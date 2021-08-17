@@ -124,36 +124,6 @@ debug_args.pdb = True  # False by default
 See https://github.com/executablebooks/jupyter-book/blob/18d52700b8636773f96631b3e187e38075557041/jupyter_book/sphinx.py#L87-L91
 for the JupyterBook code.
 
-## API diagrams
-
-We are using app.diagrams.net to create and update some diagrams in `figures`,
-notably the API ones.
-
-To edit the diagrams:
-https://app.diagrams.net/#HINRIA%2Fscikit-learn-mooc%2Fmaster%2Ffigures%2Fapi_diagram.drawio
-
-All the diagrams are in the same project, you can use the tabs at the bottom
-(Google-sheet style).
-
-Then each SVG needs to be exported individually (there could well be a better
-way, update this doc if you find it): `File -> Export As -> SVG`
-
-New modal (SVG): Click Export
-
-New modal (Save as):
-- make sure the export SVG name is correct
-- click Github and select (each time sorry ...) the github project, branch and
-  folder
-- At the end it will ask you this file already exists do you want to override
-  it: say yes
-- I think it asks you to tweak the commit message if you want
-
-Once you have done this, the SVG should have been updated in the github repo.
-Make sure the github svg looks the way you want:
-https://github.com/INRIA/scikit-learn-mooc/tree/master/figures
-
-## Jupytext useful use cases
-
 ### Get wrap-up quiz solutions code
 
 You can convert the quiz `.md` file to `.py` with valid Python code. This is
@@ -180,15 +150,28 @@ and not:
 ```
 ``````
 
-##  Workflow notes
+## Environment set up
 
-See [this](./workflow-notes.md).
+A docker container with a working sc-tutorial environment is now available [here](https://hub.docker.com/r/leanderd/single-cell-analysis) thanks to [Leander Dony](https://github.com/le-ander). If you would like to set up the environment via conda or manually outside of the docker container, please follow the instructions below.
 
-## Direct binder links to OVH, GESIS and GKE to trigger and cache builds
+## Downloading the data
 
+As mentioned above the data for the case study comes from GSE92332. To run the case study as shown, you must download this data and place it in the correct folder. Unpacking the data requires `tar` and `gunzip`, which should already be available on most systems. If you are cloning the github repository and have the case study script in a `latest_notebook/` folder, then from the location where you store the case study ipynb file, this can be done via the following commands:
 
-- [OVH Binder](https://ovh.mybinder.org/v2/gh/INRIA/scikit-learn-mooc/master)
+```
+cd ../  #To get to the main github repo folder
+mkdir -p data/Haber-et-al_mouse-intestinal-epithelium/
+cd data/Haber-et-al_mouse-intestinal-epithelium/
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92332/suppl/GSE92332_RAW.tar
+mkdir GSE92332_RAW
+tar -C GSE92332_RAW -xvf GSE92332_RAW.tar
+gunzip GSE92332_RAW/*_Regional_*
+```
 
-- [GESIS Binder](https://gesis.mybinder.org/v2/gh/INRIA/scikit-learn-mooc/master)
+The annotated dataset with which we briefly compare the results at the end of the notebook, is available from the same GEO accession ID (GSE92332). It can be obtained using the following command:
 
-- [GKE Binder](https://gke.mybinder.org/v2/gh/INRIA/scikit-learn-mooc/master)
+```
+cd data/Haber-et-al_mouse-intestinal-epithelium/
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE92nnn/GSE92332/suppl/GSE92332_Regional_UMIcounts.txt.gz
+gunzip GSE92332_Regional_UMIcounts.txt.gz
+```
