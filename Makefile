@@ -38,11 +38,15 @@ $(JUPYTER_BOOK_DIR):
 	jupyter-book build $(JUPYTER_BOOK_DIR)
 	rm -rf $(JUPYTER_BOOK_DIR)/_build/html/figures && cp -r figures $(JUPYTER_BOOK_DIR)/_build/html
 
+$(JUPYTER_BOOK_DIR)-ci:
+	jupyter-book build $(JUPYTER_BOOK_DIR) --config $(JUPYTER_BOOK_DIR)/_ci_config.yml
+	rm -rf $(JUPYTER_BOOK_DIR)/_build/html/figures && cp -r figures $(JUPYTER_BOOK_DIR)/_build/html
+
 $(JUPYTER_BOOK_DIR)-clean:
 	# keep jupyter-cache cache folder
 	jupyter-book clean $(JUPYTER_BOOK_DIR)
 
 $(JUPYTER_BOOK_DIR)-full-clean:
-  # deletes jupyter-cache cache folder
+    # deletes jupyter-cache cache folder as well
 	rm -rf $(JUPYTER_BOOK_DIR)/_build
 

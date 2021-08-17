@@ -1,0 +1,33 @@
+name: Build book
+
+on: [push, pull_request]
+
+jobs:
+  build-book:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Cache jupyter-cache folder
+      uses: actions/cache@v2
+      env:
+        cache-name: jupyter-cache
+      with:
+        path: jupyter-book/_build/.jupyter_cache
+        key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+        restore-keys: |
+          v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+          v1-${{ github.ref }}
+          v1-refs/heads/master
+
+    - name: Build the JupyterBook
+      run: make jupyter-book-ci
