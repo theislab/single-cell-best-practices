@@ -1,0 +1,4 @@
+# Handling categorical data
+
+```{tableofcontents}
+```

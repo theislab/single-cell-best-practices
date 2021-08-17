@@ -1,38 +1,48 @@
-PYTHON_SCRIPTS_DIR = python_scripts
+NOTEBOOK_SCRIPTS_DIR = notebook_scripts
 NOTEBOOKS_DIR = notebooks
 JUPYTER_BOOK_DIR = jupyter-book
 JUPYTER_KERNEL := python3
+MINIMAL_NOTEBOOK_FILES = $(shell ls $(NOTEBOOK_SCRIPTS_DIR)/*.py | perl -pe "s@$(NOTEBOOK_SCRIPTS_DIR)@$(NOTEBOOKS_DIR)@" | perl -pe "s@\.py@.ipynb@")
 
-.PHONY: build clean full-clean
-.DEFAULT_GOAL := help
+# This assumes that the folder mooc-scikit-learn-coordination and
+# scikit-learn-mooc are siblings, e.g. the repos are in the
+# ~/dev/mooc-scikit-learn-coordination and ~/dev/scikit-learn-mooc. This should
+# be the case in most development setups. If not then you can pass the
+# GITLAB_REPO_JUPYTERBOOK_DIR variable with
+# make -e GITLAB_REPO_JUPYTERBOOK_DIR=your/gitlab/repo/jupyter-book-dir/goes-here
+GITLAB_REPO_JUPYTERBOOK_DIR = ../mooc-scikit-learn-coordination/jupyter-book
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
+all: $(NOTEBOOKS_DIR)
 
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("%-20s %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
+.PHONY: $(NOTEBOOKS_DIR) copy_matplotlibrc sanity_check_$(NOTEBOOKS_DIR) all \
+        exercises quizzes $(JUPYTER_BOOK_DIR) $(JUPYTER_BOOK_DIR)-clean $(JUPYTER_BOOK_DIR)-full-clean
 
-help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+$(NOTEBOOKS_DIR): $(MINIMAL_NOTEBOOK_FILES) copy_matplotlibrc sanity_check_$(NOTEBOOKS_DIR)
 
-build: build-book build-notebooks  # builds the book and all notebooks
+$(NOTEBOOKS_DIR)/%.ipynb: $(NOTEBOOK_SCRIPTS_DIR)/%.py
+	python build_tools/convert-python-script-to-notebook.py $< $@
 
-build-book:  # builds only the book
+copy_matplotlibrc:
+	cp $(NOTEBOOK_SCRIPTS_DIR)/matplotlibrc $(NOTEBOOKS_DIR)/
+
+sanity_check_$(NOTEBOOKS_DIR):
+	python build_tools/sanity-check.py $(NOTEBOOK_SCRIPTS_DIR) $(NOTEBOOKS_DIR)
+
+exercises:
+	python build_tools/generate-exercise-from-solution.py $(NOTEBOOK_SCRIPTS_DIR)
+
+quizzes:
+	python build_tools/generate-quizzes.py $(GITLAB_REPO_JUPYTERBOOK_DIR) $(JUPYTER_BOOK_DIR)
+
+$(JUPYTER_BOOK_DIR):
 	jupyter-book build $(JUPYTER_BOOK_DIR)
+	rm -rf $(JUPYTER_BOOK_DIR)/_build/html/figures && cp -r figures $(JUPYTER_BOOK_DIR)/_build/html
 
-# https://nbconvert.readthedocs.io/en/latest/execute_api.html#module-nbconvert.preprocessors
-build-notebooks:  # builds all notebooks 
-	jupyter nbconvert --ExecutePreprocessor.timeout=6000 --to notebook --inplace --execute $(NOTEBOOKS_DIR)/*.ipynb
-
-clean: clean-book clean-full # cleans the build caches
-
-clean-book:  # Keeps the jupyter-cache cache folder
+$(JUPYTER_BOOK_DIR)-clean:
+	# keep jupyter-cache cache folder
 	jupyter-book clean $(JUPYTER_BOOK_DIR)
 
-clean-full:  # Deletes the jupyter-cache folder
+$(JUPYTER_BOOK_DIR)-full-clean:
+  # deletes jupyter-cache cache folder
 	rm -rf $(JUPYTER_BOOK_DIR)/_build
+

@@ -1,0 +1,56 @@
+name: deploy-gh-pages
+
+on:
+  push:
+    branches:
+    - master
+    - test-ci*
+
+jobs:
+  deploy-gh-pages:
+    runs-on: ubuntu-latest
+    env:
+      OMP_NUM_THREADS: 1
+      MKL_NUM_THREADS: 2
+      OPENBLAS_NUM_THREADS: 2
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements-dev.txt
+
+    - name: Cache jupyter-cache folder
+      uses: actions/cache@v2
+      env:
+        cache-name: jupyter-cache
+      with:
+        path: jupyter-book/_build/.jupyter_cache
+        key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+        restore-keys: |
+          v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+          v1-${{ github.ref }}
+          v1-refs/heads/master
+
+    - name: Build the JupyterBook
+      run: |
+        make jupyter-book
+
+    - name: Create folder for gh-pages
+      run: |
+        cp -r jupyter-book/_build/html gh-pages
+
+    - name: GitHub Pages action
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      uses: peaceiris/actions-gh-pages@v3.6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./gh-pages
+        commit_message: "[ci skip] ${{ github.event.head_commit.message }}"
