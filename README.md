@@ -23,7 +23,7 @@ Please read [contributing](contributing.md) for further instructions.
 
 In case of questions or issues, please get in touch by posting an issue in this repository.
 
-If the materials in this repository are of use to you, please consider citing the above publication.
+If the materials in this repository are of use to you, please consider citing our above publications.
 
 ## Adapting the notebooks to other datasets:
 
@@ -37,4 +37,4 @@ Please note that there are several limitations to the general applicability of t
 
 ## Acknowledgements
 
-This tutorial would not be possible without the input of all Theislab members and the countless benchmarks and reviews of various single-cell tools by the community. Furthermore, the tutorial book's technical backend was adapt from the [scikit-learn-mooc](https://github.com/INRIA/scikit-learn-mooc).
+This tutorial would not be possible without the input of all Theislab members and the countless benchmarks and reviews of various single-cell tools by the community. Furthermore, the tutorial book's technical backend was adapted from the [scikit-learn-mooc](https://github.com/INRIA/scikit-learn-mooc).
