@@ -25,9 +25,9 @@ In case of questions or issues, please get in touch by posting an issue in this 
 
 If the materials in this repository are of use to you, please consider citing the above publication.
 
-## Adapting the notebooks for other datasets:
+## Adapting the notebooks to other datasets:
 
-All notebooks for the various steps can be found in the [notebooks folder](extended-single-cell-best-practices/tree/master/notebooks). 
+All notebooks for the various steps can be found in the [notebooks folder](single-cell-best-practices/tree/master/notebooks). 
 These can easily be reused for your own projects.
 Please note that there are several limitations to the general applicability of the current workflow. When adapting the pipeline for your own dataset please take into account the following:
 
