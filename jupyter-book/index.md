@@ -1,60 +1,49 @@
-# Introduction
+# Single-cell Analysis Tutorial
 
 ## Course presentation
 
 ```{admonition} Welcome!
 :class: remove-from-content-only
 
-The goal of this course is to teach machine learning with scikit-learn to
-beginners, even without a strong technical background.
+The goal of this tutorial is to teach and to demonstrate best practices for the 
+analysis of single-cell RNA-seq data. We take an objective view and do not focus on
+particular tools from our labs or collaborators.
 ```
 
-Predictive modeling brings value to a vast variety of data, in business
-intelligence, health, industrial processes and scientific discoveries. It is a
-pillar of modern data science. In this field, scikit-learn is a central tool:
-it is easily accessible, yet powerful, and naturally dovetails in the wider
-ecosystem of data-science tools based on the Python programming language.
+### Single-cell RNA-seq
 
-This course is an in-depth introduction to predictive modeling with
-scikit-learn. Step-by-step and didactic lessons introduce the fundamental
-methodological and software tools of machine learning, and is as such a
-stepping stone to more advanced challenges in artificial intelligence, text
-mining, or data science.
+Single-cell RNA-seq allows for the generation of expression profiles of individual cells at an unprecedented scale and resolution.
+This information can for example be used to uncover rare cell types, to find stem cell development trajectories or to compare expression profiles of healthy and diseased patients. The inherent complexity of the such data has motivated the development of now more than 1000 tools {cite}`Zappia2021.08.13.456196`. The vast amounts of tools and the correct usage of these tools motivates a collection of recommendations for single-cell analysis best practices.
 
-The course is more than a cookbook: it will teach you to be critical about each
-step of the design of a predictive modeling pipeline: from choices in data
-preprocessing, to choosing models, gaining insights on their failure modes and
-interpreting their predictions.
+### Tutorial design
 
-```{admonition} Follow the MOOC
-:class: remove-from-content-only tip
+This tutorial is designed as an in-depth introduction to single-cell RNA-seq analysis best practices.
+The lessons step-by-step introduce fundamental concepts and software tool allowing for a smooth learning experience into complex analysis patterns.
+We emphasize that this tutorial is more than a cookbook: It will teach you how to choose the appropriate tools for the data, critically evaluate your analysis results and what biological conclusions to draw from them.
 
-<div class="container">
-  <div class="row">
-    <div class="col-xl">
-      Register to the
-      <a href="https://www.fun-mooc.fr/en/courses/machine-learning-python-scikit-learn">
-        "Machine learning in Python with scikit-learn MOOC"
-      </a>,
-      to have the full MOOC experience (quizz solutions, executable notebooks,
-      discussion forum, etc ...)!
-      </br>
-      The MOOC is free and the platform does not use the student data for any other purpose
-      than improving the educational material.
-    </div>
-    <div class="col-lg-5">
-      <a href="https://www.fun-mooc.fr/en/courses/machine-learning-python-scikit-learn">
-        <img src="figures/mooc_computer.jpg" style="width:100%">
-      </a>
-    </div>
-  </div>
-</div>
-```
+### Content and goals
+
+The high level concepts that we cover are listed below. Note that we subdivided these concepts into subchapters if required.
+
+1. Introduction to single-cell RNA-seq
+2. Quality control
+3. Normalization
+4. Data integration
+5. Dimensionality reduction
+6. Visualization
+7. Cluster analysis and annotation
+8. Cell type composition analysis
+9. Trajectory inference
+10. Gene level analysis
+11. Deconvolution
+12. Latent space modeling & perturbations
+13. Cell-cell interactions
 
 ## Prerequisites
 
 The course aims to be accessible without a strong technical background. The
 requirements for this course are:
+
 - basic knowledge of Python programming : defining variables, writing
   functions, importing modules
 - some prior experience with the NumPy, pandas and Matplotlib libraries is
@@ -63,32 +52,18 @@ requirements for this course are:
 For a quick introduction on these requirements, you can go through these
 [course materials](http://swcarpentry.github.io/python-novice-gapminder/)
 or use the following resources:
+
 - [Introduction to Python](https://scipy-lectures.org/intro/language/python_language.html)
 - [Introduction to NumPy](https://sebastianraschka.com/blog/2020/numpy-intro.html)
 - [Introduction to Pandas](https://pandas.pydata.org/docs/user_guide/10min.html)
 - [Introduction to Matplotlib](https://sebastianraschka.com/blog/2020/numpy-intro.html#410-matplotlib)
 
+LH ADD BASICS Of 
+R
+MOLECULAR BIOLOGY
+SCANPY?!?
 
-## MOOC material
+## Bibliography
 
-The MOOC material is developed publicly under the [CC-By license](
-https://github.com/INRIA/scikit-learn-mooc/blob/master/LICENSE),
-including the notebooks, exercises and solutions to the exercises
-(but not the quizz solutions ;) via the following GitHub
-repository:
-
-  https://github.com/INRIA/scikit-learn-mooc/
-
-This is also published as a static website at:
-
-  https://inria.github.io/scikit-learn-mooc/
-
-It is possible to use the rocket icon at the top of each notebook
-page to interactively execute the code cells via the Binder
-service.
-
-Note however that it is required to use the
-[version hosted on the fun-mooc platform](
-https://www.fun-mooc.fr/en/courses/machine-learning-python-scikit-learn/)
-to complete the quizzes.
-
+```{bibliography}
+```
