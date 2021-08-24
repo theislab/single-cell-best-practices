@@ -4,14 +4,7 @@
 
 <!-- Give in plain English what the module is about -->
 
-This module will give an example of a typical predictive modeling pipeline
-developed using tabular data (data that can be structured in a 2-dimensional
-table). We will present this pipeline in a progressive way. First, we will make
-an analysis of the dataset used. Subsequently, we will train our first
-predictive pipeline with a subset of the dataset. Then, we will give particular
-attention to the type of data, numerical and categorical, that our model has to
-handle. Finally, we will extend our pipeline to use mixed types of data, i.e.
-numerical and categorical data.
+This module will give an example of preprocessing and visualization techniques for scRNA-seq data.
 
 ## Before getting started
 
