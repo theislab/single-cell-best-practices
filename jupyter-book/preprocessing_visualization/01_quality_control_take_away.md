@@ -1,6 +1,4 @@
-# Main take-away
-
-## Wrap-up
+# Pitfalls & recommendations
 
 <!-- Quick wrap-up for the module -->
 
