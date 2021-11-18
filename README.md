@@ -27,14 +27,9 @@ If the materials in this repository are of use to you, please consider citing ou
 
 ## Adapting the notebooks to other datasets:
 
-All notebooks for the various steps can be found in the [notebooks folder](single-cell-best-practices/tree/master/notebooks). 
+All notebooks for the various steps can be found in the [jupyter book folder](extended-single-cell-best-practices/tree/master/jupyter-book). 
 These can easily be reused for your own projects.
-Please note that there are several limitations to the general applicability of the current workflow. When adapting the pipeline for your own dataset please take into account the following:
-
-1. Sparse data formats are not supported by `rpy2` and therefore do not work with any of the integrated R commands. Datasets can be turned into a dense format using the code: `adata.X = adata.X.toarray()`
-
-2. The case study assumes that the input data is count data obtained from a single-cell protocol with UMIs. If the input data is full-length read data, then one could consider replacing the normalization method with another method that includes gene length normalization (e.g., TPM).
 
 ## Acknowledgements
 
-This tutorial would not be possible without the input of all Theislab members and the countless benchmarks and reviews of various single-cell tools by the community. Furthermore, the tutorial book's technical backend was adapted from the [scikit-learn-mooc](https://github.com/INRIA/scikit-learn-mooc).
+This tutorial would not be possible without the input of all Theislab members and the countless benchmarks and reviews of various single-cell tools by the community.

@@ -1,4 +1,0 @@
-# Quality Control
-
-```{tableofcontents}
-```
