@@ -1,4 +1,4 @@
-# Single-cell Analysis Tutorial
+# Extended single-cell best practices
 
 ## About
 
@@ -13,7 +13,7 @@ The paper was recommended on F1000 prime as being of special significance in the
 <a href="https://f1000.com/prime/736010853?bd=1 &ui=150648 " target="_blank"><img src="https://s3.us-east-1.amazonaws.com/cdn.f1000.com/images/badges/badgef1000.gif" alt="Access the recommendation on F1000Prime" id="bg" /></a>
 
 The corresponding book is hosted [here](https://github.com/theislab). The main part of the book is dedicated to a case study where the best-practices established in our manuscripts are applied to a mouse intestinal epithelium regions dataset from Haber et al., Nature 551 (2018) available from GEO under GSE92332.
-Specific topics such as RNA velocity use other datasets as noted in the book.
+Specific topics may use other datasets as noted in the book.
 Moreover, the book contains many teaching resources such as quizzes with solutions.
 
 ## Contributing
@@ -21,8 +21,7 @@ Moreover, the book contains many teaching resources such as quizzes with solutio
 We would like to invite the community to further improve the tutorial and the teaching material.
 Please read [contributing](contributing.md) for further instructions.
 
-In case of questions or issues, please get in touch by posting an issue in this repository.
-
+In case of questions or issues, please get in touch by posting an issue in this repository.    
 If the materials in this repository are of use to you, please consider citing our above publications.
 
 ## Adapting the notebooks to other datasets:
