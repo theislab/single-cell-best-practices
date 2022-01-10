@@ -1,4 +1,0 @@
-# Visualization
-
-```{tableofcontents}
-```

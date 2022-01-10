@@ -1,4 +1,0 @@
-# Highly variable genes
-
-```{tableofcontents}
-```

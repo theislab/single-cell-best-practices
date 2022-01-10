@@ -1,4 +1,0 @@
-# Batch correction
-
-```{tableofcontents}
-```
