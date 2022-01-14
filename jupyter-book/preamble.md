@@ -3,14 +3,14 @@
 ## Overview
 
 You are on the landing page of the Extended Single-cell Best-practices book.
-The goal of this book is to teach newcomers and advanced professionals alike the **best-practices** of single-cell sequencing analysis.
+The goal of this book is to teach newcomers and advanced professionals alike, the **best-practices** of single-cell sequencing analysis.
 This book will teach you about the most common analysis steps ranging from preprocessing over visualization to statistical evaluation.
-After having worked through this book you will be able to analyze multimodal sequencing data on your own.
+After having worked through this book you will be able to analyze single and multimodal sequencing data on your own.
 
 ## Motivation
 
-As once newcomers ourselves in the field we noticed that while teaching materials exist they are often scattered in various places.
-Furthermore, in a rapidly developing research area like single-cell, many tools exist and get published every day.
+As once newcomers ourselves in the field, we noticed that while teaching materials exist they are often scattered in various places.
+Furthermore, in a rapidly developing research area like single-cell, many tools exist and even more get published every day.
 It is difficult to know which tool to use for which steps and why.
 Hence, we committed to writing our guidelines on not only how to do things, but how to do things right.
 These suggestions are based on external benchmarks and reviews whereever possible.
@@ -18,14 +18,14 @@ Finally, we consider this book to be a living book which can easily be updated w
 
 ## What this book covers
 
-This book aims to be comprehensive and to cover as many analysis steps as possible. 
+This book aims to be comprehensive and to cover as many analysis steps as possible.
 We cover all steps entailed in the publication TBD while adding additional information for situations that an analyst may encounter regularly.
-A simple example might be converting between analysis ecosystems and data formats.
+A simple example might be the conversion between analysis ecosystems and data formats.
 
 ## What this book does not cover
 
-This book does not cover the fundamental basics of biology or computer science including programming.
-Moreover, this book does not cover all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best.
+This book does not aim to cover the fundamental basics of biology or computer science including programming.
+Moreover, this book does not describe all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best for the data at hand.
 Whenever this is not possible and we cannot cover the explicit community verified best-practices, we only recommend a workflow based on our extensive experiences.
 
 ## Prerequisites
