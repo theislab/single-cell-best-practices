@@ -30,14 +30,14 @@ Whenever this is not possible and we cannot cover the explicit community verifie
 
 ## Prerequisites
 
-Trying to get into bioinformatician is difficult since a background is required in not only biology, but also computer science.
+Trying to get into bioinformatics is difficult since a background is required in not only biology, but also computer science.
 Single-cell especially combines many subfields making it challenging to get into it.
 This book cannot cover all prerequisites for computation single-cell analysis. The book would simply explode.
 
 We therefore recommend to have a coarse overview over the following topics:
 
 * Basic Python programming. You should be familiar with control flow (loops, conditional statements, ...), basic data structures (lists, dictionaries, sets) and core functionality of the most used libraries such as Pandas and Numpy.
-* Basics of scanpy and AnnData. If interested in multimodal data analysis the basics of muon and MuData are recommended.
+* Basics of scanpy and AnnData are beneficial. If interested in multimodal data analysis, the basics of muon and MuData are recommended.
 * Basics R programming. Familiarity with control flow and basic data structures suffices.
 * Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins.
 
