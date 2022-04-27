@@ -32,7 +32,7 @@ Whenever this is not possible and we cannot cover the explicit community verifie
 
 Trying to get into bioinformatics is difficult since a background is required in not only biology, but also computer science.
 Single-cell especially combines many subfields making it challenging to get into it.
-This book cannot cover all prerequisites for computation single-cell analysis. The book would simply explode.
+This book cannot cover all prerequisites for computation single-cell analysis.
 
 We therefore recommend to have a coarse overview over the following topics:
 
@@ -43,5 +43,5 @@ We therefore recommend to have a coarse overview over the following topics:
 
 ## Acknowledgements
 
-This book would not have been possible without the help of all members of the Theislab and external experts.
+This book could not have been written without the help of all members of the group of Fabian Theis and external experts.
 Furthermore we thank all developers and maintainers of all displayed tools and projects without whom none of this would be possible.
