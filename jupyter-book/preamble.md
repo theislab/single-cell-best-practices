@@ -1,3 +1,7 @@
+![alt text](_static/images/title.jpg "Title")
+
+<div style="page-break-after: always;"></div>
+
 # Extended Single-cell Best-practices
 
 ## Overview
