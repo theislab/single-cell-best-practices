@@ -4,9 +4,10 @@ Sources:
 
 - https://www.nature.com/articles/s41576-019-0093-7
 - The paper that helped me understand experimental protocols most, but only very old methods: (Ziegenhain et al. 2017)
-- Short, and broad overview of now somewhat old methods: (Svensson et al. 2017)
-- More recent comparison of methods that are probably more relevant: (Mereu et al. 2020)
+- Short, and broad overview of now somewhat old methods: (Svensson et al. 2017) -> https://www.nature.com/articles/nmeth.4220
+- More recent comparison of methods that are probably more relevant: (Mereu et al. 2020) -> https://www.nature.com/articles/s41587-020-0469-4
 - Guidelines for the experimental design of single-cell RNA sequencing studies: (Lafzi et al. 2018)
+- 10x vs SMART comparison -> https://www.sciencedirect.com/science/article/pii/S1672022921000486
 
 Aimed length: 7-10 pages
 Chapter is not aimed at experimentalists, but only at computational biologists to learn the biases of the assays and to get an overview about how it generally works.
@@ -21,3 +22,9 @@ Content:
 7. Chromium
 8. Smart-Seq2
 9. What else ?!? InDrop? MARS-Seq? Cel-Seq2? Quartz-seq2
+
+## References
+
+```{bibliography}
+:filter: docname in docnames
+```

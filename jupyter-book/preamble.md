@@ -21,15 +21,27 @@ This book aims to be comprehensive and to cover as many analysis steps as possib
 
 ## What this book does not cover
 
-This book does not aim to cover the fundamental basics of biology or computer science including programming. Moreover, this book does not describe all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best for the data at hand. Whenever this is not possible and we cannot cover the explicit community verified best-practices, we only recommend a workflow based on our extensive experience.
+This book does not aim to cover the fundamental basics of biology or computer science including programming. Moreover, this book does not describe all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best for the data at hand. Whenever this is not possible and we cannot cover explicit community verified best-practices, we only recommend workflows based on our extensive experience.
+
+## Structure of the book
+
+This book is divided into chapters which correspond to different stages of a typical single-cell data analysis project. Generally, a typical analysis would follow the order of the chapters. We further divide the chapters into basic and advanced chapters. As the name suggests, the advanced chapters cover advanced analysis steps and may require more prerequisites than the other chapters of the book. We recommend that newcomers to the field start with all basic chapters and afterwards revisit the advanced chapters of interest. Most single-cell data analysts do not conduct all of the advanced analyses in their day to day work, but being aware of the possibilities is still beneficial.
+
+WRITE ABOUT THE CHAPTER STRUCTURE
+WRITE ABOUT REFERENCES
 
 ## Prerequisites
 
-Trying to get into bioinformatics is difficult since a background is required in not only biology, but also computer science. Single-cell especially combines many subfields making it challenging to get into it. This book cannot cover all prerequisites for computational single-cell analysis.
+Trying to get into bioinformatics is difficult since a background is required in not only biology, but also computer science. Single-cell especially combines many subfields making it challenging to get into it. This book cannot cover all prerequisites for computational single-cell analysis. To get the most out of this book we recommend a coarse overview over the following topics:
 
-We therefore recommend to have a coarse overview over the following topics:
+* Basic Python programming. You should be familiar with control flow (loops, conditional statements, ...), basic data structures (lists, dictionaries, sets) and core functionality of the most used libraries such as Pandas and Numpy. If you are new to programming and Python we can highly recommend the free [Automate the boring stuff with Python](https://automatetheboringstuff.com/) book.
+* Basics of the AnnData and scanpy packages are beneficial, but not absolutely required. This book covers AnnData in sufficient detail to follow along and introduces the workflow of working with scanpy. However, it is not possible to introduce all of scanpy's functions in the course of this book. If you are new to scanpy we strongly suggest to work through the [scanpy tutorials](https://scanpy.readthedocs.io/en/stable/tutorials.html) with the occasional glance to the [scanpy API reference](https://scanpy.readthedocs.io/en/stable/api.html).
+* If you are interested in multimodal data analysis, the basics of muon and MuData are recommended. This book covers MuData in greater detail, but only briefly introduces muon analogously to AnnData and scanpy. The excellent [muon tutorials](https://muon-tutorials.readthedocs.io/en/latest/) serve as a great introduction to multimodal data analysis with muon.
+* Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
+* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through *Molecular Biology of the Cell* by Bruce Alberts et al. To learn more about the most widely used single-cell assays we recommend reading "Comparative Analysis of Single-Cell RNA Sequencing Methods"{cite}`Ziegenhain2017` for an overview of the experimental principles. "Power analysis of single-cell RNA-sequencing experiments"{cite}`Svensson2017` is useful to get an intuition for the strengths and weaknesses of the approaches and finally "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects"{cite}`Mereu2020` provides a comparison of the most widely used assays which completes the required background.
 
-* Basic Python programming. You should be familiar with control flow (loops, conditional statements, ...), basic data structures (lists, dictionaries, sets) and core functionality of the most used libraries such as Pandas and Numpy. WE RECOMMEND TO LEARN USING WHAT
-* Basics of scanpy and AnnData are beneficial. If interested in multimodal data analysis, the basics of muon and MuData are recommended. NOTE THAT WE COVER DATA STRUCTES AND RECOMMEND READING WHAT
-* Basics R programming. Familiarity with control flow and basic data structures suffices. WE RECOMMEND LEARNING WITH WHAT
-* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins. WE RECOMMEND LEARNING WITH WHAT
+## References
+
+```{bibliography}
+:filter: docname in docnames
+```
