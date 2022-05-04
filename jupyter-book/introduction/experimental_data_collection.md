@@ -1,6 +1,6 @@
 # Experimental data collection
 
-This chapter, which is aimed at bioinformatians, provides a short overview about the most widely used single-cell RNA sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data. The count distribution and gene coverage for example is heavily influenced by the chemistry of the assay.
+This chapter, which is aimed at bioinformatians, provides a short introduction to sequencing and the most widely used single-cell RNA sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data. The count distribution and gene coverage for example is heavily influenced by the chemistry of the assay.
 
 :::{figure-md} markdown-fig
 <img src="../_static/images/assays.png" alt="Overview of sequencing assays" class="bg-primary mb-1" width="800px">
@@ -8,7 +8,7 @@ This chapter, which is aimed at bioinformatians, provides a short overview about
 Sequencing assays overview. Image obtained from <https://www.nature.com/articles/s41592-019-0691-5> WE HAVE NO RIGHTS AND THIS NEEDS TO BE REDONE OR RECONSIDERED.
 :::
 
-## A brief history of single-cell RNA-sequencing
+## A brief history of sequencing
 
 ### First generation sequencing
 
@@ -75,19 +75,55 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 3. **Data output and analysis**: The output of a sequencing experiment depends on the sequencing technology and chemistry. Some sequencers generate fluorescence signals which are stored in specific output files and others may generate electric signals which are stored in corresponding file formats. Generally, the amount of generated data, the raw data, is very large. Such data requires complex and computationally heavy processing. This is further discussed in the raw data processing chapter.
 
-### Single-cell sequencing & platelet vs droplet
+### RNA sequencing
 
-## Drop-Seq
+So far we only introduced sequencing with the unmentioned assumption that DNA is being sequenced. DNA sequencing is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome or even a complex microbiome. This allows researchers to determine which genes and regulatory elements are in the DNA molecule and at which position in the genome. Genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions, can be uncovered with DNA sequencing. Another very common application area is evolutionary analysis where homologous DNA sequences from different organisms are compared. One of the most useful applications of DNA sequencing is also the determination of associations of mutations with diseases. A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormaly in the oxygen-carrying protein haemoglobin in red blood cells. This leads to serious health issues including pain, anemia, swelling in the hands and feet, bacterial infections and strokes. The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes haemoglobin, one from each parent. More specifically, the gene defect is caused by a single nucleotide mutation (also sometimes referred to as single nucleotide polymorphism - SNP) where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above mentioned disease. It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases due to most diseases being caused by for example complex regulatory processes.
+Knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic, real-time operations of a cell. Further, a DNA coding region could appear to be normal, but a downstream transcriptional issue could affect the splicing of the resulting RNA molecule. In turn, this alternative splicing event could result in a non-functional enzyme and an induced disease state. On the contrary, the alternative splicing event could also be benign without any effect on health by simply producing a different protein isoform. This is where RNA sequencing (RNA-Seq) comes into play. RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template. Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organism at the time of sequencing in the form of gene expression profiles of genes. This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs. The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants and many other interesting properties. Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both, known and novel features, resulting in rich data sets that can used for exploratory data analysis.
 
-## 10x Chromium
+### single-cell RNA sequencing
 
-## Smart-Seq
+Sequencing of RNA can at large be conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing). Mixing the RNA of all cells is in most cases cheaper and easier than the experimentally complex single-cell sequencing. Bulk RNA-Seq results in cell averaged expression profiles which are generally easier to analyze, but also hide some of the complexity which may help answering the question of interest. For example, some drugs or perturbations may affect only specific cell types or interactions of cell types. To uncover such relation ships it is vital to examine gene expression on a single-cell level. Single-cell RNA-Seq (scRNA-Seq) does however come with several caveats. First, the experiments are generally more expensive and more difficult to properly conduct. Second, the downstream analysis becomes more complex due to the increased resolution and it is easier to draw false conclusions.
 
-## Other assays
+A single-cell experiment generally speaking follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations. Just like bulk sequencing, single-cell sequencing requires cell isolation, lysis, reverse transcription, amplification and the eventual sequencing. In addition, a physical separation into smaller reaction chambers or another form of cell labeling is required to later be able to map the obtained transcriptomes back to the cells of origin. Hence, these are also the step where most single-cell assays differ: single-cell isolation, transcript amplification and sequencing. Currently, three types of single-cell sequencing protocols exist which are grouped primarily by their cell isolation protocols: Microfluidic device based strategies where cells are encapsulated into hydrogel droplets, well plate based assays where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. The three approaches differ in their ability to recover transcripts, the number of sequenced cells and many other aspects. In the following subsections we will briefly discuss how they work, their strengths and weaknesses and possible biases that data analysts should be aware of when analyzing data of the respective assays.
+
+
+
+
+
+#### Drop-Seq
+
+#### 10x Chromium
+
+#### Smart-Seq
+
+#### Other assays
 
 InDrop? MARS-Seq? Cel-Seq2? Quartz-seq2
 
-## single-cell vs single-nuclei
+#### UMI design
+
+A critical step in any RNA-Seq sequencing run is the amplification of transcripts to ensure that they are abundant enough for quality control and sequencing. During this amplification process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. These are indistinguishable. Hence, determining the original number of molecules in the samples is difficult. Unique Molecular Identifiers (UMIs) are a common solution to quantify the original, non-duplicated molecules. UMIs serve es Molecular Barcodes and are also sometimes referred to Random Barcodes. They consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. They must be added during the library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out or be aware of amplification biases{cite}`Aird2011`. Amplification bias is a term for sequences which are preferentially amplified during the amplification process and will therefore be sequenced more often resulting in higher counts. This can have a detrimental effect on any gene expression analysis because not very active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step where the error rate may already be comparably higher to earlier PCR stages. Although, it is computationally possible to detect and to remove such sequences by removing reads with identical alignment coordinates, it is generally advisable to always design the experiment with UMIs if possible. UMIs allow for the removal of PCR duplicates in the sequencing data. The usage of UMIs further allows for normalization to be performed without a loss of accuracy{cite}`Kivioja2012`.
+
+#### single-cell vs single-nuclei
+
+So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as for example the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`.
+
+
+Both of those options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered.
+
+
+  In contrast to whole cells, nuclei are more resistant to mechanical assaults and can be isolated from frozen tissue [12,13]. Individual nuclei have been shown to provide sufficient gene expression information to define relatively broad cell classes in adult human brain [14,15] and mouse hippocampus [16].
+
+
+
+Technical issues arise from variability in mRNA capture efficiency and cDNA amplification bias. Biological variation arises from the heterogeneity of cells and stochastic factors in transcription. While experimental bias in bulk RNA-sequencing is well studied, with scRNA-seq the issue of dropouts is still a problem due to extremely low amounts of starting material, and thus false negative expression. In certain cell types, single nuclei isolation confers many advantages compared to whole cell analyses: nuclei can be easily isolated without the use of enzymes, and they are more resistant to physical stresses compared to cells. Furthermore, nuclei can be obtained from frozen or lightly fixed tissues, which expands access for researchers to study a wide range of tissues and samples. At this point, quite a few accounts of research show that nuclei accurately recapitulate whole cell transcriptional patterns.
+
+A recent account of snRNA-Seq research, published as “An Analysis of Cellular Identities in the Murine Striatum Using Single Nuclei RNA-Sequencing”, which is the doctoral dissertation of Eva Xia (September 2020, Graduate Faculty of the Graduate School of Biomedical Sciences, Neuroscience Doctoral Program, Icahn School of Medicine at Mount Sinai, NY) describes an optimized Drop-seq protocol to profile single nuclei with lower technical noise and higher sequencing efficiency (more UMIs/read). Furthermore, Xia’s protocol has the benefit of improved cost efficiency with documented library preparation costs of $0.05 per cell, which is around 80% less than commercial scRNA-seq platforms such as 10X Genomics. Xia also demonstrated generation of quality data with comparatively low batch effects that can be successfully clustered into meaningful biological cell types with very low sequencing depth.
+
+As noted, the choice of snRNA-Seq versus scRNA-Seq is partly dependent on sample/cell type. Whole cell Drop-seq can start with frozen archived materials and is applicable to tissues that are difficult to dissociate, such as the adult brain. Whole cell protocols, though, require fresh tissue, which is not always possible to obtain, especially for human subjects. In the context of Xia’s research which involves the murine striatum, harsh enzymatic dissociation can damage the integrity of cells and their mRNA content, as well as bias towards more easily dissociable cell-types, and this is especially true for brain tissue, the focus of her research. Neurons are heterogenous in size and shape, which makes for tricky dissociation. Enzymatic and physical perturbations caused by dissociation can affect the integrity of RNA signatures and some neurons are more vulnerable to the dissociation process, which will ultimately bias representation in the sequenced dataset. In the adult human neocortex for example, non-neuronal cells survive the dissociation process better than neuronal cells and are thus over-represented in the dataset.
+
+Inasmuch as she was focusing on brain tissue, enzymatic dissociation in particular, was not optimal but rather her custom Drop-seq nuclei purification was better. Previous research from other labs has shown that individual nuclei offer sufficient transcripts to define broad cell classes in adult human brain and the mouse hippocampus and this recent dissertation adds to that body of literature.
+
 
 Sources:
 

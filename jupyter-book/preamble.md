@@ -51,7 +51,7 @@ Trying to get into bioinformatics is difficult since a background is required in
 
 * Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
-* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through *Molecular Biology of the Cell* by Bruce Alberts et al. To learn more about the most widely used single-cell assays we recommend reading "Comparative Analysis of Single-Cell RNA Sequencing Methods"{cite}`Ziegenhain2017` for an overview of the experimental principles. "Power analysis of single-cell RNA-sequencing experiments"{cite}`Svensson2017` is useful to get an intuition for the strengths and weaknesses of the approaches and finally "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects"{cite}`Mereu2020` provides a comparison of the most widely used assays which completes the required background.
+* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through *Molecular Biology of the Cell* by Bruce Alberts et al.
 
 ## References
 
