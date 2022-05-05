@@ -1,6 +1,6 @@
 # Extended single-cell best practices
 
-## About
+Warning: This project and repository is under heavy development. We will tell you when it is ready.
 
 ![image](https://drive.google.com/uc?export=view&id=1YoX3F8gNGH5K0AFu4wFdd5ccEXT-mP_J)
 
@@ -12,9 +12,7 @@ The paper was recommended on F1000 prime as being of special significance in the
 
 <a href="https://f1000.com/prime/736010853?bd=1 &ui=150648 " target="_blank"><img src="https://s3.us-east-1.amazonaws.com/cdn.f1000.com/images/badges/badgef1000.gif" alt="Access the recommendation on F1000Prime" id="bg" /></a>
 
-The corresponding book is hosted [here](https://github.com/theislab). The main part of the book is dedicated to a case study where the best-practices established in our manuscripts are applied to a mouse intestinal epithelium regions dataset from Haber et al., Nature 551 (2018) available from GEO under GSE92332.
-Specific topics may use other datasets as noted in the book.
-Moreover, the book contains many teaching resources such as quizzes with solutions.
+The corresponding book is hosted [here](https://github.com/theislab).
 
 ## Contributing
 
