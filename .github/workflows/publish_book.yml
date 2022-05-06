@@ -1,0 +1,41 @@
+name: Publish book
+
+on:
+    release:
+        types: [published]
+
+jobs:
+  build-book:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Setup environment
+      run: pip install --upgrade jupyter-book jupytext beautifulsoup4
+
+    - name: Cache jupyter-cache folder
+      uses: actions/cache@v2
+      env:
+       cache-name: jupyter-cache
+      with:
+        path: jupyter-book/_build/.jupyter_cache
+        key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+        restore-keys: |
+          v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+          v1-${{ github.ref }}
+          v1-refs/heads/master
+
+    - name: Build the JupyterBook
+      run: make
+
+    - name: Deploy
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'}}
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./jupyter-book/_build/html/

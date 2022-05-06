@@ -86,15 +86,13 @@ Sequencing of RNA can at large be conducted in two ways: Either by sequencing th
 
 A single-cell experiment generally speaking follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations. Just like bulk sequencing, single-cell sequencing requires cell isolation, lysis, reverse transcription, amplification and the eventual sequencing. In addition, a physical separation into smaller reaction chambers or another form of cell labeling is required to later be able to map the obtained transcriptomes back to the cells of origin. Hence, these are also the step where most single-cell assays differ: single-cell isolation, transcript amplification and sequencing. Currently, three types of single-cell sequencing protocols exist which are grouped primarily by their cell isolation protocols: Microfluidic device based strategies where cells are encapsulated into hydrogel droplets, well plate based assays where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. The three approaches differ in their ability to recover transcripts, the number of sequenced cells and many other aspects. In the following subsections we will briefly discuss how they work, their strengths and weaknesses and possible biases that data analysts should be aware of when analyzing data of the respective assays.
 
+#### Microfluidic device based
 
+Microfluidic device based single-cell assays 
 
+#### Plate based
 
-
-#### Drop-Seq
-
-#### 10x Chromium
-
-#### Smart-Seq
+#### Fluidigm microfluidic based
 
 #### Other assays
 
@@ -106,23 +104,8 @@ A critical step in any RNA-Seq sequencing run is the amplification of transcript
 
 #### single-cell vs single-nuclei
 
-So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as for example the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`.
-
-
-Both of those options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered.
-
-
-  In contrast to whole cells, nuclei are more resistant to mechanical assaults and can be isolated from frozen tissue [12,13]. Individual nuclei have been shown to provide sufficient gene expression information to define relatively broad cell classes in adult human brain [14,15] and mouse hippocampus [16].
-
-
-
-Technical issues arise from variability in mRNA capture efficiency and cDNA amplification bias. Biological variation arises from the heterogeneity of cells and stochastic factors in transcription. While experimental bias in bulk RNA-sequencing is well studied, with scRNA-seq the issue of dropouts is still a problem due to extremely low amounts of starting material, and thus false negative expression. In certain cell types, single nuclei isolation confers many advantages compared to whole cell analyses: nuclei can be easily isolated without the use of enzymes, and they are more resistant to physical stresses compared to cells. Furthermore, nuclei can be obtained from frozen or lightly fixed tissues, which expands access for researchers to study a wide range of tissues and samples. At this point, quite a few accounts of research show that nuclei accurately recapitulate whole cell transcriptional patterns.
-
-A recent account of snRNA-Seq research, published as “An Analysis of Cellular Identities in the Murine Striatum Using Single Nuclei RNA-Sequencing”, which is the doctoral dissertation of Eva Xia (September 2020, Graduate Faculty of the Graduate School of Biomedical Sciences, Neuroscience Doctoral Program, Icahn School of Medicine at Mount Sinai, NY) describes an optimized Drop-seq protocol to profile single nuclei with lower technical noise and higher sequencing efficiency (more UMIs/read). Furthermore, Xia’s protocol has the benefit of improved cost efficiency with documented library preparation costs of $0.05 per cell, which is around 80% less than commercial scRNA-seq platforms such as 10X Genomics. Xia also demonstrated generation of quality data with comparatively low batch effects that can be successfully clustered into meaningful biological cell types with very low sequencing depth.
-
-As noted, the choice of snRNA-Seq versus scRNA-Seq is partly dependent on sample/cell type. Whole cell Drop-seq can start with frozen archived materials and is applicable to tissues that are difficult to dissociate, such as the adult brain. Whole cell protocols, though, require fresh tissue, which is not always possible to obtain, especially for human subjects. In the context of Xia’s research which involves the murine striatum, harsh enzymatic dissociation can damage the integrity of cells and their mRNA content, as well as bias towards more easily dissociable cell-types, and this is especially true for brain tissue, the focus of her research. Neurons are heterogenous in size and shape, which makes for tricky dissociation. Enzymatic and physical perturbations caused by dissociation can affect the integrity of RNA signatures and some neurons are more vulnerable to the dissociation process, which will ultimately bias representation in the sequenced dataset. In the adult human neocortex for example, non-neuronal cells survive the dissociation process better than neuronal cells and are thus over-represented in the dataset.
-
-Inasmuch as she was focusing on brain tissue, enzymatic dissociation in particular, was not optimal but rather her custom Drop-seq nuclei purification was better. Previous research from other labs has shown that individual nuclei offer sufficient transcripts to define broad cell classes in adult human brain and the mouse hippocampus and this recent dissertation adds to that body of literature.
+So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as for example the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. The main difference is that nuclei are more resistant to mechanical force and can be better isolated from frozen tissue without the use of enzymes compared to single-cells{cite}`Krishnaswami2016`. For a case study which compares single-cell and single-nuclei we recommend reading "Single-nucleus and single-cell transcriptomes compared in matched cortical cell types"{cite}`Bakken2018`. Both options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
+The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the sample of tissue type. Data analysis however should be aware of the fact that the dissociation ability will have a strong effect on the potentially observable cell types. This effect depends on the sample or tissue and we strongly encourage discussions between wetlab and drylab scientists concerning experimental design.
 
 
 Sources:
