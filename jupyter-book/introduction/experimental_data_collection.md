@@ -1,12 +1,28 @@
-# Experimental data collection
+# A gentle introduction to single-cell RNA sequencing
 
-This chapter, which is aimed at bioinformatians, provides a short introduction to sequencing and the most widely used single-cell RNA sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data. The count distribution and gene coverage for example is heavily influenced by the chemistry of the assay.
+This chapter provides a short introduction to molecular cell biology and the most widely used single-cell RNA sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data.
 
-:::{figure-md} markdown-fig
-<img src="../_static/images/assays.png" alt="Overview of sequencing assays" class="bg-primary mb-1" width="800px">
+## The building block of life
 
-Sequencing assays overview. Image obtained from <https://www.nature.com/articles/s41592-019-0691-5> WE HAVE NO RIGHTS AND THIS NEEDS TO BE REDONE OR RECONSIDERED.
-:::
+Introducing cells
+
+what are they
+
+why do they matter
+
+how to they store information
+
+lead over to DNA & RNA
+
+## The central dogma of biology
+
+DNa and RNA in more detail
+
+Difference
+
+Where do proteins come into play
+
+Why are we interested in sequencing in the first place?
 
 ## A brief history of sequencing
 
@@ -17,7 +33,7 @@ Although DNA was already first isolated in 1869 by Friedrich Mietscher it took t
 Strengths:
 
 * Sanger sequencing is simple and does not require expensive machines.
-* If done well, the error rate is very low.
+* If done correctly, the error rate is very low.
 
 Limitations:
 
@@ -25,7 +41,7 @@ Limitations:
 * The quality of a Sanger sequence is often not very good in the first 15 to 40 bases because that is where the primer binds.
 * Sequencing degrades after 700 to 900 bases.
 * If the DNA fragment being sequenced has been cloned, some of the cloning vector sequence may find its way into the final sequence.
-* Sanger sequencing is more expensive than second or third generation sequencing.
+* Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
 
 ### Second generation sequencing
 
@@ -84,19 +100,56 @@ Knowing the DNA sequence of an organism and the positions of its regulatory elem
 
 Sequencing of RNA can at large be conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing). Mixing the RNA of all cells is in most cases cheaper and easier than the experimentally complex single-cell sequencing. Bulk RNA-Seq results in cell averaged expression profiles which are generally easier to analyze, but also hide some of the complexity which may help answering the question of interest. For example, some drugs or perturbations may affect only specific cell types or interactions of cell types. To uncover such relation ships it is vital to examine gene expression on a single-cell level. Single-cell RNA-Seq (scRNA-Seq) does however come with several caveats. First, the experiments are generally more expensive and more difficult to properly conduct. Second, the downstream analysis becomes more complex due to the increased resolution and it is easier to draw false conclusions.
 
-A single-cell experiment generally speaking follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations. Just like bulk sequencing, single-cell sequencing requires cell isolation, lysis, reverse transcription, amplification and the eventual sequencing. In addition, a physical separation into smaller reaction chambers or another form of cell labeling is required to later be able to map the obtained transcriptomes back to the cells of origin. Hence, these are also the step where most single-cell assays differ: single-cell isolation, transcript amplification and sequencing. Currently, three types of single-cell sequencing protocols exist which are grouped primarily by their cell isolation protocols: Microfluidic device based strategies where cells are encapsulated into hydrogel droplets, well plate based assays where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. The three approaches differ in their ability to recover transcripts, the number of sequenced cells and many other aspects. In the following subsections we will briefly discuss how they work, their strengths and weaknesses and possible biases that data analysts should be aware of when analyzing data of the respective assays.
+A single-cell experiment generally speaking follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations. Just like bulk sequencing, single-cell sequencing requires cell isolation, lysis, reverse transcription, amplification and the eventual sequencing. In addition, a physical separation into smaller reaction chambers or another form of cell labeling is required to later be able to map the obtained transcriptomes back to the cells of origin. Hence, these are also the step where most single-cell assays differ: single-cell isolation, transcript amplification and sequencing. Currently, three types of single-cell sequencing protocols exist which are grouped primarily by their cell isolation protocols: Microfluidic device based strategies where cells are encapsulated into hydrogel droplets, well plate based protocols where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. The three approaches differ in their ability to recover transcripts, the number of sequenced cells and many other aspects. In the following subsections we will briefly discuss how they work, their strengths and weaknesses and possible biases that data analysts should be aware of when analyzing data of the respective protocols.
 
 #### Microfluidic device based
 
-Microfluidic device based single-cell assays 
+Microfluidic device based single-cell protocols trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`Macosko2015` and the commercial 10x Genomics Chromium{cite}`Zheng2017` are able to perform this process several thousand times per second. This massively parallel process generates very high numbers of droplets for a relatively low cost. Although all three protocols differ in details, the nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously. The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b base pair long unique molecular identifier (UMI - see below) and a poly-T tail. Upon lysis the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached on the beads. Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs). This is followed by PCR and reverse transcription to capture and amplify the transcripts. Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached. This process results in sequencing libraries that are ready for sequencing as described above. In microfluidic based protocols only about 10% of the transcripts of the cell are recovered{cite}`Islam2014`. Notably, this low sequencing is sufficient for robust identification of cell types.
+
+All three microfluidic device based methods result in characteristic biases. The material of the used beads differ between the protocols. Drop-seq uses brittle resin for the beads and therefore the beads are encapsulated with a Poisson distribution, whereas the InDrop and 10X Genomics beads are deformable resulting in bead occupancies of over 80%{cite}`Zhang2019`. Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers which are released with photocleavage and 10X genomics dissolves the beads. This disparity also affects the location of the reverse transcription process. In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols{cite}`Zhang2019`.
+
+A comparison from Zhang et al. in 2019 uncovered that inDrop and Drop-seq are outperformed by 10X Genomics with respect to bead quality. The cell barcodes in the former two systems contained obvious mismatches. Moreover, the proportion of reads originating from valid barcodes was 75% for 10X Genomics compared to only 25% for InDrop and 30% for Drop-seq. Similar advantages were demonstrated for 10X Genomics regarding sensitivity. During their comparison, 10X Genomics captured about 17000 transcripts from 3000 genes on average compared to 8000 transcripts from 2500 genes for Drop-seq and 2700 transcripts from 1250 genes for InDrop. Further, technical noise was lowest for 10X Genomics followed by Drop-seq and InDrop{cite}`Zhang2019`.
+
+The actual generated data demonstrated large protocol biases. 10X Genomics favored the capture and amplification of shorter genes and genes with higher GC content. Drop-seq in comparison preferred genes with lower GC content. While 10X Genomics was shown to outperform the other protocols in various aspects, it is also about twice as expensive per cell. Moreover, with the exception of the beads, Drop-seq is open-source and the protocol can more easily be adapted if required. InDrop is completely open-sourced where even the beads can be manufactured and modified in labs. Hence, InDrop is the most flexible of the three protocols.
+
+Strengths:
+
+* Allows for the cost efficient sequencing of many cells to identify the overall composition of a tissue or the identification of rare cell types.
+* UMIs can be incorporated.
+
+Limitations:
+
+* Low detection rates of transcripts compared to other methods.
+* Captures 3' only and not full transcripts because the cell barcodes and PCR handles are only added to the end of the transcript.
 
 #### Plate based
 
-#### Fluidigm microfluidic based
+Plate based protocols typically separate the cells physically into well plates. The first step entails cell sorting using, for example, fluorescent-activated cell sorting (FACS) where cells are sorted according cell specific light scattering and fluorescent characteristics, or by micro pipetting. The selected cells are then placed into individual wells containing a lysis buffer where subsequently reverse transcription is carried out. This allows for several hundreds of cells to be analyzed in a single experiment with 5000 to 10000 captured genes each. The plate based sequencing protocols include, but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq and SRCB-seq. Generally, the protocols differ in their multiplexing ability.MARS-seq allows for three barcode levels, molecular, cellular and plate-level tags, for robust multiplexing capabilities. SMART-seq2 on the contrary does not allow for early multiplexing. A systematic comparison of protocols by Mereu et al in 2020 unveiled that QUARTZ-seq2 is able to capture more genes than SMART-seq2 and especially MARS-seq or SRCB-seq per cell{cite}`Mereu2020`. This allowed QUARTZ-seq2 to capture specific marker genes of cell types well allowing for confident cell type annotation.
 
-#### Other assays
+Strengths:
 
-InDrop? MARS-Seq? Cel-Seq2? Quartz-seq2
+* Recovers many genes per cell allowing for a deep characterization.
+
+Limitations:
+
+* The number of required PCR amplifications is equal to the number of sequenced cells, effectively limiting the number of sequenced cells.
+* Depending on the protocol, plate based protocols are labor intensive with many required pipetting steps leading to potential technical noise and batch effects.
+
+#### Fluidigm C1
+
+The commerical Fluidigm C1 system is a microfluidic chip which loads and separates cells into small reaction chambers in an automated manner. The CEL-seq2 and SMART-seq (version 1) protocols are using the Fluidigm C1 chips. This allows for the RNA extraction and library preparation step to be conducted together to decrease the required manual labor. However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size. This introduces a location bias. Since the amplification step is carried out on individual wells, the full-length sequencing is possible, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols. The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.y
+ 
+Strengths:
+
+* Allows for full-length transcript coverage.
+* Splicing variants and T/B cell receptor repertoire diversity can be recovered.
+
+Limitations:
+
+* Only allows for the sequencing of up to 800 cells{cite}`fluidigm`.
+* More expensive per cell than other protocols.
+
+In summary, we strongly recommend that wet lab scientist and dry lab scientists select the sequencing protocol based on the aim of the study. Is a deep characterization of a specific cell type population desired? In this case one of the plate-based methods may be more useful. On the contrary, droplet based assays will capture heterogeneous mixtures better allowing for a more broad characterization of the sequenced cells. Moreover, if money is a limiting factor, the protocol should be chose accordingly. When analyzing the data be aware of the sequencing assay specific biases. For an extensive comparison of all sequencing protocols we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al{cite}`Mereu2020`.
 
 #### UMI design
 
@@ -105,7 +158,7 @@ A critical step in any RNA-Seq sequencing run is the amplification of transcript
 #### single-cell vs single-nuclei
 
 So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as for example the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. The main difference is that nuclei are more resistant to mechanical force and can be better isolated from frozen tissue without the use of enzymes compared to single-cells{cite}`Krishnaswami2016`. For a case study which compares single-cell and single-nuclei we recommend reading "Single-nucleus and single-cell transcriptomes compared in matched cortical cell types"{cite}`Bakken2018`. Both options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
-The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the sample of tissue type. Data analysis however should be aware of the fact that the dissociation ability will have a strong effect on the potentially observable cell types. This effect depends on the sample or tissue and we strongly encourage discussions between wetlab and drylab scientists concerning experimental design.
+The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the sample of tissue type. Data analysis however should be aware of the fact that the dissociation ability will have a strong effect on the potentially observable cell types. This effect depends on the sample or tissue and we strongly encourage discussions between wet lab and dry lab scientists concerning experimental design.
 
 
 Sources:
