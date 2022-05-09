@@ -138,7 +138,7 @@ Limitations:
 #### Fluidigm C1
 
 The commerical Fluidigm C1 system is a microfluidic chip which loads and separates cells into small reaction chambers in an automated manner. The CEL-seq2 and SMART-seq (version 1) protocols are using the Fluidigm C1 chips. This allows for the RNA extraction and library preparation step to be conducted together to decrease the required manual labor. However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size. This introduces a location bias. Since the amplification step is carried out on individual wells, the full-length sequencing is possible, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols. The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.y
- 
+
 Strengths:
 
 * Allows for full-length transcript coverage.
@@ -157,18 +157,18 @@ A critical step in any RNA-Seq sequencing run is the amplification of transcript
 
 #### single-cell vs single-nuclei
 
-So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as for example the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. The main difference is that nuclei are more resistant to mechanical force and can be better isolated from frozen tissue without the use of enzymes compared to single-cells{cite}`Krishnaswami2016`. For a case study which compares single-cell and single-nuclei we recommend reading "Single-nucleus and single-cell transcriptomes compared in matched cortical cell types"{cite}`Bakken2018`. Both options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
+So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs such as, for example, the brain. During the tissue dissociation process some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. The main difference is that nuclei are more resistant to mechanical force and can be better isolated from frozen tissue without the use of enzymes compared to single-cells{cite}`Krishnaswami2016`. For a case study which compares single-cell and single-nuclei we recommend reading "Single-nucleus and single-cell transcriptomes compared in matched cortical cell types"{cite}`Bakken2018`. Both options have varying applicability across tissues and sample types and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
 The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the sample of tissue type. Data analysis however should be aware of the fact that the dissociation ability will have a strong effect on the potentially observable cell types. This effect depends on the sample or tissue and we strongly encourage discussions between wet lab and dry lab scientists concerning experimental design.
 
+## Recommended reading
 
-Sources:
+To get a more elaborate understanding of the assays we recommend the following papers:
 
-* <https://www.nature.com/articles/s41576-019-0093-7>
-* The paper that helped me understand experimental protocols most, but only very old methods: (Ziegenhain et al. 2017)
-* Short, and broad overview of now somewhat old methods: (Svensson et al. 2017) -> <https://www.nature.com/articles/nmeth.4220>
-* More recent comparison of methods that are probably more relevant: (Mereu et al. 2020) -> <https://www.nature.com/articles/s41587-020-0469-4>
-* Guidelines for the experimental design of single-cell RNA sequencing studies: (Lafzi et al. 2018)
-* 10x vs SMART comparison -> <https://www.sciencedirect.com/science/article/pii/S1672022921000486>
+* Comparative Analysis of Single-Cell RNA Sequencing Methods{cite}`Ziegenhain2017`
+* Power analysis of single-cell RNA-sequencing experiments{cite}`Svensson2017`
+* Guidelines for the experimental design of single-cell RNA sequencing studies{cite}`Lafzi2018`
+* Benchmarking single-cell RNA-sequencing protocols for cell atlas projects{cite}`Mereu2020`
+* Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2{cite}`Wang2021`
 
 ## References
 
