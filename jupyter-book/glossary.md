@@ -1,6 +1,7 @@
 # Glossary
 
 ```{glossary}
+Algorithms
 Algorithm
     A pre-defined set of instructions to solve a problem.
 
@@ -18,6 +19,9 @@ Benchmark
 
 Bulk RNA sequencing
     bla
+
+Cell
+    bleb
 
 Cell barcode
     bla
@@ -43,11 +47,17 @@ Demultiplexing
 Digital counting
     yes
 
+DNA
+    bla
+
 Doublets
     lel
 
 Dropout
     yes
+
+Drop-seq
+    bleb
 
 FASTQ reads
     fs
@@ -60,6 +70,9 @@ Imputation
 
 Index sorting
     lul
+
+Indrop
+    ble
 
 Library
     ef
@@ -105,4 +118,7 @@ Unique Molecular Identifier (UMI)
 
 Zero-inflated data
     lul
+
+10X Genomics
+    write sth about company & assay
 ```

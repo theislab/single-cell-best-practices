@@ -4,9 +4,26 @@ This chapter provides a short introduction to molecular cell biology and the mos
 
 ## The building block of life
 
-Introducing cells
+Although there is no consensus regarding the definition of life in the philosophic nor the scientific communities, most of them involve cells in some form. The scientific community tends to define life as a property of organisms as open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, organize themselves and are composed of cells. Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities. It could not exist without the fundamental building blocks of life - cells. Cells, the tiniest units of life, were first discovered in 1665 by the British scientist Robert Hooke. Although only equipped with a very rudimentary microscope, Hooke investigated a thin slice of cork and to his surprise noticed that the slice appeared to resemble a honeycomb.
 
-what are they
+:::{figure-md} markdown-fig
+<img src="../_static/images/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
+
+Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
+:::
+
+Hooke named these tiny units 'cells'. In 1839, Matthias Jakob Schleiden and Theodor Schwann first described the Cell Theory which describes that all living organism are made up of cells, which act as functional units, that by themselves origin from other cells. Hence, cells are also the basic units of reproduction. Since the mid-nineteenth century, when cell theory was first defined, the definition has been extended to further require energy flow within cells, heredity information in the form of {term}`DNA` (see below) being passed from earlier to later cells and all cells having the same chemical composition.
+Generally, we consider two types of cells, eukaryotic cells which contain a nucleus and prokaryotic cells that only have a nucleoid region, but no nucleus. As a result, eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms.  Eukaryotic cells further distinguish themselves from prokaryotic cells by their high degree of compartimentalization. Membrane-bound organelles, the compartments, provide crucial support for the cells. Among them is the cell nucleus which hosts the cells' {term}`DNA` and is also the reason for the eukaryotes' name: *Nucleus* is Latin for kernel or seed.
+
+NEED SOME CELL IMAGE HERE
+
+Compared to prokaryotic cells, eukaryotic cells have about 10000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments. To replicate and to keep the life cycle going, the cells need 
+
+
+
+Eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by a microtubular spindle during nuclear division. 
+
+
 
 why do they matter
 
