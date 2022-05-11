@@ -2,25 +2,18 @@
 
 Warning: This project and repository is under heavy development. We will tell you when it is ready.
 
-![image](https://drive.google.com/uc?export=view&id=1YoX3F8gNGH5K0AFu4wFdd5ccEXT-mP_J)
+## Mission
 
-This repository is complementary to the publication:
+We are writing a book on the current single-cell analysis best-practices with extensive tutorials and code examples.
 
-M.D. Luecken, F.J. Theis, "Current best practices in single-cell RNA-seq analysis: a tutorial", Molecular Systems Biology 15(6) (2019): e8746
-
-The paper was recommended on F1000 prime as being of special significance in the field.
-
-<a href="https://f1000.com/prime/736010853?bd=1 &ui=150648 " target="_blank"><img src="https://s3.us-east-1.amazonaws.com/cdn.f1000.com/images/badges/badgef1000.gif" alt="Access the recommendation on F1000Prime" id="bg" /></a>
-
-The corresponding book is hosted [here](https://github.com/theislab).
+The corresponding book is currently not hosted anywhere yet, but we will provide a very limited version very soon.
 
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](contributing.md) for further instructions.
+Please read [contributing](https://github.com/theislab/extended-single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
 
-In case of questions or issues, please get in touch by posting an issue in this repository.    
-If the materials in this repository are of use to you, please consider citing our above publications.
+In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Adapting the notebooks to other datasets:
 
