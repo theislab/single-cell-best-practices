@@ -16,36 +16,9 @@ We maintain our own container at [this repository](https://github.com/theislab/s
 These instructions will be updated as soon as the container has regular releases.
 For now:
 
-1. Clone this repository.
+Follow: https://github.com/theislab/extended-single-cell-best-practices-container/
 
-   ```bash
-   git clone https://github.com/theislab/extended-single-cell-best-practices/
-   ```
-
-2. Please ensure that you have docker installed and available on your system.
-3. Download the container and start it.
-
-   ```bash
-   bash download_container.sh
-   docker run --interactive --tty --name sc_best_practice_book_211119 --publish 8888-8892:8888-8892 --volume $HOME:/root/host_home --workdir /root sc_best_practice_book:211119 /bin/bash
-   ```
-
-4. Once you are done with your container session, you have two options:
-4.1 You can either discard the container with the command below and start over with a clean container the next time using the docker run command from step 3.
-
-```bash
-docker rm sc_best_practice_book_211119
-```
-
-4.2 Alternatively, you can choose to not remove the container and reuse it in you next session. It will look exactly as you left it with additional packages installed etc. To reuse the container:
-
-```
-docker start -i sc_best_practice_book_211119
-```
-
-### Downloading the data
-
-TODO
+Note: This container is very big and complex. It has 90% of the packages that are required to build the respective notebooks. We are working on new solutions for the notebook environments in the future, because cramming everything into a single container does not really work out.
 
 ## Executing the notebooks
 
@@ -84,8 +57,6 @@ To clean the build directory run:
 ```bash
 make clean
 ```
-
-Note that this will require the execution of all notebooks to rebuild the book.
 
 ## Contributing new best-practices, tutorials, quizzes and solutions
 
