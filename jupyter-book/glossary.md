@@ -89,6 +89,9 @@ Negative binomial distribution
 Pipeline
     safd
 
+RNA
+    Ribonucleic acid. Single-stranded nucleic acid present in all living cells 
+
 Poisson distribution
     sdf
 
