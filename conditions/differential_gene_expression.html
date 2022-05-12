@@ -1,0 +1,2355 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>11. Differential gene expression analysis of human COVID-19 PBMCs &#8212; Extended single-cell analysis tutorial</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/book.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="12. Modeling mechanisms introduction" href="../mechanisms/introduction.html" />
+    <link rel="prev" title="10. Dealing with conditions introduction" href="introduction.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Extended single-cell analysis tutorial</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/experimental_data_collection.html">
+   2. A gentle introduction to single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Computational single-cell analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/data_infrastructure.html">
+   5. Data infrastructure
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   6. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/introduction.html">
+   7. Preprocessing &amp; visualization introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with batch effects
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../batch_effects/introduction.html">
+   8. Dealing with batch effects introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Interpreting cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/introduction.html">
+   9. Interpreting cellular structure introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   10. Dealing with conditions introduction
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   11. Differential gene expression analysis of human COVID-19 PBMCs
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/introduction.html">
+   12. Modeling mechanisms introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/introduction.html">
+   13. Deconvolution introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Spatial omics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/introduction.html">
+   14. Spatial omics introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Multi-omics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multi_omics/introduction.html">
+   15. Multi-omics introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   16. Reproducibility introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   17. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   18. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/conditions/differential_gene_expression.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/theislab/extended-single-cell-tutorial"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/theislab/extended-single-cell-tutorial/issues/new?title=Issue%20on%20page%20%2Fconditions/differential_gene_expression.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/theislab/extended-single-cell-tutorial/edit/master/conditions/differential_gene_expression.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/theislab/extended-single-cell-tutorial/master?urlpath=tree/conditions/differential_gene_expression.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-setup">
+   11.1. Environment setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preparing-the-covid-19-pbmc-dataset">
+   11.2. Preparing the COVID-19 PBMC dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#edger">
+   11.3. edgeR
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#notes-on-edger">
+     11.3.1. Notes on edgeR:
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mast-re">
+   11.4. MAST-RE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   11.5. Key Takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quiz">
+   11.6. Quiz
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   11.7. References
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="differential-gene-expression-analysis-of-human-covid-19-pbmcs">
+<h1><span class="section-number">11. </span>Differential gene expression analysis of human COVID-19 PBMCs<a class="headerlink" href="#differential-gene-expression-analysis-of-human-covid-19-pbmcs" title="Permalink to this headline">¶</a></h1>
+<p>This chapter is a more detailed continuation of the Annotation subchapter which already introduced differential gene expression (DGE) as a tool to annotate clusters with cell types.
+Here, we focus on more advanced use-cases of differential gene expression testing on more complex experimental designs which involve one or more conditions such as diseases, genetic knockouts or drugs.
+In such cases we are commonly interested in the magnitude and significance of differences in gene expression patterns between the condition of interest and a reference. This reference can be everything but is commonly a healthy sample. This statistical test can be applied to arbitrary groups, but in the case of single-cell RNA-Seq is commonly applied on the cell type level.</p>
+<p>The outcome of such an analysis could be genesets which effect and potentially  explain any observed phenotypes. These genesets can then be examined more closely with respect to, for example, affected pathways or induced cell cell communication changes.</p>
+<p>A differential gene expression test usually returns the log2 fold-change and the adjusted p-value per compared genes per compared conditions. This list can then be sorted by p-value and investigated in more detail.</p>
+<p>The popular student’s t-test is one way of conducting such a test. However, it fails to take several single-cell RNA-seq peculiarities into account such as the the excess number of zeros originating from dropouts or the need for complex experimental designs. More specifically, very rarely does one have sufficient sample numbers to accurately estimate the variance without pooling information across genes. Moreover, raw counts are never an absolute measurements of expression for a specific gene within a given sample. The actual read number per gene depends on the efficiency of the library preparation, the amount of contamination from non-coding transcripts and the sequencing depth. It does therefore lack in both, sensitivity and specificity for single-cell RNA-seq, let alone experimental design flexibility.</p>
+<p>As a result, differential gene expression testing is a classic bioinformatics problem which has been tackled by many tools already. Generally, the problem is currently being approached from two views, the sample-level view where expression is aggregated to create “pseudobulks” and then analysed with methods originally designed for bulk expression samples such as edgeR<span id="id1">[<a class="reference internal" href="#id74">Robinson <em>et al.</em>, 2010</a>]</span> or DEseq2<span id="id2">[<a class="reference internal" href="#id75">Love <em>et al.</em>, 2014</a>]</span> and the cell-level view where cells are modeled individually using generalized mixed effect models such as MAST<span id="id3">[<a class="reference internal" href="#id76">Finak <em>et al.</em>, 2015</a>]</span> or glmmTMB<span id="id4">[<a class="reference internal" href="#id77">Brooks <em>et al.</em>, 2017</a>]</span>. The consensus and robustness across datasets for DGE tools is low5,6. As previously described, although single-cell data contains technical noise artifacts such as dropout, zero-inflation and high cell-to-cell variability7,8,9, methods designed for bulk RNA-seq data performed favorably compared to methods explicitly designed for scRNA-seq data<span id="id5">[<a class="reference internal" href="#id78">Das <em>et al.</em>, 2021</a>]</span>,<span id="id6">[<a class="reference internal" href="#id79">Soneson and Robinson, 2018</a>]</span>,<span id="id7">[<a class="reference internal" href="#id80">Jaakkola <em>et al.</em>, 2016</a>]</span>,<span id="id8">[<a class="reference internal" href="#id81">Squair <em>et al.</em>, 2021</a>]</span>. Single-cell specific methods were found to be especially prone to wrongly labeling highly expressed genes as differentially expressed12.</p>
+<p>A recent study highlighted the issue of pseudoreplication where inferential statistics is applied to biological replicates which are not statistically independent. Failing to account for the inherent correlation of replicates (cells from the same individual) inflates the false discovery rate (FDR)<span id="id9">[<a class="reference internal" href="#id81">Squair <em>et al.</em>, 2021</a>]</span>,<span id="id10">[<a class="reference internal" href="#id83">Zimmerman <em>et al.</em>, 2021</a>]</span>,<span id="id11">[<a class="reference internal" href="#id84">Junttila <em>et al.</em>, 2022</a>]</span>. Therefore, batch effect correction or the aggregation of cell-type-specific expression values within an individual through either a sum, mean or random effect per individual, that is pseudobulk generation, should be applied prior to DGE analysis to account for within-sample correlations13. Generally, both, pseudobulk methods with sum aggregation such as edgeR, DESeq2, or Limma<span id="id12">[<a class="reference internal" href="#id85">Ritchie <em>et al.</em>, 2015</a>]</span> and mixed models such as MAST with random effect setting were found to be superior compared to naive methods, such as the popular Wilcoxon rank-sum test or Seurat’s16 latent models, which do not account for them<span id="id13">[<a class="reference internal" href="#id84">Junttila <em>et al.</em>, 2022</a>]</span>.</p>
+<p>Hence, in this notebook, we demonstrate how to use two tools for DE analysis: edgeR with a quasi likelihood test and MAST with random effects. Since both edgeR and MAST are implemented in R, we use the anndata2ri package to be able to simultaneously work with AnnData objects in Python and SingeCellExperiment objects in R.</p>
+<p>We use a publically available dataset of nearly 100,000 human PBMCs in this analysis, which contains healthy donors as well as COVID-19 patients<span id="id14">[<a class="reference internal" href="#id82">Schulte-Schrepping <em>et al.</em>, 2020</a>]</span>.</p>
+<div class="section" id="environment-setup">
+<h2><span class="section-number">11.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
+<span class="kn">import</span> <span class="nn">anndata2ri</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface_lib</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+library(edgeR)
+library(MAST)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="preparing-the-covid-19-pbmc-dataset">
+<h2><span class="section-number">11.2. </span>Preparing the COVID-19 PBMC dataset<a class="headerlink" href="#preparing-the-covid-19-pbmc-dataset" title="Permalink to this headline">¶</a></h2>
+<p>The dataset we will be looking at in this notebook comes from a study that examined differences in mild and severe cases of COVID-19. The data contains human single-cell data from two reasearch institue, one in Berlin and one in Bonn. The original dataset has mass cytometry (CyTOF), droplet-based single-cell RNA-sequencing (scRNA-seq), multi-color flow cytometry (MCFC) and microwell-based scRNA-seq  measuremenets, but we concentrate our analysis on droplet-based scRNA-seq data so we limit our analysis to the Berlin cohort. This subset contains almost 100,000 peripheral blood mononuclear cells (PBMCs). We further subset the data to control and severe COVID-19 conditions and aim to find differentially expressed genes that are specific for this particular condition. The authors of the paper identified that monocytes and granulocytes undergo significant changes in severe COVID-19 cases. Therefore we additionally concentrate our analysis on those two subpopulations.</p>
+<p>First, we load the full dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;/storage/groups/ml01/workspace/anastasia.litinetskaya/bp/Schulte_Schrepping_PBMC_10X_Berlin_cohort_rnaseq.h5ad&#39;</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 99049 × 46584
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;
+    uns: &#39;X_name&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will need to work with raw counts so we check that <code class="docutils literal notranslate"><span class="pre">.X</span></code> indeed contains raw counts and put them into the <code class="docutils literal notranslate"><span class="pre">counts</span></code> layer of our AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>49066.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Afterwards, we need to subset the full data to our conditions of interest. We also create cleaner metadata names.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;group_per_sample&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_identity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;hemato.labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;control&#39;</span><span class="p">,</span> <span class="s1">&#39;severe&#39;</span><span class="p">])]</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 80854 × 46584
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;
+    uns: &#39;X_name&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;, &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also restrict our control samples to one study (Reyes et al., Nat Med, 2020)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;control&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;experiment&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Reyes et al., Nat Med, 2020&#39;</span><span class="p">))]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>After subsetting, we have 19 control and 10 disease patients.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;severe&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;control&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19
+</pre></div>
+</div>
+</div>
+</div>
+<p>We filter cells which have less than 200 genes and genes which were found in less than 3 cells for a rudimentary quality control.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trying to set attribute `.obs` of view, copying.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 63725 × 27377
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;
+    var: &#39;n_cells&#39;
+    uns: &#39;X_name&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;, &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="edger">
+<h2><span class="section-number">11.3. </span>edgeR<a class="headerlink" href="#edger" title="Permalink to this headline">¶</a></h2>
+<p>edgeR is a differential gene expression testing tool implemented in R which was initially designed for bulk gene expression data. It implements a wide range of statistical methodology based on the negative binomial distribution, empirical Bayes estimation, exact tests, generalized linear models (GLMs) and quasi-likelihood tests.</p>
+<p>For more details please read the original publication<span id="id15">[<a class="reference internal" href="#id74">Robinson <em>et al.</em>, 2010</a>]</span>.</p>
+<p>Here, we will be using the quasi likelihood test because it accounts for the uncertainty of the dispersion estimates. In contrast, the exact test assumes that the estimated dispersion is the true value, which can result in some inaccuracy. Additionally, the quasi likelihood GLMs are more flexible when it comes to experimental design.</p>
+<p>Since edgeR was introduced as a method for DE analysis for bulk data, we first need to create pseudo-bulk samples from our single-cell dataset. For each patient we create 3 pseudo-replicates with approximately the same numbder of cells by sampling without replacement. We repeat the gene filtering step for each of the conditions because we do not know if zeros in the count matrix are true zeros or results of drop-outs. We would not be able to draw meaningful conclusions about biological differences for genes that are expressed in one condition and not expressed in the other.</p>
+<p>The final design matrix for our experiment is then <code class="docutils literal notranslate"><span class="pre">~</span> <span class="pre">condition</span> <span class="pre">+</span> <span class="pre">donor</span></code> to account for patient variability. We strongly recommend to read this guide <a class="reference external" href="https://f1000research.com/articles/9-1444">https://f1000research.com/articles/9-1444</a> on design matrices.</p>
+<p>First, we repeat the filtering step for each condition separately.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">severe</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;severe&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">control</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;control&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">severe</span><span class="p">,</span> <span class="n">control</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(AnnData object with n_obs × n_vars = 30071 × 27377
+     obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;
+     var: &#39;n_cells&#39;
+     uns: &#39;X_name&#39;
+     obsm: &#39;PCA&#39;
+     layers: &#39;logcounts&#39;, &#39;counts&#39;,
+ AnnData object with n_obs × n_vars = 33654 × 27377
+     obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;
+     var: &#39;n_cells&#39;
+     uns: &#39;X_name&#39;
+     obsm: &#39;PCA&#39;
+     layers: &#39;logcounts&#39;, &#39;counts&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We remove genes that are expressed in fewer than 3 cells in both groups.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">severe</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">severe</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 30071 × 22799
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;
+    var: &#39;n_cells&#39;
+    uns: &#39;X_name&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;, &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">control</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 33654 × 20000
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;
+    var: &#39;n_cells&#39;
+    uns: &#39;X_name&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;, &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we concatenate again with inner join so we are left with genes that are expressed in both groups. This is the object that we will pass to edgeR.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span> <span class="o">=</span> <span class="n">severe</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">index_unique</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">adata_pp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 63725 × 15501
+    obs: &#39;Row.names&#39;, &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nReads_RNA&#39;, &#39;nReads_ALL&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;origID&#39;, &#39;date_of_sampling&#39;, &#39;DaysAfterSample0&#39;, &#39;experiment&#39;, &#39;PoolID&#39;, &#39;sampletag&#39;, &#39;hash.ID&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;RNA_snn_res.0.4&#39;, &#39;cluster_labels_res.0.4&#39;, &#39;new.order&#39;, &#39;id.celltype&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;mapping.score&#39;, &#39;predicted.celltype.l1.COVID19.score&#39;, &#39;predicted.celltype.l1.COVID19&#39;, &#39;predicted.celltype.l2.COVID19.score&#39;, &#39;predicted.celltype.l2.COVID19&#39;, &#39;predicted.celltype.l1.citeseq.score&#39;, &#39;predicted.celltype.l1.citeseq&#39;, &#39;predicted.celltype.l2.citeseq.score&#39;, &#39;predicted.celltype.l2.citeseq&#39;, &#39;predicted.celltype.l3.citeseq.score&#39;, &#39;predicted.celltype.l3.citeseq&#39;, &#39;predicted.celltype.l1.final&#39;, &#39;predicted.celltype.l2.final&#39;, &#39;predicted.celltype.l3.final&#39;, &#39;disease_merged&#39;, &#39;ident&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;n_genes&#39;, &#39;batch&#39;
+    var: &#39;n_cells-0&#39;, &#39;n_cells-1&#39;
+    obsm: &#39;PCA&#39;
+    layers: &#39;logcounts&#39;, &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, let’s define the function we need to aggregate single cells into pseudo-replicates:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregate_and_filter</span></code> is a function that creates an AnnData object with 3 pseudo-replicates for each donor for a specified subpopulation from the original single-cell AnnData object. Here we also filter out donors that have fewer than 30 cells for the specified population.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NUM_OF_CELL_PER_DONOR</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="k">def</span> <span class="nf">aggregate_and_filter</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> 
+    <span class="n">cell_identity</span><span class="p">,</span> 
+    <span class="n">donor_key</span><span class="o">=</span><span class="s1">&#39;donor&#39;</span><span class="p">,</span> 
+    <span class="n">condition_key</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> 
+    <span class="n">cell_identity_key</span><span class="o">=</span><span class="s1">&#39;cell_identity&#39;</span><span class="p">,</span>
+    <span class="n">obs_to_keep</span><span class="o">=</span><span class="p">[],</span> <span class="c1"># which additional metadata to keep, e.g. gender, age, etc.</span>
+    <span class="n">replicates_per_patient</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># subset adata to the given cell identity</span>
+    <span class="n">adata_cell_pop</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">cell_identity_key</span><span class="p">]</span> <span class="o">==</span> <span class="n">cell_identity</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># re-filter for this cell population</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata_cell_pop</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># check which donors to keep according to the number of cells specified with NUM_OF_CELL_PER_DONOR </span>
+    <span class="n">size_by_donor</span> <span class="o">=</span> <span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">donor_key</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="n">donors_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">donor</span> <span class="k">for</span> <span class="n">donor</span> <span class="ow">in</span> <span class="n">size_by_donor</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">size_by_donor</span><span class="p">[</span><span class="n">donor</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">NUM_OF_CELL_PER_DONOR</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span> <span class="o">*</span><span class="n">obs_to_keep</span><span class="p">])</span>
+    
+    <span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">donor_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">donor_key</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">donor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">donors</span><span class="o">:=</span><span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">donor_key</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing donor </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1"> out of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">donors</span><span class="p">)</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">donor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">donors_to_drop</span><span class="p">:</span>
+            <span class="n">adata_donor</span> <span class="o">=</span> <span class="n">adata_cell_pop</span><span class="p">[</span><span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">donor_key</span><span class="p">]</span> <span class="o">==</span> <span class="n">donor</span><span class="p">]</span>
+            <span class="c1"># create replicates for each donor</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata_donor</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">replicates_per_patient</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rep_idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+                <span class="n">adata_replicate</span> <span class="o">=</span> <span class="n">adata_donor</span><span class="p">[</span><span class="n">rep_idx</span><span class="p">]</span>
+                <span class="c1"># specify how to aggregate: sum gene expression for each gene for each donor and also keep the condition information</span>
+                <span class="n">agg_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">gene</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">adata_replicate</span><span class="o">.</span><span class="n">var_names</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">obs_to_keep</span><span class="p">:</span>
+                    <span class="n">agg_dict</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;first&#39;</span>
+                <span class="c1"># create a df with all genes, donor and condition info</span>
+                <span class="n">df_donor</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adata_replicate</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>
+                <span class="n">df_donor</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adata_replicate</span><span class="o">.</span><span class="n">obs_names</span>
+                <span class="n">df_donor</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_replicate</span><span class="o">.</span><span class="n">var_names</span>
+                <span class="n">df_donor</span> <span class="o">=</span> <span class="n">df_donor</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">adata_replicate</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">obs_to_keep</span><span class="p">])</span>
+                <span class="c1"># aggregate</span>
+                <span class="n">df_donor</span> <span class="o">=</span> <span class="n">df_donor</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">donor_key</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">agg_dict</span><span class="p">)</span>
+                <span class="n">df_donor</span><span class="p">[</span><span class="n">donor_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">donor</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;donor_</span><span class="si">{</span><span class="n">donor</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_donor</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">donor</span><span class="p">]</span>
+        
+    <span class="c1"># create AnnData object from the df</span>
+    <span class="n">adata_cell_pop</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">var_names</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">adata_cell_pop</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">adata_cell_pop</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We might want to look at available metadata later and therefore keep it in the AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">,</span> <span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_identity&#39;</span><span class="p">,</span> <span class="s1">&#39;platform&#39;</span><span class="p">,</span> <span class="s1">&#39;purification&#39;</span><span class="p">,</span> <span class="s1">&#39;cells&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;who_per_sample&#39;</span><span class="p">,</span> <span class="s1">&#39;disease_stage&#39;</span><span class="p">,</span> <span class="s1">&#39;outcome&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to pass the raw counts to edgeR. Hence, we set <code class="docutils literal notranslate"><span class="pre">.X</span></code> to the <code class="docutils literal notranslate"><span class="pre">counts</span></code> layer to ensure the pseudo-replicates are created for raw counts.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First we run the analysis for granulocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">adata_gran</span> <span class="o">=</span> <span class="n">aggregate_and_filter</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="s1">&#39;Granulocytes&#39;</span><span class="p">,</span> <span class="n">obs_to_keep</span><span class="o">=</span><span class="n">obs_to_keep</span><span class="p">)</span>
+<span class="n">adata_gran</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 33min 9s, sys: 54.5 s, total: 34min 4s
+Wall time: 33min 36s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 75 × 13209
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The validity of differential gene expression results highly depend on the capturement of the major axis of variations in the statistical model. Intermediate data exploration steps such as principal component analysis (PCA) or multidimensional scaling (MDS) on pseudobulk samples allow for the identification of the sources of variation and thus can guide the construction of corresponding design and contrast matrices that model the data<span id="id16">[<a class="reference internal" href="#id87">Law <em>et al.</em>, 2020</a>]</span>.</p>
+<p>Failing to account for multiple sources of biological variability for experiments which include biological replicates will inflate the FDR<span id="id17">[<a class="reference internal" href="#id86">Thurman <em>et al.</em>, 2021</a>]</span>,<span id="id18">[<a class="reference internal" href="#id88">Lähnemann <em>et al.</em>, 2020</a>]</span>. While increasing the number of cells per individual increases the precision, it has a limited effect on the power for the detection of differences across individuals. Therefore, the best way to increase statistical power is to increase the number of independent experimental samples<span id="id19">[<a class="reference internal" href="#id83">Zimmerman <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Since our data has already been generated, we cannot further increase the number of independent experimental samples. Nevertheless, we will now explore our data to determine the major axes of variation to properly generate our design matrices.</p>
+<p>We perform very basic EDA on the created pseudo-replicates to check if some patients/pseudobulks are outliers that we need to exclude not to bias the DE results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_gran</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set categorical metadata to be indeed categorical</span>
+<span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+<span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we look at created pseudo-replicates on a PCA plot and color by all the available metadata to see if there are any confounding factors that we might want to include in the design matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_gran</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s1">&#39;on data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;cell_identity&#39; as categorical
+... storing &#39;platform&#39; as categorical
+... storing &#39;purification&#39; as categorical
+... storing &#39;cells&#39; as categorical
+... storing &#39;age&#39; as categorical
+... storing &#39;sex&#39; as categorical
+... storing &#39;disease_stage&#39; as categorical
+... storing &#39;outcome&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_49_1.png" src="../_images/differential_gene_expression_49_1.png" />
+</div>
+</div>
+<p>There are two outliers in the severe group, namely the donors with labels <code class="docutils literal notranslate"><span class="pre">C19-CB-0009</span></code> and <code class="docutils literal notranslate"><span class="pre">C19-CB-0008</span></code>. We exclude them from further analysis.</p>
+<p>Additionally, the first principal component seems to be confounded by variation that is not captured by any of the known metadata, so we do not include any additional factors other than donor information into the design matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exclude outliers</span>
+<span class="n">adata_gran</span> <span class="o">=</span> <span class="n">adata_gran</span><span class="p">[</span><span class="o">~</span><span class="n">adata_gran</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;C19-CB-0009&#39;</span><span class="p">,</span> <span class="s1">&#39;C19-CB-0008&#39;</span><span class="p">])]</span>
+<span class="n">adata_gran</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 69 × 13209
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;
+    uns: &#39;pca&#39;, &#39;donor_colors&#39;, &#39;condition_colors&#39;, &#39;cell_identity_colors&#39;, &#39;platform_colors&#39;, &#39;purification_colors&#39;, &#39;cells_colors&#39;, &#39;age_colors&#39;, &#39;sex_colors&#39;, &#39;disease_stage_colors&#39;, &#39;outcome_colors&#39;
+    obsm: &#39;X_pca&#39;
+    varm: &#39;PCs&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we are finally ready to run the edgeR pipeline. We define a separate function:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">find_de_edgeR</span></code> takes a SingleCellExperiment object as input and runs standard edgeR pipeline. The function returns a new SingleCellExperiment object which contains results of the analysis, e.g. log-fold change and p-value for each gene, an edgeR object of class DGEList, the table with results for each gene and the fitted GLM.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+find_de_edgeR &lt;- function(adata_){
+    # create an edgeR object with counts and grouping factor
+    y &lt;- DGEList(assay(adata_, &quot;X&quot;), group = colData(adata_)$condition)
+    # filter out genes with low counts
+    print(&quot;Dimensions before subsetting:&quot;)
+    print(dim(y))
+    print(&quot;&quot;)
+    keep &lt;- filterByExpr(y)
+    y &lt;- y[keep, , keep.lib.sizes=FALSE]
+    print(&quot;Dimensions after subsetting:&quot;)
+    print(dim(y))
+    print(&quot;&quot;)
+    y &lt;- calcNormFactors(y)
+    # create a design matrix: here we have multiple donors so also consider that in the design matrix
+    design &lt;- model.matrix(~ colData(adata_)$condition + colData(adata_)$donor)
+    # when we have both condition and donor information in the design matrix, it becomes not full rank
+    # i.e. sum over condition columns minus sum over donor columns = 0
+    # so we remove the last column so the matrix has full rank again
+    design &lt;- design[,-ncol(design)]
+    print(&quot;Head of the design matrix after removing the last column:&quot;)
+    print(head(design))
+    print(&quot;&quot;)
+    y &lt;- estimateDisp(y, design = design)
+    fit &lt;- glmQLFit(y, design)
+    # here we have two conditions and interested in differences between them, so look at the corresponding coefficient
+    qlf &lt;- glmQLFTest(fit, coef=2)
+    # get all of the DE genes and calculate Benjamini-Hochberg adjusted FDR
+    tt &lt;- topTags(qlf, n = Inf)
+    print(&quot;Head of the table with the test results:&quot;)
+    print(head(tt))
+    counts = data.matrix(tt$table)
+    res = SingleCellExperiment(assays = list(counts = counts))
+    
+    return(list(&quot;sc&quot; = as(res, &#39;SingleCellExperiment&#39;), &quot;y&quot; = y, &quot;tt&quot; = tt, &quot;qlf&quot; = qlf, &quot;design&quot; = design))
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">adata_gran</span> <span class="o">-</span><span class="n">o</span> <span class="n">outputs</span>
+<span class="n">outputs</span> <span class="o">&lt;-</span> <span class="n">find_de_edgeR</span><span class="p">(</span><span class="n">adata_gran</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;Dimensions before subsetting:&quot;
+[1] 13209    69
+[1] &quot;&quot;
+[1] &quot;Dimensions after subsetting:&quot;
+[1] 1103   69
+[1] &quot;&quot;
+[1] &quot;Head of the design matrix after removing the last column:&quot;
+  (Intercept) colData(adata_)$conditionsevere colData(adata_)$donorC19-CB-0013
+1           1                               1                                0
+2           1                               1                                0
+3           1                               1                                0
+4           1                               1                                1
+5           1                               1                                1
+6           1                               1                                1
+  colData(adata_)$donorC19-CB-0016 colData(adata_)$donorC19-CB-0020
+1                                0                                0
+2                                0                                0
+3                                0                                0
+4                                0                                0
+5                                0                                0
+6                                0                                0
+  colData(adata_)$donorC19-CB-0021 colData(adata_)$donorC2P01H
+1                                0                           0
+2                                0                           0
+3                                0                           0
+4                                0                           0
+5                                0                           0
+6                                0                           0
+  colData(adata_)$donorC2P05F colData(adata_)$donorC2P07H
+1                           0                           0
+2                           0                           0
+3                           0                           0
+4                           0                           0
+5                           0                           0
+6                           0                           0
+  colData(adata_)$donorC2P10H colData(adata_)$donorC2P15H
+1                           0                           0
+2                           0                           0
+3                           0                           0
+4                           0                           0
+5                           0                           0
+6                           0                           0
+  colData(adata_)$donorC2P16H colData(adata_)$donorC2P19H
+1                           0                           0
+2                           0                           0
+3                           0                           0
+4                           0                           0
+5                           0                           0
+6                           0                           0
+  colData(adata_)$donorP02H colData(adata_)$donorP04H colData(adata_)$donorP06F
+1                         0                         0                         0
+2                         0                         0                         0
+3                         0                         0                         0
+4                         0                         0                         0
+5                         0                         0                         0
+6                         0                         0                         0
+  colData(adata_)$donorP07H colData(adata_)$donorP08H colData(adata_)$donorP09H
+1                         0                         0                         0
+2                         0                         0                         0
+3                         0                         0                         0
+4                         0                         0                         0
+5                         0                         0                         0
+6                         0                         0                         0
+  colData(adata_)$donorP13H colData(adata_)$donorP15F colData(adata_)$donorP17H
+1                         0                         0                         0
+2                         0                         0                         0
+3                         0                         0                         0
+4                         0                         0                         0
+5                         0                         0                         0
+6                         0                         0                         0
+  colData(adata_)$donorP18F
+1                         0
+2                         0
+3                         0
+4                         0
+5                         0
+6                         0
+[1] &quot;&quot;
+[1] &quot;Head of the table with the test results:&quot;
+Coefficient:  colData(adata_)$conditionsevere 
+           logFC   logCPM        F       PValue          FDR
+RPS27  -2.935878 14.33177 689.9482 2.077870e-36 2.291891e-33
+RPS17  -5.692482 11.90703 639.9099 1.951287e-35 1.076135e-32
+RPL36A -4.874053 11.53996 624.7457 3.970014e-35 1.459642e-32
+RPL31  -3.246269 12.24266 544.5074 2.255233e-33 6.218805e-31
+RPS29  -2.645442 13.23716 483.7886 6.951806e-32 1.533568e-29
+RPL21  -2.505256 13.44972 463.2946 2.410828e-31 4.431906e-29
+CPU times: user 15.3 s, sys: 21.8 s, total: 37 s
+Wall time: 14.7 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o res_gran
+res_gran &lt;- outputs$sc
+y &lt;- outputs$y
+tt &lt;- outputs$tt
+qlf &lt;- outputs$qlf
+design &lt;- outputs$design
+</pre></div>
+</div>
+</div>
+</div>
+<p>One can also test for genes that are differentially expressed for a provided coefficient or contrast relative to a specified fold-change using <code class="docutils literal notranslate"><span class="pre">glmTreat</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+fit &lt;- glmQLFit(y, design)
+tr &lt;- glmTreat(fit, coef=2, lfc=1.5)
+print(head(topTags(tr)))
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Coefficient:  colData(adata_)$conditionsevere 
+           logFC unshrunk.logFC   logCPM       PValue          FDR
+RPS17  -5.692482      -5.718189 11.90703 2.415194e-28 2.663959e-25
+RPL36A -4.874053      -4.889164 11.53996 6.168954e-27 3.402178e-24
+RPS27  -2.935878      -2.936423 14.33177 8.846861e-22 3.252696e-19
+NBEAL1 -4.925705      -4.960025 10.58724 7.559164e-21 2.084440e-18
+RPL31  -3.246269      -3.249498 12.24266 1.188264e-20 2.621311e-18
+RPL17  -4.472863      -4.494509 10.50108 5.170729e-19 9.505524e-17
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we did not enter our analysis with a prior assumption that a specific gene will be up- or downregulated, we need visualizations to make sense of the DGE results. MDS plots allow for a high level overview. Commonly, we expect a separation between samples from different conditions as can be seen in the following plot for our results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotMDS(y)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_59_0.png" src="../_images/differential_gene_expression_59_0.png" />
+</div>
+</div>
+<p>Biological Coefficient of Variation (BCV) plots show the variability of every gene on average across biological groups as a function of mean expression. For example, bcv of 0.3 indicates that there is on average 30% percent variability in the expression of genes across groups.</p>
+<p>Genes with low abundace generally exhibit larger BCV as read count measurements are more uncertain for low abundance genes. On the other hand, genes with high average expression are quantified more reliably, thus they generally have lower variability and hence lower BCV. Use this plot to detect outlier genes or pinpoint other experimental factors that may need to be reflected in the design matrix. For example, a group of genes with high average expression and high BCV appearing in the top right corner of the plot can flag experimental stress, contamination etc, particularly if they belong to similar gene families.</p>
+<p>BCV is the square root of dispersion. The distance between tagwise and common bcv trend indicate if tagwise (gene-wise) dispersion estimates are highly variable (i.e. heterogenous gene expression). If tag-wise dispersion values are very heterogenous, less moderation is applied to capture heterogenity. The distance between any two points on those curves reflects how much the dispersion for a gene was shrunken towards the common trend. That is, it captures the amount of dispersion moderation applied.</p>
+<p>In the BCV plot below, we see some low abundance genes with high bcv, but no high abundance genes with high bcv, which indicates that there should not be any further experimental considerations modelled into the design matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotBCV(y)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_61_0.png" src="../_images/differential_gene_expression_61_0.png" />
+</div>
+</div>
+<p>And finally, we can see how many genes we have with FDR-corrected values of less than 0.01.</p>
+<p>The smear plot (also known as MA, M-values vs A-values, plot) shows the log fold-change of the genes as a function of their mean abundance. We generally observe higher logFC at low abundance ranges as read counts are more variable at low abundance resulting in large logFC estimates. If we fit a loess curve to logFC and Average logCPM values, the trend should center around zero. Any deviations from this can indicate that data has not been properly normalised. Genes with large mean expression and large logFC in absolute values can flag biologically interesting genes for investigation and follow-up.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotSmear(qlf, de.tags = rownames(tt$table)[which(tt$table$FDR&lt;0.01)])
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_63_0.png" src="../_images/differential_gene_expression_63_0.png" />
+</div>
+</div>
+<p>Next we repeat the same analysis for monocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">adata_mono</span> <span class="o">=</span> <span class="n">aggregate_and_filter</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="s1">&#39;Monocytes&#39;</span><span class="p">,</span> <span class="n">obs_to_keep</span><span class="o">=</span><span class="n">obs_to_keep</span><span class="p">)</span>
+<span class="n">adata_mono</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 49min 44s, sys: 1min 6s, total: 50min 51s
+Wall time: 50min 18s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 87 × 14980
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We repeat basic EDA.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_mono</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_mono</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_mono</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;donor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+<span class="n">adata_mono</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_mono</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_mono</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">adata_mono</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s1">&#39;on data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;cell_identity&#39; as categorical
+... storing &#39;platform&#39; as categorical
+... storing &#39;purification&#39; as categorical
+... storing &#39;cells&#39; as categorical
+... storing &#39;age&#39; as categorical
+... storing &#39;sex&#39; as categorical
+... storing &#39;disease_stage&#39; as categorical
+... storing &#39;outcome&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_69_1.png" src="../_images/differential_gene_expression_69_1.png" />
+</div>
+</div>
+<p>Here we do not have such clear outliers so we do not exclude any of the samples and run the analysis on all pseudo-replicates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">adata_mono</span> <span class="o">-</span><span class="n">o</span> <span class="n">outputs</span>
+<span class="n">outputs</span> <span class="o">&lt;-</span> <span class="n">find_de_edgeR</span><span class="p">(</span><span class="n">adata_mono</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;Dimensions before subsetting:&quot;
+[1] 14980    87
+[1] &quot;&quot;
+[1] &quot;Dimensions after subsetting:&quot;
+[1] 5461   87
+[1] &quot;&quot;
+CPU times: user 50.4 s, sys: 47.6 s, total: 1min 38s
+Wall time: 46.8 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o res_mono
+res_mono &lt;- outputs$sc
+y &lt;- outputs$y
+tt &lt;- outputs$tt
+qlf &lt;- outputs$qlf
+</pre></div>
+</div>
+</div>
+</div>
+<p>The MDS plot again shows a good separation between conditions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotMDS(y)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_74_0.png" src="../_images/differential_gene_expression_74_0.png" />
+</div>
+</div>
+<p>We see some low abundace genes with high bcv here. We can label those genes, but there should not be any concerns here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotBCV(y)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_76_0.png" src="../_images/differential_gene_expression_76_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+plotSmear(qlf, de.tags = rownames(tt$table)[which(tt$table$FDR&lt;0.01)])
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_77_0.png" src="../_images/differential_gene_expression_77_0.png" />
+</div>
+</div>
+<p>From these plots we can see that compared to granulocytes, we obtained a higher number of DE genes for monocytes.</p>
+<p>We can additionally visualize results with a heatmap and a volcano plot. Each row of a heatmap corresponds to a gene and each column to a single-cell. The brighter the color is the higher is the expresion of that gene in a particular cell. Since we only plot DE genes, we would like to see clear differences in expression between the two conditions. Volcano plots are often used to visualize results of statistical testing, and they show the change in expression on the x-axis (log-fold change) and statistical significance on the y-axis (FDR-corrected p-values). We color code the genes that have FDR-corrected p-value under 0.01 and log-fold change of over 1.5</p>
+<p>We need to define an additional helper funcion to clean up the results and store it in the original AnnData object. We store the output of the edgeR analysis in <code class="docutils literal notranslate"><span class="pre">.varm</span></code> where data for genes that were not used is set to <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prep_result</span><span class="p">(</span><span class="n">adata_res</span><span class="p">,</span> <span class="n">adata</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adata_res</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">adata_res</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">adata_res</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_gran</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 5 × 1083
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_mono</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 5 × 5461
+</pre></div>
+</div>
+</div>
+</div>
+<p>We store the results of the edgeR analysis in <code class="docutils literal notranslate"><span class="pre">.varm</span></code> of the preprocessed AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_granulocytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_result</span><span class="p">(</span><span class="n">res_gran</span><span class="p">,</span> <span class="n">adata_pp</span><span class="p">)</span>
+<span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_monocytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_result</span><span class="p">(</span><span class="n">res_mono</span><span class="p">,</span> <span class="n">adata_pp</span><span class="p">)</span>
+<span class="n">adata_pp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 63725 × 15501
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;n_genes&#39;, &#39;batch&#39;
+    var: &#39;n_cells-0&#39;, &#39;n_cells-1&#39;
+    varm: &#39;edgeR_granulocytes&#39;, &#39;edgeR_monocytes&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can quickly take a look of what the output table looks like. We are interested in FDR-corrected p-values that are stored in FDR column and log-fold change stored in logFC column.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_granulocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;logFC&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>logFC</th>
+      <th>logCPM</th>
+      <th>F</th>
+      <th>PValue</th>
+      <th>FDR</th>
+      <th>-logQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>S100P</th>
+      <td>6.195858</td>
+      <td>7.529244</td>
+      <td>93.680298</td>
+      <td>2.464194e-13</td>
+      <td>3.294719e-12</td>
+      <td>26.438700</td>
+    </tr>
+    <tr>
+      <th>RPS4Y1</th>
+      <td>6.130698</td>
+      <td>8.352696</td>
+      <td>83.835197</td>
+      <td>6.018926e-13</td>
+      <td>7.668820e-12</td>
+      <td>25.593859</td>
+    </tr>
+    <tr>
+      <th>CXCL8</th>
+      <td>6.025499</td>
+      <td>8.251882</td>
+      <td>70.334969</td>
+      <td>4.152945e-10</td>
+      <td>3.844137e-09</td>
+      <td>19.376717</td>
+    </tr>
+    <tr>
+      <th>FOSB</th>
+      <td>5.742328</td>
+      <td>6.841267</td>
+      <td>50.675110</td>
+      <td>2.350864e-09</td>
+      <td>1.879959e-08</td>
+      <td>17.789431</td>
+    </tr>
+    <tr>
+      <th>RETN</th>
+      <td>5.374373</td>
+      <td>8.275250</td>
+      <td>74.171013</td>
+      <td>2.945938e-12</td>
+      <td>3.467881e-11</td>
+      <td>24.084892</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>RPS17</th>
+      <td>-5.666752</td>
+      <td>11.907924</td>
+      <td>860.791321</td>
+      <td>1.487547e-38</td>
+      <td>1.611014e-35</td>
+      <td>80.113617</td>
+    </tr>
+    <tr>
+      <th>MS4A1</th>
+      <td>-5.697968</td>
+      <td>7.476444</td>
+      <td>16.463888</td>
+      <td>1.519071e-04</td>
+      <td>5.520649e-04</td>
+      <td>7.501845</td>
+    </tr>
+    <tr>
+      <th>CD79B</th>
+      <td>-5.839272</td>
+      <td>7.787713</td>
+      <td>21.559813</td>
+      <td>1.860750e-05</td>
+      <td>8.467193e-05</td>
+      <td>9.376726</td>
+    </tr>
+    <tr>
+      <th>ZNF90</th>
+      <td>-5.946415</td>
+      <td>8.487720</td>
+      <td>92.572533</td>
+      <td>1.443975e-13</td>
+      <td>1.954781e-12</td>
+      <td>26.960743</td>
+    </tr>
+    <tr>
+      <th>XIST</th>
+      <td>-7.264265</td>
+      <td>7.577901</td>
+      <td>65.271156</td>
+      <td>6.263651e-11</td>
+      <td>6.281050e-10</td>
+      <td>21.188314</td>
+    </tr>
+  </tbody>
+</table>
+<p>1083 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_monocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;logFC&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>logFC</th>
+      <th>logCPM</th>
+      <th>F</th>
+      <th>PValue</th>
+      <th>FDR</th>
+      <th>-logQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>LCN2</th>
+      <td>12.434523</td>
+      <td>6.869434</td>
+      <td>87.729362</td>
+      <td>1.598935e-13</td>
+      <td>1.781996e-12</td>
+      <td>27.053288</td>
+    </tr>
+    <tr>
+      <th>FCGR3B</th>
+      <td>11.523978</td>
+      <td>6.632944</td>
+      <td>334.420990</td>
+      <td>1.127355e-29</td>
+      <td>4.594392e-28</td>
+      <td>62.947548</td>
+    </tr>
+    <tr>
+      <th>RPS4Y1</th>
+      <td>11.438132</td>
+      <td>7.854853</td>
+      <td>572.287720</td>
+      <td>2.740433e-37</td>
+      <td>1.644561e-35</td>
+      <td>80.093002</td>
+    </tr>
+    <tr>
+      <th>SLPI</th>
+      <td>10.456722</td>
+      <td>5.332150</td>
+      <td>108.700386</td>
+      <td>4.442105e-16</td>
+      <td>6.300867e-15</td>
+      <td>32.698090</td>
+    </tr>
+    <tr>
+      <th>IFI27</th>
+      <td>10.454596</td>
+      <td>6.679850</td>
+      <td>40.995224</td>
+      <td>1.214654e-08</td>
+      <td>7.386663e-08</td>
+      <td>16.421005</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>AC245100.1</th>
+      <td>-7.732700</td>
+      <td>3.027743</td>
+      <td>108.725807</td>
+      <td>1.225134e-15</td>
+      <td>1.672614e-14</td>
+      <td>31.721804</td>
+    </tr>
+    <tr>
+      <th>ZNF90</th>
+      <td>-8.030133</td>
+      <td>6.591205</td>
+      <td>1157.500122</td>
+      <td>0.000000e+00</td>
+      <td>0.000000e+00</td>
+      <td>inf</td>
+    </tr>
+    <tr>
+      <th>NACA2</th>
+      <td>-8.513414</td>
+      <td>4.471872</td>
+      <td>379.455200</td>
+      <td>1.253660e-32</td>
+      <td>6.005471e-31</td>
+      <td>69.587463</td>
+    </tr>
+    <tr>
+      <th>GREM1</th>
+      <td>-10.651922</td>
+      <td>4.870068</td>
+      <td>888.295227</td>
+      <td>2.802597e-45</td>
+      <td>2.438259e-43</td>
+      <td>98.119873</td>
+    </tr>
+    <tr>
+      <th>SCO2</th>
+      <td>-10.748438</td>
+      <td>5.493521</td>
+      <td>1064.969604</td>
+      <td>0.000000e+00</td>
+      <td>6.165713e-44</td>
+      <td>99.494743</td>
+    </tr>
+  </tbody>
+</table>
+<p>5461 rows × 6 columns</p>
+</div></div></div>
+</div>
+<p>We normalize the data before plotting the heatmaps to see the differences in expression between two conditions better.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we define a helper plotting function for the heatmaps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">FDR</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">LOG_FOLD_CHANGE</span> <span class="o">=</span> <span class="mf">1.5</span>
+
+<span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">cell_identity</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;FDR&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">FDR</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">LOG_FOLD_CHANGE</span><span class="p">)]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="si">}</span><span class="s2"> genes...&quot;</span><span class="p">)</span>
+    <span class="n">markers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_identity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cell_identity</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">markers</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">swap_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And finally we can plot the heatmaps for granulocytes and monocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_heatmap</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;Granulocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 233 genes...
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_94_1.png" src="../_images/differential_gene_expression_94_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_heatmap</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;Monocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 662 genes...
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_95_1.png" src="../_images/differential_gene_expression_95_1.png" />
+</div>
+</div>
+<p>We can see that the differences in expressions are clearer for granulocytes than for monocytes. Because there are also differences in gene expression within the cell populations (blocks of brighter/darker columns within condition), it probably indicates some substructures in both populations that are not captured but the current cell type annotation which may be interesting to investigate further.</p>
+<p>Next, we define the helper plotting function for the volcano plots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">volcano_plot</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">genes_to_annotate</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;-logQ&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;FDR&#39;</span><span class="p">])</span>
+    <span class="n">lowqval_de</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">LOG_FOLD_CHANGE</span><span class="p">]</span>
+    <span class="n">other_de</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">LOG_FOLD_CHANGE</span><span class="p">]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">other_de</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">],</span> <span class="n">other_de</span><span class="p">[</span><span class="s1">&#39;-logQ&#39;</span><span class="p">],</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">})</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">lowqval_de</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">],</span> <span class="n">lowqval_de</span><span class="p">[</span><span class="s1">&#39;-logQ&#39;</span><span class="p">],</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;s&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">})</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;log2 FC&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;-log Q-value&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    
+    <span class="c1"># genes to annotate</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># positions</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># leave the genes that were used in the DE analysis and were present in the original data in the first place</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes_to_annotate</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">][</span><span class="n">gene</span><span class="p">]):</span> 
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;logFC&#39;</span><span class="p">][</span><span class="n">gene</span><span class="p">])</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;-logQ&#39;</span><span class="p">][</span><span class="n">gene</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">txt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;edgeR monocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_99_0.png" src="../_images/differential_gene_expression_99_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;edgeR granulocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_100_0.png" src="../_images/differential_gene_expression_100_0.png" />
+</div>
+</div>
+<p>We will investigate volcano plots in more detail later and compare them with volcano plots for MAST.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># just for me, will delete later</span>
+<span class="n">adata_pp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/storage/groups/ml01/workspace/anastasia.litinetskaya/bp/de_edgeR.h5ad&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;donor&#39; as categorical
+... storing &#39;condition&#39; as categorical
+... storing &#39;cell_identity&#39; as categorical
+... storing &#39;purification&#39; as categorical
+... storing &#39;cells&#39; as categorical
+... storing &#39;age&#39; as categorical
+... storing &#39;sex&#39; as categorical
+... storing &#39;group_per_sample&#39; as categorical
+... storing &#39;disease_stage&#39; as categorical
+... storing &#39;outcome&#39; as categorical
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="notes-on-edger">
+<h3><span class="section-number">11.3.1. </span>Notes on edgeR:<a class="headerlink" href="#notes-on-edger" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Requires raw counts as input</p></li>
+<li><p>Requires pseudo-bulks from a single-cell experiment</p></li>
+<li><p>If there are several donors in the single-cell experiment and the user wants to account for the patient varianility, we recommend creating 2 or 3 pseudo-replicates for each patient and including patient information into the design matrix</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="mast-re">
+<h2><span class="section-number">11.4. </span>MAST-RE<a class="headerlink" href="#mast-re" title="Permalink to this headline">¶</a></h2>
+<p>MAST models single-cell gene expression with a two-part generalized linear model. One part models the discrete expression rate of each gene across cells, whereas the other part models the conditional continuous expression level</p>
+<p>The MAST framework models single-cell gene expression using a two-part generalized linear model. One component of MAST models the discrete expression rate of each gene across cells, while the other component models the conditional continuous expression level (conditional on the gene being expressed).
+For more details please read the original publication<span id="id20">[<a class="reference internal" href="#id76">Finak <em>et al.</em>, 2015</a>]</span>.</p>
+<p>MAST takes normalized counts as input, so we first take the ‘counts’ layer and then perform the normalization step.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to filter out genes that are expressed in a small number of cells (3 in this case) for each subpopulation as the model needs to be able to estimate the variance for each gene.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prep_anndata</span><span class="p">(</span><span class="n">adata_</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">fix_dtypes</span><span class="p">(</span><span class="n">adata_</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adata_</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span><span class="p">))</span>
+    
+    <span class="n">adata_</span> <span class="o">=</span> <span class="n">fix_dtypes</span><span class="p">(</span><span class="n">adata_</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata_</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adata_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We again run the MAST pipeline for granulocytes and monocytes so subset the full data to two subpopulations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_gran</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_identity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Granulocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_mono</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_identity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Monocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we filter both objects as mentioned above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">adata_gran</span> <span class="o">=</span> <span class="n">prep_anndata</span><span class="p">(</span><span class="n">adata_gran</span><span class="p">)</span>
+<span class="n">adata_gran</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.77 s, sys: 527 ms, total: 2.3 s
+Wall time: 2.3 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 4185 × 16217
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;n_genes&#39;
+    var: &#39;n_cells&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">adata_mono</span> <span class="o">=</span> <span class="n">prep_anndata</span><span class="p">(</span><span class="n">adata_mono</span><span class="p">)</span>
+<span class="n">adata_mono</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 25.9 s, sys: 7.95 s, total: 33.9 s
+Wall time: 33.9 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 23615 × 22315
+    obs: &#39;donor&#39;, &#39;condition&#39;, &#39;cell_identity&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;outcome&#39;, &#39;n_genes&#39;
+    var: &#39;n_cells&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>As is the case whenever multiple statistical tests are performed, the obtained p-values for DGE tests over conditions must be corrected for multiple testing using, for example, a Benjamini-Hochberg correction<span id="id21">[<a class="reference internal" href="#id51">Luecken and Theis, 2019</a>]</span>,<span id="id22">[<a class="reference internal" href="#id89">Benjamini and Hochberg, 1995</a>]</span>.</p>
+<p>Similarly to edgeR analysis, we define a separate function that we use for the analysis:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">find_de_MAST_RE</span></code> takes a SingleCellExperiment object as input and runs MAST with RE pipeline. The output of the function is table (panda’s DataFrame in python) which contains results of the analysis, e.g. log-fold change, p-value and FDR-corrected value for each gene.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+find_de_MAST_RE &lt;- function(adata_){
+    # create a MAST object
+    sca &lt;- SceToSingleCellAssay(adata_, class = &quot;SingleCellAssay&quot;)
+    print(&quot;Dimensions before subsetting:&quot;)
+    print(dim(sca))
+    print(&quot;&quot;)
+    # keep genes that are expressed in more than 10% of all cells
+    sca &lt;- sca[freq(sca)&gt;0.1,]
+    print(&quot;Dimensions after subsetting:&quot;)
+    print(dim(sca))
+    print(&quot;&quot;)
+    # add a column to the data which contains scaled number of genes that are expressed in each cell
+    cdr2 &lt;- colSums(assay(sca)&gt;0)
+    colData(sca)$ngeneson &lt;- scale(cdr2)
+    # store the condition that we are interested in as factors
+    cond &lt;- factor(colData(sca)$condition)
+    colData(sca)$condition &lt;- cond
+    # same for donors (which we need to model random effects)
+    donor &lt;- factor(colData(sca)$donor)
+    colData(sca)$donor &lt;- donor
+    # define and fit the model
+    zlmCond &lt;- zlm(formula = ~ngeneson + condition + (1 | donor), 
+                   sca=sca, 
+                   method=&#39;glmer&#39;, 
+                   ebayes=F, 
+                   strictConvergence=F,
+                   fitArgsD=list(nAGQ = 0)) # to speed up calculations
+    
+    # perform likelihood-ratio test for the condition that we are interested in
+    summaryCond &lt;- summary(zlmCond, doLRT=&#39;conditionsevere&#39;)
+    # get the table with log-fold changes and p-values
+    summaryDt &lt;- summaryCond$datatable
+    result &lt;- merge(summaryDt[contrast==&#39;conditionsevere&#39; &amp; component==&#39;H&#39;,.(primerid, `Pr(&gt;Chisq)`)], # p-values
+                     summaryDt[contrast==&#39;conditionsevere&#39; &amp; component==&#39;logFC&#39;, .(primerid, coef)],
+                     by=&#39;primerid&#39;) # logFC coefficients
+    # MAST uses natural logarithm so we convert the coefficients to log2 base to be comparable to edgeR
+    # comment from N: this notebook was run without this line of code as Leander just pointed this out to me, 
+    # but we&#39;ll rerun everything again anyway so shouldn&#39;t matter that much
+    result[,coef:=result[,coef]/log(2)]
+    # do multiple testing correction
+    result[,FDR:=p.adjust(`Pr(&gt;Chisq)`, &#39;fdr&#39;)]
+    result = result[result$FDR&lt;0.01,, drop=F]
+
+    result &lt;- stats::na.omit(as.data.frame(result))
+    return(result)
+}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We run the pipeline for monocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">adata_mono</span> <span class="o">-</span><span class="n">o</span> <span class="n">res_mono</span>
+<span class="n">res_mono</span> <span class="o">&lt;-</span> <span class="n">find_de_MAST_RE</span><span class="p">(</span><span class="n">adata_mono</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;Dimensions before subsetting:&quot;
+[1] 22315 23615
+[1] &quot;&quot;
+[1] &quot;Dimensions after subsetting:&quot;
+[1]  3497 23615
+[1] &quot;&quot;
+CPU times: user 5h 12min 57s, sys: 1h 6min 21s, total: 6h 19min 19s
+Wall time: 5h 16min 43s
+</pre></div>
+</div>
+</div>
+</div>
+<p>We run the pipeline for granulocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">adata_gran</span> <span class="o">-</span><span class="n">o</span> <span class="n">res_gran</span>
+<span class="n">res_gran</span> <span class="o">&lt;-</span> <span class="n">find_de_MAST_RE</span><span class="p">(</span><span class="n">adata_gran</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;Dimensions before subsetting:&quot;
+[1] 16217  4185
+[1] &quot;&quot;
+[1] &quot;Dimensions after subsetting:&quot;
+[1] 1282 4185
+[1] &quot;&quot;
+CPU times: user 24min 4s, sys: 32.5 s, total: 24min 36s
+Wall time: 24min 36s
+</pre></div>
+</div>
+</div>
+</div>
+<p>We define a helper function to create a dataframe with MAST output that can be used with our plotting functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rename_df</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">adata</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;primerid&#39;</span><span class="p">),</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+    <span class="c1"># sort by adata.var_names so that the gene order is the same</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># rename columns so MAST column names are consistent with edgeR to make plotting easier</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coef&quot;</span><span class="p">:</span> <span class="s2">&quot;logFC&quot;</span><span class="p">,</span> <span class="s2">&quot;Pr(&gt;Chisq)&quot;</span><span class="p">:</span> <span class="s2">&quot;PValue&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we clean the output and store in the original AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_gran</span> <span class="o">=</span> <span class="n">rename_df</span><span class="p">(</span><span class="n">res_gran</span><span class="p">,</span> <span class="n">adata</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_granulocytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_gran</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_mono</span> <span class="o">=</span> <span class="n">rename_df</span><span class="p">(</span><span class="n">res_mono</span><span class="p">,</span> <span class="n">adata</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_monocytes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_mono</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let us take a look at the output table for MAST:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_granulocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;logFC&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PValue</th>
+      <th>logFC</th>
+      <th>FDR</th>
+      <th>-logQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>MNDA</th>
+      <td>3.937059e-28</td>
+      <td>5.858330</td>
+      <td>1.364138e-26</td>
+      <td>59.556690</td>
+    </tr>
+    <tr>
+      <th>S100P</th>
+      <td>3.121795e-19</td>
+      <td>5.660107</td>
+      <td>3.420633e-18</td>
+      <td>40.216706</td>
+    </tr>
+    <tr>
+      <th>LCP1</th>
+      <td>2.125467e-19</td>
+      <td>4.661601</td>
+      <td>2.369434e-18</td>
+      <td>40.583881</td>
+    </tr>
+    <tr>
+      <th>GCA</th>
+      <td>1.019662e-20</td>
+      <td>4.426935</td>
+      <td>1.210376e-19</td>
+      <td>43.558186</td>
+    </tr>
+    <tr>
+      <th>IGKC</th>
+      <td>1.960420e-15</td>
+      <td>4.225049</td>
+      <td>1.561030e-14</td>
+      <td>31.790845</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>RPL23A</th>
+      <td>1.227711e-33</td>
+      <td>-5.362029</td>
+      <td>1.748806e-31</td>
+      <td>70.821204</td>
+    </tr>
+    <tr>
+      <th>RPL10A</th>
+      <td>2.978284e-29</td>
+      <td>-5.592252</td>
+      <td>1.363628e-27</td>
+      <td>61.859648</td>
+    </tr>
+    <tr>
+      <th>CD52</th>
+      <td>1.683573e-24</td>
+      <td>-6.058712</td>
+      <td>2.956631e-23</td>
+      <td>51.875407</td>
+    </tr>
+    <tr>
+      <th>RPL36A</th>
+      <td>6.136282e-34</td>
+      <td>-6.472752</td>
+      <td>1.104943e-31</td>
+      <td>71.280345</td>
+    </tr>
+    <tr>
+      <th>RPS17</th>
+      <td>1.255703e-38</td>
+      <td>-7.344851</td>
+      <td>1.609811e-35</td>
+      <td>80.114361</td>
+    </tr>
+  </tbody>
+</table>
+<p>839 rows × 4 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_monocytes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;logFC&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PValue</th>
+      <th>logFC</th>
+      <th>FDR</th>
+      <th>-logQ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NAMPT</th>
+      <td>7.893098e-25</td>
+      <td>5.781319</td>
+      <td>2.075351e-23</td>
+      <td>52.229327</td>
+    </tr>
+    <tr>
+      <th>IGKC</th>
+      <td>2.195855e-12</td>
+      <td>4.203570</td>
+      <td>9.229455e-12</td>
+      <td>25.408621</td>
+    </tr>
+    <tr>
+      <th>CXCL8</th>
+      <td>3.930821e-17</td>
+      <td>4.108723</td>
+      <td>3.462489e-16</td>
+      <td>35.599374</td>
+    </tr>
+    <tr>
+      <th>FOSB</th>
+      <td>3.077985e-16</td>
+      <td>4.093683</td>
+      <td>2.457468e-15</td>
+      <td>33.639645</td>
+    </tr>
+    <tr>
+      <th>PLEK</th>
+      <td>5.385657e-24</td>
+      <td>3.967789</td>
+      <td>1.317038e-22</td>
+      <td>50.381487</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>HLA-DRB1</th>
+      <td>4.615806e-22</td>
+      <td>-5.291862</td>
+      <td>8.495512e-21</td>
+      <td>46.214749</td>
+    </tr>
+    <tr>
+      <th>CD52</th>
+      <td>1.083854e-19</td>
+      <td>-5.303056</td>
+      <td>1.398611e-18</td>
+      <td>41.111052</td>
+    </tr>
+    <tr>
+      <th>HLA-DRA</th>
+      <td>7.359628e-28</td>
+      <td>-6.009360</td>
+      <td>2.523198e-26</td>
+      <td>58.941685</td>
+    </tr>
+    <tr>
+      <th>RPL36A</th>
+      <td>2.484223e-35</td>
+      <td>-6.452267</td>
+      <td>2.802364e-33</td>
+      <td>74.954845</td>
+    </tr>
+    <tr>
+      <th>RPS17</th>
+      <td>3.473870e-45</td>
+      <td>-6.844715</td>
+      <td>1.214812e-41</td>
+      <td>94.211399</td>
+    </tr>
+  </tbody>
+</table>
+<p>2741 rows × 4 columns</p>
+</div></div></div>
+</div>
+<p>Here we again plot the heatmaps and volcano plots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_heatmap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;Granulocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 246 genes...
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_131_1.png" src="../_images/differential_gene_expression_131_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_heatmap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;Monocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 389 genes...
+</pre></div>
+</div>
+<img alt="../_images/differential_gene_expression_132_1.png" src="../_images/differential_gene_expression_132_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;MAST granulocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_133_0.png" src="../_images/differential_gene_expression_133_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;MAST monocytes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_134_0.png" src="../_images/differential_gene_expression_134_0.png" />
+</div>
+</div>
+<p>We note the differences in the number of DE genes detected by MAST and edgeR (with FDR-corrected p-value of &lt;0.01 and log-fold change &gt;1.5 for both methods): 246 vs 233 for granulocytes and 389 vs 662 for monocytes. It is well known that in general, the consensus and robustness across datasets for DGE tools is low5,6.</p>
+<p>In the original publication, the authors found several gene markers for severe COVID-19 in both monocytes and granulocytes. We finally plot these markers for both explored methods to see if our analysis alligns with the findings of the paper.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">monocytes_genes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CD163&#39;</span><span class="p">,</span> <span class="s1">&#39;PLAC8&#39;</span><span class="p">,</span> <span class="s1">&#39;HLA-DRA&#39;</span><span class="p">,</span> <span class="s1">&#39;ITGAX&#39;</span><span class="p">,</span> <span class="s1">&#39;CD226&#39;</span><span class="p">,</span> <span class="s1">&#39;CD69&#39;</span><span class="p">,</span> <span class="s1">&#39;CD38&#39;</span><span class="p">,</span> <span class="s1">&#39;FAS&#39;</span><span class="p">,</span> <span class="s1">&#39;CXCR3&#39;</span><span class="p">,</span> <span class="s1">&#39;S100A12&#39;</span><span class="p">,</span> <span class="s1">&#39;CXCL8&#39;</span><span class="p">,</span> <span class="s1">&#39;SELL&#39;</span><span class="p">,</span> <span class="s1">&#39;CD163&#39;</span><span class="p">,</span> <span class="s1">&#39;MPO&#39;</span><span class="p">,</span> <span class="s1">&#39;ISG15&#39;</span><span class="p">,</span> <span class="s1">&#39;IFI6&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;MAST monocytes&#39;</span><span class="p">,</span> <span class="n">monocytes_genes</span><span class="p">)</span>
+<span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_monocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;edgeR monocytes&#39;</span><span class="p">,</span> <span class="n">monocytes_genes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_138_0.png" src="../_images/differential_gene_expression_138_0.png" />
+<img alt="../_images/differential_gene_expression_138_1.png" src="../_images/differential_gene_expression_138_1.png" />
+</div>
+</div>
+<p>We observe that CXCL8, S100A12 and SELL are detected by both methods as upregulated in monocytes in severe COVID-19. HLA-DRA is only downregulated in MAST results, but only edgeR detects PLAC8.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">granulocytes_genes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CD274&#39;</span><span class="p">,</span> <span class="s1">&#39;FCGR1A&#39;</span><span class="p">,</span> <span class="s1">&#39;SELL&#39;</span><span class="p">,</span> <span class="s1">&#39;TNFRSF11A&#39;</span><span class="p">,</span> <span class="s1">&#39;TNFSF11&#39;</span><span class="p">,</span> <span class="s1">&#39;S100A8&#39;</span><span class="p">,</span> <span class="s1">&#39;S100A9&#39;</span><span class="p">,</span> <span class="s1">&#39;S100A4&#39;</span><span class="p">,</span> <span class="s1">&#39;S100A12&#39;</span><span class="p">,</span> <span class="s1">&#39;ARG1&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;MAST_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;MAST granulocytes&#39;</span><span class="p">,</span> <span class="n">granulocytes_genes</span><span class="p">)</span>
+<span class="n">volcano_plot</span><span class="p">(</span><span class="n">adata_pp</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s1">&#39;edgeR_granulocytes&#39;</span><span class="p">],</span> <span class="s1">&#39;edgeR granulocytes&#39;</span><span class="p">,</span> <span class="n">granulocytes_genes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/differential_gene_expression_141_0.png" src="../_images/differential_gene_expression_141_0.png" />
+<img alt="../_images/differential_gene_expression_141_1.png" src="../_images/differential_gene_expression_141_1.png" />
+</div>
+</div>
+<p>Both methods detect S100A genes as upregulated, but only edgeR detects S100A4.</p>
+<p>We don’t see the rest of the genes, i.e. CD274, FCGR1A, TNFRSF11A, TNFSF11, ARG1, on the volcano plots. It means that they were filtered out by both methods in the filtering step and hence the models were not fitted for these genes and so can’t compute the p-values for them.</p>
+</div>
+<div class="section" id="key-takeaways">
+<h2><span class="section-number">11.5. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Repeated measurements (cells) from the same experimental subject in scRNA-seq introduce correlations between measurements, which need to be adjusted by modeling the experimental units as Random Effect to mitigate the pseudoreplication issue. Account for them through a sum or mean aggregation (pseudobulk methods - by fixed- or random effect terms) or by accounting for individual as a random effect (single-cell methods) to mitigate the pseudoreplication issue.</p></li>
+<li><p>Determine the major axis of variation with exploratory analysis to construct an appropriate design matrix to better model the variations in the data.</p></li>
+<li><p>Statistical power is best increased with more samples in the experimental design.</p></li>
+</ol>
+</div>
+<div class="section" id="quiz">
+<h2><span class="section-number">11.6. </span>Quiz<a class="headerlink" href="#quiz" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>What is differential gene expression and in which cases are we interested in testing for it?</p></li>
+<li><p>What is the ‘pseudoreplication’ problem and how can it be circumvented?</p></li>
+<li><p>What is the ‘multiple testing’ problem and how can it be eluded?</p></li>
+</ol>
+</div>
+<div class="section" id="references">
+<h2><span class="section-number">11.7. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id23"><dl class="citation">
+<dt class="label" id="id89"><span class="brackets"><a class="fn-backref" href="#id22">BH95</a></span></dt>
+<dd><p>Yoav Benjamini and Yosef Hochberg. Controlling the false discovery rate: a practical and powerful approach to multiple testing. <em>Journal of the Royal Statistical Society: Series B (Methodological)</em>, 57(1):289–300, 1995. URL: <a class="reference external" href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://arxiv.org/abs/https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x">arXiv:https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">doi:https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a>.</p>
+</dd>
+<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id4">BKvB+17</a></span></dt>
+<dd><p>Mollie E. Brooks, Kasper Kristensen, Koen J. van Benthem, Arni Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin Mächler, and Benjamin M. Bolker. glmmTMB Balances Speed and Flexibility Among Packages for Zero-inflated Generalized Linear Mixed Modeling. <em>The R Journal</em>, 9(2):378–400, 2017. URL: <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">https://doi.org/10.32614/RJ-2017-066</a>, <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">doi:10.32614/RJ-2017-066</a>.</p>
+</dd>
+<dt class="label" id="id78"><span class="brackets"><a class="fn-backref" href="#id5">DRM+21</a></span></dt>
+<dd><p>Samarendra Das, Anil Rai, Michael L Merchant, Matthew C Cave, and Shesh N Rai. A comprehensive survey of statistical approaches for differential expression analysis in single-cell RNA sequencing studies. <em>Genes (Basel)</em>, 12(12):1947, December 2021.</p>
+</dd>
+<dt class="label" id="id76"><span class="brackets">FMY+15</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id20">2</a>)</span></dt>
+<dd><p>Greg Finak, Andrew McDavid, Masanao Yajima, Jingyuan Deng, Vivian Gersuk, Alex K. Shalek, Chloe K. Slichter, Hannah W. Miller, M. Juliana McElrath, Martin Prlic, Peter S. Linsley, and Raphael Gottardo. Mast: a flexible statistical framework for assessing transcriptional changes and characterizing heterogeneity in single-cell rna sequencing data. <em>Genome Biology</em>, 16(1):278, Dec 2015. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">https://doi.org/10.1186/s13059-015-0844-5</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">doi:10.1186/s13059-015-0844-5</a>.</p>
+</dd>
+<dt class="label" id="id80"><span class="brackets"><a class="fn-backref" href="#id7">JSME16</a></span></dt>
+<dd><p>Maria K Jaakkola, Fatemeh Seyednasrollah, Arfa Mehmood, and Laura L Elo. Comparison of methods to detect differentially expressed genes between single-cell populations. <em>Briefings in Bioinformatics</em>, 18(5):735–743, 07 2016. URL: <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">https://doi.org/10.1093/bib/bbw057</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf">arXiv:https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">doi:10.1093/bib/bbw057</a>.</p>
+</dd>
+<dt class="label" id="id84"><span class="brackets">JSE22</span><span class="fn-backref">(<a href="#id11">1</a>,<a href="#id13">2</a>)</span></dt>
+<dd><p>Sini Junttila, Johannes Smolander, and Laura L Elo. Benchmarking methods for detecting differential states between conditions from multi-subject single-cell rna-seq data. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662">https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.02.16.480662">doi:10.1101/2022.02.16.480662</a>.</p>
+</dd>
+<dt class="label" id="id87"><span class="brackets"><a class="fn-backref" href="#id16">LZD+20</a></span></dt>
+<dd><p>Charity W. Law, Kathleen Zeglinski, Xueyi Dong, Monther Alhamdoosh, Gordon K. Smyth, and Matthew E. Ritchie. A guide to creating design matrices for gene expression experiments. <em>F1000Research</em>, 9:1444–1444, Dec 2020. 33604029[pmid]. URL: <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33604029">https://pubmed.ncbi.nlm.nih.gov/33604029</a>.</p>
+</dd>
+<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id2">LHA14</a></span></dt>
+<dd><p>Michael I. Love, Wolfgang Huber, and Simon Anders. Moderated estimation of fold change and dispersion for rna-seq data with deseq2. <em>Genome Biology</em>, 15(12):550, Dec 2014. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">doi:10.1186/s13059-014-0550-8</a>.</p>
+</dd>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id21">LT19</a></span></dt>
+<dd><p>Malte D Luecken and Fabian J Theis. Current best practices in single-cell rna-seq analysis: a tutorial. <em>Molecular Systems Biology</em>, 15(6):e8746, 2019. URL: <a class="reference external" href="https://www.embopress.org/doi/abs/10.15252/msb.20188746">https://www.embopress.org/doi/abs/10.15252/msb.20188746</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.embopress.org/doi/pdf/10.15252/msb.20188746">arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.15252/msb.20188746">doi:https://doi.org/10.15252/msb.20188746</a>.</p>
+</dd>
+<dt class="label" id="id88"><span class="brackets"><a class="fn-backref" href="#id18">LahnemannKosterS+20</a></span></dt>
+<dd><p>David Lähnemann, Johannes Köster, Ewa Szczurek, Davis J. McCarthy, Stephanie C. Hicks, Mark D. Robinson, Catalina A. Vallejos, Kieran R. Campbell, Niko Beerenwinkel, Ahmed Mahfouz, Luca Pinello, Pavel Skums, Alexandros Stamatakis, Camille Stephan-Otto Attolini, Samuel Aparicio, Jasmijn Baaijens, Marleen Balvert, Buys de Barbanson, Antonio Cappuccio, Giacomo Corleone, Bas E. Dutilh, Maria Florescu, Victor Guryev, Rens Holmer, Katharina Jahn, Thamar Jessurun Lobo, Emma M. Keizer, Indu Khatri, Szymon M. Kielbasa, Jan O. Korbel, Alexey M. Kozlov, Tzu-Hao Kuo, Boudewijn P.F. Lelieveldt, Ion I. Mandoiu, John C. Marioni, Tobias Marschall, Felix Mölder, Amir Niknejad, Lukasz Raczkowski, Marcel Reinders, Jeroen de Ridder, Antoine-Emmanuel Saliba, Antonios Somarakis, Oliver Stegle, Fabian J. Theis, Huan Yang, Alex Zelikovsky, Alice C. McHardy, Benjamin J. Raphael, Sohrab P. Shah, and Alexander Schönhuth. Eleven grand challenges in single-cell data science. <em>Genome Biology</em>, 21(1):31, Feb 2020. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">https://doi.org/10.1186/s13059-020-1926-6</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">doi:10.1186/s13059-020-1926-6</a>.</p>
+</dd>
+<dt class="label" id="id85"><span class="brackets"><a class="fn-backref" href="#id12">RPW+15</a></span></dt>
+<dd><p>Matthew E. Ritchie, Belinda Phipson, Di Wu, Yifang Hu, Charity W. Law, Wei Shi, and Gordon K. Smyth. Limma powers differential expression analyses for rna-sequencing and microarray studies. <em>Nucleic acids research</em>, 43(7):e47–e47, Apr 2015. gkv007[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">https://doi.org/10.1093/nar/gkv007</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">doi:10.1093/nar/gkv007</a>.</p>
+</dd>
+<dt class="label" id="id74"><span class="brackets">RMS10</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id15">2</a>)</span></dt>
+<dd><p>Mark D. Robinson, Davis J. McCarthy, and Gordon K. Smyth. Edger: a bioconductor package for differential expression analysis of digital gene expression data. <em>Bioinformatics (Oxford, England)</em>, 26(1):139–140, Jan 2010. btp616[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">https://doi.org/10.1093/bioinformatics/btp616</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">doi:10.1093/bioinformatics/btp616</a>.</p>
+</dd>
+<dt class="label" id="id82"><span class="brackets"><a class="fn-backref" href="#id14">SSRP+20</a></span></dt>
+<dd><p>Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. <em>Cell</em>, 182(6):1419–1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">https://doi.org/10.1016/j.cell.2020.08.001</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">doi:10.1016/j.cell.2020.08.001</a>.</p>
+</dd>
+<dt class="label" id="id79"><span class="brackets"><a class="fn-backref" href="#id6">SR18</a></span></dt>
+<dd><p>Charlotte Soneson and Mark D. Robinson. Bias, robustness and scalability in single-cell differential expression analysis. <em>Nature Methods</em>, 15(4):255–261, Apr 2018. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">https://doi.org/10.1038/nmeth.4612</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">doi:10.1038/nmeth.4612</a>.</p>
+</dd>
+<dt class="label" id="id81"><span class="brackets">SGK+21</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>)</span></dt>
+<dd><p>Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. <em>Nature Communications</em>, 12(1):5692, Sep 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">https://doi.org/10.1038/s41467-021-25960-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">doi:10.1038/s41467-021-25960-2</a>.</p>
+</dd>
+<dt class="label" id="id86"><span class="brackets"><a class="fn-backref" href="#id17">TRCP21</a></span></dt>
+<dd><p>Andrew L Thurman, Jason A Ratcliff, Michael S Chimenti, and Alejandro A Pezzulo. Differential gene expression analysis for multi-subject single cell RNA sequencing studies with aggregateBioVar. <em>Bioinformatics</em>, 37(19):3243–3251, May 2021.</p>
+</dd>
+<dt class="label" id="id83"><span class="brackets">ZEL21</span><span class="fn-backref">(<a href="#id10">1</a>,<a href="#id19">2</a>)</span></dt>
+<dd><p>Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. <em>Nature Communications</em>, 12(1):738, Feb 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">https://doi.org/10.1038/s41467-021-21038-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">doi:10.1038/s41467-021-21038-1</a>.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./conditions"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="introduction.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">10. </span>Dealing with conditions introduction</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../mechanisms/introduction.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">12. </span>Modeling mechanisms introduction</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Theislab<br/>
+        
+            &copy; Copyright 2021.<br/>
+          <div class="extra_footer">
+            <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+          </div>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

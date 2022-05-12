@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2. A gentle introduction to single-cell RNA sequencing &#8212; Extended single-cell analysis tutorial</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/book.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. Raw data processing" href="raw_data_processing.html" />
+    <link rel="prev" title="1. Prior art" href="prior_art.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Extended single-cell analysis tutorial</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   2. A gentle introduction to single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="analysis_tools.html">
+   4. Computational single-cell analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="data_infrastructure.html">
+   5. Data infrastructure
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="interoperability.html">
+   6. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/introduction.html">
+   7. Preprocessing &amp; visualization introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with batch effects
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../batch_effects/introduction.html">
+   8. Dealing with batch effects introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Interpreting cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/introduction.html">
+   9. Interpreting cellular structure introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/introduction.html">
+   10. Dealing with conditions introduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   11. Differential gene expression analysis of human COVID-19 PBMCs
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/introduction.html">
+   12. Modeling mechanisms introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/introduction.html">
+   13. Deconvolution introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Spatial omics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/introduction.html">
+   14. Spatial omics introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Multi-omics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multi_omics/introduction.html">
+   15. Multi-omics introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   16. Reproducibility introduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   17. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   18. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/introduction/experimental_data_collection.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/theislab/extended-single-cell-tutorial"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/theislab/extended-single-cell-tutorial/issues/new?title=Issue%20on%20page%20%2Fintroduction/experimental_data_collection.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/theislab/extended-single-cell-tutorial/edit/master/introduction/experimental_data_collection.md"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-building-block-of-life">
+   2.1. The building block of life
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-brief-history-of-sequencing">
+   2.2. A brief history of sequencing
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#first-generation-sequencing">
+     2.2.1. First generation sequencing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#second-generation-sequencing">
+     2.2.2. Second generation sequencing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#third-generation-sequencing">
+     2.2.3. Third generation sequencing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-of-the-ngs-process">
+   2.3. Overview of the NGS process
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#rna-sequencing">
+   2.4. RNA sequencing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#single-cell-rna-sequencing">
+   2.5. single-cell RNA sequencing
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#microfluidic-device-based">
+     2.5.1. Microfluidic device based
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plate-based">
+     2.5.2. Plate based
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fluidigm-c1">
+     2.5.3. Fluidigm C1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#umi-design">
+     2.5.4. UMI design
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#single-cell-vs-single-nuclei">
+     2.5.5. single-cell vs single-nuclei
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recommended-reading">
+   2.6. Recommended reading
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   2.7. References
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="a-gentle-introduction-to-single-cell-rna-sequencing">
+<h1><span class="section-number">2. </span>A gentle introduction to single-cell RNA sequencing<a class="headerlink" href="#a-gentle-introduction-to-single-cell-rna-sequencing" title="Permalink to this headline">¶</a></h1>
+<p>This chapter provides a short introduction to molecular cell biology and the most widely used single-cell ribonucleic acid (<a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>) sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data.</p>
+<div class="section" id="the-building-block-of-life">
+<h2><span class="section-number">2.1. </span>The building block of life<a class="headerlink" href="#the-building-block-of-life" title="Permalink to this headline">¶</a></h2>
+<p>Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities. Although there is no consensus regarding the precise definition of life in the philosophical nor the scientific communities, most of them involve cells in some form. The scientific community in particular defines life as a property of organisms as open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, organize themselves, and are composed of cells. These properties could not be fulfilled without the fundamental building blocks of life - cells. Known as the tiniest units of life, cells were first discovered in 1665 by the British scientist Robert Hooke. Although only equipped with a very rudimentary microscope, Hooke investigated a thin slice of cork and to his surprise noticed that the slice appeared to resemble a honeycomb. Hooke named these tiny units ‘cells’.</p>
+<div class="figure align-default" id="markdown-fig">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/hooke_cork.jpg"><img alt="Robert Hook cell" class="bg-primary mb-1" src="../_images/hooke_cork.jpg" style="width: 800px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 2.1 </span><span class="caption-text">Robert Hooke’s drawing of cork cells. Image obtained from Micrographia.</span><a class="headerlink" href="#markdown-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, which describes that all living organisms are made up of cells, that act as functional units, that by themselves originate from other cells. Hence, cells are also the basic units of reproduction. Since the mid-nineteenth century, when cell theory was first defined, the definition has been extended to further require energy flow within cells, heredity information in the form of <a class="reference internal" href="../glossary.html#term-DNA"><span class="xref std std-term">DNA</span></a> being passed from earlier to later cells, and all cells having the same chemical composition.
+Generally, we consider two types of cells, eukaryotic cells which contain a nucleus, and prokaryotic cells that only have a nucleoid region, but no nucleus. The nucleus hosts the cells’ deoxyribonucleic acid <a class="reference internal" href="../glossary.html#term-DNA"><span class="xref std std-term">DNA</span></a> and is also the reason for the eukaryotes’ name: <em>Nucleus</em> is Latin for kernel or seed. As a result, eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells further distinguish themselves from prokaryotic cells by their high degree of compartmentalization. Membrane-bound organelles, the compartments, provide crucial support for cells.</p>
+<p>TODO: NEED SOME CELL IMAGE HERE</p>
+<p>Compared to prokaryotic cells, eukaryotic cells have about 10000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
+To replicate and to keep the life cycle going, cells need to read the heredity information that is stored in the DNA in the nucleus. This eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by a microtubular spindle during nuclear division.
+Knowing the DNA sequence is key to understanding many evolutionary and disease-related processes.
+The process of determining the order of DNA nucleotides is known as <em>sequencing</em>.
+DNA sequencing is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
+This allows researchers to determine which genes and regulatory elements are in the DNA molecule and at which position in the genome.
+Genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions, can be uncovered with DNA sequencing.
+Another very common application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
+One of the most useful applications of DNA sequencing is also the determination of associations of mutations with diseases.
+A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
+This leads to serious health issues including pain, anemia, swelling in the hands and feet, bacterial infections and strokes. The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
+More specifically, the gene defect is caused by a single nucleotide mutation (also sometimes referred to as single nucleotide polymorphism - SNP) where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above mentioned disease.
+It is unfortunately not always possible to find such “simple” associations between single nucleotide mutations and diseases due to most diseases being caused by, for example, complex regulatory processes.</p>
+<p>TODO: AN IMAGE OF DNA HERE??</p>
+</div>
+<div class="section" id="a-brief-history-of-sequencing">
+<h2><span class="section-number">2.2. </span>A brief history of sequencing<a class="headerlink" href="#a-brief-history-of-sequencing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="first-generation-sequencing">
+<h3><span class="section-number">2.2.1. </span>First generation sequencing<a class="headerlink" href="#first-generation-sequencing" title="Permalink to this headline">¶</a></h3>
+<p>Although DNA was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies. In 1953 Watson, Crick and Franklin discovered the structure of DNA and in 1965 Robert Holley sequenced the first tRNA. Seven years later, in 1972, Walter Fiers was the first to sequence the DNA of a complete gene (MS2) using RNAses to digest the virus RNA and isolate oligonucleotides and finally separate them with electrophoresis and chromatography<span id="id1">[<a class="reference internal" href="#id58">JOU <em>et al.</em>, 1972</a>]</span>. In parallel, Friedrich Sanger developed a DNA sequencing method that uses radiolabelled, partially digested fragments termed “chain termination method”, which is more commonly known as “Sanger Sequencing”. Although Sanger Sequencing is still used even today, it suffered from several short comings: It lacked automation and was time consuming. In 1987 Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. The most important innovation to accomplish this was the automatic labelling of DNA fragments with fluorescent dies instead of radioactive molecules. This allowed for computers to analyze the acquired data<span id="id2">[<a class="reference internal" href="#id59">Hood <em>et al.</em>, 1987</a>]</span>.</p>
+<p>TODO: AN IMAGE OF SANGER SEQUENCING</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Sanger sequencing is simple and does not require expensive machines.</p></li>
+<li><p>If done correctly, the error rate is very low (&lt;0.001%).</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.</p></li>
+<li><p>The quality of a Sanger sequence is often not very good in the first 15 to 40 bases because this is where the primer binds.</p></li>
+<li><p>Sequencing degrades after 700 to 900 bases.</p></li>
+<li><p>If the DNA fragment being sequenced has been cloned, some of the cloning vector sequence may find its way into the final sequence.</p></li>
+<li><p>Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.</p></li>
+</ul>
+</div>
+<div class="section" id="second-generation-sequencing">
+<h3><span class="section-number">2.2.2. </span>Second generation sequencing<a class="headerlink" href="#second-generation-sequencing" title="Permalink to this headline">¶</a></h3>
+<p>Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen introduced a new DNA sequencing technique called pyrosequencing, introducing the age of second generation sequencing.
+Second generation sequencing, also known as next-generation sequencing (NGS), was primarily made possible by automation in the lab, the usage of computers, and the miniaturisation of reactions.
+Pyrosequencing measures luminescence that is generated by pyrophosphate synthesis during sequencing.
+This process is also commonly known as “sequencing-by-synthesis”.
+Two years later, Shankar Balasubramanian and David Klenerman, developed and adapted the sequencing-by-synthesis process for a new method which utilizes fluorescent dyes at the company Solexa.
+The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
+Although many other platforms such as SOLiD systems’ “sequencing-by-ligation” (2007) and Life Technologies’ Ion Torrent (2011) that uses “sequencing-by-synthesis” to detect hydrogen ions when new DNA is synthesized were introduced, Illumina’s sequencers which are based on Solexa’s technology after a takeover, dominate the market.</p>
+<p>TODO: SHOW AN ILLUMINA SEQUENCER OR HOW IT WORKS OR STH</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Second generation generation sequencing is often times the cheapest option concerning the required chemicals.</p></li>
+<li><p>Sparse material can still be used as input.</p></li>
+<li><p>High sensitivity to detect low-frequency variants and comprehensive genome coverage.</p></li>
+<li><p>High capacity with sample multiplexing.</p></li>
+<li><p>Ability to sequence thousands of genes simultaneously,</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>The sequencing machines are expensive and often times need to be shared with colleagues.</p></li>
+<li><p>Second generation sequencers are big, stationary machines and not designed for field work.</p></li>
+<li><p>Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.</p></li>
+</ul>
+</div>
+<div class="section" id="third-generation-sequencing">
+<h3><span class="section-number">2.2.3. </span>Third generation sequencing<a class="headerlink" href="#third-generation-sequencing" title="Permalink to this headline">¶</a></h3>
+<p>The third generation of sequencing, which is nowadays also known as next-generation sequencing depending on whom you ask, brought two innovations to the market. First, long-read sequencing, which describes the ability to obtain nucleotide fragments of longer lengths than the usual Illumina short-read sequencers generate (order of 75 to 300 base pairs depending on the sequencer). This is especially important for the assembly of novel genomes where no reference genome is known. Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complicated machines for the chemistry, sequencing is now “field-ready” and can be used even far away from society to collect samples.</p>
+<p>Pacific Biosciences’ (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010. ZMW uses so-called nanoholes containing a single DNA polymerase. This allows for the incorporation of any single nucleotide to be directly observed, which is used by detecters that are attached below the ZMW. Every nucleotide is labeled with a different fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently detected. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases with possibilities for up to 70kb making them several times longer than Illumina reads.</p>
+<p>However, PacBio sequencers are hardly portable. Oxford Nanopore Technologies’ introduced the GridION in 2012. The GridION and its successors MinIO and Flongle are portable sequencers for DNA and RNA sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in electrical conductivity that occur when the DNA strands pass through biological nanopores to identify the nucleotide sequence<span id="id3">[<a class="reference internal" href="#id60">Jain <em>et al.</em>, 2016</a>]</span>.</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Long reads which allow for the assembly of large novel genomes.</p></li>
+<li><p>Sequencers are portable allowing for field work.</p></li>
+<li><p>Possibility to detect epigenetic modifications.</p></li>
+<li><p>Speed. Third generation sequencers are fast.</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Some third generation sequencers exhibit higher error rates than second generation sequencers.</p></li>
+<li><p>The chemistry is generally more expensive than second generation sequencing.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="overview-of-the-ngs-process">
+<h2><span class="section-number">2.3. </span>Overview of the NGS process<a class="headerlink" href="#overview-of-the-ngs-process" title="Permalink to this headline">¶</a></h2>
+<p>Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same. The differences lie primarily in the chemistry of the respective sequencing technologies.</p>
+<ol class="simple">
+<li><p><strong>Sample and library preparation</strong>: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules. They act in the hybridisation of the library fragments to the matrix and provide a priming site.</p></li>
+<li><p><strong>Amplification and sequencing</strong>: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are being created. All of the clusters perform individual reactions during a single sequencing run.</p></li>
+<li><p><strong>Data output and analysis</strong>: The output of a sequencing experiment depends on the sequencing technology and chemistry. Some sequencers generate fluorescence signals which are stored in specific output files, and others may generate electric signals which are stored in corresponding file formats. Generally, the amount of generated data, the raw data, is very large. Such data requires complex and computationally heavy processing. This is further discussed in the raw data processing chapter.</p></li>
+</ol>
+</div>
+<div class="section" id="rna-sequencing">
+<h2><span class="section-number">2.4. </span>RNA sequencing<a class="headerlink" href="#rna-sequencing" title="Permalink to this headline">¶</a></h2>
+<p>So far we have only introduced sequencing with the unmentioned assumption that DNA is being sequenced. Knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic, real-time operations of a cell. Further, a DNA coding region could appear to be normal, but a downstream transcriptional issue could affect the splicing of the resulting RNA molecule. In turn, this alternative splicing event could result in a non-functional enzyme and an induced disease state. On the contrary, the alternative splicing event could also be benign without any effect on health by simply producing a different protein isoform. This is where RNA sequencing (RNA-Seq) comes into play. RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template. Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of gene expression profiles of genes. This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs. The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties. Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both, known and novel features, resulting in rich data sets that be can used for exploratory data analysis.</p>
+</div>
+<div class="section" id="single-cell-rna-sequencing">
+<h2><span class="section-number">2.5. </span>single-cell RNA sequencing<a class="headerlink" href="#single-cell-rna-sequencing" title="Permalink to this headline">¶</a></h2>
+<p>Sequencing of RNA can at large be conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing). Mixing the RNA of all cells is in most cases cheaper and easier than experimentally complex single-cell sequencing. Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity which may help answer the question of interest. For example, some drugs or perturbations may affect only specific cell types or interactions between cell types. To uncover such relation ships, it is vital to examine gene expression on a single-cell level. Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats. First, single-cell experiments are generally more expensive and more difficult to properly conduct. Second, the downstream analysis becomes more complex due to the increased resolution and it is easier to draw false conclusions.</p>
+<p>A single-cell experiment generally speaking, follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations. Just like bulk sequencing, single-cell sequencing requires cell isolation, lysis, reverse transcription, amplification, and the eventual sequencing. In addition, a physical separation into smaller reaction chambers or another form of cell labeling is required to later be able to map the obtained transcriptomes back to the cells of origin. Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing. Currently, three types of single-cell sequencing protocols exist which are grouped primarily by their cell isolation protocols: Microfluidic device-based strategies where cells are encapsulated into hydrogel droplets; well plate based protocols where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. The three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of when analyzing data from the respective protocols.</p>
+<p>TODO: MAYBE ADD OVERVIEW FIGURE (LIKE MESHAL’S DISS)</p>
+<div class="section" id="microfluidic-device-based">
+<h3><span class="section-number">2.5.1. </span>Microfluidic device based<a class="headerlink" href="#microfluidic-device-based" title="Permalink to this headline">¶</a></h3>
+<p>Microfluidic device based single-cell protocols trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop<span id="id4">[<a class="reference internal" href="#id68">Klein <em>et al.</em>, 2015</a>]</span>, Drop-seq<span id="id5">[<a class="reference internal" href="#id69">Macosko <em>et al.</em>, 2015</a>]</span> and the commercial 10x Genomics Chromium<span id="id6">[<a class="reference internal" href="#id70">Zheng <em>et al.</em>, 2017</a>]</span> are able to perform this process several thousand times per second. This massively parallel process generates very high numbers of droplets for a relatively low cost. Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously. The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b base pair long unique molecular identifier (UMI - see below) and a poly-T tail. Upon lysis the cell’s mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached on the beads. Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs). This is followed by PCR and reverse transcription to capture and amplify the transcripts. Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached. This process results in sequencing libraries that are ready for sequencing as described above. In microfluidic based protocols only about 10% of the transcripts of the cell are recovered<span id="id7">[<a class="reference internal" href="#id71">Islam <em>et al.</em>, 2014</a>]</span>. Notably, this low sequencing is sufficient for robust identification of cell types.</p>
+<p>All three microfluidic device-based methods result in characteristic biases. The material of the used beads differs between the protocols. Drop-seq uses brittle resin for the beads and therefore the beads are encapsulated with a Poisson distribution, whereas the InDrop and 10X Genomics beads are deformable resulting in bead occupancies of over 80%<span id="id8">[<a class="reference internal" href="#id72">Zhang <em>et al.</em>, 2019</a>]</span>.
+Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers which are released with photocleavage and 10X genomics dissolves the beads. This disparity also affects the location of the reverse transcription process. In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols<span id="id9">[<a class="reference internal" href="#id72">Zhang <em>et al.</em>, 2019</a>]</span>.</p>
+<p>A comparison from Zhang et al. in 2019 uncovered that inDrop and Drop-seq are outperformed by 10X Genomics with respect to bead quality. The cell barcodes in the former two systems contained obvious mismatches. Moreover, the proportion of reads originating from valid barcodes was 75% for 10X Genomics, compared to only 25% for InDrop and 30% for Drop-seq. Similar advantages were demonstrated for 10X Genomics regarding sensitivity. During their comparison, 10X Genomics captured about 17000 transcripts from 3000 genes on average, compared to 8000 transcripts from 2500 genes for Drop-seq and 2700 transcripts from 1250 genes for InDrop. Further, technical noise was lowest for 10X Genomics followed by Drop-seq and InDrop<span id="id10">[<a class="reference internal" href="#id72">Zhang <em>et al.</em>, 2019</a>]</span>.</p>
+<p>The actual generated data demonstrated large protocol biases. 10X Genomics favored the capture and amplification of shorter genes and genes with higher GC content. Drop-seq in comparison preferred genes with lower GC content. While 10X Genomics was shown to outperform the other protocols in various aspects, it is also about twice as expensive per cell. Moreover, with the exception of the beads, Drop-seq is open-source and the protocol can more easily be adapted if required. InDrop is completely open-sourced where even the beads can be manufactured and modified in labs. Hence, InDrop is the most flexible of the three protocols.</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Allows for the cost efficient sequencing of many cells to identify the overall composition of a tissue or the identification of rare cell types.</p></li>
+<li><p>UMIs can be incorporated.</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Low detection rates of transcripts compared to other methods.</p></li>
+<li><p>Captures 3’ only and not full transcripts because the cell barcodes and PCR handles are only added to the end of the transcript.</p></li>
+</ul>
+<p>TODO: ADD FIGURE FOR MICROFLUIDIC BASED ASSAY.</p>
+</div>
+<div class="section" id="plate-based">
+<h3><span class="section-number">2.5.2. </span>Plate based<a class="headerlink" href="#plate-based" title="Permalink to this headline">¶</a></h3>
+<p>Plate based protocols typically separate the cells physically into well plates. The first step entails cell sorting using, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according cell-specific light scattering and fluorescent characteristics, or by micro pipetting. The selected cells are then placed into individual wells containing a lysis buffer where subsequently reverse transcription is carried out. This allows for several hundreds of cells to be analyzed in a single experiment with 5000 to 10000 captured genes each. Plate based sequencing protocols include, but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq. Generally, the protocols differ in their multiplexing ability. MARS-seq allows for three barcode levels, molecular, cellular and plate-level tags, for robust multiplexing capabilities. SMART-seq2 on the contrary, does not allow for early multiplexing. A systematic comparison of protocols by Mereu et al in 2020 revealed that QUARTZ-seq2 is able to capture more genes than SMART-seq2 and especially MARS-seq or SRCB-seq per cell<span id="id11">[<a class="reference internal" href="#id73">Mereu <em>et al.</em>, 2020</a>]</span>. This allowed QUARTZ-seq2 to capture specific marker genes of cell types well, allowing for confident cell type annotation.</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Recovers many genes per cell allowing for a deep characterization.</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>The number of required PCR amplifications is equal to the number of sequenced cells, effectively limiting the number of sequenced cells.</p></li>
+<li><p>Depending on the protocol, plate based protocols are labor intensive with many required pipetting steps leading to potential technical noise and batch effects.</p></li>
+</ul>
+<p>TODO: ADD FIGURE FOR PLATE BASED ASSAY</p>
+</div>
+<div class="section" id="fluidigm-c1">
+<h3><span class="section-number">2.5.3. </span>Fluidigm C1<a class="headerlink" href="#fluidigm-c1" title="Permalink to this headline">¶</a></h3>
+<p>The commercial Fluidigm C1 system is a microfluidic chip which loads and separates cells into small reaction chambers in an automated manner. The CEL-seq2 and SMART-seq (version 1) protocols are using the Fluidigm C1 chips. This allows for the RNA extraction and library preparation steps to be conducted together to decrease the required manual labor. However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size. This introduces a location bias. Since the amplification step is carried out on individual wells, full-length sequencing is possible, effectively reducing the 3’ bias of many other single-cell RNA-seq sequencing protocols. The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.</p>
+<p>Strengths:</p>
+<ul class="simple">
+<li><p>Allows for full-length transcript coverage.</p></li>
+<li><p>Splicing variants and T/B cell receptor repertoire diversity can be recovered.</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Only allows for the sequencing of up to 800 cells<span id="id12">[<a class="reference internal" href="#id74">Fluidigm, 2022</a>]</span>.</p></li>
+<li><p>More expensive per cell than other protocols.</p></li>
+</ul>
+<p>In summary, we strongly recommend that wet lab scientist and dry lab scientists select the sequencing protocol based on the aim of the study. Is a deep characterization of a specific cell type population desired? In this case one of the plate-based methods may be more useful. On the contrary, droplet based assays will capture heterogeneous mixtures better allowing for a more broad characterization of the sequenced cells. Moreover, if money is a limiting factor, the protocol should be chose accordingly. When analyzing the data be aware of the sequencing assay specific biases. For an extensive comparison of all sequencing protocols we recommend the “Benchmarking single-cell RNA-sequencing protocols for cell atlas projects” paper by Mereu et al<span id="id13">[<a class="reference internal" href="#id73">Mereu <em>et al.</em>, 2020</a>]</span>.</p>
+<p>TODO: CHECK THIS AGAIN. I READ SOMEWHERE THAT THEY SWITCHED TO A 3’ PROTOCOL. WHAT IS THE BEST PROTOCOL FOR FULL LENGTH SEQUENCING THEN?</p>
+<p>TODO: ADD A FIGURE FOR SUCH AN ASSAY.</p>
+</div>
+<div class="section" id="umi-design">
+<h3><span class="section-number">2.5.4. </span>UMI design<a class="headerlink" href="#umi-design" title="Permalink to this headline">¶</a></h3>
+<p>A critical step in any RNA-Seq sequencing run is the amplification of transcripts to ensure that they are abundant enough for quality control and sequencing. During this amplification process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. These are indistinguishable. Hence, determining the original number of molecules in samples is difficult. Unique Molecular Identifiers (UMIs) are a common solution to quantify the original, non-duplicated molecules. UMIs serve es Molecular Barcodes and are also sometimes referred to as Random Barcodes. They consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. They must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out or be aware of amplification biases<span id="id14">[<a class="reference internal" href="#id61">Aird <em>et al.</em>, 2011</a>]</span>. Amplification bias is a term for sequences which are preferentially amplified during the amplification process and will therefore be sequenced more often, resulting in higher counts. This can have a detrimental effect on any gene expression analysis because not very active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step where the error rate may already be comparably higher than earlier PCR stages. Although it is computationally possible to detect and to remove such sequences by removing reads with identical alignment coordinates, it is generally advisable to always design the experiment with UMIs if possible. UMIs allow for the removal of PCR duplicates in the sequencing data. The usage of UMIs further allows for normalization to be performed without a loss of accuracy<span id="id15">[<a class="reference internal" href="#id62">Kivioja <em>et al.</em>, 2012</a>]</span>.</p>
+<p>TODO: What else to talk about? Spikeins?</p>
+</div>
+<div class="section" id="single-cell-vs-single-nuclei">
+<h3><span class="section-number">2.5.5. </span>single-cell vs single-nuclei<a class="headerlink" href="#single-cell-vs-single-nuclei" title="Permalink to this headline">¶</a></h3>
+<p>So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells. Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs, such as, for example, the brain. During the tissue dissociation process, some cell types are more vulnerable and may therefore accidentally be removed. Fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex<span id="id16">[<a class="reference internal" href="#id63">Tasic <em>et al.</em>, 2018</a>]</span>. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex<span id="id17">[<a class="reference internal" href="#id64">Darmanis <em>et al.</em>, 2015</a>]</span>. The main difference is that nuclei are more resistant to mechanical force and can be better isolated from frozen tissue without the use of enzymes compared to single-cells<span id="id18">[<a class="reference internal" href="#id66">Krishnaswami <em>et al.</em>, 2016</a>]</span>. Both options have varying applicability across tissues and sample types, and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells<span id="id19">[<a class="reference internal" href="#id67">Ding <em>et al.</em>, 2020</a>]</span>.
+The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the sample of tissue type. Data analysis however should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types. This effect depends on the sample or tissue and we strongly encourage discussions between wet lab and dry lab scientists concerning experimental design.</p>
+</div>
+</div>
+<div class="section" id="recommended-reading">
+<h2><span class="section-number">2.6. </span>Recommended reading<a class="headerlink" href="#recommended-reading" title="Permalink to this headline">¶</a></h2>
+<p>To get a more elaborate understanding of the experimental assays we recommend the following papers:</p>
+<ul class="simple">
+<li><p>Comparative Analysis of Single-Cell RNA Sequencing Methods<span id="id20">[<a class="reference internal" href="#id56">Ziegenhain <em>et al.</em>, 2017</a>]</span></p></li>
+<li><p>Power analysis of single-cell RNA-sequencing experiments<span id="id21">[<a class="reference internal" href="#id57">Svensson <em>et al.</em>, 2017</a>]</span></p></li>
+<li><p>Single-nucleus and single-cell transcriptomes compared in matched cortical cell types<span id="id22">[<a class="reference internal" href="#id65">Bakken <em>et al.</em>, 2018</a>]</span></p></li>
+<li><p>Guidelines for the experimental design of single-cell RNA sequencing studies<span id="id23">[<a class="reference internal" href="#id75">Lafzi <em>et al.</em>, 2018</a>]</span></p></li>
+<li><p>Benchmarking single-cell RNA-sequencing protocols for cell atlas projects<span id="id24">[<a class="reference internal" href="#id73">Mereu <em>et al.</em>, 2020</a>]</span></p></li>
+<li><p>Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2<span id="id25">[<a class="reference internal" href="#id76">Wang <em>et al.</em>, 2021</a>]</span></p></li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2><span class="section-number">2.7. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id26"><dl class="citation">
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id14">ARC+11</a></span></dt>
+<dd><p>Daniel Aird, Michael G. Ross, Wei-Sheng Chen, Maxwell Danielsson, Timothy Fennell, Carsten Russ, David B. Jaffe, Chad Nusbaum, and Andreas Gnirke. Analyzing and minimizing pcr amplification bias in illumina sequencing libraries. <em>Genome Biology</em>, 12(2):R18, Feb 2011. URL: <a class="reference external" href="https://doi.org/10.1186/gb-2011-12-2-r18">https://doi.org/10.1186/gb-2011-12-2-r18</a>, <a class="reference external" href="https://doi.org/10.1186/gb-2011-12-2-r18">doi:10.1186/gb-2011-12-2-r18</a>.</p>
+</dd>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id22">BHM+18</a></span></dt>
+<dd><p>Trygve E. Bakken, Rebecca D. Hodge, Jeremy A. Miller, Zizhen Yao, Thuc Nghi Nguyen, Brian Aevermann, Eliza Barkan, Darren Bertagnolli, Tamara Casper, Nick Dee, Emma Garren, Jeff Goldy, Lucas T. Graybuck, Matthew Kroll, Roger S. Lasken, Kanan Lathia, Sheana Parry, Christine Rimorin, Richard H. Scheuermann, Nicholas J. Schork, Soraya I. Shehata, Michael Tieu, John W. Phillips, Amy Bernard, Kimberly A. Smith, Hongkui Zeng, Ed S. Lein, and Bosiljka Tasic. Single-nucleus and single-cell transcriptomes compared in matched cortical cell types. <em>PLOS ONE</em>, 13(12):1–24, 12 2018. URL: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0209648">https://doi.org/10.1371/journal.pone.0209648</a>, <a class="reference external" href="https://doi.org/10.1371/journal.pone.0209648">doi:10.1371/journal.pone.0209648</a>.</p>
+</dd>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id17">DSZ+15</a></span></dt>
+<dd><p>Spyros Darmanis, Steven A. Sloan, Ye Zhang, Martin Enge, Christine Caneda, Lawrence M. Shuer, Melanie G. Hayden Gephart, Ben A. Barres, and Stephen R. Quake. A survey of human brain transcriptome diversity at the single cell level. <em>Proceedings of the National Academy of Sciences</em>, 112(23):7285–7290, 2015. URL: <a class="reference external" href="https://www.pnas.org/doi/abs/10.1073/pnas.1507125112">https://www.pnas.org/doi/abs/10.1073/pnas.1507125112</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.pnas.org/doi/pdf/10.1073/pnas.1507125112">arXiv:https://www.pnas.org/doi/pdf/10.1073/pnas.1507125112</a>, <a class="reference external" href="https://doi.org/10.1073/pnas.1507125112">doi:10.1073/pnas.1507125112</a>.</p>
+</dd>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id19">DAS+20</a></span></dt>
+<dd><p>Jiarui Ding, Xian Adiconis, Sean K. Simmons, Monika S. Kowalczyk, Cynthia C. Hession, Nemanja D. Marjanovic, Travis K. Hughes, Marc H. Wadsworth, Tyler Burks, Lan T. Nguyen, John Y. H. Kwon, Boaz Barak, William Ge, Amanda J. Kedaigle, Shaina Carroll, Shuqiang Li, Nir Hacohen, Orit Rozenblatt-Rosen, Alex K. Shalek, Alexandra-Chloé Villani, Aviv Regev, and Joshua Z. Levin. Systematic comparison of single-cell and single-nucleus rna-sequencing methods. <em>Nature Biotechnology</em>, 38(6):737–746, Jun 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-020-0465-8">https://doi.org/10.1038/s41587-020-0465-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-020-0465-8">doi:10.1038/s41587-020-0465-8</a>.</p>
+</dd>
+<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id12">Flu22</a></span></dt>
+<dd><p>Fluidigm. Single-cell analysis with microfluidics. <span><a class="reference external" href="#"></a></span>https://www.fluidigm.com/area-of-interest/single-cell-analysis/single-cell-analysis-with-microfluidics, 2022. Accessed: 2022-05-07.</p>
+</dd>
+<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id2">HHS87</a></span></dt>
+<dd><p>L E Hood, M W Hunkapiller, and L M Smith. Automated DNA sequencing and analysis of the human genome. <em>Genomics</em>, 1(3):201–212, November 1987.</p>
+</dd>
+<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id7">IZJ+14</a></span></dt>
+<dd><p>Saiful Islam, Amit Zeisel, Simon Joost, Gioele La Manno, Pawel Zajac, Maria Kasper, Peter Lönnerberg, and Sten Linnarsson. Quantitative single-cell rna-seq with unique molecular identifiers. <em>Nature Methods</em>, 11(2):163–166, Feb 2014. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.2772">https://doi.org/10.1038/nmeth.2772</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.2772">doi:10.1038/nmeth.2772</a>.</p>
+</dd>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id3">JOPA16</a></span></dt>
+<dd><p>Miten Jain, Hugh E. Olsen, Benedict Paten, and Mark Akeson. The oxford nanopore minion: delivery of nanopore sequencing to the genomics community. <em>Genome Biology</em>, 17(1):239, Nov 2016. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-016-1103-0">https://doi.org/10.1186/s13059-016-1103-0</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-016-1103-0">doi:10.1186/s13059-016-1103-0</a>.</p>
+</dd>
+<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id1">JHYF72</a></span></dt>
+<dd><p>W. MIN JOU, G. HAEGEMAN, M. YSEBAERT, and W. FIERS. Nucleotide sequence of the gene coding for the bacteriophage ms2 coat protein. <em>Nature</em>, 237(5350):82–88, May 1972. URL: <a class="reference external" href="https://doi.org/10.1038/237082a0">https://doi.org/10.1038/237082a0</a>, <a class="reference external" href="https://doi.org/10.1038/237082a0">doi:10.1038/237082a0</a>.</p>
+</dd>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id15">KVaharautioK+12</a></span></dt>
+<dd><p>Teemu Kivioja, Anna Vähärautio, Kasper Karlsson, Martin Bonke, Martin Enge, Sten Linnarsson, and Jussi Taipale. Counting absolute numbers of molecules using unique molecular identifiers. <em>Nature Methods</em>, 9(1):72–74, Jan 2012. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.1778">https://doi.org/10.1038/nmeth.1778</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.1778">doi:10.1038/nmeth.1778</a>.</p>
+</dd>
+<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id4">KMA+15</a></span></dt>
+<dd><p>Allon M. Klein, Linas Mazutis, Ilke Akartuna, Naren Tallapragada, Adrian Veres, Victor Li, Leonid Peshkin, David A. Weitz, and Marc W. Kirschner. Droplet barcoding for single-cell transcriptomics applied to embryonic stem cells. <em>Cell</em>, 161(5):1187–1201, May 2015. PMC4441768[pmcid]. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2015.04.044">https://doi.org/10.1016/j.cell.2015.04.044</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2015.04.044">doi:10.1016/j.cell.2015.04.044</a>.</p>
+</dd>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id18">KGN+16</a></span></dt>
+<dd><p>Suguna Rani Krishnaswami, Rashel V. Grindberg, Mark Novotny, Pratap Venepally, Benjamin Lacar, Kunal Bhutani, Sara B. Linker, Son Pham, Jennifer A. Erwin, Jeremy A. Miller, Rebecca Hodge, James K. McCarthy, Martijn Kelder, Jamison McCorrison, Brian D. Aevermann, Francisco Diez Fuertes, Richard H. Scheuermann, Jun Lee, Ed S. Lein, Nicholas Schork, Michael J. McConnell, Fred H. Gage, and Roger S. Lasken. Using single nuclei for rna-seq to capture the transcriptome of postmortem neurons. <em>Nature Protocols</em>, 11(3):499–524, Mar 2016. URL: <a class="reference external" href="https://doi.org/10.1038/nprot.2016.015">https://doi.org/10.1038/nprot.2016.015</a>, <a class="reference external" href="https://doi.org/10.1038/nprot.2016.015">doi:10.1038/nprot.2016.015</a>.</p>
+</dd>
+<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id23">LMPH18</a></span></dt>
+<dd><p>Atefeh Lafzi, Catia Moutinho, Simone Picelli, and Holger Heyn. Tutorial: guidelines for the experimental design of single-cell rna sequencing studies. <em>Nature Protocols</em>, 13(12):2742–2757, Dec 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s41596-018-0073-y">https://doi.org/10.1038/s41596-018-0073-y</a>, <a class="reference external" href="https://doi.org/10.1038/s41596-018-0073-y">doi:10.1038/s41596-018-0073-y</a>.</p>
+</dd>
+<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id5">MBS+15</a></span></dt>
+<dd><p>Evan Z. Macosko, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, Allison R. Bialas, Nolan Kamitaki, Emily M. Martersteck, John J. Trombetta, David A. Weitz, Joshua R. Sanes, Alex K. Shalek, Aviv Regev, and Steven A. McCarroll. Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets. <em>Cell</em>, 161(5):1202–1214, May 2015. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2015.05.002">https://doi.org/10.1016/j.cell.2015.05.002</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2015.05.002">doi:10.1016/j.cell.2015.05.002</a>.</p>
+</dd>
+<dt class="label" id="id73"><span class="brackets">MLM+20</span><span class="fn-backref">(<a href="#id11">1</a>,<a href="#id13">2</a>,<a href="#id24">3</a>)</span></dt>
+<dd><p>Elisabetta Mereu, Atefeh Lafzi, Catia Moutinho, Christoph Ziegenhain, Davis J. McCarthy, Adrián Álvarez-Varela, Eduard Batlle, Sagar, Dominic Grün, Julia K. Lau, Stéphane C. Boutet, Chad Sanada, Aik Ooi, Robert C. Jones, Kelly Kaihara, Chris Brampton, Yasha Talaga, Yohei Sasagawa, Kaori Tanaka, Tetsutaro Hayashi, Caroline Braeuning, Cornelius Fischer, Sascha Sauer, Timo Trefzer, Christian Conrad, Xian Adiconis, Lan T. Nguyen, Aviv Regev, Joshua Z. Levin, Swati Parekh, Aleksandar Janjic, Lucas E. Wange, Johannes W. Bagnoli, Wolfgang Enard, Marta Gut, Rickard Sandberg, Itoshi Nikaido, Ivo Gut, Oliver Stegle, and Holger Heyn. Benchmarking single-cell rna-sequencing protocols for cell atlas projects. <em>Nature Biotechnology</em>, 38(6):747–755, Jun 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-020-0469-4">https://doi.org/10.1038/s41587-020-0469-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-020-0469-4">doi:10.1038/s41587-020-0469-4</a>.</p>
+</dd>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id21">SNL+17</a></span></dt>
+<dd><p>Valentine Svensson, Kedar Nath Natarajan, Lam-Ha Ly, Ricardo J. Miragaia, Charlotte Labalette, Iain C. Macaulay, Ana Cvejic, and Sarah A. Teichmann. Power analysis of single-cell rna-sequencing experiments. <em>Nature Methods</em>, 14(4):381–387, Apr 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4220">https://doi.org/10.1038/nmeth.4220</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4220">doi:10.1038/nmeth.4220</a>.</p>
+</dd>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id16">TYG+18</a></span></dt>
+<dd><p>Bosiljka Tasic, Zizhen Yao, Lucas T. Graybuck, Kimberly A. Smith, Thuc Nghi Nguyen, Darren Bertagnolli, Jeff Goldy, Emma Garren, Michael N. Economo, Sarada Viswanathan, Osnat Penn, Trygve Bakken, Vilas Menon, Jeremy Miller, Olivia Fong, Karla E. Hirokawa, Kanan Lathia, Christine Rimorin, Michael Tieu, Rachael Larsen, Tamara Casper, Eliza Barkan, Matthew Kroll, Sheana Parry, Nadiya V. Shapovalova, Daniel Hirschstein, Julie Pendergraft, Heather A. Sullivan, Tae Kyung Kim, Aaron Szafer, Nick Dee, Peter Groblewski, Ian Wickersham, Ali Cetin, Julie A. Harris, Boaz P. Levi, Susan M. Sunkin, Linda Madisen, Tanya L. Daigle, Loren Looger, Amy Bernard, John Phillips, Ed Lein, Michael Hawrylycz, Karel Svoboda, Allan R. Jones, Christof Koch, and Hongkui Zeng. Shared and distinct transcriptomic cell types across neocortical areas. <em>Nature</em>, 563(7729):72–78, Nov 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-018-0654-5">https://doi.org/10.1038/s41586-018-0654-5</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-018-0654-5">doi:10.1038/s41586-018-0654-5</a>.</p>
+</dd>
+<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id25">WHZ+21</a></span></dt>
+<dd><p>Xiliang Wang, Yao He, Qiming Zhang, Xianwen Ren, and Zemin Zhang. Direct comparative analyses of 10x genomics chromium and smart-seq2. <em>Genomics, Proteomics &amp; Bioinformatics</em>, 19(2):253–266, 2021. Single-cell Omics Analysis. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1672022921000486">https://www.sciencedirect.com/science/article/pii/S1672022921000486</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.gpb.2020.02.005">doi:https://doi.org/10.1016/j.gpb.2020.02.005</a>.</p>
+</dd>
+<dt class="label" id="id72"><span class="brackets">ZLL+19</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>,<a href="#id10">3</a>)</span></dt>
+<dd><p>Xiannian Zhang, Tianqi Li, Feng Liu, Yaqi Chen, Jiacheng Yao, Zeyao Li, Yanyi Huang, and Jianbin Wang. Comparative analysis of droplet-based ultra-high-throughput single-cell rna-seq systems. <em>Molecular Cell</em>, 73(1):130–142.e5, Jan 2019. URL: <a class="reference external" href="https://doi.org/10.1016/j.molcel.2018.10.020">https://doi.org/10.1016/j.molcel.2018.10.020</a>, <a class="reference external" href="https://doi.org/10.1016/j.molcel.2018.10.020">doi:10.1016/j.molcel.2018.10.020</a>.</p>
+</dd>
+<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id6">ZTB+17</a></span></dt>
+<dd><p>Grace X. Y. Zheng, Jessica M. Terry, Phillip Belgrader, Paul Ryvkin, Zachary W. Bent, Ryan Wilson, Solongo B. Ziraldo, Tobias D. Wheeler, Geoff P. McDermott, Junjie Zhu, Mark T. Gregory, Joe Shuga, Luz Montesclaros, Jason G. Underwood, Donald A. Masquelier, Stefanie Y. Nishimura, Michael Schnall-Levin, Paul W. Wyatt, Christopher M. Hindson, Rajiv Bharadwaj, Alexander Wong, Kevin D. Ness, Lan W. Beppu, H. Joachim Deeg, Christopher McFarland, Keith R. Loeb, William J. Valente, Nolan G. Ericson, Emily A. Stevens, Jerald P. Radich, Tarjei S. Mikkelsen, Benjamin J. Hindson, and Jason H. Bielas. Massively parallel digital transcriptional profiling of single cells. <em>Nature Communications</em>, 8(1):14049, Jan 2017. URL: <a class="reference external" href="https://doi.org/10.1038/ncomms14049">https://doi.org/10.1038/ncomms14049</a>, <a class="reference external" href="https://doi.org/10.1038/ncomms14049">doi:10.1038/ncomms14049</a>.</p>
+</dd>
+<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id20">ZVP+17</a></span></dt>
+<dd><p>Christoph Ziegenhain, Beate Vieth, Swati Parekh, Björn Reinius, Amy Guillaumet-Adkins, Martha Smets, Heinrich Leonhardt, Holger Heyn, Ines Hellmann, and Wolfgang Enard. Comparative analysis of Single-Cell RNA sequencing methods. <em>Mol Cell</em>, 65(4):631–643.e4, February 2017.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./introduction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="prior_art.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">1. </span>Prior art</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="raw_data_processing.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Raw data processing</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Theislab<br/>
+        
+            &copy; Copyright 2021.<br/>
+          <div class="extra_footer">
+            <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+          </div>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
