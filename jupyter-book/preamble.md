@@ -51,7 +51,7 @@ Trying to get into bioinformatics is difficult since a background is required in
 
 * Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
-* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of DNA, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through *Molecular Biology of the Cell* by Bruce Alberts et al.
+* Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through *Molecular Biology of the Cell* by Bruce Alberts et al.
 
 ## References
 

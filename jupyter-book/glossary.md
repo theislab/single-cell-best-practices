@@ -1,14 +1,16 @@
 # Glossary
 
 ```{glossary}
-Algorithms
 Algorithm
+Algorithms
     A pre-defined set of instructions to solve a problem.
 
 AnnData
+AnnDatas
     A Python package for annotated data matrices. The primary data structure used in the scverse ecosystem.
 
 Bar code
+Bar codes
     bla
 
 Batch effect
