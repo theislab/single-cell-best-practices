@@ -2,13 +2,12 @@
 
 Warning: This project and repository is under heavy development. We will tell you when it is ready.
 
-The latest version of the book is rendered [here](https://theislab.github.io/extended-single-cell-best-practices/index.html).
+A version of the book is rendered [here](https://theislab.github.io/extended-single-cell-best-practices/index.html).
+We are not making regular releases yet and the rendered version is likely to be out of date.
 
 ## Mission
 
 We are writing a book on the current single-cell analysis best-practices with extensive tutorials and code examples.
-
-The corresponding book is currently not hosted anywhere yet, but we will provide a very limited version very soon.
 
 ## Contributing
 
