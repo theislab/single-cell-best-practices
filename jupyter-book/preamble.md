@@ -4,24 +4,19 @@
 
 # Extended Single-cell Best-practices
 
-## Overview
+## Introduction
 
+The human body is a complex machine that heavily relies on the basic units of life - cells. We know that there is not one type of cell, but several cell types which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing dysregulations of the cell types influence the entire system causing potentially even serious diseases like cancer{cite}`Macaulay2017`. To improve our understanding of cellular systems, it is therefore vital to understand how cells normally and under perturbations behave.
+The most promising approach to this monumental task is to profile cells at the individual level. Whereas, in the past, primarily the transcriptome was examined in a process known as single-cell RNA sequencing, it is now possible to enrich the transcriptome information with spatial, chromatin accessibility or protein information. These new possibilities do not only open up new ways of generating insight into complex regulatory mechanisms, they also bring additional complexity for data analysts.
+The scRNA-tools database recently surpassed the collection of more than 1000 computational single-cell analysis tools. Besides the already complex biology and experimental data generation, navigating this vast analysis tool landscape to generate sound and at the forefront of science results, is challenging.
 The goal of this book is to teach newcomers and advanced professionals alike, the **best-practices** of single-cell sequencing analysis.
-This book will teach you about the most common analysis steps ranging from preprocessing over visualization to statistical evaluation.
-After having worked through this book you will be able to analyze unimodal and multimodal sequencing data on your own.
-
-## Motivation
-
-As once newcomers ourselves in the field, we noticed that while teaching materials exist they are often scattered in various places. Furthermore, in a rapidly developing research area like single-cell, many tools exist and even more get published every day. It is difficult to know which tool to use for which steps and why.
-Hence, we committed to writing our guidelines on not only how to do things, but how to do things right. These suggestions are based on external benchmarks and reviews whereever possible. Finally, we consider this book to be a living book which can easily be updated when the recommendations change.
-
-## What this book covers
-
-This book aims to be comprehensive and to cover as many analysis steps as possible. We cover all steps depicted in figure X while adding additional information for situations that an analyst run into. A simple example might be the conversion between analysis ecosystems and data formats.
+This book will teach you about the most common analysis steps ranging from preprocessing to visualization and finally statistical evaluation.
+After having worked through this book, you will be able to analyze unimodal and multimodal single-cell sequencing data on your own.
+We are committed to writing our guidelines on not only how to do things, but how to do things right. These suggestions are based on external benchmarks and reviews whenever possible. Finally, we consider this book to be a living book which can easily be updated when the recommendations change.
 
 ## What this book does not cover
 
-This book does not aim to cover the fundamental basics of biology or computer science including programming. Moreover, this book does not describe all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best for the data at hand. Whenever this is not possible and we cannot cover explicit community verified best-practices, we only recommend workflows based on our extensive experience.
+This book does not aim to cover the fundamental basics of biology or computer science, including programming. Moreover, this book does not describe all possible tools to approach a specific issue and only focuses on the tools, which ideally were externally verified to work best for the data at hand. Whenever this is not possible, and we cannot cover explicit community-verified best practices, we only recommend workflows based on our extensive experience.
 
 ## Structure of the book
 
@@ -31,13 +26,13 @@ Further, the chapters are labeled with a traffic light system. We differentiate 
 
 * No best-practices exist in any way and the topic is very recent. We cannot recommend best practices nor do we know how to conduct this analysis step properly. We show one way to tackle the issue. The traffic light color for these chapters is SOMETHING.
 
-* For COLOR colored chapters no clear, community agreed, best practices exist. There may be one benchmark paper already out, but evidence is sparse. Furthermore, we may be very experienced in the analysis of discussion and can therefore wholeheartedly recommend an analysis workflow and know the pitfalls to be aware of.
+* For COLOR colored chapters, no clear, community-agreed, best practices exist. There may be one benchmark paper already out, but the evidence is sparse. Furthermore, we may be very experienced in the analysis of discussion and can therefore wholeheartedly recommend an analysis workflow and know the pitfalls to be aware of.
 
 * Topics for which explicit best practices exist with evidence of several strong benchmarking are colored in COLOR. Generally, we are confident in our recommendations and strongly recommend readers to take our suggestions into account for their own analyses.
 
 SHOW SOME OF MESHALS COOL IMAGES HERE
 
-All of our chapters feature extensive lists of references and we encourage readers to consult the primary sources for our statements. Our summaries cannot always capture the full reasoning for our recommendations although we try to provide the required background whenever possible.
+All of our chapters feature extensive lists of references, and we encourage readers to consult the primary sources for our statements. Our summaries cannot always capture the full reasoning for our recommendations, although we try to provide the required background whenever possible.
 
 ## Prerequisites
 
