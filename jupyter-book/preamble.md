@@ -8,7 +8,10 @@
 
 The human body is a complex machine that heavily relies on the basic units of life - cells. We know that there is not one type of cell, but several cell types which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing dysregulations of the cell types influence the entire system causing potentially even serious diseases like cancer{cite}`Macaulay2017`. To improve our understanding of cellular systems, it is therefore vital to understand how cells normally and under perturbations behave.
 The most promising approach to this monumental task is to profile cells at the individual level. Whereas, in the past, primarily the transcriptome was examined in a process known as single-cell RNA sequencing, it is now possible to enrich the transcriptome information with spatial, chromatin accessibility or protein information. These new possibilities do not only open up new ways of generating insight into complex regulatory mechanisms, they also bring additional complexity for data analysts.
-The scRNA-tools database recently surpassed the collection of more than 1000 computational single-cell analysis tools. Besides the already complex biology and experimental data generation, navigating this vast analysis tool landscape to generate sound and at the forefront of science results, is challenging.
+The scRNA-tools database recently surpassed the collection of more than 1000 computational single-cell analysis tools. Besides the already complex biology and experimental data generation, navigating this vast analysis tool landscape to generate sound and at the forefront of science results, is challenging. This motivates us to write this book.
+
+## What this book covers
+
 The goal of this book is to teach newcomers and advanced professionals alike, the **best-practices** of single-cell sequencing analysis.
 This book will teach you about the most common analysis steps ranging from preprocessing to visualization and finally statistical evaluation.
 After having worked through this book, you will be able to analyze unimodal and multimodal single-cell sequencing data on your own.
