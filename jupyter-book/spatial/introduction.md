@@ -1,1 +1,11 @@
-# Spatial omics introduction
+# Spatially resolved transcriptomics - introduction
+
+In single-cell biology, a classical visualization of bulk RNA sequencing is a smoothie which resembles a diverse mixture of different cells all stired together. In single-cell RNA sequencing (scRNA-seq) cells are dissociated form the tissue and are analyzed based on their genes expression profile. So, scRNA-seq can be visualized by digging into a fruit salat. 
+
+If we stick to the fruit motto, spatially resolved transcriptomic methods can be seen as a fruit tart. The exact position of every strawberry, banana and others is known and we can inspect the relationship between each piece. Spatial single-cell transcriptomics is becoming increasingly important and was announced Method of the Year in 2021 by Nature{cite}`marx_method_2021`. It measures transcriptomic information while spatial information is preserved. Spatial transciptomic data can be generated in multiple ways by measuring the RNA molecules by in situ sequencing, in situ hybridization or spatial barcoding. Each method aims to recover the original spatial coordinates. 
+
+Adding the spatial information adds various new analysis and visualization opportunities and challenges which opens the field for new novel methods. {cite}`10.3389/fgene.2021.785290` provided a complete review of 
+
+
+Human and animal tissues consist of heterogeneous cell types that organize and interact in highly structured manners. Bulk and single-cell sequencing technologies remove cells from their original microenvironments, resulting in a loss of spatial information. Spatial transcriptomics is a recent technological innovation that measures transcriptomic information while preserving spatial information. Spatial transcriptomic data can be generated in several ways. RNA molecules are measured by in situ sequencing, in situ hybridization, or spatial barcoding to recover original spatial coordinates. The inclusion of spatial information expands the range of possibilities for analysis and visualization, and spurred the development of numerous novel methods. In this review, we summarize the core concepts of spatial genomics technology and provide a comprehensive review of current analysis and visualization methods for spatial transcriptomics.
+
