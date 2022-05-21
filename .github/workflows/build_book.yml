@@ -35,34 +35,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.9
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
 
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install wheel
-        pip install -e .[sphinx,pdfhtml]
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install -e .[sphinx,pdfhtml]
 
-    - name: Install Headless Chrome dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -yq $(cat .github/workflows/pyppeteer_requirements.txt)
+      - name: Install Headless Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yq $(cat .github/workflows/pyppeteer_requirements.txt)
 
-    - name: Install Chromium
-      run: |
-        pyppeteer-install
+      - name: Install Chromium
+        run: |
+          pyppeteer-install
 
-    - name: Build PDF from HTML (Docs)
-      run: |
-        jb build jupyter-book --builder pdfhtml -n -W --keep-going
+      - name: Build PDF from HTML (Docs)
+        run: |
+          jb build jupyter-book --builder pdfhtml -n -W --keep-going
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: PDF_HTML
-        path: jupyter-book/_build/pdf/book.pdf
-
+      - uses: actions/upload-artifact@v3
+        with:
+          name: PDF_HTML
+          path: jupyter-book/_build/pdf/book.pdf
