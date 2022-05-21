@@ -1,6 +1,7 @@
 # Prior art
 
 Single-cell analysis is slowly transitioning from an interesting niche topic to a more mature field. Hence, we are arguably not the first to write a book on single-cell analysis, let alone guides and tutorials. In the following sections we highlight two existing and ongoing efforts to teach single-cell analysis and emphasize commonalities and differences to this book.
+
 ## Bioconductor OSCA
 
 Orchestrating Single-Cell Analysis with Bioconductor (Bioconductor OSCA){cite}`osca` accessible at https://bioconductor.org/books/release/OSCA/ is a digital book which aims to teach common workflows for the analysis of single-cell RNA-Seq with the R based Bioconductor{cite}`Huber2015` ecosystem. A paper with the same name{cite}`Amezquita2020` presented an overview of single-cell analysis with Bioconductor and the book is an associated online version which goes into greater detail with extensive code examples.

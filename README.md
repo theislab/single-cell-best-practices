@@ -18,7 +18,7 @@ In case of questions or problems, please get in touch by posting an issue in thi
 
 ## Adapting the notebooks to other datasets:
 
-All notebooks for the various steps can be found in the [jupyter book folder](extended-single-cell-best-practices/tree/master/jupyter-book). 
+All notebooks for the various steps can be found in the [jupyter book folder](extended-single-cell-best-practices/tree/master/jupyter-book).
 These can easily be reused for your own projects.
 
 ## Acknowledgements
