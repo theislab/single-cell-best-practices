@@ -13,14 +13,14 @@ Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
 In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, which describes that all living organisms are made up of cells, that act as functional units, that by themselves originate from other cells. Hence, cells are also the basic units of reproduction. Since the mid-nineteenth century, when cell theory was first defined, the definition has been extended to further require energy flow within cells, heredity information in the form of {term}`DNA` being passed from earlier to later cells, and all cells having the same chemical composition.
-Generally, we consider two types of cells, eukaryotic cells which contain a nucleus, and prokaryotic cells that only have a nucleoid region, but no nucleus. The nucleus hosts the cells' deoxyribonucleic acid {term}`DNA` and is also the reason for the eukaryotes' name: *Nucleus* is Latin for kernel or seed. As a result, eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells further distinguish themselves from prokaryotic cells by their high degree of compartmentalization. Membrane-bound organelles, the compartments, provide crucial support for cells.
+Generally, we consider two types of cells, eukaryotic cells which contain a nucleus, and prokaryotic cells that only have a nucleoid region, but no nucleus. The nucleus hosts the cells' deoxyribonucleic acid {term}`DNA` and is also the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. As a result, eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells further distinguish themselves from prokaryotic cells by their high degree of compartmentalization. Membrane-bound organelles, the compartments, provide crucial support for cells.
 
 TODO: NEED SOME CELL IMAGE HERE
 
 Compared to prokaryotic cells, eukaryotic cells have about 10000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
 To replicate and to keep the life cycle going, cells need to read the heredity information that is stored in the DNA in the nucleus. This eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by a microtubular spindle during nuclear division.
 Knowing the DNA sequence is key to understanding many evolutionary and disease-related processes.
-The process of determining the order of DNA nucleotides is known as *sequencing*.
+The process of determining the order of DNA nucleotides is known as _sequencing_.
 DNA sequencing is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
 This allows researchers to determine which genes and regulatory elements are in the DNA molecule and at which position in the genome.
 Genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions, can be uncovered with DNA sequencing.
@@ -43,16 +43,16 @@ TODO: AN IMAGE OF SANGER SEQUENCING
 
 Strengths:
 
-* Sanger sequencing is simple and does not require expensive machines.
-* If done correctly, the error rate is very low (<0.001%).
+- Sanger sequencing is simple and does not require expensive machines.
+- If done correctly, the error rate is very low (<0.001%).
 
 Limitations:
 
-* Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
-* The quality of a Sanger sequence is often not very good in the first 15 to 40 bases because this is where the primer binds.
-* Sequencing degrades after 700 to 900 bases.
-* If the DNA fragment being sequenced has been cloned, some of the cloning vector sequence may find its way into the final sequence.
-* Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
+- Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
+- The quality of a Sanger sequence is often not very good in the first 15 to 40 bases because this is where the primer binds.
+- Sequencing degrades after 700 to 900 bases.
+- If the DNA fragment being sequenced has been cloned, some of the cloning vector sequence may find its way into the final sequence.
+- Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
 
 ### Second generation sequencing
 
@@ -68,17 +68,17 @@ TODO: SHOW AN ILLUMINA SEQUENCER OR HOW IT WORKS OR STH
 
 Strengths:
 
-* Second generation generation sequencing is often times the cheapest option concerning the required chemicals.
-* Sparse material can still be used as input.
-* High sensitivity to detect low-frequency variants and comprehensive genome coverage.
-* High capacity with sample multiplexing.
-* Ability to sequence thousands of genes simultaneously,
+- Second generation generation sequencing is often times the cheapest option concerning the required chemicals.
+- Sparse material can still be used as input.
+- High sensitivity to detect low-frequency variants and comprehensive genome coverage.
+- High capacity with sample multiplexing.
+- Ability to sequence thousands of genes simultaneously,
 
 Limitations:
 
-* The sequencing machines are expensive and often times need to be shared with colleagues.
-* Second generation sequencers are big, stationary machines and not designed for field work.
-* Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.
+- The sequencing machines are expensive and often times need to be shared with colleagues.
+- Second generation sequencers are big, stationary machines and not designed for field work.
+- Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.
 
 ### Third generation sequencing
 
@@ -90,15 +90,15 @@ However, PacBio sequencers are hardly portable. Oxford Nanopore Technologies' in
 
 Strengths:
 
-* Long reads which allow for the assembly of large novel genomes.
-* Sequencers are portable allowing for field work.
-* Possibility to detect epigenetic modifications.
-* Speed. Third generation sequencers are fast.
+- Long reads which allow for the assembly of large novel genomes.
+- Sequencers are portable allowing for field work.
+- Possibility to detect epigenetic modifications.
+- Speed. Third generation sequencers are fast.
 
 Limitations:
 
-* Some third generation sequencers exhibit higher error rates than second generation sequencers.
-* The chemistry is generally more expensive than second generation sequencing.
+- Some third generation sequencers exhibit higher error rates than second generation sequencers.
+- The chemistry is generally more expensive than second generation sequencing.
 
 ## Overview of the NGS process
 
@@ -135,13 +135,13 @@ The actual generated data demonstrated large protocol biases. 10X Genomics favor
 
 Strengths:
 
-* Allows for the cost efficient sequencing of many cells to identify the overall composition of a tissue or the identification of rare cell types.
-* UMIs can be incorporated.
+- Allows for the cost efficient sequencing of many cells to identify the overall composition of a tissue or the identification of rare cell types.
+- UMIs can be incorporated.
 
 Limitations:
 
-* Low detection rates of transcripts compared to other methods.
-* Captures 3' only and not full transcripts because the cell barcodes and PCR handles are only added to the end of the transcript.
+- Low detection rates of transcripts compared to other methods.
+- Captures 3' only and not full transcripts because the cell barcodes and PCR handles are only added to the end of the transcript.
 
 TODO: ADD FIGURE FOR MICROFLUIDIC BASED ASSAY.
 
@@ -151,12 +151,12 @@ Plate based protocols typically separate the cells physically into well plates. 
 
 Strengths:
 
-* Recovers many genes per cell allowing for a deep characterization.
+- Recovers many genes per cell allowing for a deep characterization.
 
 Limitations:
 
-* The number of required PCR amplifications is equal to the number of sequenced cells, effectively limiting the number of sequenced cells.
-* Depending on the protocol, plate based protocols are labor intensive with many required pipetting steps leading to potential technical noise and batch effects.
+- The number of required PCR amplifications is equal to the number of sequenced cells, effectively limiting the number of sequenced cells.
+- Depending on the protocol, plate based protocols are labor intensive with many required pipetting steps leading to potential technical noise and batch effects.
 
 TODO: ADD FIGURE FOR PLATE BASED ASSAY
 
@@ -166,13 +166,13 @@ The commercial Fluidigm C1 system is a microfluidic chip which loads and separat
 
 Strengths:
 
-* Allows for full-length transcript coverage.
-* Splicing variants and T/B cell receptor repertoire diversity can be recovered.
+- Allows for full-length transcript coverage.
+- Splicing variants and T/B cell receptor repertoire diversity can be recovered.
 
 Limitations:
 
-* Only allows for the sequencing of up to 800 cells{cite}`fluidigm`.
-* More expensive per cell than other protocols.
+- Only allows for the sequencing of up to 800 cells{cite}`fluidigm`.
+- More expensive per cell than other protocols.
 
 In summary, we strongly recommend that wet lab scientist and dry lab scientists select the sequencing protocol based on the aim of the study. Is a deep characterization of a specific cell type population desired? In this case one of the plate-based methods may be more useful. On the contrary, droplet based assays will capture heterogeneous mixtures better allowing for a more broad characterization of the sequenced cells. Moreover, if money is a limiting factor, the protocol should be chose accordingly. When analyzing the data be aware of the sequencing assay specific biases. For an extensive comparison of all sequencing protocols we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al{cite}`Mereu2020`.
 
@@ -195,12 +195,12 @@ The choice of single-cell versus single-nuclei in the experimental design is mos
 
 To get a more elaborate understanding of the experimental assays we recommend the following papers:
 
-* Comparative Analysis of Single-Cell RNA Sequencing Methods{cite}`Ziegenhain2017`
-* Power analysis of single-cell RNA-sequencing experiments{cite}`Svensson2017`
-* Single-nucleus and single-cell transcriptomes compared in matched cortical cell types{cite}`Bakken2018`
-* Guidelines for the experimental design of single-cell RNA sequencing studies{cite}`Lafzi2018`
-* Benchmarking single-cell RNA-sequencing protocols for cell atlas projects{cite}`Mereu2020`
-* Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2{cite}`Wang2021`
+- Comparative Analysis of Single-Cell RNA Sequencing Methods{cite}`Ziegenhain2017`
+- Power analysis of single-cell RNA-sequencing experiments{cite}`Svensson2017`
+- Single-nucleus and single-cell transcriptomes compared in matched cortical cell types{cite}`Bakken2018`
+- Guidelines for the experimental design of single-cell RNA sequencing studies{cite}`Lafzi2018`
+- Benchmarking single-cell RNA-sequencing protocols for cell atlas projects{cite}`Mereu2020`
+- Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2{cite}`Wang2021`
 
 ## References
 
