@@ -19,19 +19,19 @@ This book will teach you the most common analysis steps ranging from preprocessi
 
 ## What this book does not cover
 
-Fundamental basics of biology or computer science, including programming are not covered within this book. Furthermore, this book does not function as a complete collection of all analysis tools designed for a specific tasks. We especially highlight externally verified tools, which work best for the data at hand or methods which proved to be community-verified best practices. Whenever this is not possible, we only recommend workflows based on our extensive experience.
+This book does not cover fundamental basics of biology or computer science, including programming. Furthermore, this book does not function as a complete collection of all analysis tools designed for a specific tasks. We especially highlight externally verified tools, which work best for the data at hand or methods which proved to be community-verified best practices. Whenever this is not possible, we only recommend workflows based on our extensive experience.
 
 ## Structure of the book
 
-Each chapter in this book corresponds to different stages of a typical single-cell data analysis project. Generally, a typical analysis would follow the order of the chapters. We further divide the chapters into basic and advanced chapters. As the name suggests, the advanced chapters cover advanced analysis steps and may require more prerequisites than the other chapters of the book. We recommend that newcomers to the field start with all basic chapters and afterwards revisit the advanced chapters of interest. Most single-cell data analysts do not conduct all of the advanced analyses in their day to day work, but being aware of the possibilities is still beneficial.
+Each chapter in this book corresponds to a different stage of a typical single-cell data analysis project. Generally, an analysis workflow would follow the order of the chapters. Chapters are labeled as basic or advanced. Newcomers are recommended to start with all basic chapters and potentially revisit the advanced chapters of interest afterwards. Advanced chapters introduce analysis steps that may require more prerequisites compared to other chapters of the book. Most single-cell data analysts do not conduct all of the advanced analyses in their day to day work, but being aware of the possibilities is still beneficial.
 
-Further, the chapters are labeled with a traffic light system. We differentiate the chapters into three groups:
+Chapters are additionally labeled with a traffic light system. We differentiate the chapters into three groups:
 
-- No best-practices exist in any way and the topic is very recent. We cannot recommend best practices nor do we know how to conduct this analysis step properly. We show one way to tackle the issue. The traffic light color for these chapters is SOMETHING.
+- Chapters labeled with SOMETHING are rather novel and no best-practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
 
-- For COLOR colored chapters, no clear, community-agreed, best practices exist. There may be one benchmark paper already out, but the evidence is sparse. Furthermore, we may be very experienced in the analysis of discussion and can therefore wholeheartedly recommend an analysis workflow and know the pitfalls to be aware of.
+- For COLOR chapters, no clear, community-agreed, best practices exist. A few independent benchmarks may exist, but they might be in preprint or evidence might be sparse. In this chapter, we recommend analysis worksflows that proved well-working according to our vast experience and we can therefore wholeheartedly recommend the stated tools.
 
-- Topics for which explicit best practices exist with evidence of several strong benchmarking are colored in COLOR. Generally, we are confident in our recommendations and strongly recommend readers to take our suggestions into account for their own analyses.
+- COLOR chapters are validated by several independent benchmarks and there is a strong community agreement on the preferred tool that should be used for this analysis step. Generally, we are confident in our recommendations and strongly recommend readers to take our suggestions into account for their own analyses.
 
 SHOW SOME OF MESHALS COOL IMAGES HERE
 
@@ -39,11 +39,11 @@ All of our chapters feature extensive lists of references, and we encourage read
 
 ## Prerequisites
 
-Trying to get into bioinformatics is difficult since a background is required in not only biology, but also computer science. Single-cell especially combines many subfields making it challenging to get into it. This book cannot cover all prerequisites for computational single-cell analysis. To get the most out of this book we recommend a coarse overview over the following topics:
+Bioinformatics is a challenging research field for newjoiners as it requires knowledge in both biology as well as computer science. Single-cell is even more demanding as it combines many subfields and datasets are often large. This book cannot cover all prerequisites for computational single-cell analysis, we therefore recommend a coarse overview of various topics below. The following links might increase your learning experience throughout the book:
 
 - Basic Python programming. You should be familiar with control flow (loops, conditional statements, ...), basic data structures (lists, dictionaries, sets) and core functionality of the most used libraries such as Pandas and Numpy. If you are new to programming and Python we can highly recommend the free [Automate the boring stuff with Python](https://automatetheboringstuff.com/) book.
 
-- Basics of the AnnData and scanpy packages are beneficial, but not absolutely required. This book covers AnnData in sufficient detail to follow along and introduces the workflow of working with scanpy. However, it is not possible to introduce all of scanpy's functions in the course of this book. If you are new to scanpy we strongly suggest to work through the [scanpy tutorials](https://scanpy.readthedocs.io/en/stable/tutorials.html) with the occasional glance to the [scanpy API reference](https://scanpy.readthedocs.io/en/stable/api.html).
+- Basics of the AnnData and scanpy packages are beneficial, but not absolutely required. This book covers AnnData in sufficient detail to follow along and introduces the workflow of working with scanpy. However, we are not able to introduce all of scanpy's functionalities in the course of this book. If you are new to scanpy we strongly suggest to work through the [scanpy tutorials](https://scanpy.readthedocs.io/en/stable/tutorials.html) with the occasional glance to the [scanpy API reference](https://scanpy.readthedocs.io/en/stable/api.html).
 
 - If you are interested in multimodal data analysis, the basics of muon and MuData are recommended. This book covers MuData in greater detail, but only briefly introduces muon analogously to AnnData and scanpy. The excellent [muon tutorials](https://muon-tutorials.readthedocs.io/en/latest/) serve as a great introduction to multimodal data analysis with muon.
 
