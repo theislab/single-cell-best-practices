@@ -1,10 +1,10 @@
 # A gentle introduction to single-cell RNA sequencing
 
-This chapter provides a short introduction to molecular cell biology and the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays. Multimodal or spatial assays are not covered here, but instead in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data.
+This chapter provides a short introduction to molecular cell biology and the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays. Multimodal or spatial assays are not covered here, but are introduced in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data.
 
 ## The building block of life
 
-Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities. Although there is no consensus regarding the precise definition of life in the philosophical nor the scientific communities, most of them involve cells in some form. The scientific community in particular defines life as a property of organisms as open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, organize themselves, and are composed of cells. These properties could not be fulfilled without the fundamental building blocks of life - cells. Known as the tiniest units of life, cells were first discovered in 1665 by the British scientist Robert Hooke. Although only equipped with a very rudimentary microscope, Hooke investigated a thin slice of cork and to his surprise noticed that the slice appeared to resemble a honeycomb. Hooke named these tiny units 'cells'.
+Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities. Most definitions of the term life share a common entity - cells. Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves. Therefore, cells are the fundamental building block of live which were first discovered in 1665 by the British scientist Robert Hooke. Hooke investigated a thin slice of cork with a very rudimentary microscope, and to his surprise noticed that the slice appeared to resemble a honeycomb. He named these tiny units 'cells'.
 
 :::{figure-md} markdown-fig
 <img src="../_static/images/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
@@ -12,24 +12,23 @@ Life, as we know it, is the characteristic that distinguishes living from dead o
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
-In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, which describes that all living organisms are made up of cells, that act as functional units, that by themselves originate from other cells. Hence, cells are also the basic units of reproduction. Since the mid-nineteenth century, when cell theory was first defined, the definition has been extended to further require energy flow within cells, heredity information in the form of {term}`DNA` being passed from earlier to later cells, and all cells having the same chemical composition.
-Generally, we consider two types of cells, eukaryotic cells which contain a nucleus, and prokaryotic cells that only have a nucleoid region, but no nucleus. The nucleus hosts the cells' deoxyribonucleic acid {term}`DNA` and is also the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. As a result, eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells further distinguish themselves from prokaryotic cells by their high degree of compartmentalization. Membrane-bound organelles, the compartments, provide crucial support for cells.
+In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory. It describes that all living organisms are made up of cells. Cells act as functional units that by themselves originate from other cells making them the basic units of reproduction. 
+
+Since the early definition of cell theory, researches discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of {term}`DNA` and that all cells have the same chemical composition. Two general types of cells exist. Eukaryotic cells which contain a nucleus and prokaryotic cells only having a nucleoid region, but no nucleus. The nucleus hosts the cells' deoxyribonucleic acid {term}`DNA` and is the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. Eukaryotes are organisms composed of a single cell or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization. Membrane-bound organelles, the compartments, provide crucial support for cells.
 
 TODO: NEED SOME CELL IMAGE HERE
 
-Compared to prokaryotic cells, eukaryotic cells have about 10000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
-To replicate and to keep the life cycle going, cells need to read the heredity information that is stored in the DNA in the nucleus. This eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by a microtubular spindle during nuclear division.
-Knowing the DNA sequence is key to understanding many evolutionary and disease-related processes.
-The process of determining the order of DNA nucleotides is known as _sequencing_.
-DNA sequencing is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-This allows researchers to determine which genes and regulatory elements are in the DNA molecule and at which position in the genome.
-Genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions, can be uncovered with DNA sequencing.
-Another very common application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
-One of the most useful applications of DNA sequencing is also the determination of associations of mutations with diseases.
-A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
+Compared to prokaryotic cells, eukaryotic cells have about 10,000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
+Cells read the heredity information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going. This eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by a microtubular spindle during nuclear division.
+Understanding the DNA sequence is key to understanding many evolutionary and disease-related processes.
+_sequencing_ is the process of determining the order of DNA nucleotides and is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome. 
+DNA _sequencing_ allows researchers to determine which genes and regulatory elements are in the DNA molecule at which position in the genome and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions. Another very common application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared. DNA sequencing can additionally be applied for the determination of associations of mutations with diseases forming one of the most useful applications.  
+
+TODO! - EXAMPLE is a little long here - can we make it shorter?? (A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
 This leads to serious health issues including pain, anemia, swelling in the hands and feet, bacterial infections and strokes. The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
 More specifically, the gene defect is caused by a single nucleotide mutation (also sometimes referred to as single nucleotide polymorphism - SNP) where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above mentioned disease.
-It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases due to most diseases being caused by, for example, complex regulatory processes.
+It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases due to most diseases being caused by, for example, complex regulatory processes.)
+
 
 TODO: AN IMAGE OF DNA HERE??
 
@@ -37,7 +36,7 @@ TODO: AN IMAGE OF DNA HERE??
 
 ### First generation sequencing
 
-Although DNA was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies. In 1953 Watson, Crick and Franklin discovered the structure of DNA and in 1965 Robert Holley sequenced the first tRNA. Seven years later, in 1972, Walter Fiers was the first to sequence the DNA of a complete gene (MS2) using RNAses to digest the virus RNA and isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`. In parallel, Friedrich Sanger developed a DNA sequencing method that uses radiolabelled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several short comings: It lacked automation and was time consuming. In 1987 Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. The most important innovation to accomplish this was the automatic labelling of DNA fragments with fluorescent dies instead of radioactive molecules. This allowed for computers to analyze the acquired data{cite}`Hood1987`.
+Although DNA was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies. In 1953 Watson, Crick and Franklin discovered the structure of DNA and in 1965 Robert Holley sequenced the first tRNA. Seven years later, in 1972, Walter Fiers was the first to sequence the DNA of a complete gene (MS2) using RNAses to digest the virus RNA and isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`. In parallel, Friedrich Sanger developed a DNA sequencing method that uses radiolabelled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several short comings: It lacked automation and was time consuming. In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. The most important innovation  accomplishing this was the automatic labelling of DNA fragments with fluorescent dies instead of radioactive molecules. This allowed for computers to analyze the acquired data{cite}`Hood1987`.
 
 TODO: AN IMAGE OF SANGER SEQUENCING
 
@@ -51,7 +50,7 @@ Limitations:
 - Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
 - The quality of a Sanger sequence is often not very good in the first 15 to 40 bases because this is where the primer binds.
 - Sequencing degrades after 700 to 900 bases.
-- If the DNA fragment being sequenced has been cloned, some of the cloning vector sequence may find its way into the final sequence.
+- If the sequenced DNA fragment has been cloned, some of the cloning vector sequence may find its way into the final sequence.
 - Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
 
 ### Second generation sequencing
@@ -62,13 +61,13 @@ Pyrosequencing measures luminescence that is generated by pyrophosphate synthesi
 This process is also commonly known as "sequencing-by-synthesis".
 Two years later, Shankar Balasubramanian and David Klenerman, developed and adapted the sequencing-by-synthesis process for a new method which utilizes fluorescent dyes at the company Solexa.
 The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
-Although many other platforms such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new DNA is synthesized were introduced, Illumina's sequencers which are based on Solexa's technology after a takeover, dominate the market.
+Many other platforms were introduced such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new DNA is synthesized. Nevertheless, Illumina's sequencers still dominate the market and are based on Solexa's technology after a takeover.
 
 TODO: SHOW AN ILLUMINA SEQUENCER OR HOW IT WORKS OR STH
 
 Strengths:
 
-- Second generation generation sequencing is often times the cheapest option concerning the required chemicals.
+- Second generation generation sequencing is often the cheapest option with respect to required chemicals.
 - Sparse material can still be used as input.
 - High sensitivity to detect low-frequency variants and comprehensive genome coverage.
 - High capacity with sample multiplexing.
@@ -76,13 +75,13 @@ Strengths:
 
 Limitations:
 
-- The sequencing machines are expensive and often times need to be shared with colleagues.
+- The sequencing machines are expensive and often need to be shared with colleagues.
 - Second generation sequencers are big, stationary machines and not designed for field work.
 - Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.
 
 ### Third generation sequencing
 
-The third generation of sequencing, which is nowadays also known as next-generation sequencing depending on whom you ask, brought two innovations to the market. First, long-read sequencing, which describes the ability to obtain nucleotide fragments of longer lengths than the usual Illumina short-read sequencers generate (order of 75 to 300 base pairs depending on the sequencer). This is especially important for the assembly of novel genomes where no reference genome is known. Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complicated machines for the chemistry, sequencing is now "field-ready" and can be used even far away from society to collect samples.
+The third generation of sequencing, nowadays also known as next-generation sequencing, brought two innovations to the market. First, long-read sequencing, which describes the ability to obtain nucleotide fragments of longer lengths than the usual Illumina short-read sequencers generate (order of 75 to 300 base pairs depending on the sequencer). This is especially important for the assembly of novel genomes without a known reference genome. Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from society to collect samples.
 
 Pacific Biosciences' (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010. ZMW uses so-called nanoholes containing a single DNA polymerase. This allows for the incorporation of any single nucleotide to be directly observed, which is used by detecters that are attached below the ZMW. Every nucleotide is labeled with a different fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently detected. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases with possibilities for up to 70kb making them several times longer than Illumina reads.
 
