@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for the tutorial
 title: "Feature request"
 labels: "enhancement"
-assignees: "zethson"
+assignees: ""
 ---
 
 **Is your feature request related to a problem? Please describe.**
