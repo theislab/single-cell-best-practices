@@ -3,7 +3,7 @@ name: Bug report
 about: Found a bug
 title: "Bug report"
 labels: "bug"
-assignees: "zethson"
+assignees: ""
 ---
 
 **Describe the bug**
