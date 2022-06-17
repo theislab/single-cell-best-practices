@@ -1,4 +1,0 @@
-# Tabular data exploration
-
-```{tableofcontents}
-```
