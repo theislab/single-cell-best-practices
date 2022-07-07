@@ -215,12 +215,12 @@ where the steps described in this section occur and to convey what different pro
 
 Before we start, we create a conda environment in the terminal and install the required packages. In this procedure, we will install [`alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/), [`salmon`](https://salmon.readthedocs.io/en/latest/) and [`pyroe`](https://github.com/COMBINE-lab/pyroe).
 
-"`bash
+```bash
 conda create -n af_xmpl -y -c bioconda python=3.9 salmon alevin-fry pyroe
 conda activate af_xmpl
 ```
 
-"`{admonition} Note on using an M1/M2-based device
+```{admonition} Note on using an M1/M2-based device
 
 Conda does not currently build most packages natively for Apple silicon. Therefore, if you 
 are using a non-Intel-based Apple computer (e.g., with an M1(Pro/Max/Ultra) or M2 chip), you 
@@ -228,7 +228,7 @@ should make sure to specify that your environment uses the Rosetta2 translation 
 To do this, you can replace the above commands with the following (instructions adopted 
 from [here](https://github.com/Haydnspass/miniforge#rosetta-on-mac-with-apple-silicon-hardware)):
 
-"`bash
+```bash
 CONDA_SUBDIR=osx-64 conda create -n af_xmpl -y -c bioconda python=3.9 salmon alevin-fry pyroe   # create a new environment
 conda activate af_xmpl
 conda env config vars set CONDA_SUBDIR=osx-64  # subsequent commands use intel packages
@@ -333,7 +333,7 @@ After running these commands, the resulting quantification information can be fo
 % TODO: cross ref to the chapter for AnnData
 We can load the count matrix into python as an [`AnnData`](https://anndata.readthedocs.io/en/latest/) object using the `load_fry` function from [`pyroe`](https://github.com/COMBINE-lab/pyroe). A similar function has been implemented in the [`roe`](https://github.com/COMBINE-lab/roe) R package.
 
-"`python
+```python
 import pyroe
 
 quant_dir = 'quant'
@@ -342,7 +342,7 @@ anndata = pyroe.load_fry(quant_dir)
 
 The default behavior loads the `X` layer of the `anndata` object as the sum of the spliced and ambiguous counts for each gene. However, recent work{cite}`Pool2022` and [updated practices](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/release-notes) suggest that the inclusion of intronic counts, even in single-cell RNA-seq data, may increase sensitivity and benefit downstream analysis. While the best way to make use of this information is the subject of ongoing research since `alevin-fry` automatically quantifies spliced, unspliced, and ambiguous reads in each sample, the count matrix containing the total counts for each gene can be simply obtained as follows:
 
-"`python
+```python
 import pyroe
 
 quant_dir = 'quant'
