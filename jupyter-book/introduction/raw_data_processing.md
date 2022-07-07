@@ -144,11 +144,6 @@ In the context of single-cell data, a UMI graph $G(V,E)$ is a directed graph wit
 
 In the UMI graph framework, a UMI resolution approach can be divided into three major steps, each of which has different options that can be modularly composed by different approaches. The three steps are defining nodes, defining adjacency relationships, and resolving components. Additionally, these steps may sometimes be preceded (and/or followed) by filtering steps designed to discard or heuristically assign (by modifying the set of reference mappings reported) reads and UMIs exhibiting certain types of mapping ambiguity.
 
-```{admonition} Rob comment
-* Does calib use a UMI graph resolution approach? DH: Yes, 
-* Does CellRanger use this approach? I don't think they specifically mention a UMI graph (can what they do be phrased that way)?
-```
-
 (raw-proc:umi-graph-node-def)=
 #### Defining nodes
 
