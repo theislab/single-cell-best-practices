@@ -6,9 +6,59 @@ jobs:
   build-book:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+
+      - name: Setup environment
+        run: pip install --upgrade jupyter-book jupytext beautifulsoup4
+
+      - name: Cache jupyter-cache folder
+        uses: actions/cache@v2
+        env:
+          cache-name: jupyter-cache
+        with:
+          path: jupyter-book/_build/.jupyter_cache
+          key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+          restore-keys: |
+            v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
+            v1-${{ github.ref }}
+            v1-refs/heads/master
+
+      - name: Build the JupyterBook
+        run: make
+
+  pdfhtml:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jupyter-book jupytext beautifulsoup4
+
+      - name: Install Headless Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yq $(cat .github/workflows/pyppeteer_requirements.txt)
+
+      - name: Install Chromium
+        run: pip install pyppeteer
+
+      - name: Build PDF from HTML (Docs)
+        run: make pdf
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: PDF_HTML
+          path: jupyter-book/_build/pdf/book.pdf

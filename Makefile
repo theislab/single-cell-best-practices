@@ -9,3 +9,6 @@ build-all:
 
 clean:
 	jupyter-book clean --all $(JUPYTER_BOOK_DIR)
+
+pdf:
+	jupyter-book build jupyter-book/ --builder pdfhtml
