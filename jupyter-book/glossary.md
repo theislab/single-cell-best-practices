@@ -92,7 +92,13 @@ Pipeline
     safd
 
 RNA
-    Ribonucleic acid. Single-stranded nucleic acid present in all living cells 
+    Ribonucleic acid. Single-stranded nucleic acid present in all living cells
+
+RT-qPCR
+    Quantitative reverse transcription PCR (RT-qPCR) monitors the amplification of a targeted DNA molecule during the PCR.
+
+PCR
+    Polymercase chain reaction (PCR) is a method to amplify sequences to create billions of copies. PCR requires primers, which are short synthetic DNA fragments, to select the genome segments to be amplified and subsequently multiple rounds of DNA synthesis to amplify the targeted segments.
 
 Poisson distribution
     sdf
