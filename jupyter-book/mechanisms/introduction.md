@@ -1,1 +1,0 @@
-# Modeling mechanisms introduction
