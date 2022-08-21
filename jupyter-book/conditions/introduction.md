@@ -1,1 +1,0 @@
-# Dealing with conditions introduction
