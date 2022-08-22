@@ -120,7 +120,7 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 TODO This needs a cartoon image
 
-(raw-proc:rna-sequencing)=
+(exp-data:rna-sequencing)=
 
 ## RNA sequencing
 
