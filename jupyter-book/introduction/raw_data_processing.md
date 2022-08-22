@@ -292,8 +292,6 @@ UMI errors, especially those due to nucleotide substitutions and miscallings, ar
 
 There exist other challenges that we do not focus upon here, such as "convergent" and "divergent" UMI collisions. We consider the case where the same UMI is used to tag two different pre-PCR molecules arising from the same gene, in the same cell, as a convergent collision. When two or more distinct UMIs arise from the same pre-PCR molecule, e.g., due to the sampling of multiple priming sites from this molecule, we consider this a divergent collision. We expect convergent UMI collisions to be rare and, therefore, their effect typically small. Further, transcript-level mapping information can sometimes be used to resolve such collisions{cite}`Srivastava2019`. Divergent UMI collisions occur primarily among introns of unspliced transcripts{cite}`technote_10x_intronic_reads`, and approaches to addressing the issues they raise are an area of active research{cite}`technote_10x_intronic_reads,Gorin2021`.
 
-% **TODO**: If needed, come up with a section name for the following two paragraphs.
-
 Given that the use of UMIs is near ubiquitous in high-throughput scRNA-seq protocols and the fact that addressing these errors improves the estimation of gene abundances, there has been much attention paid to the problem of UMI resolution in recent literature {cite}`Islam2013,Bose2015,Macosko2015,Smith2017,Srivastava2019,Kaminow2021,Melsted2021,He2022,calib,umic,zumis`.
 
 (raw-proc:graph-based-umi-resolution)=
@@ -348,7 +346,6 @@ Basic global metrics are often recorded and reported to help assess the overall 
 In the following toggle section, we discuss an example alevinQC report taken from the `alevinQC` [manual webpage](https://github.com/csoneson/alevinQC).
 
 
-% **TODO**: review the following toggle section.
 ```{toggle}
 
 Once `alevin` or `alevin-fry` quantifies the single-cell data, the quality of the data can be assessed through the R package [`alevinQC`](https://github.com/csoneson/alevinQC). The alevinQC report can be generated in PDF format or as R/Shiny applications, which summarizes various components of the single-cell library, such as reads, CBs, and UMIs. 
@@ -398,8 +395,6 @@ This led to the development of several tools specifically designed to detect emp
 
 In addition to determining which cell barcodes correspond to empty droplets or damaged cells, one may also wish to identify those cell barcodes that correspond to doublets or multiplets. When a given droplet captures two (doublets) or more (multiplets) cells, this can result in a skewed distribution for these cell barcodes in terms of quantities like the number of reads and UMIs they represent, as well as gene expression profiles they display. Many tools have also been developed to predict the doublet status of cell barcodes{cite}`DePasquale2019,McGinnis2019,Wolock2019,Bais2019,Bernstein2020`. Once detected, cells determined to likely be doublets and multiplets can be removed or otherwise adjusted for in the subsequent analysis.
 
-% **TODO**: Should anything else go in this basic QC section?
-
 (raw-proc:output-representation)=
 ## Count data representation
 
@@ -408,8 +403,6 @@ As one completes initial raw data processing and quality control and moves on to
 In light of these challenges and the simplifications adopted to address them, there remains active research as to how best to represent the preprocessed data to downstream tools. For example, several quantification tools{cite}`Srivastava2019,Melsted2021,Kaminow2021,He2022` implement an *optional* EM algorithm, initially introduced in this context by {cite:t}`Srivastava2019`, that probabilistically apportions UMIs associated with reads that map to more than one gene. This, however, can result in non-integer count matrices that may be unexpected by certain downstream tools. Alternatively, one may choose to resolve UMIs to *gene groups* instead of individual genes, retaining the multimapping information in the preprocessed output (it is worth noting that a similar representation, but at the transcript level, has been used for over a decade as a succinct internal representation in bulk RNA-seq transcript quantification tools{cite}`Turro2011,Nicolae2011,Patro2014,Bray2016,Patro2017,Ju2017`, and such a transcript-level representation has even been proposed for use in the clustering and dimensionality reduction of full-length single-cell RNA-seq data{cite}`Ntranos2016` and differential expression analysis of single-cell RNA-seq data{cite}`Ntranos2019`). In this case, instead of the resulting count matrix having dimensions $C \times G$, where $G$ is the number of genes in the quantified annotation, it will have dimension $C \times E$, where $E$ is the number of distinct *gene groups* (commonly called equivalence class labels) across all cells in the given sample. By propagating this information to the output count matrix, one can avoid the application of heuristic or probabilistic UMI resolution methods that can result in loss of data, or bias, in the counts used in downstream analyses. Of course, to make use of this information, downstream analysis methods must expect the information in this format. Further, those downstream methods must typically have a way to resolve these counts, eventually, to the level of genes, as the abundance of *gene groups* lacks the intuitive biological interpretability of gene abundance. Nonetheless, the benefits provided by such representations, in terms of conveying more complete and accurate information to downstream analysis tools, can be substantial, and tools taking advantage of such representations are being developed (e.g. [DifferentialRegulation](https://github.com/SimoneTiberi/DifferentialRegulation)); this is still an active area of research.
 
 ## Brief Discussion
-
-% **TODO**: review this sentence.
 
 To close this chapter, we convey some observations and suggestions that have arisen from recent benchmarking and review studies surrounding some of the common preprocessing tools described above {cite}`You_2021,Bruning_2022`. It is, of course, important to note that the development of methods and tools for single-cell and single-nucleus RNA-seq raw data processing, as well as the continual evaluation of such methods, is an ongoing community effort. It is therefore often useful and reasonable, when performing your own analyses, to experiment with several different tools.
 
@@ -584,7 +577,6 @@ TTCGATTTCCGCTTAC
 TGCTCGTGTTCGAAGG
 ACTGTGAAGAAATTGC
 ```
-
 
 % **TODO**: cross ref to the chapter for AnnData
 We can load the count matrix into python as an [`AnnData`](https://anndata.readthedocs.io/en/latest/) object using the `load_fry` function from [`pyroe`](https://github.com/COMBINE-lab/pyroe). A similar function has been implemented in the [`roe`](https://github.com/COMBINE-lab/roe) R package.
