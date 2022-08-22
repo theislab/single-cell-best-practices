@@ -1,14 +1,16 @@
 # Glossary
 
 ```{glossary}
-Algorithms
 Algorithm
+Algorithms
     A pre-defined set of instructions to solve a problem.
 
 AnnData
+AnnDatas
     A Python package for annotated data matrices. The primary data structure used in the scverse ecosystem.
 
 Bar code
+Bar codes
     bla
 
 Batch effect
@@ -90,7 +92,13 @@ Pipeline
     safd
 
 RNA
-    Ribonucleic acid. Single-stranded nucleic acid present in all living cells 
+    Ribonucleic acid. Single-stranded nucleic acid present in all living cells
+
+RT-qPCR
+    Quantitative reverse transcription PCR (RT-qPCR) monitors the amplification of a targeted DNA molecule during the PCR.
+
+PCR
+    Polymercase chain reaction (PCR) is a method to amplify sequences to create billions of copies. PCR requires primers, which are short synthetic DNA fragments, to select the genome segments to be amplified and subsequently multiple rounds of DNA synthesis to amplify the targeted segments.
 
 Poisson distribution
     sdf
