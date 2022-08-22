@@ -19,7 +19,7 @@ The decision of where to begin discussing raw data processing is somewhat arbitr
 and transformed from raw measurements. Further, some of the processing that precedes the generation of the FASTQ files is relevant to challenges that may arise in subsequent processing. For example, the process of base calling and base quality estimation affects the errors that arise in the FASTQ representation of the sequenced fragments, as well as the instrument's estimation of the confidence of each called nucleotide. Further, issues can arise upstream of FASTQ generation, such as index hopping {cite}`farouni2020model`, though these issues can be largely mitigated both with _in silico_ approaches {cite}`farouni2020model` and through enhanced protocols such as [dual indexing](https://www.10xgenomics.com/blog/sequence-with-confidence-understand-index-hopping-and-how-to-resolve-it). In this section, however, we will not consider upstream effects such as these, and instead will consider the FASTQ files, derived from, e.g., BCL files via [appropriate tools](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/bcl2fastq-direct), as the raw input under consideration.
 ```
 
-## Raw Data Quality Control
+## Raw data quality control
 
 Once raw FASTQ files have been obtained, the quality of the reads themselves can be quickly diagnosed by running a quality control (QC) tool, such as [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), to assess read quality, sequence content, etc. If run successfully, `FastQC` generates a QC report for each input FASTQ file. Overall, this report summarizes the quality score, base content, and certain relevant statistics to spot potential problems originating from library preparation or sequencing.
 
@@ -153,7 +153,7 @@ A good (left) and a bad (right) per sequence quality score plot. The plot on the
 
 (raw-proc:aln-map)=
 
-## Alignment and Mapping
+## Alignment and mapping
 
 Mapping or alignment is a fundamental step in single-cell raw data processing. It refers to the process of determining the potential loci of origin of each sequenced fragment (e.g., the set of genomic or transcriptomic loci that are similar to the read). Depending on the sequencing protocol, the resulting raw sequence file contains the cell-level information, commonly known as cell barcodes (CB), the unique molecule identifier (UMI), and the raw cDNA sequence (read sequence) generated from the molecule. As the first step in the raw data processing of a single-cell sample ({numref}`raw-proc-fig-overview`), executing mapping or alignment accurately is instrumental for all downstream analyses, since incorrect read-to-transcript/gene mapping can lead to wrong or inaccurate matrices.
 
@@ -231,7 +231,7 @@ To deal with the fact that sequenced reads may arise from outside of spliced tra
 
 (raw-proc:cb-correction)=
 
-## Cell Barcode Correction
+## Cell barcode correction
 
 Droplet-based single-cell segregation systems, such as those provided by 10x Genomics, have become an important tool for studying the cause and consequences of cellular heterogeneity. In this segregation system, the RNA material of each captured cell is extracted within a water-based droplet encapsulation along with a barcoded bead. These beads tag the RNA content of individual cells with unique oligonucleotides, called cell barcodes (CBs), that are later sequenced along with the fragments of the cDNAs that are reversely transcribed from the RNA content. The beads contain high-diversity DNA barcodes enabling parallel barcoding of the cell's molecular content and _in silico_ demultiplexing of the sequencing reads into individual cellular bins.
 
@@ -416,7 +416,7 @@ As one completes initial raw data processing and quality control and moves on to
 
 In light of these challenges and the simplifications adopted to address them, there remains active research as to how best to represent the preprocessed data to downstream tools. For example, several quantification tools{cite}`Srivastava2019,Melsted2021,Kaminow2021,He2022` implement an _optional_ EM algorithm, initially introduced in this context by {cite:t}`Srivastava2019`, that probabilistically apportions UMIs associated with reads that map to more than one gene. This, however, can result in non-integer count matrices that may be unexpected by certain downstream tools. Alternatively, one may choose to resolve UMIs to _gene groups_ instead of individual genes, retaining the multimapping information in the preprocessed output (it is worth noting that a similar representation, but at the transcript level, has been used for over a decade as a succinct internal representation in bulk RNA-seq transcript quantification tools{cite}`Turro2011,Nicolae2011,Patro2014,Bray2016,Patro2017,Ju2017`, and such a transcript-level representation has even been proposed for use in the clustering and dimensionality reduction of full-length single-cell RNA-seq data{cite}`Ntranos2016` and differential expression analysis of single-cell RNA-seq data{cite}`Ntranos2019`). In this case, instead of the resulting count matrix having dimensions $C \times G$, where $G$ is the number of genes in the quantified annotation, it will have dimension $C \times E$, where $E$ is the number of distinct _gene groups_ (commonly called equivalence class labels) across all cells in the given sample. By propagating this information to the output count matrix, one can avoid the application of heuristic or probabilistic UMI resolution methods that can result in loss of data, or bias, in the counts used in downstream analyses. Of course, to make use of this information, downstream analysis methods must expect the information in this format. Further, those downstream methods must typically have a way to resolve these counts, eventually, to the level of genes, as the abundance of _gene groups_ lacks the intuitive biological interpretability of gene abundance. Nonetheless, the benefits provided by such representations, in terms of conveying more complete and accurate information to downstream analysis tools, can be substantial, and tools taking advantage of such representations are being developed (e.g. [DifferentialRegulation](https://github.com/SimoneTiberi/DifferentialRegulation)); this is still an active area of research.
 
-## Brief Discussion
+## Brief discussion
 
 To close this chapter, we convey some observations and suggestions that have arisen from recent benchmarking and review studies surrounding some of the common preprocessing tools described above {cite}`You_2021,Bruning_2022`. It is, of course, important to note that the development of methods and tools for single-cell and single-nucleus RNA-seq raw data processing, as well as the continual evaluation of such methods, is an ongoing community effort. It is therefore often useful and reasonable, when performing your own analyses, to experiment with several different tools.
 
@@ -481,7 +481,7 @@ wget -qO- https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/py
 
 (raw-proc:example-map)=
 
-### mapping the data
+### Mapping the data
 
 Now, we process the data to obtain the mapping information. This includes three steps:
 
