@@ -120,6 +120,8 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 TODO This needs a cartoon image
 
+(raw-proc:rna-sequencing)=
+
 ## RNA sequencing
 
 So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
@@ -146,6 +148,8 @@ A single-cell experiment generally speaking, follows the same steps as a bulk RN
 Just like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and the eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and, depending on the sequencing machine, sequencing. Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
+
+(exp-data:transcript-quantification)=
 
 ### Transcript quantification
 
