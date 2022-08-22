@@ -2,7 +2,7 @@
 
 <div style="page-break-after: always;"></div>
 
-# Extended Single-cell Best-practices
+# Cross-modal Single-cell Best-practices
 
 ## Introduction
 

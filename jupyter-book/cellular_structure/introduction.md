@@ -1,1 +1,0 @@
-# Interpreting cellular structure introduction
