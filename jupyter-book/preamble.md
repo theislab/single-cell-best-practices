@@ -8,7 +8,7 @@
 
 The human body is a complex machine that heavily relies on the basic units of life - cells. Cells can be separated into different types, which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing deregulations of the cell types influence the entire system causing potentially even serious diseases like cancer{cite}`Macaulay2017`. It is therefore vital to understand how cells behave in a normal state and under perturbations to improve our understanding of the entire cellular systems.
 
-This monumental task is approached in different ways of which the most promising one is to profile cells at the individual level. So far, each cells' transcriptome was primarily examined in a process known as single-cell RNA sequencing. With recent advances in single-cell genomics, it is now possible to enrich the transcriptome information with spatial, chromatin accessibility or protein information. These advances generate not only insight into complex regulatory mechanisms, but also go along with additional complexity for data analysts.
+This monumental task is approached in different ways of which the most promising one is to profile cells at the individual level. So far, each cells' transcriptome was primarily examined in a process known as single-cell {term}`RNA` sequencing. With recent advances in single-cell genomics, it is now possible to enrich the transcriptome information with spatial, chromatin accessibility or protein information. These advances generate not only insight into complex regulatory mechanisms, but also go along with additional complexity for data analysts.
 
 Nowadays, data analysts are facing a vast analysis tool landscape with a collection of more than 1000 computational single-cell analysis methods. It is becoming increasingly challenging to navigate this large range of different tools to generate sound results which are at the forefront of science.
 
@@ -49,7 +49,7 @@ Bioinformatics is a challenging research field for newcomers as it requires know
 
 - Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
-- Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through _Molecular Biology of the Cell_ by Bruce Alberts et al.
+- Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, {term}`RNA` and proteins. If you are completely new to molecular biology in general, it might be advisable to work through _Molecular Biology of the Cell_ by Bruce Alberts et al.
 
 ## References
 
