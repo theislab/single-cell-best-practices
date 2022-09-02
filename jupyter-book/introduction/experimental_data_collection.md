@@ -178,7 +178,7 @@ TODO: MAYBE ADD OVERVIEW FIGURE (LIKE MESHAL'S DISS)
 
 #### Microfluidic device based protocols
 
-Microfluidic device based single-cell strategies trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`Macosko2015` and the commercially available 10x Genomics Chromium{cite}`Zheng2017` are able to generate such droplets several thousand times per second.
+Microfluidic device based single-cell strategies trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`exp:Macosko2015` and the commercially available 10x Genomics Chromium{cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
 This massively parallel process generates very high numbers of droplets for a relatively low cost. Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
 The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b bp-long unique molecular identifier (UMI - see below) and a poly-T tail.
 Upon lysis the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached on the beads.
@@ -289,4 +289,5 @@ To get a more elaborate understanding of the experimental assays we recommend th
 
 ```{bibliography}
 :filter: docname in docnames
+:labelprefix: exp
 ```
