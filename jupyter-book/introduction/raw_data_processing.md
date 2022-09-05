@@ -643,3 +643,18 @@ Tutorials for explaining and evaluating `FastQC` report from [MSU](https://rtsf.
 ```{bibliography}
 :filter: docname in docnames
 ```
+
+## Contributors
+
+We gratefully acknowledge the contributions of:
+
+### Authors
+
+- Dongze He
+- Avi Srivastava
+- Hirak Sarkar
+- Rob Patro
+
+### Reviewers
+
+- Lukas Heumos

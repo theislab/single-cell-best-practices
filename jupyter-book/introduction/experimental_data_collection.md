@@ -291,3 +291,15 @@ To get a more elaborate understanding of the experimental assays we recommend th
 :filter: docname in docnames
 :labelprefix: exp
 ```
+
+## Contributors
+
+We gratefully acknowledge the contributions of:
+
+### Authors
+
+- Lukas Heumos
+
+### Reviewers
+
+- Yuexin Chen
