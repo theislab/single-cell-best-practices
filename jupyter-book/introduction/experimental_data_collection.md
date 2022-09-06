@@ -1,4 +1,4 @@
-# Introduction to single-cell {term}`RNA` sequencing
+# Single-cell RNA sequencing
 
 This chapter provides a short introduction to the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts. Multimodal or spatial assays are not covered here, but are introduced in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysis to be aware of possible biases in the data.
 
@@ -122,7 +122,7 @@ TODO This needs a cartoon image
 
 (exp-data:{term}`RNA`-sequencing)=
 
-## {term}`RNA` sequencing
+## RNA sequencing
 
 So far, we have only introduced sequencing with the unmentioned assumption that the {term}`DNA` is being sequenced. However, knowing the {term}`DNA` sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
 For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where {term}`RNA` sequencing ({term}`RNA`-Seq) comes into play.
@@ -132,7 +132,7 @@ Modern {term}`RNA` sequencing allows for an unbiased sampling of transcripts in 
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern {term}`RNA` sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
 
-## Single-cell {term}`RNA` sequencing
+## Single-cell RNA sequencing
 
 ### Overview
 
