@@ -23,27 +23,27 @@ The nucleus hosts the cells' genomic deoxyribonucleic acid {term}`DNA` and is th
 TODO: NEED SOME CELL IMAGE HERE
 
 Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
-The {term}`DNA` replication machinery reads the hereditary information that is stored in the {term}`DNA` in the nucleus to replicate themselves and keep the life cycle going. The eukaryotic {term}`DNA` is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
-Understanding the hereditary information hidden in {term}`DNA` is key to understanding many evolutionary and disease-related processes.
-_sequencing_ is the process of deciphering the order of {term}`DNA` nucleotides and is primarily used to unveil the genetic information that is carried by a specific {term}`DNA` segment, a complete genome, or even a complex microbiome.
-{term}`DNA` _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the {term}`DNA` molecule and the genome, and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions. Another very common application area is evolutionary analysis, where homologous {term}`DNA` sequences from different organisms are compared. {term}`DNA` sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming one of the most useful applications.
+The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going. The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
+Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
+_sequencing_ is the process of deciphering the order of DNA nucleotides and is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
+DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome, and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions. Another very common application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared. DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming one of the most useful applications.
 
 A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
 This leads to serious health issues including pain, anemia, swelling in the hands and feet, bacterial infections and strokes. The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
 The gene defect is caused by a single nucleotide mutation where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above-mentioned disease.
 It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases, due to most diseases being caused by, for example, complex regulatory processes.
 
-TODO: AN IMAGE OF {term}`DNA` HERE??
+TODO: AN IMAGE OF DNA HERE??
 
 ## A brief history of sequencing
 
 ### First generation sequencing
 
-Although {term}`DNA` was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
-In 1953, Watson, Crick and Franklin discovered the structure of {term}`DNA`; and in 1965 Robert Holley sequenced the first tRNA.
-Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus {term}`RNA`, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
-In parallel, Friedrich Sanger developed a {term}`DNA` sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and time-consuming.
-In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of {term}`DNA` fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data{cite}`Hood1987`.
+Although DNA was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
+In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965 Robert Holley sequenced the first tRNA.
+Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
+In parallel, Friedrich Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and time-consuming.
+In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data{cite}`Hood1987`.
 
 TODO: AN IMAGE OF SANGER SEQUENCING
 
@@ -54,21 +54,21 @@ Strengths:
 
 Limitations:
 
-- Sanger methods can only sequence short pieces of {term}`DNA` of about 300 to 1000 base pairs (bp).
+- Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs (bp).
 - The quality of a Sanger sequence is often not very good in the first 15 to 40 bases, because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
-- If the sequenced {term}`DNA` fragment has been cloned, some of the cloning vector sequence may find its way into the final sequence.
+- If the sequenced DNA fragment has been cloned, some of the cloning vector sequence may find its way into the final sequence.
 - Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
 
 ### Second generation sequencing
 
-Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen introduced a new {term}`DNA` sequencing technique called pyrosequencing, introducing the age of second generation sequencing.
+Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen introduced a new DNA sequencing technique called pyrosequencing, introducing the age of second generation sequencing.
 Second generation sequencing, also known as next-generation sequencing (NGS), was primarily made possible by further automation in the lab, the usage of computers, and the miniaturization of reactions.
 Pyrosequencing measures luminescence that is generated by pyrophosphate synthesis during sequencing.
 This process is also commonly known as "sequencing-by-synthesis".
 Two years later, Shankar Balasubramanian and David Klenerman, developed and adapted the sequencing-by-synthesis process for a new method which utilizes fluorescent dyes at the company Solexa. Solexa’s technology also forms the basis of Illumina’s sequencers, which dominate the market today.
 The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
-Many other platforms were introduced such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new {term}`DNA` is synthesized.
+Many other platforms were introduced such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new DNA is synthesized.
 
 TODO: SHOW AN ILLUMINA SEQUENCER OR HOW IT WORKS OR STH
 
@@ -92,15 +92,15 @@ Limitations:
 The third generation of sequencing, nowadays also known as next-generation sequencing, brought two innovations to the market.
 First, long-read sequencing, which describes the ability to obtain nucleotide fragments of longer lengths than the usual Illumina short-read sequencers generate (order of 75 to 300 base pairs depending on the sequencer). This is especially important for the assembly of novel genomes without an available reference genome. Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
-Pacific Biosciences' (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010, which uses so-called nanoholes containing a single {term}`DNA` polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases (kb), with possibilities for up to 70kb.
+Pacific Biosciences' (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases (kb), with possibilities for up to 70kb.
 
-Oxford Nanopore Technologies' introduced the GridION in 2012. The GridION and its successors MinIO and Flongle are portable sequencers for {term}`DNA` and {term}`RNA` sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in the electrical current that occur when nucleic acids pass through protein nanopores, to identify the nucleotide sequence{cite}`Jain2016`.
+Oxford Nanopore Technologies' introduced the GridION in 2012. The GridION and its successors MinIO and Flongle are portable sequencers for DNA and RNA sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in the electrical current that occur when nucleic acids pass through protein nanopores, to identify the nucleotide sequence{cite}`Jain2016`.
 
 Strengths:
 
 - Long reads will allow for the assembly of large novel genomes.
 - Sequencers are portable, allowing for field work.
-- Possibility to directly detect epigenetic modifications of {term}`DNA` and {term}`RNA` sequences.
+- Possibility to directly detect epigenetic modifications of DNA and RNA sequences.
 - Speed. Third generation sequencers are fast.
 
 Limitations:
@@ -110,41 +110,41 @@ Limitations:
 
 ## Overview of the NGS process
 
-Even though a variety of NGS technologies exist, the general steps to sequence {term}`DNA` (and therefore reverse transcribed {term}`RNA`) are largely the same. The differences lie primarily in the chemistry of the respective sequencing technologies.
+Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same. The differences lie primarily in the chemistry of the respective sequencing technologies.
 
-1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the {term}`DNA` samples and ligating them with adapter molecules. They act in the hybridisation of the library fragments to the matrix and provide a priming site.
+1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules. They act in the hybridisation of the library fragments to the matrix and provide a priming site.
 
-2. **Amplification and sequencing**: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of {term}`DNA` molecules are being created. All of the clusters perform individual reactions during a single sequencing run.
+2. **Amplification and sequencing**: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are being created. All of the clusters perform individual reactions during a single sequencing run.
 
 3. **Data output and analysis**: The output of a sequencing experiment depends on the sequencing technology and chemistry. Some sequencers generate fluorescence signals which are stored in specific output files, and others may generate electric signals which are stored in corresponding file formats. Generally, the amount of generated data, the raw data, is very large. Such data requires complex and computationally heavy processing. This is further discussed in the raw data processing chapter.
 
 TODO This needs a cartoon image
 
-(exp-data:{term}`RNA`-sequencing)=
+(exp-data:rna-sequencing)=
 
 ## RNA sequencing
 
-So far, we have only introduced sequencing with the unmentioned assumption that the {term}`DNA` is being sequenced. However, knowing the {term}`DNA` sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
-For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where {term}`RNA` sequencing ({term}`RNA`-Seq) comes into play.
-{term}`RNA`-Seq largely follows the {term}`DNA` sequencing protocols, but includes a reverse transcription step where complementary {term}`DNA` (c{term}`DNA`) is synthesized from the {term}`RNA` template. Sequencing {term}`RNA` allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
+So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
+For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where RNA sequencing (RNA-Seq) comes into play.
+RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template. Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
-Modern {term}`RNA` sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
-Modern {term}`RNA` sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
+Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
 
 ### Overview
 
-Sequencing of {term}`RNA` can be mainly conducted in two ways: Either by sequencing the mixed {term}`RNA` from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
-Mixing the {term}`RNA` of all cells is in most cases cheaper and easier than experimentally complex single-cell sequencing. Bulk {term}`RNA`-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity such as cell expression profile heterogeneity, which may help answer the question of interest.
-Some drugs or perturbations may affect only specific cell types or interactions between cell types. For example, in oncology, it is possible to have rare drug resistant tumor cells causing relapse, which is difficult to identify by simple bulk {term}`RNA`-seq even on cultured cells.
+Sequencing of RNA can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
+Mixing the RNA of all cells is in most cases cheaper and easier than experimentally complex single-cell sequencing. Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity such as cell expression profile heterogeneity, which may help answer the question of interest.
+Some drugs or perturbations may affect only specific cell types or interactions between cell types. For example, in oncology, it is possible to have rare drug resistant tumor cells causing relapse, which is difficult to identify by simple bulk RNA-seq even on cultured cells.
 
 To uncover such relationships, it is vital to examine gene expression on a single-cell level.
-Single-cell {term}`RNA`-Seq (scRNA-Seq) does, however, come with several caveats.
+Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct. Second, the downstream analysis becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
-A single-cell experiment generally speaking, follows the same steps as a bulk {term}`RNA`-Seq experiment (see above), but requires several adaptations.
+A single-cell experiment generally speaking, follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations.
 Just like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and the eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and, depending on the sequencing machine, sequencing. Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
@@ -157,13 +157,13 @@ Transcript quantification is the process of counting the hits of the sequenced t
 There are two major approaches to transcript quantification: full-length and tag-based.
 Full-length protocols try to cover the whole transcript uniformly with sequencing reads, whereas tag-based protocols only capture the 5' or 3' ends.
 The transcript quantification method has strong implications on the captured genes, and analysts must therefore be aware of the used quantification process.
-Full-length sequencing is restricted to plate-based protocols (see below) and the library preparation is comparable to bulk {term}`RNA`-seq sequencing approaches.
+Full-length sequencing is restricted to plate-based protocols (see below) and the library preparation is comparable to bulk RNA-seq sequencing approaches.
 An even coverage of transcripts is not always achieved with full-length protocols and therefore specific regions across the gene body may still be biased.
 A major advantage of full-length protocols is that they allow for the detection of splice variants.
 Tag-based protocols only sequence the 3' or 5' ends of the transcripts. This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms{cite}`Archer2016`. However, it allows for the usage of unique molecular identifiers (UMIs), which are useful to resolve biases in the transcript amplification process.
-The transcript amplification process is a critical step in any {term}`RNA`-seq sequencing run, to ensure that the transcripts are abundant enough for quality control and sequencing. During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging. The usage of UMIs is a common solution to quantify the original, non-duplicated molecules.
+The transcript amplification process is a critical step in any RNA-seq sequencing run, to ensure that the transcripts are abundant enough for quality control and sequencing. During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging. The usage of UMIs is a common solution to quantify the original, non-duplicated molecules.
 The UMIs serve as molecular barcodes and are also sometimes referred to as random barcodes. These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. UMIs must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases{cite}`Aird2011`.
-Amplification bias is a term for the {term}`RNA`/c{term}`DNA` sequences which are preferentially amplified and will therefore be sequenced more often, resulting in higher counts. It can have a detrimental effect on any gene expression analysis, because the not-very-active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step, where the error rate may already be comparably higher than earlier PCR stages.
+Amplification bias is a term for the RNA/cDNA sequences which are preferentially amplified and will therefore be sequenced more often, resulting in higher counts. It can have a detrimental effect on any gene expression analysis, because the not-very-active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step, where the error rate may already be comparably higher than earlier PCR stages.
 Although it is computationally possible to detect and remove such sequences by removing reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 The usage of UMIs further allows for normalization of gene counts to be performed without a loss of accuracy{cite}`Kivioja2012`.
 
@@ -230,8 +230,8 @@ TODO: ADD FIGURE FOR PLATE BASED ASSAY
 
 #### Fluidigm C1
 
-The commercial Fluidigm C1 system is a microfluidic chip, which loads and separates cells into small reaction chambers in an automated manner. The CEL-seq2 and SMART-seq (version 1) protocols are using the Fluidigm C1 chips in their workflow, allowing the {term}`RNA` extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor. However, the Fluidigm C1 requires rather homogeneous cell mixtures, since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
-Since the amplification step is carried out in individual wells, full-length sequencing is possible, effectively reducing the 3' bias of many other single-cell {term}`RNA`-seq sequencing protocols. The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
+The commercial Fluidigm C1 system is a microfluidic chip, which loads and separates cells into small reaction chambers in an automated manner. The CEL-seq2 and SMART-seq (version 1) protocols are using the Fluidigm C1 chips in their workflow, allowing the RNA extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor. However, the Fluidigm C1 requires rather homogeneous cell mixtures, since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
+Since the amplification step is carried out in individual wells, full-length sequencing is possible, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols. The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
 
 Strengths:
 
@@ -263,7 +263,7 @@ Weaknesses:
 
 In summary, we strongly recommend that wet lab and dry lab scientists select the sequencing protocol based on the aim of the study. Is a deep characterization of a specific cell type population desired? In this case one of the plate-based methods may be more suitable. On the contrary, droplet based assays will capture heterogeneous mixtures better, allowing for a more broad characterization of the sequenced cells.
 Moreover, if the budget is a limiting factor, the protocol of choice should be more cost-effective and robust. When analyzing the data, be aware of the sequencing assay specific biases.
-For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell {term}`RNA`-sequencing protocols for cell atlas projects" paper by Mereu et al{cite}`Mereu2020`.
+For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al{cite}`Mereu2020`.
 
 TODO: ADD A FIGURE FOR SUCH AN ASSAY.
 
@@ -278,11 +278,11 @@ The choice of single-cell versus single-nuclei in the experimental design is mos
 
 To get a more elaborate understanding of the experimental assays we recommend the following papers:
 
-- Comparative Analysis of Single-Cell {term}`RNA` Sequencing Methods{cite}`Ziegenhain2017`
-- Power analysis of single-cell {term}`RNA`-sequencing experiments{cite}`Svensson2017`
+- Comparative Analysis of Single-Cell RNA Sequencing Methods{cite}`Ziegenhain2017`
+- Power analysis of single-cell RNA-sequencing experiments{cite}`Svensson2017`
 - Single-nucleus and single-cell transcriptomes compared in matched cortical cell types{cite}`Bakken2018`
-- Guidelines for the experimental design of single-cell {term}`RNA` sequencing studies{cite}`Lafzi2018`
-- Benchmarking single-cell {term}`RNA`-sequencing protocols for cell atlas projects{cite}`Mereu2020`
+- Guidelines for the experimental design of single-cell RNA sequencing studies{cite}`Lafzi2018`
+- Benchmarking single-cell RNA-sequencing protocols for cell atlas projects{cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2{cite}`Wang2021`
 
 ## References
