@@ -9,7 +9,7 @@ Cells form open systems which maintain homeostasis, have a metabolism, grow, ada
 Therefore, cells are the fundamental building block of life which were first discovered in 1665 by the British scientist Robert Hooke. Hooke investigated a thin slice of cork with a very rudimentary microscope, and to his surprise noticed that the slice appeared to resemble a honeycomb. He named these tiny units 'cells'.
 
 :::{figure-md} markdown-fig
-<img src="../_static/images/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
+<img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
 
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
