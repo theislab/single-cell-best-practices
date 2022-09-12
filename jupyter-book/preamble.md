@@ -1,4 +1,4 @@
-![alt text](_static/images/title.jpg "Title")
+![alt text](_static/images/title.png "Title")
 
 <div style="page-break-after: always;"></div>
 
