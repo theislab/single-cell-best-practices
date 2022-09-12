@@ -18,7 +18,7 @@ Cells that have a hard time getting mapped onto high quality references are eith
 
 ## Modality prediction
 
-Single-cell analysis is slowly starting to move on from unimodal to cross-modal perspectives to obtain complete views of cells.
+Single-cell analysis is slowly starting to move on from unimodal to multimodal perspectives to obtain complete views of cells.
 Though, it is not always possible to obtain all modalities. We therefore expect modality prediction and unpaired integration methods to become more important.
 
 ## End-to-end pipelines
