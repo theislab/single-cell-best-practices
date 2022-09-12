@@ -48,7 +48,7 @@ The book requires the following dependencies to be installed:
 2. jupytext
 3. beautifulsoup4
 
-[An example Conda environment can be found here](https://github.com/theislab/cross-modal-single-cell-best-practices/blob/development/environment.yml).
+[An example Conda environment can be found here](https://github.com/theislab/multimodal-single-cell-best-practices/blob/development/environment.yml).
 
 Run the following command with the environment file to create the environment to build the book.
 
