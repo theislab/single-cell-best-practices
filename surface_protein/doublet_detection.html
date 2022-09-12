@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>26. Doublet detection &#8212; Multimodal single-cell analysis</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="27. Dimensionality Reduction" href="dimensionality_reduction.html" />
+    <link rel="prev" title="25. Normalization" href="normalization.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/scrna_seq.html">
+   2. Single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/data_infrastructure.html">
+   5. Data infrastructure
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   6. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
+   7. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
+   8. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
+   9. Feature selection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
+   10. Dimensionality Reduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Identifying cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/clustering.html">
+   11. Clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/integration.html">
+   12. Data integration
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferring trajectories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/pseudotemporal.html">
+   13. Pseudotemporal ordering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/rna_velocity.html">
+   14. RNA velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/fate_mapping.html">
+   15. Fate mapping
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/lineage_tracing.html">
+   16. Lineage tracing
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   17. Differential gene expression analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/compositional.html">
+   18. Compositional analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/gsea_pathway.html">
+   19. Gene set enrichment and pathway analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/perturbation_modeling.html">
+   20. Perturbation modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/grns.html">
+   21. Gene regulatory networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
+   22. Cell-cell communication
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/motivation.html">
+   23. Motivation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Surface protein
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="quality_control.html">
+   24. Quality control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="normalization.html">
+   25. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   26. Doublet detection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dimensionality_reduction.html">
+   27. Dimensionality Reduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="batch_correction.html">
+   28. Batch correction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="annotation.html">
+   29. Annotation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  AIR repertoire
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
+   30. Immune Receptor Profiling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/clonotype.html">
+   31. Clonotype analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/specificity.html">
+   32. Specificity analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
+   33. Integrating AIR and transcriptomics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   34. Reproducibility
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Outlook
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../outlook.html">
+   35. Outlook
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   36. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   37. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/theislab/multimodal-single-cell-best-practices/master?urlpath=tree/surface_protein/doublet_detection.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fsurface_protein/doublet_detection.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/edit/master/surface_protein/doublet_detection.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/surface_protein/doublet_detection.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   26.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-setup">
+   26.2. Environment setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-the-data">
+   26.3. Loading the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#doublets-detected-with-cell-type-markers">
+   26.4. Doublets detected with cell type markers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   26.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   26.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   26.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     26.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     26.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Doublet detection</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   26.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-setup">
+   26.2. Environment setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-the-data">
+   26.3. Loading the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#doublets-detected-with-cell-type-markers">
+   26.4. Doublets detected with cell type markers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   26.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   26.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   26.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     26.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     26.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="doublet-detection">
+<h1><span class="section-number">26. </span>Doublet detection<a class="headerlink" href="#doublet-detection" title="Permalink to this headline">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">26.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<p>So far, we have removed cells that potentially reflect doublets based only on their high count content. We have also filtered based on sample-wise distribution. Now, we will focus on heterotypic doublets. With ADT data, we can detect them using cell type specific surface markers<span id="id1">[]</span>.</p>
+</section>
+<section id="environment-setup">
+<h2><span class="section-number">26.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="c1"># setting visualisation parameters</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/ciro.suastegui/miniconda3/envs/citeseq_pp/lib/python3.7/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-the-data">
+<h2><span class="section-number">26.3. </span>Loading the data<a class="headerlink" href="#loading-the-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_norm_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm.h5mu&quot;</span>
+<span class="n">filtered_xdbt_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm-xdbt.h5mu&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filtered_norm_mu_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="doublets-detected-with-cell-type-markers">
+<h2><span class="section-number">26.4. </span>Doublets detected with cell type markers<a class="headerlink" href="#doublets-detected-with-cell-type-markers" title="Permalink to this headline">#</a></h2>
+<p>We are now going to look at cell type markers that are mutually exclusive. Some examples are CD3 (T cell marker) vs CD19 (B cell marker) to identify T/B cells doublets.
+As cells expressing both specific B and T cell markers do not exist in the physiological condition, those droplets most likely contain more than one cell.</p>
+<p>The same is true for cells both expressing T cell (CD3) and Monocyte (CD14) markers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 120502 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	120502 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	120502 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;
+      layers:	&#x27;counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;CD3&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;CD19-1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;log1p_total_counts&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/doublet_detection_11_0.png" src="../_images/doublet_detection_11_0.png" />
+</div>
+</div>
+<p>In this plot, we can see a large amount of cells not expressing T or B cell markers in the lower left, cells expressing only one marker in the upper left and lower right as well as some cells expressing both markers (upper right).</p>
+<p>The cells expressing both markers are most likely doublets and can be removed.</p>
+<p>We can also use CD3 and CD14 to detect T/Monocytes doublets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;CD3&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;CD14-1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;log1p_total_counts&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/doublet_detection_14_0.png" src="../_images/doublet_detection_14_0.png" />
+</div>
+</div>
+<p>It looks like the change in distribution is around 2.5. We could use an expression level above 2.5 of at least two incompatible markers as our threshold to flag doublets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">genes2filter</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CD3&quot;</span><span class="p">,</span> <span class="s2">&quot;CD19-1&quot;</span><span class="p">,</span> <span class="s2">&quot;CD14-1&quot;</span><span class="p">]</span>
+<span class="n">temp</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">][:,</span> <span class="n">genes2filter</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;doublets_markers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="ow">and</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">2.5</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="ow">and</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">2.5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">filtered</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="p">]</span>
+<span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;doublets_markers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;doublets_markers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We leave out cells expressing both markers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">keys</span><span class="o">=</span><span class="s2">&quot;log1p_total_counts&quot;</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;doublets_markers&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;doublets_markers&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/doublet_detection_19_1.png" src="../_images/doublet_detection_19_1.png" />
+</div>
+</div>
+<p>Doublets usually have a higher count due to the presence of increased counts from more than one cell. We can see this effect in the cells classified as doublets using our markers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="n">filtered</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs_names</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;doublets_markers&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>View of MuData object with n_obs × n_vars = 119837 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	119837 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	119837 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;, &#x27;doublets_markers&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;
+      uns:	&#x27;doublets_markers_colors&#x27;
+      layers:	&#x27;counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filtered_xdbt_mu_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/ciro.suastegui/miniconda3/envs/citeseq_pp/lib/python3.7/site-packages/anndata/_core/anndata.py:1241: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df[key] = c
+... storing &#39;feature_types&#39; as categorical
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">26.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
+<p>TODO</p>
+</section>
+<section id="references">
+<h2><span class="section-number">26.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<span class="target" id="id2"></span></section>
+<section id="contributors">
+<h2><span class="section-number">26.7. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">26.7.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Daniel Strobl</p></li>
+<li><p>Ciro Suast</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">26.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./surface_protein"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="normalization.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">25. </span>Normalization</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="dimensionality_reduction.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">27. </span>Dimensionality Reduction</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Lukas Heumos, Anna Schaar<br/>
+  
+      &copy; Copyright 2022.<br/>
+    <div class="extra_footer">
+      <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

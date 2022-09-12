@@ -1,0 +1,2546 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>31. Clonotype analysis &#8212; Multimodal single-cell analysis</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="32. Specificity analysis" href="specificity.html" />
+    <link rel="prev" title="30. Immune Receptor Profiling" href="ir_profiling.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/scrna_seq.html">
+   2. Single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/data_infrastructure.html">
+   5. Data infrastructure
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   6. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
+   7. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
+   8. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
+   9. Feature selection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
+   10. Dimensionality Reduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Identifying cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/clustering.html">
+   11. Clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/integration.html">
+   12. Data integration
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferring trajectories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/pseudotemporal.html">
+   13. Pseudotemporal ordering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/rna_velocity.html">
+   14. RNA velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/fate_mapping.html">
+   15. Fate mapping
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/lineage_tracing.html">
+   16. Lineage tracing
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   17. Differential gene expression analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/compositional.html">
+   18. Compositional analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/gsea_pathway.html">
+   19. Gene set enrichment and pathway analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/perturbation_modeling.html">
+   20. Perturbation modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/grns.html">
+   21. Gene regulatory networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
+   22. Cell-cell communication
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/motivation.html">
+   23. Motivation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Surface protein
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/quality_control.html">
+   24. Quality control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/normalization.html">
+   25. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/doublet_detection.html">
+   26. Doublet detection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
+   27. Dimensionality Reduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/batch_correction.html">
+   28. Batch correction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/annotation.html">
+   29. Annotation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  AIR repertoire
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="ir_profiling.html">
+   30. Immune Receptor Profiling
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   31. Clonotype analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="specificity.html">
+   32. Specificity analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="multimodal_integration.html">
+   33. Integrating AIR and transcriptomics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   34. Reproducibility
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Outlook
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../outlook.html">
+   35. Outlook
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   36. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   37. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/theislab/multimodal-single-cell-best-practices/master?urlpath=tree/air_repertoire/clonotype.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fair_repertoire/clonotype.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/edit/master/air_repertoire/clonotype.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/air_repertoire/clonotype.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonal-expansion-diversity-and-abundance">
+   31.1. Clonal expansion: diversity and abundance
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gene-segment-usage-and-spectratype">
+   31.2. Gene segment usage and spectratype
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tcr-data-preparation">
+   31.3. TCR data preparation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonotype-definition">
+   31.4. Clonotype definition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonal-expansion">
+   31.5. Clonal expansion
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonotype-abundance">
+   31.6. Clonotype abundance
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gene-usage">
+   31.7. Gene usage
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#spectratype-analysis">
+   31.8. Spectratype analysis
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motif-sequence-analysis">
+   31.9. Motif sequence analysis
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#repertoire-comparison">
+   31.10. Repertoire comparison
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bcr-data-analysis-with-dandelion">
+   31.11. BCR Data Analysis with Dandelion
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   31.12. References
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Clonotype analysis</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonal-expansion-diversity-and-abundance">
+   31.1. Clonal expansion: diversity and abundance
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gene-segment-usage-and-spectratype">
+   31.2. Gene segment usage and spectratype
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tcr-data-preparation">
+   31.3. TCR data preparation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonotype-definition">
+   31.4. Clonotype definition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonal-expansion">
+   31.5. Clonal expansion
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clonotype-abundance">
+   31.6. Clonotype abundance
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gene-usage">
+   31.7. Gene usage
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#spectratype-analysis">
+   31.8. Spectratype analysis
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motif-sequence-analysis">
+   31.9. Motif sequence analysis
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#repertoire-comparison">
+   31.10. Repertoire comparison
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bcr-data-analysis-with-dandelion">
+   31.11. BCR Data Analysis with Dandelion
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   31.12. References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="clonotype-analysis">
+<h1><span class="section-number">31. </span>Clonotype analysis<a class="headerlink" href="#clonotype-analysis" title="Permalink to this headline">#</a></h1>
+<section id="clonal-expansion-diversity-and-abundance">
+<h2><span class="section-number">31.1. </span>Clonal expansion: diversity and abundance<a class="headerlink" href="#clonal-expansion-diversity-and-abundance" title="Permalink to this headline">#</a></h2>
+<p>In general, the lymphocytes are in a dormant state until receiving an external signal (epitope recognition of foreign agent) or stimulation from autocrine agents (signaling from the same organism as a response from the innate immune system). As consequence, the specific cells proliferate dramatically to fulfill the defense response they are programmed to perform, this phenomenon is known as clonal expansion <span id="id1">[<a class="reference internal" href="#id313" title="Michal Polonsky, Benjamin Chain, and Nir Friedman. Clonal expansion under the microscope: studying lymphocyte activation and differentiation using live-cell imaging. Immunology and Cell Biology, 94(3):242–249, 2016.">Polonsky <em>et al.</em>, 2016</a>]</span>. This name referred to the recognition of the proliferation of specific cells given the high number of the same IR through many, different cells (expanded clones). This expansion provides hints of differentiation from naive lymphocytes to mature effector and memory lymphocytes, helping in the interpretation and expected results regarding previous cell annotation <span id="id2">[<a class="reference internal" href="#id313" title="Michal Polonsky, Benjamin Chain, and Nir Friedman. Clonal expansion under the microscope: studying lymphocyte activation and differentiation using live-cell imaging. Immunology and Cell Biology, 94(3):242–249, 2016.">Polonsky <em>et al.</em>, 2016</a>]</span>. On the other hand, the analysis of expanded clones should consider derivative processes such as clonal competitions (two or more clones in expansion competing for the same space), clonal dominance (one single clonal expanded cell outnumbering the rest of the clonal cells), and bystander activation (activation of T-cells by cytokines but not for T-cell receptor coupling) <span id="id3">[<a class="reference internal" href="#id312" title="Kamila Naxerova. Clonal competition in a confined space. Nature Genetics, 52(6):553–554, 2020.">Naxerova, 2020</a>]</span><span id="id4">[<a class="reference internal" href="#id311" title="Peter Ashcroft, Markus G Manz, and Sebastian Bonhoeffer. Clonal dominance and transplantation dynamics in hematopoietic stem cell compartments. PLoS computational biology, 13(10):e1005803, 2017.">Ashcroft <em>et al.</em>, 2017</a>]</span><span id="id5">[<a class="reference internal" href="#id310" title="Tae-Shin Kim and Eui-Cheol Shin. The activation of bystander cd8+ t cells and their roles in viral infection. Experimental &amp; molecular medicine, 51(12):1–9, 2019.">Kim and Shin, 2019</a>]</span>.</p>
+<p>The dynamical changes in terms of the number of cells per clonotype in a given space allow applying concepts from population biology such as diversity and abundance. Diversity is defined as number of species and their amount in an area or community, whereas abundance is the number, or frequency of individuals of the same species <span id="id6">[<a class="reference internal" href="#id314" title="Ilias S Travlos, Nikolina Cheimona, Ioannis Roussis, and Dimitrios J Bilalis. Weed-species abundance and diversity indices in relation to tillage systems and fertilization. Frontiers in Environmental Science, 6:11, 2018.">Travlos <em>et al.</em>, 2018</a>]</span>. Here, we can replace the term species with clones to make clear their relevance in single-cell IRs analysis. If a high clonal expansion has been detected in a specific cell type, e.g., effector CD8+ T-cells, the number of clones is expected to reduce because the expanded clones is taken space from the total available sacrificing receptor alternatives in the process. Therefore, we could expect a reduction in the diversity for this cell-type. On the other hand, we could expect an increase in abundance regarding the expanded clones given they have increased the number of individuals (cells) belonging to this specific clone (observed by the number of cells per clone ID).</p>
+</section>
+<section id="gene-segment-usage-and-spectratype">
+<h2><span class="section-number">31.2. </span>Gene segment usage and spectratype<a class="headerlink" href="#gene-segment-usage-and-spectratype" title="Permalink to this headline">#</a></h2>
+<p>The process shaping a T-cell or B-cell receptor by rearrangement of the V(D)J segments is thinking to generate random sequences and, in consequence, the distribution of V(D)J sequences should follow a uniform distribution. Nevertheless, it has been observed that V(D)J gene usage frequency is largely consistent across different individuals, which suggests a preference selection in terms of the V(D)J gene segments used <span id="id7">[<a class="reference internal" href="#id315" title="Yuval Elhanati, Anand Murugan, Curtis G Callan Jr, Thierry Mora, and Aleksandra M Walczak. Quantifying selection in immune receptor repertoires. Proceedings of the National Academy of Sciences, 111(27):9875–9880, 2014.">Elhanati <em>et al.</em>, 2014</a>]</span>. That allows the analysis of gene segment usage in terms of abundance of most used gene segments per cell type and frequency of most abundant segment per cell type per individual <span id="id8">[<a class="reference internal" href="#id316" title="Mark Chernyshev, Mateusz Kaduk, Martin Corcoran, and Gunilla B Karlsson Hedestam. Vdj gene usage in igm repertoires of rhesus and cynomolgus macaques. Frontiers in immunology, 2021.">Chernyshev <em>et al.</em>, 2021</a>]</span>. Likewise, considering we know the amino aicd composition of the immune receptors for each cell, it is possible to identify the exact combinations of V(D)J segments of interest.</p>
+<p>On the other hand, the recombination of V(D)J gene segments and the imprecise junction of V and J segments produce CDR3 regions with variable lengths. Spectratype analysis is seen as the measurement of the heterogeneity of CDR3 regions by their length diversity across the different cell types <span id="id9">[<a class="reference internal" href="#id317" title="Stanca M Ciupe, Blythe H Devlin, Mary Louise Markert, and Thomas B Kepler. Quantification of total t-cell receptor diversity by flow cytometry and spectratyping. BMC immunology, 14(1):1–12, 2013.">Ciupe <em>et al.</em>, 2013</a>]</span>. This measurement, in combination with clonal expansion and gene segment usage provides pieces of evidence to define well-described immunodominant clonotypes.</p>
+</section>
+<section id="tcr-data-preparation">
+<h2><span class="section-number">31.3. </span>TCR data preparation<a class="headerlink" href="#tcr-data-preparation" title="Permalink to this headline">#</a></h2>
+<p>Here, as well as in the pre-processing step, we will use the utilities from the <em>Scirpy</em> library to perform the analysis and locate the results in the <em>AnnData</em> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">palmotif</span> <span class="kn">import</span> <span class="n">compute_motif</span><span class="p">,</span> <span class="n">svg_logo</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_versions</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: If you miss a compact list, please try `print_header`!
+-----
+anndata     0.8.0
+scanpy      1.6.1
+sinfo       0.3.1
+-----
+Levenshtein                 NA
+PIL                         8.1.0
+adjustText                  NA
+airr                        1.3.1
+anndata                     0.8.0
+anyio                       NA
+attr                        20.3.0
+babel                       2.9.0
+backcall                    0.2.0
+brotli                      1.0.9
+certifi                     2020.12.05
+cffi                        1.14.4
+chardet                     4.0.0
+cloudpickle                 1.6.0
+constants                   NA
+cycler                      0.10.0
+cython_runtime              NA
+dask                        2020.12.0
+dateutil                    2.8.1
+decorator                   4.4.2
+future_fstrings             NA
+get_version                 2.1
+google                      NA
+h5py                        3.7.0
+highs_wrapper               NA
+idna                        2.10
+igraph                      0.8.3
+ipykernel                   5.4.3
+ipython_genutils            0.2.0
+ipywidgets                  7.6.3
+jedi                        0.18.0
+jinja2                      2.11.2
+joblib                      1.0.0
+json5                       NA
+jsonschema                  3.2.0
+jupyter_server              1.2.1
+jupyterlab_server           2.1.2
+kiwisolver                  1.3.1
+legacy_api_wrap             1.2
+leidenalg                   0.8.3
+llvmlite                    0.35.0
+louvain                     0.7.0
+lxml                        4.6.2
+markupsafe                  1.1.1
+matplotlib                  3.3.3
+mpl_toolkits                NA
+natsort                     7.1.0
+nbclassic                   NA
+nbformat                    5.1.1
+networkx                    2.5
+numba                       0.52.0
+numexpr                     2.7.2
+numpy                       1.19.5
+packaging                   20.8
+pandas                      1.2.0
+parasail                    1.2.4
+parso                       0.8.1
+pexpect                     4.8.0
+pickleshare                 0.7.5
+pkg_resources               NA
+prometheus_client           NA
+prompt_toolkit              3.0.10
+ptyprocess                  0.7.0
+pvectorc                    NA
+pygments                    2.7.4
+pyparsing                   2.4.7
+pyrsistent                  NA
+pytz                        2020.5
+requests                    2.25.1
+scanpy                      1.6.1
+scipy                       1.6.0
+scirpy                      0.11.0
+seaborn                     0.11.1
+send2trash                  NA
+setuptools_scm              NA
+sinfo                       0.3.1
+six                         1.15.0
+sklearn                     0.24.0
+sniffio                     1.2.0
+sparse                      0.11.2
+statsmodels                 0.12.1
+storemagic                  NA
+tables                      3.6.1
+texttable                   1.6.3
+tlz                         0.11.1
+toolz                       0.11.1
+tornado                     6.1
+tqdm                        4.56.0
+tracerlib                   NA
+traitlets                   5.0.5
+typing_extensions           NA
+urllib3                     1.26.2
+wcwidth                     0.2.5
+yaml                        5.3.1
+yamlordereddictloader       NA
+zmq                         21.0.0
+-----
+IPython             7.19.0
+jupyter_client      6.1.11
+jupyter_core        4.7.0
+jupyterlab          3.0.4
+notebook            6.2.0
+-----
+Python 3.8.6 (default, Jan 14 2021, 17:39:54) [GCC 8.3.0]
+Linux-3.10.0-1160.25.1.el7.x86_64-x86_64-with-glibc2.28
+48 logical CPU cores
+-----
+Session information updated at 2022-08-12 11:05
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;/home/icb/juan.henao/BestPracticeStart/data&quot;</span>
+
+<span class="n">path_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_filtered.h5ad&quot;</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Note</strong></p>
+<p>Before performing any analysis, it is necessary to reduce the size of our data to make this tutorial computationally less expensive and make it timely suitable.</p>
+<p>To do so, we have chosen six samples ensuring the different centers and medical statuses were represented.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;patient_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;COVID-014&quot;</span><span class="p">,</span> <span class="s2">&quot;CV0902&quot;</span><span class="p">,</span> <span class="s2">&quot;AP6&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-045&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-066&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-067&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="c1"># adata[adata.obs[&#39;Status&#39;] == &#39;Healthy&#39;].obs[&#39;patient_id&#39;]</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/juan.henao/.local/lib/python3.8/site-packages/anndata/compat/_overloaded_dict.py:106: ImplicitModificationWarning: Trying to modify attribute `._uns` of view, initializing view as actual.
+  self.data[key] = value
+</pre></div>
+</div>
+<img alt="../_images/clonotype_9_1.png" src="../_images/clonotype_9_1.png" />
+</div>
+</div>
+</section>
+<section id="clonotype-definition">
+<h2><span class="section-number">31.4. </span>Clonotype definition<a class="headerlink" href="#clonotype-definition" title="Permalink to this headline">#</a></h2>
+<p>One way to define the clonotypes is by detecting all identical sequences for VJ CDR3 and VDJ CDR3. It is the most used one due to allowing to define trustable cell lineages. However, another way to deal with this problem is finding a distance between sequences, this method is restrictive, and it could be useful to test some hypotheses regarding complex immunological phenotypes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">ir_dist</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once the identity between T-cells is obtained for V(D)J CDR3, it is time to define the cluster of cells corresponding to one specific clonotype. A clonotype will be a set of cells with identical sequences, considering the parameters used in the previous step. However, it is possible to define clonotypes as a set of cells with just identical VJ or just identical VDJ sequences. Furthermore, it is possible definding the clonotypes by comparing either or both pairs of VJ or VDJ sequences.</p>
+<p>The set of parameters to define clonotypes should be the same as used previously. In our case, the sequences of amino acids must be compared using identity as a metric. In addition, we are setting the additional parameters to define clonotypes if the V(D)J are identical using the most abundant pair as the target sequence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clonotype_clusters</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">,</span> <span class="n">receptor_arms</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">dual_ir</span><span class="o">=</span><span class="s2">&quot;primary_only&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "e7159ee89ce947b18b58af4fedb6ec77", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+<p>The way to visualize the results is through a network where each node represents a clonotype (cluster of cells), and its size represents the number of cells detected in that cluster. They are labeled with a numerical ID, however, the order is given randomly, and it is not showing any additional information beyond to identify clonotypes of interest.</p>
+<p>To generate the network, it is necessary to establish the layout to be plotted afterward. This parameter should be one of the igraph library layouts. Furthermore, it is recommended to set at least <em>min_cells</em> &gt;=2 to avoid overcrowding the plot with singletons (clonotypes with only one cell as a member). Here, this parameter is established as &gt;= 50 to show just the biggest clonotypes to easier the observation of the expected result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clonotype_network</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now it is possible to plot the network. The result is just like the one you can observe below. As we said previously, each node (circle) represents a clonotype with a unique number as ID. Furthermore, the size represents the number of cells belonging to each specific clonotype.</p>
+<p>On the other hand, we set the color according to the samples to observe if a clonotype appears in two or more samples, those clonotypes are called <em>public clonotypes</em> and are of high interest due to they represent shared immunological responses, and therefore they are candidates to explain general response over the disease/phenotype under study. Otherwise, there are <em>privet clonotypes</em> which represent patient/sample specific clonal response, and it could be interesting for analysis regarding personalized medicine. As you can see below, the highest clonotypes are composed just of private clonotypes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonotype_network</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">base_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">label_fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+    <span class="n">panel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;cc_aa_identity&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/clonotype_17_1.png" src="../_images/clonotype_17_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As mentioned previously, the detected clonotypes are labeled with a number we can use to extract more information. For instance, we are extracting the immune sequences for clonotype number 0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;receptor_subtype&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;n_cells&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>IR_VJ_1_junction_aa</th>
+      <th>IR_VDJ_1_junction_aa</th>
+      <th>receptor_subtype</th>
+      <th>n_cells</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>CAVSVVRNNNARLMF</td>
+      <td>CASSARGASGERTDTQYF</td>
+      <td>TRA+TRB</td>
+      <td>71</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="clonal-expansion">
+<h2><span class="section-number">31.5. </span>Clonal expansion<a class="headerlink" href="#clonal-expansion" title="Permalink to this headline">#</a></h2>
+<p>The positive selection of immune cells, e.g., for immune response activation, causes their expansion (division) reflected in the representation of clonotypes in one or more cells. The first step is to identify the clonal expansion and add a column in the .obs table.</p>
+<p>Once the clonal expansion has been identified, it is easy to observe that, plotting the number of cells per cell type corresponding to expanded clones as a stacked bar plot.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">)</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
+    <span class="n">clip_at</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_22_0.png" src="../_images/clonotype_22_0.png" />
+</div>
+</div>
+<p>The plot above tells us that CD4+ is the most abundant cell type. However, CD8+ shows the highest number of expanded clonotypes, which could be possible by the positive selection of CD8+ effector cells.</p>
+<p>Another way to observe clonal expansion is by normalizing the size of cell-type clusters. Here, the clonal expansion differences between CD4+ and CD8+ are easier to observe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_24_0.png" src="../_images/clonotype_24_0.png" />
+</div>
+</div>
+<p>Another way to observe the clonal expansion phenomenon is through the loss of alpha diversity. The expanded clones are less diverse because there are more individuals (cells) from the same type (clone) inside a specific population (cluster of cells). There are different types of diversity and different ways to calculate this according to different assumptions. However, in TCR analysis, we are interested in correlate this concept with the clonality expansion per cluster as the reduction of variability in a specific set of features (alpha diversity).</p>
+<p>The plot below reflects this assumption, the alpha diversity of CD8+ is lower than CD4+ due to the possible clonal expansion from CD8+ effector cells reducing their diversity in consideration of the total cells conforming to the CD8+ cluster. The same observation is repeated for clusters NK_16hi and gdT-cell, which are highly expanded, as the clonal expansion plot demonstrates (see above).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">alpha_diversity</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_26_0.png" src="../_images/clonotype_26_0.png" />
+</div>
+</div>
+</section>
+<section id="clonotype-abundance">
+<h2><span class="section-number">31.6. </span>Clonotype abundance<a class="headerlink" href="#clonotype-abundance" title="Permalink to this headline">#</a></h2>
+<p>Contrary to diversity, which is expected to be reduced when clonal expansion is gained, regarding a cluster of cells, the abundance is expected to be gained when clonal expansion occurred due to the increase in the number of cells from the same clone.</p>
+<p>The next function helps to plot the most abundant clonotypes showing the ID, the number of cells and the cluster (cell type) the specific clonotype belongs to. Here, we highlight the ten most abundant clonotypes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;cc_aa_identity&#39; as categorical
+... storing &#39;clonal_expansion&#39; as categorical
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div>
+</div>
+<img alt="../_images/clonotype_29_1.png" src="../_images/clonotype_29_1.png" />
+</div>
+</div>
+<p>The plot above showed that clonotype ID 11501 was the most expanded and is present in more than one cell cluster. However, according to the previous results, it is expected this clonotype corresponds to the same sample and therefore is involved in one specific condition (COVID or healthy). Hence, the repetition of this plotting is worth it to check this assumption.</p>
+<p>Furthermore, the clonal expansion is expected to occur in response to an immune event, which means it is expected to the total, or at least the majority of the most expanded clones belong to the COVID set of patients.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># By condition</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;Status&quot;</span><span class="p">,</span>
+    <span class="n">max_cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># By sample</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">max_cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div>
+</div>
+<img alt="../_images/clonotype_31_1.png" src="../_images/clonotype_31_1.png" />
+<img alt="../_images/clonotype_31_2.png" src="../_images/clonotype_31_2.png" />
+</div>
+</div>
+</section>
+<section id="gene-usage">
+<h2><span class="section-number">31.7. </span>Gene usage<a class="headerlink" href="#gene-usage" title="Permalink to this headline">#</a></h2>
+<p>In the previous steps, we analyzed the data regarding clones, their expansion, and their diversity and abundance. However, it is possible to analyze the data to describe the specific V(D)J gene segments, their abundances across the different cell clusters, and their specific combination resulting in the immune receptors.</p>
+<p>As described in the introduction, there are shreds of evidence of selective selection of gene segments privileging the use of some gene segments over the rest of them. Therefore, the first step is to detect those segments privileged for this phenomenon via abundance analysis, the assumption behind is straightforward, if one gene segment is highly abundant, it means it was selectively chosen in IR final arrangement.</p>
+<p>We calculated the abundances for the V segment in the VJ chain using the same function to clone abundance calculation. The sequence with ID TRAV19 was the most abundant V gene, and it was present in CD8+ cells mainly. Otherwise, the second most abundant V segment (TRAV29/DV5) was mostly selected for the CD4+ cell cluster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_v_call&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Normalized abundances</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_v_call&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_34_0.png" src="../_images/clonotype_34_0.png" />
+<img alt="../_images/clonotype_34_1.png" src="../_images/clonotype_34_1.png" />
+</div>
+</div>
+<p>On the other hand, it is possible to choose the list of segments of interest and detect the fraction of cells for which those segments are represented across the different clusters of cells.</p>
+<p>Here, we are showing a list of four V segments for the VDJ chain. From them, the TRBV18 segment was the most abundant in the majority of cell clusters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;TRBV19&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV10-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-9&quot;</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="p">:,</span>
+    <span class="p">],</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/juan.henao/.local/lib/python3.8/site-packages/anndata/compat/_overloaded_dict.py:106: ImplicitModificationWarning: Trying to modify attribute `._uns` of view, initializing view as actual.
+  self.data[key] = value
+</pre></div>
+</div>
+<img alt="../_images/clonotype_36_1.png" src="../_images/clonotype_36_1.png" />
+</div>
+</div>
+<p>Beyond the individual analysis and specific V(D)J segments according to abundances, it is possible to visualize a specific combination of V, D, and J segments for the total number of cells (see below). It provides valuable information regarding how the different privileged segments are combined to create different alpha and beta IRs sequences and how they are related to the rest of the low-selected segments.</p>
+<p>One assumption for this graphic would be the most abundant segments are combined expecting a kind of linear representation. However, those segments are independent of each other in the random somatic recombination, therefore, this assumption is not true.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">vdj_usage</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">full_combination</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_segments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_ribbons</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_38_0.png" src="../_images/clonotype_38_0.png" />
+</div>
+</div>
+<p>The segment combination plot showed that there was just one D segment (TBRD2) for the VDJ chains detected for the set of cells and patients used here from the original experiment.</p>
+<p>As well as the previous plots, it is possible to plot the combination of segments for a set of specific observations. In this case, we focused attention checking the combination of V(D)J segments for a set of clonotypes with positive detection of the TRBD2 segment highlighted above. In the next example, we used the first five clonotype IDs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_d_call&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRBD2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cc_aa_identity</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5150     1
+1815     1
+4427     1
+3500     1
+4078     1
+        ..
+4734     0
+4735     0
+4736     0
+4737     0
+14180    0
+Name: cc_aa_identity, Length: 14181, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">vdj_usage</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;5150&quot;</span><span class="p">,</span> <span class="s2">&quot;1815&quot;</span><span class="p">,</span> <span class="s2">&quot;4427&quot;</span><span class="p">,</span> <span class="s2">&quot;3500&quot;</span><span class="p">,</span> <span class="s2">&quot;4078&quot;</span><span class="p">]),</span> <span class="p">:</span>
+    <span class="p">],</span>
+    <span class="n">max_ribbons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_segments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_41_0.png" src="../_images/clonotype_41_0.png" />
+</div>
+</div>
+</section>
+<section id="spectratype-analysis">
+<h2><span class="section-number">31.8. </span>Spectratype analysis<a class="headerlink" href="#spectratype-analysis" title="Permalink to this headline">#</a></h2>
+<p>Spectratype analysis provides more information about V(D)J sequences heterogeneity. Not all IR sequences have the same number of amino acids, given the pseudo-random gene segment cleavage during somatic recombination. In addition, spectratype is another way to define immunodominance based on the most abundant sequence length. If the majority of V(D)J sequences share the same length, it means the functional chains should have the same or a similar number of amino acids.</p>
+<p>Below, we plotted the abundances for VDJ sequences and the most common length was 15, closely followed by 14 amino acids detected in a variety of cell clusters, mainly CD4+ and CD8+. We highlight the last cell type, which was previously detected as highly clonal expanded. However, we found even VDJ sequences with lengths of 10 or 21 amino acids. However, they were strongly less represented in the general set of VDJ sequences.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">},</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_44_0.png" src="../_images/clonotype_44_0.png" />
+</div>
+</div>
+<p>Furthermore, it is possible to visualize the V(D)J sequence length distributions individually for each cluster of cells, which provides a better perspective of those clusters closer to the most abundant sequence length. The plot below shows how the distribution of CD4+ and CD8+ is related to the previous analysis for general length abundances and how heterogenic the distribution per cluster is, for example, in the case of gdT-cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span>
+    <span class="n">curve_layout</span><span class="o">=</span><span class="s2">&quot;shifted&quot;</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+    <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kde_norm&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/juan.henao/.local/lib/python3.8/site-packages/scirpy/pl/base.py:262: UserWarning: FixedFormatter should only be used together with FixedLocator
+  ax.set_yticklabels(order)
+</pre></div>
+</div>
+<img alt="../_images/clonotype_46_1.png" src="../_images/clonotype_46_1.png" />
+</div>
+</div>
+<p>By exploiting the commodities provided by the AnnData object, we can extract more specific information from spectratype analysis easily. For instance, we can visualize the distribution of sequence lengths regarding a specific V(D)J gene segment according to their fraction in the cluster of cells. Here, we selected the four V segments from V(D)J chain illustrated in the last gene usage plot. Once again, they were represented mainly by sequences of length 15. TRBV5-1 was the most abundant, followed by TRBV11-3, which was represented mainly by this specific length.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;TRBV5-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-3&quot;</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="p">:,</span>
+    <span class="p">],</span>
+    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">},</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/juan.henao/.local/lib/python3.8/site-packages/anndata/compat/_overloaded_dict.py:106: ImplicitModificationWarning: Trying to modify attribute `._uns` of view, initializing view as actual.
+  self.data[key] = value
+</pre></div>
+</div>
+<img alt="../_images/clonotype_48_1.png" src="../_images/clonotype_48_1.png" />
+</div>
+</div>
+</section>
+<section id="motif-sequence-analysis">
+<h2><span class="section-number">31.9. </span>Motif sequence analysis<a class="headerlink" href="#motif-sequence-analysis" title="Permalink to this headline">#</a></h2>
+<p>So far, we have analyzed different properties of the IR sequences, which provides us with information we can use to establish similarities. However, it is necessary to compare the sequences per se and to be able to detect those similarities at the amino acid-specific position level. One widely used tool to do that is the generation of logo plots. They show the amino acids per position, and the size of every letter indicates how much a specific letter is repeated across all the sequences under analysis.</p>
+<p>Considering the information we have, we can create a logo plot for all the V(D)J sequences of length 15 with one of the five V segments analyzed in the previous step.</p>
+<p>To perform this plot, we used the <em>palmotif</em> python library, this is implemented in other libraries for TCR analysis, such as <em>TCRdist3</em>. This library uses as input a list of sequences and saves the logo plot directly to a designated file path.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">motif</span> <span class="o">=</span> <span class="n">compute_motif</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">[</span>
+        <span class="p">(</span>
+            <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;TRBV5-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-3&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">:,</span>
+    <span class="p">]</span>
+    <span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">svg_logo</span><span class="p">(</span>
+    <span class="n">motif</span><span class="p">,</span> <span class="s2">&quot;../_static/images/air_repertoire/logo_motif.svg&quot;</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="s2">&quot;taylor&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result was saved as <em>logo_motif.svg</em>, and the result is the plot you can see below.</p>
+<p><img alt="" src="../_images/logo_motif.svg" /></p>
+<p>As you can see, C-A-S are the three first amino acids for all the sequences analyzed in this example, as well F is the last amino acid for all the sequences. In addition, position 14 could be a Y, or an F, or an H, or an T. The fourth amino acid is most probable to be an S more than R or T. Those types of characterization are useful in protein profile discoveries, which are relevant in further experimental performance such as protein design.</p>
+</section>
+<section id="repertoire-comparison">
+<h2><span class="section-number">31.10. </span>Repertoire comparison<a class="headerlink" href="#repertoire-comparison" title="Permalink to this headline">#</a></h2>
+<p>The IR repertoires can be used to identify similarities between samples, which could help to understand the general response regarding the experimental perturbation. <em>Scirpy</em> allows the comparison between samples through the construction of a matrix with the abundances of clonotypes per sample (<code class="docutils literal notranslate"><span class="pre">df</span></code>), a Jaccard distance between samples (<code class="docutils literal notranslate"><span class="pre">dst</span></code>), and a linkage for hierarchical clustering (<code class="docutils literal notranslate"><span class="pre">lk</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">lk</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>cc_aa_identity</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>...</th>
+      <th>14171</th>
+      <th>14172</th>
+      <th>14173</th>
+      <th>14174</th>
+      <th>14175</th>
+      <th>14176</th>
+      <th>14177</th>
+      <th>14178</th>
+      <th>14179</th>
+      <th>14180</th>
+    </tr>
+    <tr>
+      <th>patient_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AP6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>COVID-014</th>
+      <td>71.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>COVID-045</th>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>COVID-066</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>COVID-067</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>32.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>CV0902</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>6 rows × 14181 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.        , 1.        , 1.        , 1.        , 1.        ,
+       1.        , 1.        , 1.        , 1.        , 1.        ,
+       1.        , 1.        , 1.        , 0.99982818, 1.        ])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lk</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[3.        , 5.        , 0.99982818, 2.        ],
+       [0.        , 1.        , 1.        , 2.        ],
+       [2.        , 7.        , 1.        , 3.        ],
+       [6.        , 8.        , 1.        , 5.        ],
+       [4.        , 9.        , 1.        , 6.        ]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The previous data can be displayed as a heatmap which facilitates the interpretation of the results. For instance, the patients <em>COVID-066</em> and <em>CV0902</em> are the most similar, although with a low distance between them. Curiously both samples come from different centers, <em>COVID-066</em> from Newcastle and <em>CV0902</em> from Cambridge.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">heatmap_cats</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Centre&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.matrix.ClusterGrid at 0x7ff53cc2e2b0&gt;
+</pre></div>
+</div>
+<img alt="../_images/clonotype_61_1.png" src="../_images/clonotype_61_1.png" />
+</div>
+</div>
+<p>Once sample similarities are detected, it is possible to analyze the pair of samples of interest. One way to do it is by comparing the clonotype sizes (number of cells) and the number of clonotypes (IDs) sharing a specific size. Visually, a scatter plot allows easy interpretations of the comparison result. Here, we compared the samples <em>COVID-067</em> versus <em>CV0902</em> in consideration of the heatmap interpretation above.</p>
+<p>The scatterplot below shows that both samples are characterized by a high number of clonotypes with small size. Specifically, <em>COVID-067</em> presents a few clonotypes with high number of cells (size) than <em>CV0902</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">pair_to_plot</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;COVID-067&quot;</span><span class="p">,</span> <span class="s2">&quot;CV0902&quot;</span><span class="p">],</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No handles with labels found to put in legend.
+</pre></div>
+</div>
+<img alt="../_images/clonotype_63_1.png" src="../_images/clonotype_63_1.png" />
+</div>
+</div>
+</section>
+<section id="bcr-data-analysis-with-dandelion">
+<h2><span class="section-number">31.11. </span>BCR Data Analysis with Dandelion<a class="headerlink" href="#bcr-data-analysis-with-dandelion" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">dandelion</span> <span class="k">as</span> <span class="nn">ddl</span>
+<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_versions</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: If you miss a compact list, please try `print_header`!
+-----
+anndata     0.8.0
+scanpy      1.6.1
+sinfo       0.3.1
+-----
+Bio                         1.79
+Levenshtein                 NA
+PIL                         8.1.0
+adjustText                  NA
+airr                        1.3.1
+anndata                     0.8.0
+anyio                       NA
+attr                        20.3.0
+babel                       2.9.0
+backcall                    0.2.0
+brotli                      1.0.9
+certifi                     2020.12.05
+cffi                        1.14.4
+changeo                     1.2.0
+chardet                     4.0.0
+cloudpickle                 1.6.0
+constants                   NA
+cycler                      0.10.0
+cython_runtime              NA
+dandelion                   0.2.3
+dask                        2020.12.0
+dateutil                    2.8.1
+decorator                   4.4.2
+descartes                   NA
+distance                    NA
+fontTools                   4.33.3
+future_fstrings             NA
+get_version                 2.1
+google                      NA
+h5py                        3.7.0
+highs_wrapper               NA
+idna                        2.10
+igraph                      0.8.3
+ipykernel                   5.4.3
+ipython_genutils            0.2.0
+ipywidgets                  7.6.3
+jedi                        0.18.0
+jinja2                      2.11.2
+joblib                      1.0.0
+json5                       NA
+jsonschema                  3.2.0
+jupyter_server              1.2.1
+jupyterlab_server           2.1.2
+kiwisolver                  1.3.1
+legacy_api_wrap             1.2
+leidenalg                   0.8.3
+llvmlite                    0.35.0
+louvain                     0.7.0
+lxml                        4.6.2
+markupsafe                  1.1.1
+matplotlib                  3.5.2
+mizani                      0.7.4
+mpl_toolkits                NA
+natsort                     7.1.0
+nbclassic                   NA
+nbformat                    5.1.1
+networkx                    2.5
+numba                       0.52.0
+numexpr                     2.7.2
+numpy                       1.19.5
+nxviz                       NA
+packaging                   20.8
+palettable                  3.3.0
+pandas                      1.4.3
+parasail                    1.2.4
+parso                       0.8.1
+patsy                       0.5.1
+pexpect                     4.8.0
+pickleshare                 0.7.5
+pkg_resources               NA
+plotnine                    0.8.0
+polyleven                   NA
+presto                      0.7.0
+prometheus_client           NA
+prompt_toolkit              3.0.10
+ptyprocess                  0.7.0
+pvectorc                    NA
+pygments                    2.7.4
+pyparsing                   2.4.7
+pyrsistent                  NA
+pytoml                      NA
+pytz                        2020.5
+requests                    2.25.1
+rpy2                        3.4.2
+scanpy                      1.6.1
+scipy                       1.6.0
+scirpy                      0.10.1
+seaborn                     0.11.1
+send2trash                  NA
+setuptools_scm              NA
+sinfo                       0.3.1
+six                         1.15.0
+sklearn                     0.24.0
+sniffio                     1.2.0
+sparse                      0.11.2
+statsmodels                 0.12.1
+storemagic                  NA
+tables                      3.6.1
+texttable                   1.6.3
+threadpoolctl               2.1.0
+tlz                         0.11.1
+toolz                       0.11.1
+tornado                     6.1
+tqdm                        4.56.0
+tracerlib                   NA
+traitlets                   5.0.5
+typing_extensions           NA
+tzlocal                     NA
+urllib3                     1.26.2
+wcwidth                     0.2.5
+yaml                        5.3.1
+yamlordereddictloader       NA
+zmq                         21.0.0
+-----
+IPython             7.19.0
+jupyter_client      6.1.11
+jupyter_core        4.7.0
+jupyterlab          3.0.4
+notebook            6.2.0
+-----
+Python 3.8.6 (default, Jan 14 2021, 17:39:54) [GCC 8.3.0]
+Linux-3.10.0-1160.25.1.el7.x86_64-x86_64-with-glibc2.28
+48 logical CPU cores
+-----
+Session information updated at 2022-06-27 21:27
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;/home/icb/juan.henao/BestPracticeStart/data&quot;</span>
+
+<span class="n">path_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_filtered.h5ad&quot;</span>
+<span class="n">adata_bcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata_bcr</span><span class="p">[</span>
+    <span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;patient_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;COVID-030&quot;</span><span class="p">,</span> <span class="s2">&quot;IVLPS-6&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-064&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-014&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-027&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-024&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vdjx</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">from_scirpy</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">vdjx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Non-standard locus name ignored: Multi 
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dandelion class object with n_obs = 20772 and n_contigs = 53380
+    data: &#39;sequence_id&#39;, &#39;sequence&#39;, &#39;rev_comp&#39;, &#39;productive&#39;, &#39;v_call&#39;, &#39;d_call&#39;, &#39;j_call&#39;, &#39;sequence_alignment&#39;, &#39;germline_alignment&#39;, &#39;junction&#39;, &#39;junction_aa&#39;, &#39;v_cigar&#39;, &#39;d_cigar&#39;, &#39;j_cigar&#39;, &#39;c_call&#39;, &#39;consensus_count&#39;, &#39;duplicate_count&#39;, &#39;locus&#39;, &#39;cell_id&#39;, &#39;multi_chain&#39;, &#39;receptor_subtype&#39;, &#39;patient_id&#39;, &#39;chain_pairing&#39;, &#39;is_cell&#39;, &#39;receptor_type&#39;, &#39;high_confidence&#39;
+    metadata: &#39;locus_VDJ&#39;, &#39;locus_VJ&#39;, &#39;productive_VDJ&#39;, &#39;productive_VJ&#39;, &#39;v_call_VDJ&#39;, &#39;v_call_VJ&#39;, &#39;d_call_VDJ&#39;, &#39;j_call_VDJ&#39;, &#39;j_call_VJ&#39;, &#39;c_call_VDJ&#39;, &#39;c_call_VJ&#39;, &#39;duplicate_count_VDJ&#39;, &#39;duplicate_count_VJ&#39;, &#39;duplicate_count_VDJ_1&#39;, &#39;duplicate_count_VDJ_2&#39;, &#39;duplicate_count_VJ_1&#39;, &#39;duplicate_count_VJ_2&#39;, &#39;duplicate_count_VDJ_3&#39;, &#39;duplicate_count_VJ_3&#39;, &#39;duplicate_count_VJ_4&#39;, &#39;duplicate_count_VJ_5&#39;, &#39;duplicate_count_VDJ_4&#39;, &#39;duplicate_count_VJ_6&#39;, &#39;duplicate_count_VDJ_5&#39;, &#39;duplicate_count_VJ_7&#39;, &#39;junction_VDJ&#39;, &#39;junction_VJ&#39;, &#39;junction_aa_VDJ&#39;, &#39;junction_aa_VJ&#39;, &#39;isotype&#39;, &#39;isotype_status&#39;, &#39;locus_status&#39;, &#39;productive_status&#39;, &#39;rearrangement_VDJ_status&#39;, &#39;rearrangement_VJ_status&#39;, &#39;constant_VDJ_status&#39;, &#39;constant_VJ_status&#39;
+    edges: None
+    layout: None
+    graph: None
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;v_call&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;j_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;j_call&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">find_clones</span><span class="p">(</span><span class="n">vdjx</span><span class="p">)</span>
+<span class="n">vdjx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finding clones based on VDJ chains : 100%|██████████| 273/273 [00:01&lt;00:00, 256.21it/s]
+Refining clone assignment based on VJ chain pairing : 100%|██████████| 20772/20772 [00:00&lt;00:00, 447062.99it/s]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dandelion class object with n_obs = 20772 and n_contigs = 46087
+    data: &#39;sequence_id&#39;, &#39;sequence&#39;, &#39;rev_comp&#39;, &#39;productive&#39;, &#39;v_call&#39;, &#39;d_call&#39;, &#39;j_call&#39;, &#39;sequence_alignment&#39;, &#39;germline_alignment&#39;, &#39;junction&#39;, &#39;junction_aa&#39;, &#39;v_cigar&#39;, &#39;d_cigar&#39;, &#39;j_cigar&#39;, &#39;c_call&#39;, &#39;consensus_count&#39;, &#39;duplicate_count&#39;, &#39;locus&#39;, &#39;cell_id&#39;, &#39;multi_chain&#39;, &#39;receptor_subtype&#39;, &#39;patient_id&#39;, &#39;chain_pairing&#39;, &#39;is_cell&#39;, &#39;receptor_type&#39;, &#39;high_confidence&#39;, &#39;junction_length&#39;, &#39;clone_id&#39;
+    metadata: &#39;clone_id&#39;, &#39;clone_id_by_size&#39;, &#39;locus_VDJ&#39;, &#39;locus_VJ&#39;, &#39;productive_VDJ&#39;, &#39;productive_VJ&#39;, &#39;v_call_VDJ&#39;, &#39;v_call_VJ&#39;, &#39;d_call_VDJ&#39;, &#39;j_call_VDJ&#39;, &#39;j_call_VJ&#39;, &#39;c_call_VDJ&#39;, &#39;c_call_VJ&#39;, &#39;duplicate_count_VDJ&#39;, &#39;duplicate_count_VJ&#39;, &#39;duplicate_count_VDJ_1&#39;, &#39;duplicate_count_VJ_1&#39;, &#39;duplicate_count_VJ_2&#39;, &#39;duplicate_count_VDJ_2&#39;, &#39;duplicate_count_VJ_3&#39;, &#39;duplicate_count_VDJ_3&#39;, &#39;duplicate_count_VJ_4&#39;, &#39;duplicate_count_VDJ_4&#39;, &#39;duplicate_count_VJ_5&#39;, &#39;duplicate_count_VJ_6&#39;, &#39;junction_VDJ&#39;, &#39;junction_VJ&#39;, &#39;junction_aa_VDJ&#39;, &#39;junction_aa_VJ&#39;, &#39;isotype&#39;, &#39;isotype_status&#39;, &#39;locus_status&#39;, &#39;productive_status&#39;, &#39;rearrangement_VDJ_status&#39;, &#39;rearrangement_VJ_status&#39;, &#39;constant_VDJ_status&#39;, &#39;constant_VJ_status&#39;
+    edges: None
+    layout: None
+    graph: None
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_threshold</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/python/lib/python3.8/site-packages/rpy2/robjects/pandas2ri.py:59: UserWarning: Error while trying to convert the column &quot;productive&quot;. Fall back to string conversion. The error is: Series can only be of one type, or None (and here we have &lt;class &#39;str&#39;&gt; and &lt;class &#39;bool&#39;&gt;).
+R[write to console]: Error in (function (db, sequenceColumn = &quot;junction&quot;, vCallColumn = &quot;v_call&quot;,  : 
+  The locus column contains invalid loci annotations.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Rerun this after filtering. For now, switching to heavy mode.
+Automatic Threshold : 0.11
+ method = density
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clones</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;hh_s5f&quot;</span><span class="p">)</span>
+<span class="n">vdjx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dandelion class object with n_obs = 20772 and n_contigs = 46087
+    data: &#39;sequence_id&#39;, &#39;sequence&#39;, &#39;rev_comp&#39;, &#39;productive&#39;, &#39;v_call&#39;, &#39;d_call&#39;, &#39;j_call&#39;, &#39;sequence_alignment&#39;, &#39;germline_alignment&#39;, &#39;junction&#39;, &#39;junction_aa&#39;, &#39;v_cigar&#39;, &#39;d_cigar&#39;, &#39;j_cigar&#39;, &#39;c_call&#39;, &#39;consensus_count&#39;, &#39;duplicate_count&#39;, &#39;locus&#39;, &#39;cell_id&#39;, &#39;multi_chain&#39;, &#39;receptor_subtype&#39;, &#39;patient_id&#39;, &#39;chain_pairing&#39;, &#39;is_cell&#39;, &#39;receptor_type&#39;, &#39;high_confidence&#39;, &#39;junction_length&#39;, &#39;clone_id&#39;, &#39;changeo_clone_id&#39;
+    metadata: &#39;clone_id&#39;, &#39;clone_id_by_size&#39;, &#39;locus_VDJ&#39;, &#39;locus_VJ&#39;, &#39;productive_VDJ&#39;, &#39;productive_VJ&#39;, &#39;v_call_VDJ&#39;, &#39;v_call_VJ&#39;, &#39;d_call_VDJ&#39;, &#39;j_call_VDJ&#39;, &#39;j_call_VJ&#39;, &#39;c_call_VDJ&#39;, &#39;c_call_VJ&#39;, &#39;duplicate_count_VDJ&#39;, &#39;duplicate_count_VJ&#39;, &#39;duplicate_count_VDJ_1&#39;, &#39;duplicate_count_VJ_1&#39;, &#39;duplicate_count_VJ_2&#39;, &#39;duplicate_count_VDJ_2&#39;, &#39;duplicate_count_VJ_3&#39;, &#39;duplicate_count_VDJ_3&#39;, &#39;duplicate_count_VJ_4&#39;, &#39;duplicate_count_VDJ_4&#39;, &#39;duplicate_count_VJ_5&#39;, &#39;duplicate_count_VJ_6&#39;, &#39;junction_VDJ&#39;, &#39;junction_VJ&#39;, &#39;junction_aa_VDJ&#39;, &#39;junction_aa_VJ&#39;, &#39;isotype&#39;, &#39;isotype_status&#39;, &#39;locus_status&#39;, &#39;productive_status&#39;, &#39;rearrangement_VDJ_status&#39;, &#39;rearrangement_VJ_status&#39;, &#39;constant_VDJ_status&#39;, &#39;constant_VJ_status&#39;, &#39;changeo_clone_id&#39;
+    edges: None
+    layout: None
+    graph: None
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 14406 × 0
+    obs: &#39;is_cell&#39;, &#39;high_confidence&#39;, &#39;multi_chain&#39;, &#39;extra_chains&#39;, &#39;IR_VJ_1_c_call&#39;, &#39;IR_VJ_2_c_call&#39;, &#39;IR_VDJ_1_c_call&#39;, &#39;IR_VDJ_2_c_call&#39;, &#39;IR_VJ_1_consensus_count&#39;, &#39;IR_VJ_2_consensus_count&#39;, &#39;IR_VDJ_1_consensus_count&#39;, &#39;IR_VDJ_2_consensus_count&#39;, &#39;IR_VJ_1_d_call&#39;, &#39;IR_VJ_2_d_call&#39;, &#39;IR_VDJ_1_d_call&#39;, &#39;IR_VDJ_2_d_call&#39;, &#39;IR_VJ_1_duplicate_count&#39;, &#39;IR_VJ_2_duplicate_count&#39;, &#39;IR_VDJ_1_duplicate_count&#39;, &#39;IR_VDJ_2_duplicate_count&#39;, &#39;IR_VJ_1_j_call&#39;, &#39;IR_VJ_2_j_call&#39;, &#39;IR_VDJ_1_j_call&#39;, &#39;IR_VDJ_2_j_call&#39;, &#39;IR_VJ_1_junction&#39;, &#39;IR_VJ_2_junction&#39;, &#39;IR_VDJ_1_junction&#39;, &#39;IR_VDJ_2_junction&#39;, &#39;IR_VJ_1_junction_aa&#39;, &#39;IR_VJ_2_junction_aa&#39;, &#39;IR_VDJ_1_junction_aa&#39;, &#39;IR_VDJ_2_junction_aa&#39;, &#39;IR_VJ_1_locus&#39;, &#39;IR_VJ_2_locus&#39;, &#39;IR_VDJ_1_locus&#39;, &#39;IR_VDJ_2_locus&#39;, &#39;IR_VJ_1_productive&#39;, &#39;IR_VJ_2_productive&#39;, &#39;IR_VDJ_1_productive&#39;, &#39;IR_VDJ_2_productive&#39;, &#39;IR_VJ_1_v_call&#39;, &#39;IR_VJ_2_v_call&#39;, &#39;IR_VDJ_1_v_call&#39;, &#39;IR_VDJ_2_v_call&#39;, &#39;has_ir&#39;, &#39;patient_id&#39;, &#39;receptor_type&#39;, &#39;receptor_subtype&#39;, &#39;chain_pairing&#39;
+    uns: &#39;has_ir_colors&#39;, &#39;scirpy_version&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">generate_network</span><span class="p">(</span>
+    <span class="n">vdjx</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sequence_alignment&quot;</span><span class="p">,</span> <span class="n">layout_method</span><span class="o">=</span><span class="s2">&quot;sfdp&quot;</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Setting up data: 46087it [00:05, 8961.42it/s]
+Calculating distances... : 100%|██████████| 16298/16298 [00:09&lt;00:00, 1641.79it/s]
+Generating edge list : 100%|██████████| 996/996 [00:00&lt;00:00, 1576.20it/s]
+Computing overlap : 100%|██████████| 16298/16298 [00:37&lt;00:00, 437.95it/s]
+Linking edges : 100%|██████████| 15344/15344 [00:17&lt;00:00, 870.09it/s]  
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>generating network layout
+To benefit from faster layout computation, please install graph-tool: conda install -c conda-forge graph-tool
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vdjx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dandelion class object with n_obs = 20772 and n_contigs = 42830
+    data: &#39;sequence_id&#39;, &#39;sequence&#39;, &#39;rev_comp&#39;, &#39;productive&#39;, &#39;v_call&#39;, &#39;d_call&#39;, &#39;j_call&#39;, &#39;sequence_alignment&#39;, &#39;germline_alignment&#39;, &#39;junction&#39;, &#39;junction_aa&#39;, &#39;v_cigar&#39;, &#39;d_cigar&#39;, &#39;j_cigar&#39;, &#39;c_call&#39;, &#39;consensus_count&#39;, &#39;duplicate_count&#39;, &#39;locus&#39;, &#39;cell_id&#39;, &#39;multi_chain&#39;, &#39;high_confidence&#39;, &#39;is_cell&#39;, &#39;receptor_type&#39;, &#39;patient_id&#39;, &#39;chain_pairing&#39;, &#39;receptor_subtype&#39;, &#39;clone_id&#39;, &#39;junction_length&#39;, &#39;umi_count&#39;, &#39;changeo_clone_id&#39;
+    metadata: &#39;clone_id&#39;, &#39;clone_id_by_size&#39;, &#39;locus_VDJ&#39;, &#39;locus_VJ&#39;, &#39;productive_VDJ&#39;, &#39;productive_VJ&#39;, &#39;v_call_VDJ&#39;, &#39;v_call_VJ&#39;, &#39;d_call_VDJ&#39;, &#39;j_call_VDJ&#39;, &#39;j_call_VJ&#39;, &#39;c_call_VDJ&#39;, &#39;c_call_VJ&#39;, &#39;duplicate_count_VDJ&#39;, &#39;duplicate_count_VJ&#39;, &#39;duplicate_count_VDJ_1&#39;, &#39;duplicate_count_VJ_1&#39;, &#39;duplicate_count_VJ_2&#39;, &#39;duplicate_count_VDJ_2&#39;, &#39;junction_aa_VDJ&#39;, &#39;junction_aa_VJ&#39;, &#39;locus_status&#39;, &#39;locus_status_summary&#39;, &#39;productive&#39;, &#39;productive_summary&#39;, &#39;isotype&#39;, &#39;isotype_summary&#39;, &#39;vdj_status&#39;, &#39;vdj_status_summary&#39;, &#39;constant_status_summary&#39;, &#39;changeo_clone_id&#39;
+    distance: None
+    edges: None
+    layout: None
+    graph: None
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 20772 × 0
+    obs: &#39;is_cell&#39;, &#39;high_confidence&#39;, &#39;multi_chain&#39;, &#39;extra_chains&#39;, &#39;IR_VJ_1_c_call&#39;, &#39;IR_VJ_2_c_call&#39;, &#39;IR_VDJ_1_c_call&#39;, &#39;IR_VDJ_2_c_call&#39;, &#39;IR_VJ_1_consensus_count&#39;, &#39;IR_VJ_2_consensus_count&#39;, &#39;IR_VDJ_1_consensus_count&#39;, &#39;IR_VDJ_2_consensus_count&#39;, &#39;IR_VJ_1_d_call&#39;, &#39;IR_VJ_2_d_call&#39;, &#39;IR_VDJ_1_d_call&#39;, &#39;IR_VDJ_2_d_call&#39;, &#39;IR_VJ_1_duplicate_count&#39;, &#39;IR_VJ_2_duplicate_count&#39;, &#39;IR_VDJ_1_duplicate_count&#39;, &#39;IR_VDJ_2_duplicate_count&#39;, &#39;IR_VJ_1_j_call&#39;, &#39;IR_VJ_2_j_call&#39;, &#39;IR_VDJ_1_j_call&#39;, &#39;IR_VDJ_2_j_call&#39;, &#39;IR_VJ_1_junction&#39;, &#39;IR_VJ_2_junction&#39;, &#39;IR_VDJ_1_junction&#39;, &#39;IR_VDJ_2_junction&#39;, &#39;IR_VJ_1_junction_aa&#39;, &#39;IR_VJ_2_junction_aa&#39;, &#39;IR_VDJ_1_junction_aa&#39;, &#39;IR_VDJ_2_junction_aa&#39;, &#39;IR_VJ_1_locus&#39;, &#39;IR_VJ_2_locus&#39;, &#39;IR_VDJ_1_locus&#39;, &#39;IR_VDJ_2_locus&#39;, &#39;IR_VJ_1_productive&#39;, &#39;IR_VJ_2_productive&#39;, &#39;IR_VDJ_1_productive&#39;, &#39;IR_VDJ_2_productive&#39;, &#39;IR_VJ_1_v_call&#39;, &#39;IR_VJ_2_v_call&#39;, &#39;IR_VDJ_1_v_call&#39;, &#39;IR_VDJ_2_v_call&#39;, &#39;has_ir&#39;, &#39;patient_id&#39;, &#39;receptor_type&#39;, &#39;receptor_subtype&#39;, &#39;chain_pairing&#39;
+    uns: &#39;has_ir_colors&#39;, &#39;scirpy_version&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">,</span> <span class="n">expanded_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">edgeweights</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">extract_edge_weights</span><span class="p">(</span><span class="n">vdjx</span><span class="p">)</span>
+<span class="p">]</span>  <span class="c1"># invert and add 1 to each edge weight (e) so that distance of 0 becomes the thickest edge</span>
+<span class="c1"># therefore, the thicker the line, the shorter the edit distance.</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;isotype&quot;</span><span class="p">],</span> <span class="n">legend_fontoutline</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">edges_width</span><span class="o">=</span><span class="n">edgeweights</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>converting matrices
+Updating anndata slots
+</pre></div>
+</div>
+<img alt="../_images/clonotype_82_1.png" src="../_images/clonotype_82_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_size</span><span class="p">(</span><span class="n">vdjx</span><span class="p">)</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>converting matrices
+Updating anndata slots
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;clone_id_size&quot;</span><span class="p">],</span>
+    <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="n">legend_fontoutline</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">edges_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_84_0.png" src="../_images/clonotype_84_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">stackedbarplot</span><span class="p">(</span>
+    <span class="n">vdjx</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;isotype&quot;</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;locus_status&quot;</span><span class="p">,</span> <span class="n">xtick_rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8e5be7f370&gt;
+</pre></div>
+</div>
+<img alt="../_images/clonotype_85_1.png" src="../_images/clonotype_85_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">vdjx</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;junction_length&quot;</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;c_call&quot;</span><span class="p">,</span> <span class="n">locus</span><span class="o">=</span><span class="s2">&quot;IGH&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">2.3</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8e4c065760&gt;
+</pre></div>
+</div>
+<img alt="../_images/clonotype_86_1.png" src="../_images/clonotype_86_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">vdjx</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;junction_length&quot;</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;c_call&quot;</span><span class="p">,</span> <span class="n">locus</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;IGK&quot;</span><span class="p">,</span> <span class="s2">&quot;IGL&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8f38e02670&gt;
+</pre></div>
+</div>
+<img alt="../_images/clonotype_87_1.png" src="../_images/clonotype_87_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;is_cell&#39;, &#39;high_confidence&#39;, &#39;multi_chain&#39;, &#39;extra_chains&#39;,
+       &#39;IR_VJ_1_c_call&#39;, &#39;IR_VJ_2_c_call&#39;, &#39;IR_VDJ_1_c_call&#39;,
+       &#39;IR_VDJ_2_c_call&#39;, &#39;IR_VJ_1_consensus_count&#39;, &#39;IR_VJ_2_consensus_count&#39;,
+       &#39;IR_VDJ_1_consensus_count&#39;, &#39;IR_VDJ_2_consensus_count&#39;,
+       &#39;IR_VJ_1_d_call&#39;, &#39;IR_VJ_2_d_call&#39;, &#39;IR_VDJ_1_d_call&#39;,
+       &#39;IR_VDJ_2_d_call&#39;, &#39;IR_VJ_1_duplicate_count&#39;, &#39;IR_VJ_2_duplicate_count&#39;,
+       &#39;IR_VDJ_1_duplicate_count&#39;, &#39;IR_VDJ_2_duplicate_count&#39;,
+       &#39;IR_VJ_1_j_call&#39;, &#39;IR_VJ_2_j_call&#39;, &#39;IR_VDJ_1_j_call&#39;,
+       &#39;IR_VDJ_2_j_call&#39;, &#39;IR_VJ_1_junction&#39;, &#39;IR_VJ_2_junction&#39;,
+       &#39;IR_VDJ_1_junction&#39;, &#39;IR_VDJ_2_junction&#39;, &#39;IR_VJ_1_junction_aa&#39;,
+       &#39;IR_VJ_2_junction_aa&#39;, &#39;IR_VDJ_1_junction_aa&#39;, &#39;IR_VDJ_2_junction_aa&#39;,
+       &#39;IR_VJ_1_locus&#39;, &#39;IR_VJ_2_locus&#39;, &#39;IR_VDJ_1_locus&#39;, &#39;IR_VDJ_2_locus&#39;,
+       &#39;IR_VJ_1_productive&#39;, &#39;IR_VJ_2_productive&#39;, &#39;IR_VDJ_1_productive&#39;,
+       &#39;IR_VDJ_2_productive&#39;, &#39;IR_VJ_1_v_call&#39;, &#39;IR_VJ_2_v_call&#39;,
+       &#39;IR_VDJ_1_v_call&#39;, &#39;IR_VDJ_2_v_call&#39;, &#39;has_ir&#39;, &#39;patient_id&#39;,
+       &#39;receptor_type&#39;, &#39;receptor_subtype&#39;, &#39;chain_pairing&#39;, &#39;clone_id&#39;,
+       &#39;clone_id_by_size&#39;, &#39;locus_VDJ&#39;, &#39;locus_VJ&#39;, &#39;productive_VDJ&#39;,
+       &#39;productive_VJ&#39;, &#39;v_call_VDJ&#39;, &#39;v_call_VJ&#39;, &#39;d_call_VDJ&#39;, &#39;j_call_VDJ&#39;,
+       &#39;j_call_VJ&#39;, &#39;c_call_VDJ&#39;, &#39;c_call_VJ&#39;, &#39;duplicate_count_VDJ&#39;,
+       &#39;duplicate_count_VJ&#39;, &#39;duplicate_count_VDJ_1&#39;, &#39;duplicate_count_VJ_1&#39;,
+       &#39;duplicate_count_VJ_2&#39;, &#39;duplicate_count_VDJ_2&#39;, &#39;duplicate_count_VJ_3&#39;,
+       &#39;duplicate_count_VDJ_3&#39;, &#39;duplicate_count_VJ_4&#39;,
+       &#39;duplicate_count_VDJ_4&#39;, &#39;duplicate_count_VJ_5&#39;, &#39;duplicate_count_VJ_6&#39;,
+       &#39;junction_VDJ&#39;, &#39;junction_VJ&#39;, &#39;junction_aa_VDJ&#39;, &#39;junction_aa_VJ&#39;,
+       &#39;isotype&#39;, &#39;isotype_status&#39;, &#39;locus_status&#39;, &#39;productive_status&#39;,
+       &#39;rearrangement_VDJ_status&#39;, &#39;rearrangement_VJ_status&#39;,
+       &#39;constant_VDJ_status&#39;, &#39;constant_VJ_status&#39;, &#39;changeo_clone_id&#39;,
+       &#39;clone_id_size&#39;, &#39;clone_centrality&#39;, &#39;clone_size_gini&#39;,
+       &#39;clone_centrality_gini&#39;, &#39;clone_centrality_cluster_size_gini_expanded&#39;,
+       &#39;clone_centrality_vertex_size_gini_expanded&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">colorby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">weighted_overlap</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">colorby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">weighted_overlap</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">52</span><span class="o">-</span><span class="mi">8</span><span class="n">d2868b4577c</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_overlap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">groupby</span> <span class="o">=</span> <span class="s1">&#39;patient_id&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>                      <span class="n">colorby</span> <span class="o">=</span> <span class="s1">&#39;patient_id&#39;</span><span class="p">,</span> <span class="n">weighted_overlap</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_overlap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>                      <span class="n">groupby</span> <span class="o">=</span> <span class="s1">&#39;patient_id&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>                      <span class="n">colorby</span> <span class="o">=</span> <span class="s1">&#39;patient_id&#39;</span><span class="p">,</span>
+
+<span class="nn">~/.local/lib/python3.8/site-packages/dandelion/plotting/_plotting.py</span> in <span class="ni">clone_overlap</span><span class="nt">(self, groupby, colorby, min_clone_size, weighted_overlap, clone_key, color_mapping, node_labels, return_graph, save, legend_kwargs, node_label_size, as_heatmap, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1088</span>             <span class="kn">from</span> <span class="nn">nxviz</span> <span class="kn">import</span> <span class="n">annotate</span>
+<span class="g g-Whitespace">   </span><span class="mi">1089</span> 
+<span class="ne">-&gt; </span><span class="mi">1090</span>             <span class="n">ax</span> <span class="o">=</span> <span class="n">nxv</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1091</span>                 <span class="n">G</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1092</span>                 <span class="n">group_by</span><span class="o">=</span><span class="n">colorby</span><span class="p">,</span>
+
+<span class="ne">TypeError</span>: base() got an unexpected keyword argument &#39;node_palette&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_overlap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">colorby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="n">weighted_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">as_heatmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="c1"># seaborn clustermap kwargs</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="n">annot_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/python/lib/python3.8/site-packages/seaborn/matrix.py:619: ClusterWarning: scipy.cluster: The symmetric non-negative hollow observation matrix looks suspiciously like an uncondensed distance matrix
+</pre></div>
+</div>
+<img alt="../_images/clonotype_90_1.png" src="../_images/clonotype_90_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_diversity</span><span class="p">(</span>
+    <span class="n">vdj</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;sample_id&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;gini&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;clone_centrality&quot;</span>
+<span class="p">)</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdj</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing Gini indices for cluster and vertex size using network.
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">44</span><span class="o">-</span><span class="n">f299bec7e946</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_diversity</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>                        <span class="n">groupby</span> <span class="o">=</span> <span class="s1">&#39;isotype&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>                        <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;gini&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>                        <span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;clone_network&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>                        <span class="n">expanded_only</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+
+<span class="nn">~/.local/lib/python3.8/site-packages/dandelion/tools/_diversity.py</span> in <span class="ni">clone_diversity</span><span class="nt">(self, groupby, method, metric, clone_key, update_obs_meta, diversity_key, resample, downsample, n_resample, normalize, reconstruct_network, expanded_only, use_contracted, key_added, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">205</span>     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;gini&quot;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">206</span>         <span class="k">if</span> <span class="n">update_obs_meta</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">207</span>             <span class="n">diversity_gini</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">208</span>                 <span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">209</span>                 <span class="n">groupby</span><span class="o">=</span><span class="n">groupby</span><span class="p">,</span>
+
+<span class="nn">~/.local/lib/python3.8/site-packages/dandelion/tools/_diversity.py</span> in <span class="ni">diversity_gini</span><span class="nt">(self, groupby, metric, clone_key, update_obs_meta, diversity_key, resample, n_resample, downsample, reconstruct_network, expanded_only, use_contracted, key_added, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">813</span>         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">814</span> 
+<span class="ne">--&gt; </span><span class="mi">815</span>     <span class="n">res</span> <span class="o">=</span> <span class="n">gini_indices</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">816</span>         <span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">817</span>         <span class="n">groupby</span><span class="o">=</span><span class="n">groupby</span><span class="p">,</span>
+
+<span class="nn">~/.local/lib/python3.8/site-packages/dandelion/tools/_diversity.py</span> in <span class="ni">gini_indices</span><span class="nt">(self, groupby, metric, clone_key, resample, n_resample, downsample, reconstruct_network, expanded_only, contracted, key_added, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">697</span>                     <span class="k">if</span> <span class="n">met</span> <span class="o">==</span> <span class="s2">&quot;clone_network&quot;</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">698</span>                         <span class="k">if</span> <span class="n">reconstruct_network</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">699</span>                             <span class="n">generate_network</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">700</span>                                 <span class="n">ddl_dat</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">701</span>                                 <span class="n">clone_key</span><span class="o">=</span><span class="n">clonekey</span><span class="p">,</span>
+
+<span class="nn">~/.local/lib/python3.8/site-packages/dandelion/tools/_network.py</span> in <span class="ni">generate_network</span><span class="nt">(self, key, clone_key, min_size, downsample, verbose, compute_layout, layout_method, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span> 
+<span class="g g-Whitespace">     </span><span class="mi">87</span>     <span class="k">if</span> <span class="n">key_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dat</span><span class="p">:</span>
+<span class="nn">---&gt; 88         raise ValueError(&quot;key {} not found</span> in <span class="ni">input table.&quot;.format</span><span class="nt">(key_))</span>
+<span class="g g-Whitespace">     </span><span class="mi">89</span> 
+<span class="g g-Whitespace">     </span><span class="mi">90</span>     <span class="k">if</span> <span class="n">clone_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="ne">ValueError</span>: key sequence_alignment_aa not found in input table.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;clone_size_gini&quot;</span><span class="p">,</span> <span class="s2">&quot;clone_centrality_gini&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_93_0.png" src="../_images/clonotype_93_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_diversity</span><span class="p">(</span>
+    <span class="n">vdjx</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;isotype&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;gini&quot;</span><span class="p">,</span>
+    <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;clone_centrality&quot;</span><span class="p">,</span>
+    <span class="n">expanded_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">key_added</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;clone_centrality_cluster_size_gini_expanded&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;clone_centrality_vertex_size_gini_expanded&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing gini indices for clone size using metadata and node closeness centrality using network.
+converting matrices
+Updating anndata slots
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;clone_centrality_cluster_size_gini_expanded&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;clone_centrality_vertex_size_gini_expanded&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/clonotype_95_0.png" src="../_images/clonotype_95_0.png" />
+</div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">31.12. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<div class="docutils container" id="id10">
+<dl class="citation">
+<dt class="label" id="id311"><span class="brackets"><a class="fn-backref" href="#id4">AMB17</a></span></dt>
+<dd><p>Peter Ashcroft, Markus G Manz, and Sebastian Bonhoeffer. Clonal dominance and transplantation dynamics in hematopoietic stem cell compartments. <em>PLoS computational biology</em>, 13(10):e1005803, 2017.</p>
+</dd>
+<dt class="label" id="id316"><span class="brackets"><a class="fn-backref" href="#id8">CKCH21</a></span></dt>
+<dd><p>Mark Chernyshev, Mateusz Kaduk, Martin Corcoran, and Gunilla B Karlsson Hedestam. Vdj gene usage in igm repertoires of rhesus and cynomolgus macaques. <em>Frontiers in immunology</em>, 2021.</p>
+</dd>
+<dt class="label" id="id317"><span class="brackets"><a class="fn-backref" href="#id9">CDMK13</a></span></dt>
+<dd><p>Stanca M Ciupe, Blythe H Devlin, Mary Louise Markert, and Thomas B Kepler. Quantification of total t-cell receptor diversity by flow cytometry and spectratyping. <em>BMC immunology</em>, 14(1):1–12, 2013.</p>
+</dd>
+<dt class="label" id="id315"><span class="brackets"><a class="fn-backref" href="#id7">EMCJ+14</a></span></dt>
+<dd><p>Yuval Elhanati, Anand Murugan, Curtis G Callan Jr, Thierry Mora, and Aleksandra M Walczak. Quantifying selection in immune receptor repertoires. <em>Proceedings of the National Academy of Sciences</em>, 111(27):9875–9880, 2014.</p>
+</dd>
+<dt class="label" id="id310"><span class="brackets"><a class="fn-backref" href="#id5">KS19</a></span></dt>
+<dd><p>Tae-Shin Kim and Eui-Cheol Shin. The activation of bystander cd8+ t cells and their roles in viral infection. <em>Experimental &amp; molecular medicine</em>, 51(12):1–9, 2019.</p>
+</dd>
+<dt class="label" id="id312"><span class="brackets"><a class="fn-backref" href="#id3">Nax20</a></span></dt>
+<dd><p>Kamila Naxerova. Clonal competition in a confined space. <em>Nature Genetics</em>, 52(6):553–554, 2020.</p>
+</dd>
+<dt class="label" id="id313"><span class="brackets">PCF16</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p>Michal Polonsky, Benjamin Chain, and Nir Friedman. Clonal expansion under the microscope: studying lymphocyte activation and differentiation using live-cell imaging. <em>Immunology and Cell Biology</em>, 94(3):242–249, 2016.</p>
+</dd>
+<dt class="label" id="id314"><span class="brackets"><a class="fn-backref" href="#id6">TCRB18</a></span></dt>
+<dd><p>Ilias S Travlos, Nikolina Cheimona, Ioannis Roussis, and Dimitrios J Bilalis. Weed-species abundance and diversity indices in relation to tillage systems and fertilization. <em>Frontiers in Environmental Science</em>, 6:11, 2018.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./air_repertoire"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="ir_profiling.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">30. </span>Immune Receptor Profiling</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="specificity.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">32. </span>Specificity analysis</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Lukas Heumos, Anna Schaar<br/>
+  
+      &copy; Copyright 2022.<br/>
+    <div class="extra_footer">
+      <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

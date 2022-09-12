@@ -1,0 +1,1007 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>28. Batch correction &#8212; Multimodal single-cell analysis</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="29. Annotation" href="annotation.html" />
+    <link rel="prev" title="27. Dimensionality Reduction" href="dimensionality_reduction.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/scrna_seq.html">
+   2. Single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/data_infrastructure.html">
+   5. Data infrastructure
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   6. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
+   7. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
+   8. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
+   9. Feature selection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
+   10. Dimensionality Reduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Identifying cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/clustering.html">
+   11. Clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/integration.html">
+   12. Data integration
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferring trajectories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/pseudotemporal.html">
+   13. Pseudotemporal ordering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/rna_velocity.html">
+   14. RNA velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/fate_mapping.html">
+   15. Fate mapping
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/lineage_tracing.html">
+   16. Lineage tracing
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   17. Differential gene expression analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/compositional.html">
+   18. Compositional analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/gsea_pathway.html">
+   19. Gene set enrichment and pathway analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/perturbation_modeling.html">
+   20. Perturbation modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/grns.html">
+   21. Gene regulatory networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
+   22. Cell-cell communication
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/motivation.html">
+   23. Motivation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Surface protein
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="quality_control.html">
+   24. Quality control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="normalization.html">
+   25. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="doublet_detection.html">
+   26. Doublet detection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dimensionality_reduction.html">
+   27. Dimensionality Reduction
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   28. Batch correction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="annotation.html">
+   29. Annotation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  AIR repertoire
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
+   30. Immune Receptor Profiling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/clonotype.html">
+   31. Clonotype analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/specificity.html">
+   32. Specificity analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
+   33. Integrating AIR and transcriptomics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   34. Reproducibility
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Outlook
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../outlook.html">
+   35. Outlook
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   36. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   37. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/theislab/multimodal-single-cell-best-practices/master?urlpath=tree/surface_protein/batch_correction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fsurface_protein/batch_correction.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/multimodal-single-cell-best-practices/edit/master/surface_protein/batch_correction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/surface_protein/batch_correction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   28.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-setup">
+   28.2. Environment setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-the-data">
+   28.3. Loading the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#harmony">
+   28.4. Harmony
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   28.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   28.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   28.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     28.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     28.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Batch correction</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   28.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-setup">
+   28.2. Environment setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-the-data">
+   28.3. Loading the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#harmony">
+   28.4. Harmony
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   28.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   28.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   28.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     28.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     28.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="batch-correction">
+<h1><span class="section-number">28. </span>Batch correction<a class="headerlink" href="#batch-correction" title="Permalink to this headline">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">28.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<p>As could be seen for our earlier visualized ADT data, batch effects between samples are very pronounced.
+Hence, batch correction to mitigate this effect is required.
+Generally, no purpose build methods for the batch correction of ADT data have been developed, and we therefore suggest applying methods designed for transcriptomics data to ADT data.</p>
+</section>
+<section id="environment-setup">
+<h2><span class="section-number">28.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">harmonypy</span> <span class="k">as</span> <span class="nn">hm</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/ciro.suastegui/miniconda3/envs/citeseq_pp/lib/python3.7/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-the-data">
+<h2><span class="section-number">28.3. </span>Loading the data<a class="headerlink" href="#loading-the-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_xdbt_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm-xdbt.h5mu&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filtered_xdbt_mu_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It is not yet clear which batch effect correction works best for ADT data. For general purposes we recommend scVI <span id="id1">[]</span> or Harmony <span id="id2">[]</span> to perform batch correction of the data due to their robust performance on scRNA-seq data.</p>
+</section>
+<section id="harmony">
+<h2><span class="section-number">28.4. </span>Harmony<a class="headerlink" href="#harmony" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">ho</span> <span class="o">=</span> <span class="n">hm</span><span class="o">.</span><span class="n">run_harmony</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-08-23 17:14:39,455 - harmonypy - INFO - Iteration 1 of 10
+2022-08-23 17:17:08,689 - harmonypy - INFO - Iteration 2 of 10
+2022-08-23 17:19:37,835 - harmonypy - INFO - Iteration 3 of 10
+2022-08-23 17:22:05,621 - harmonypy - INFO - Iteration 4 of 10
+2022-08-23 17:24:35,136 - harmonypy - INFO - Iteration 5 of 10
+2022-08-23 17:27:01,593 - harmonypy - INFO - Iteration 6 of 10
+2022-08-23 17:29:28,106 - harmonypy - INFO - Iteration 7 of 10
+2022-08-23 17:31:54,225 - harmonypy - INFO - Iteration 8 of 10
+2022-08-23 17:33:46,116 - harmonypy - INFO - Iteration 9 of 10
+2022-08-23 17:35:00,320 - harmonypy - INFO - Iteration 10 of 10
+2022-08-23 17:36:11,653 - harmonypy - INFO - Converged after 10 iterations
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 22min 51s, sys: 17min 41s, total: 40min 32s
+Wall time: 22min 38s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pc_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ho</span><span class="o">.</span><span class="n">Z_corr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pc_std</span><span class="p">)),</span> <span class="n">y</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">pc_std</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:&gt;
+</pre></div>
+</div>
+<img alt="../_images/batch_correction_12_1.png" src="../_images/batch_correction_12_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pcahm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ho</span><span class="o">.</span><span class="n">Z_corr</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obsm</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AxisArrays with keys: X_pcahm
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_pcahm&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 50s, sys: 19.3 s, total: 4min 10s
+Wall time: 3min 24s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: You’re trying to run this on 140 dimensions of `.X`, if you really want this, set `use_rep=&#39;X&#39;`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/batch_correction_17_0.png" src="../_images/batch_correction_17_0.png" />
+</div>
+</div>
+<p>As we can see here, the cells of different donors are much more intermixed in the embedding than before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD4-1&quot;</span><span class="p">,</span> <span class="s2">&quot;CD8&quot;</span><span class="p">,</span> <span class="s2">&quot;CD3&quot;</span><span class="p">])</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD14-1&quot;</span><span class="p">,</span> <span class="s2">&quot;CD16&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/batch_correction_19_0.png" src="../_images/batch_correction_19_0.png" />
+<img alt="../_images/batch_correction_19_1.png" src="../_images/batch_correction_19_1.png" />
+</div>
+</div>
+<p>We check the expression of a few marker genes to confirm that separate cell types are still separate from each other. We can see that T-Cells still form a separate population that is further split into CD4 and CD8 T-Cells.</p>
+<p>In following steps, you can now go ahead and cluster and annotate the cells in a similar process as it is described in the annotation chapter[LINK].
+Here, we have only used the ADT part of the data and thus lost all of the information contained in the RNA part of the study.
+In other chapters, we will explore how you can make use of both modalities jointly, which allows for a more detailed cell type annotation for example.</p>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">28.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
+<p>TODO</p>
+</section>
+<section id="references">
+<h2><span class="section-number">28.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<span class="target" id="id3"></span></section>
+<section id="contributors">
+<h2><span class="section-number">28.7. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">28.7.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Daniel Strobl</p></li>
+<li><p>Ciro Suast</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">28.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./surface_protein"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="dimensionality_reduction.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">27. </span>Dimensionality Reduction</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="annotation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">29. </span>Annotation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Lukas Heumos, Anna Schaar<br/>
+  
+      &copy; Copyright 2022.<br/>
+    <div class="extra_footer">
+      <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

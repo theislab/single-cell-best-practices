@@ -18,7 +18,7 @@ Cells that have a hard time getting mapped onto high quality references are eith
 
 ## Modality prediction
 
-Single-cell analysis is slowly starting to move on from unimodal to cross-modal perspectives to obtain complete views of cells.
+Single-cell analysis is slowly starting to move on from unimodal to multimodal perspectives to obtain complete views of cells.
 Though, it is not always possible to obtain all modalities. We therefore expect modality prediction and unpaired integration methods to become more important.
 
 ## End-to-end pipelines
@@ -26,7 +26,7 @@ Though, it is not always possible to obtain all modalities. We therefore expect 
 The amount of single-cell data and analysis possibilities is growing on such a big scale that it is inevitable that as many processes as possible should be automated.
 With the advent of reference mapping to atlases to automate cell type annotation and automated quality control tools, the development of highly automated pipelines is becoming a real possibility.
 Especially, the reanalysis of "old", existing datasets could uncover previously missed biology.
-The first pipelines are starting to appear {cite}`Khozoie2021`, and we expect more pipelines with support for modalities beyond RNA to be developed.
+The first pipelines are starting to appear {cite}`ol:Khozoie2021`, and we expect more pipelines with support for modalities beyond {term}`RNA` to be developed.
 
 ## Single-cell proteomics
 
@@ -38,4 +38,5 @@ As soon as high quality single-cell proteomics datasets are generated on a regul
 
 ```{bibliography}
 :filter: docname in docnames
+:labelprefix: ol
 ```
