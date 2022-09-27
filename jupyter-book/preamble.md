@@ -58,21 +58,21 @@ TBD
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](https://github.com/theislab/multimodal-single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Alternative formats
 
-PDF versions of this book are available on our [releases page](https://github.com/theislab/multimodal-single-cell-best-practices/releases).
+PDF versions of this book are available on our [releases page](https://github.com/theislab/cell-best-practices/releases).
 
 ## Contact us
 
-You can report issues and requests in our [issue tracker](https://github.com/theislab/multimodal-single-cell-best-practices/issues). For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.
+You can report issues and requests in our [issue tracker](https://github.com/theislab/single-cell-best-practices/issues). For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.
 
 ## License
 
-This book is licensed under the [Apache 2.0 license](https://github.com/theislab/multimodal-single-cell-best-practices/blob/development/LICENSE).
+This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/development/LICENSE).
 
 ## References
 
