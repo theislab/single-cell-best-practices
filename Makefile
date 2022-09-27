@@ -4,9 +4,6 @@ JUPYTER_KERNEL := python3
 build:
 	jupyter-book build $(JUPYTER_BOOK_DIR)
 
-build-all:
-	jupyter-book build --all $(JUPYTER_BOOK_DIR)
-
 clean:
 	jupyter-book clean --all $(JUPYTER_BOOK_DIR)
 
