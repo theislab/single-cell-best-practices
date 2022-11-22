@@ -4,6 +4,12 @@
 
 # Multimodal Single-cell Best-practices
 
+```{warning}
+This project is still work in progress and the content is not final yet.
+If you have early feedback feel free to open issues and to get in touch with us.
+Interested in contributing? Please have a look at https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md
+```
+
 ## Introduction
 
 The human body is a complex machine that heavily relies on the basic units of life - cells. Cells can be separated into different types, which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing deregulations of the cell types influence the entire system causing potentially even serious diseases like cancer{cite}`Macaulay2017`. It is therefore vital to understand how cells behave in a normal state and under perturbations to improve our understanding of the entire cellular systems.
