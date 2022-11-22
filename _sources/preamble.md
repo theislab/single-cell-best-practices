@@ -4,6 +4,12 @@
 
 # Multimodal Single-cell Best-practices
 
+```{warning}
+This project is still work in progress and the content is not final yet.
+If you have early feedback feel free to open issues and to get in touch with us.
+Interested in contributing? Please have a look at https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md
+```
+
 ## Introduction
 
 The human body is a complex machine that heavily relies on the basic units of life - cells. Cells can be separated into different types, which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing deregulations of the cell types influence the entire system causing potentially even serious diseases like cancer{cite}`Macaulay2017`. It is therefore vital to understand how cells behave in a normal state and under perturbations to improve our understanding of the entire cellular systems.
@@ -58,21 +64,21 @@ TBD
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](https://github.com/theislab/multimodal-single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Alternative formats
 
-PDF versions of this book are available on our [releases page](https://github.com/theislab/multimodal-single-cell-best-practices/releases).
+PDF versions of this book are available on our [releases page](https://github.com/theislab/cell-best-practices/releases).
 
 ## Contact us
 
-You can report issues and requests in our [issue tracker](https://github.com/theislab/multimodal-single-cell-best-practices/issues). For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.
+You can report issues and requests in our [issue tracker](https://github.com/theislab/single-cell-best-practices/issues). For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.
 
 ## License
 
-This book is licensed under the [Apache 2.0 license](https://github.com/theislab/multimodal-single-cell-best-practices/blob/development/LICENSE).
+This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/development/LICENSE).
 
 ## References
 
