@@ -2,7 +2,7 @@
 
 <div style="page-break-after: always;"></div>
 
-# Multimodal Single-cell Best-practices
+# Single-cell Best practices
 
 ```{warning}
 This project is still work in progress and the content is not final yet.
@@ -20,7 +20,7 @@ Nowadays, data analysts are facing a vast analysis tool landscape with a collect
 
 ## What this book covers
 
-The goal of this book is to teach newcomers and advanced professionals alike, the **best-practices** of single-cell sequencing analysis.
+The goal of this book is to teach newcomers and advanced professionals alike, the **best practices** of single-cell sequencing analysis.
 This book will teach you the most common analysis steps ranging from preprocessing to visualization to statistical evaluation and beyond. A read through the entire book will enable you to analyze unimodal and multimodal single-cell sequencing data on your own. The guidelines and recommendations in this book are not only tailored to teach you how to do single-cell analysis in general, but how to do them right. We base our suggestions on external benchmarks and reviews whenever possible. Finally, we consider this book to be a living resource for single-cell data analysts which can easily be updated when the recommendations change.
 
 ## What this book does not cover
@@ -33,7 +33,7 @@ Each chapter in this book corresponds to a different stage of a typical single-c
 
 Chapters are additionally labeled with a traffic light system. We differentiate the chapters into three groups:
 
-- Chapters labeled with white are rather novel and no best-practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
+- Chapters labeled with white are rather novel and no best practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
 
 - For yellow chapters, no clear, community-agreed, best practices exist. A few independent benchmarks may exist, but they might be in preprint or evidence might be sparse. In this chapter, we recommend analysis workflows that proved well-working according to our vast experience, and we can therefore wholeheartedly recommend the stated tools.
 
