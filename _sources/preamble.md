@@ -2,7 +2,7 @@
 
 <div style="page-break-after: always;"></div>
 
-# Single-cell Best practices
+# Single-cell best practices
 
 ```{warning}
 This project is still work in progress and the content is not final yet.
