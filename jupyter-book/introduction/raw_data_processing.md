@@ -5,7 +5,6 @@
 In this section, we discuss some of the fundamental issues surrounding what is commonly called "preprocessing" of single-cell and single-nucleus RNA-sequencing (sc/snRNA-seq) data. Though this is common terminology, it seems a bit of a misnomer, as this process involves several
 steps that make important decisions about how to deal with and represent the data that can enable or preclude subsequent analyses. Here, we will primarily refer to this phase of processing as "raw data processing", and our focus will be on the phase of data analysis that begins with lane-demultiplexed FASTQ files, and ends with a count matrix representing the estimated number of distinct molecules arising from each gene within each quantified cell, potentially stratified by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
-^
 :::{figure-md} raw-proc-fig-overview
 <img src="../_static/images/raw_data_processing/overview_raw_data_processing.jpg" alt="Chapter Overview" class="bg-primary mb-1" width="800px">
 
