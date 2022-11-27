@@ -1,5 +1,7 @@
 # Multimodal single-cell best practices
 
+![Cover](https://user-images.githubusercontent.com/21954664/204139606-c1f9f5bb-55ed-4fc9-9a12-e3ad1ebcb14f.png)
+
 Warning: This project and repository is under heavy development. We will tell you when it is ready.
 
 A version of the book is rendered [here](https://sc-best-practices.org).
