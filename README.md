@@ -1,4 +1,4 @@
-# Multimodal single-cell best practices
+# Single-cell best practices
 
 ![Cover](https://user-images.githubusercontent.com/21954664/204139606-c1f9f5bb-55ed-4fc9-9a12-e3ad1ebcb14f.png)
 
