@@ -3,6 +3,7 @@ name: Publish book
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build-book:
@@ -32,6 +33,11 @@ jobs:
 
       - name: Build the JupyterBook
         run: make
+
+      - name: Create CNAME record
+        run: |
+          cd ./jupyter-book/_build/html/
+          echo "www.sc-best-practices.org" > CNAME
 
       - name: Deploy to Github Pages
         uses: peaceiris/actions-gh-pages@v3
