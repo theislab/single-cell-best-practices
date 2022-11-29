@@ -1,8 +1,14 @@
-![alt text](_static/images/title.jpg "Title")
+![alt text](_static/images/title.png "Title")
 
 <div style="page-break-after: always;"></div>
 
-# Cross-modal Single-cell Best-practices
+# Single-cell best practices
+
+```{warning}
+This project is still work in progress and the content is not final yet.
+If you have early feedback feel free to open issues and to get in touch with us.
+Interested in contributing? Please have a look at https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md
+```
 
 ## Introduction
 
@@ -14,7 +20,7 @@ Nowadays, data analysts are facing a vast analysis tool landscape with a collect
 
 ## What this book covers
 
-The goal of this book is to teach newcomers and advanced professionals alike, the **best-practices** of single-cell sequencing analysis.
+The goal of this book is to teach newcomers and advanced professionals alike, the **best practices** of single-cell sequencing analysis.
 This book will teach you the most common analysis steps ranging from preprocessing to visualization to statistical evaluation and beyond. A read through the entire book will enable you to analyze unimodal and multimodal single-cell sequencing data on your own. The guidelines and recommendations in this book are not only tailored to teach you how to do single-cell analysis in general, but how to do them right. We base our suggestions on external benchmarks and reviews whenever possible. Finally, we consider this book to be a living resource for single-cell data analysts which can easily be updated when the recommendations change.
 
 ## What this book does not cover
@@ -27,9 +33,9 @@ Each chapter in this book corresponds to a different stage of a typical single-c
 
 Chapters are additionally labeled with a traffic light system. We differentiate the chapters into three groups:
 
-- Chapters labeled with white are rather novel and no best-practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
+- Chapters labeled with white are rather novel and no best practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
 
-- For yellow chapters, no clear, community-agreed, best practices exist. A few independent benchmarks may exist, but they might be in preprint or evidence might be sparse. In this chapter, we recommend analysis worksflows that proved well-working according to our vast experience and we can therefore wholeheartedly recommend the stated tools.
+- For yellow chapters, no clear, community-agreed, best practices exist. A few independent benchmarks may exist, but they might be in preprint or evidence might be sparse. In this chapter, we recommend analysis workflows that proved well-working according to our vast experience, and we can therefore wholeheartedly recommend the stated tools.
 
 - Green chapters are validated by several independent benchmarks and there is a strong community agreement on the preferred tool that should be used for this analysis step. Generally, we are confident in our recommendations and strongly recommend readers to take our suggestions into account for their own analyses.
 
@@ -50,6 +56,29 @@ Bioinformatics is a challenging research field for newcomers as it requires know
 - Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
 - Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through _Molecular Biology of the Cell_ by Bruce Alberts et al.
+
+## Citation
+
+TBD
+
+## Contributing
+
+We would like to invite the community to further improve the tutorial and the teaching material.
+Please read [contributing](https://github.com/theislab/cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+
+In case of questions or problems, please get in touch by posting an issue in this repository.
+
+## Alternative formats
+
+PDF versions of this book are available on our [releases page](https://github.com/theislab/cell-best-practices/releases).
+
+## Contact us
+
+You can report issues and requests in our [issue tracker](https://github.com/theislab/single-cell-best-practices/issues). For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.
+
+## License
+
+This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/development/LICENSE).
 
 ## References
 
