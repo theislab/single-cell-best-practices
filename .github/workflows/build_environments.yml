@@ -1,0 +1,23 @@
+name: Build book
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environments:
+          [
+            "jupyter-book/cellular_structure/clustering_environment.yml",
+            "jupyter-book/cellular_structure/integration_environment.yml",
+          ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          cache-downloads: true
+          environment-file: ${{ matrix.environments }}
+          environment-name: ${{ matrix.environments }}
