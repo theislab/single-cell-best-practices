@@ -1,0 +1,31 @@
+name: Build environments
+
+on: [push, pull_request]
+
+jobs:
+  Build-environments:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environments:
+          [
+            "jupyter-book/introduction/analysis_tools_environment.yml",
+            "jupyter-book/preprocessing_visualization/preprocessing_environment.yml",
+            "jupyter-book/cellular_structure/clustering_environment.yml",
+            "jupyter-book/cellular_structure/integration_environment.yml",
+            "jupyter-book/conditions/compositional_environment.yml",
+            "jupyter-book/conditions/gsea_pathway_environment.yml",
+            "jupyter-book/conditions/perturbation_modeling_environment.yml",
+            "jupyter-book/trajectories/lineage_tracing_environment.yml",
+            "jupyter-book/trajectories/pseudotemporal_environment.yml",
+          ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          channel-priority: disabled
+          cache-downloads: true
+          environment-file: ${{ matrix.environments }}
+          environment-name: currentenv
