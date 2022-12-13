@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>35. Integrating AIR and transcriptomics &#8212; Multimodal single-cell analysis</title>
+    <title>35. Integrating AIR and transcriptomics &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -909,19 +909,19 @@ title="Print to PDF"
                 
   <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Introduction                 =&gt; Done</span>
-<span class="c1"># 2. Groups                       =&gt; Done</span>
-<span class="c1"># 2.1 Apply TCR on RNA clusters   =&gt; Done</span>
-<span class="c1"># 2.2 Apply RNA on TCR clusters   =&gt; TODO wait for conditions of previous chapters</span>
-<span class="c1"># 3. Multimodal integration       =&gt; Done</span>
-<span class="c1"># 3.1. TCR                        =&gt; Done</span>
-<span class="c1"># 3.1.1 TESSA                     =&gt; Done</span>
-<span class="c1"># 3.1.2 CONGA                     =&gt; Needs refactoring</span>
-<span class="c1"># 3.1.3 mvTCR                     =&gt; Done</span>
-<span class="c1"># 3.2. BCR                        =&gt; Done</span>
-<span class="c1"># 3.2.1. Benisse                  =&gt; Done</span>
-<span class="c1"># 4. Take Home messages           =&gt; Done</span>
-<span class="c1"># 5. Quiz                         =&gt; Done</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 1. Introduction                 =&gt; Done
+# 2. Groups                       =&gt; Done
+# 2.1 Apply TCR on RNA clusters   =&gt; Done
+# 2.2 Apply RNA on TCR clusters   =&gt; TODO wait for conditions of previous chapters
+# 3. Multimodal integration       =&gt; Done
+# 3.1. TCR                        =&gt; Done
+# 3.1.1 TESSA                     =&gt; Done
+# 3.1.2 CONGA                     =&gt; Needs refactoring
+# 3.1.3 mvTCR                     =&gt; Done
+# 3.2. BCR                        =&gt; Done
+# 3.2.1. Benisse                  =&gt; Done
+# 4. Take Home messages           =&gt; Done
+# 5. Quiz                         =&gt; Done
 </pre></div>
 </div>
 </div>
@@ -937,33 +937,33 @@ title="Print to PDF"
 <p>First, we will combine the GEX with AIR data. Note, that we can do this also at earlier stages of single cell analysis: e.g. we can fuse both modalities already before preprocessing to filter GEX doublets. When fusing GEX and AIR data, a left join is often performed. I.e., only cells with GEX are kept for analysis. Therefore, the order of fusing and filtering is not of great importance. However, it can be convenient to visualize the AIR information in an GEX UMAP in early stages. E.g. missing AIR information in clusters can help during cell type assignment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import warnings
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
-    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+warnings.filterwarnings(
+    &quot;ignore&quot;,
+    &quot;.*IProgress not found*&quot;,
+)
+warnings.simplefilter(action=&quot;ignore&quot;, category=FutureWarning)
 
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+import scanpy as sc
+import scirpy as ir
+import pandas as pd
+import numpy as np
+import seaborn as sb
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
-<span class="n">path_gex_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_GEX.h5ad&quot;</span>
-<span class="n">path_gex_bcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_00_GEX.h5ad&quot;</span>
-<span class="n">path_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_01_preprocessed.h5ad&quot;</span>
-<span class="n">path_bcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_01_preprocessed.h5ad&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>path_data = &quot;./data&quot;
+path_gex_tcr = f&quot;{path_data}/TCR_00_GEX.h5ad&quot;
+path_gex_bcr = f&quot;{path_data}/BCR_00_GEX.h5ad&quot;
+path_tcr = f&quot;{path_data}/TCR_01_preprocessed.h5ad&quot;
+path_bcr = f&quot;{path_data}/BCR_01_preprocessed.h5ad&quot;
 
-<span class="n">path_tmp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/tmp&quot;</span>
-<span class="n">path_res</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/res&quot;</span>
+path_tmp = f&quot;{path_data}/tmp&quot;
+path_res = f&quot;{path_data}/res&quot;
 </pre></div>
 </div>
 </div>
@@ -974,10 +974,10 @@ title="Print to PDF"
 <p>Let’s load the GEX and the previously annotated TCR data. Both AnnData objects can then easily be merged via scirpy into a shared AnnData object, which will store IR information in adata.obs and GEX in <code class="docutils literal notranslate"><span class="pre">adata.X</span></code>. Here a left join is conducted: only AIRs from cells, where there is scRNA data, are added to the AnnData object. While the dataset can include cells other than B- and T-cells and, therefore, AIRs without scRNA-seq indicate missing values. Since a majority of downstream analysis is conducted on transcriptomics level, these cells are excluded.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex_tcr</span><span class="p">)</span>
-<span class="n">adata_tcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_tcr</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_tc = sc.read(path_gex_tcr)
+adata_tcr = sc.read(path_tcr)
 
-<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">merge_with_ir</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">adata_tcr</span><span class="p">)</span>
+ir.pp.merge_with_ir(adata_tc, adata_tcr)
 </pre></div>
 </div>
 </div>
@@ -985,8 +985,8 @@ title="Print to PDF"
 <p>Let’s calculate Leiden clustering on the T cell transcriptome.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata_tc)
+sc.tl.leiden(adata_tc)
 </pre></div>
 </div>
 </div>
@@ -994,8 +994,8 @@ title="Print to PDF"
 <p>To get an overview, we will plot the data with cluster assigment as a UMAP visualisation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;has_ir&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.umap(adata_tc)
+sc.pl.umap(adata_tc, color=[&quot;full_clustering&quot;, &quot;has_ir&quot;, &quot;leiden&quot;], ncols=1)
 </pre></div>
 </div>
 </div>
@@ -1007,20 +1007,20 @@ title="Print to PDF"
 <p>Similar, we merge with the BCR and GEX data for B cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex_bcr</span><span class="p">)</span>
-<span class="n">adata_bcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_bcr</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_bc = sc.read(path_gex_bcr)
+adata_bcr = sc.read(path_bcr)
 
-<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">merge_with_ir</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">,</span> <span class="n">adata_bcr</span><span class="p">)</span>
+ir.pp.merge_with_ir(adata_bc, adata_bcr)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;has_ir&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata_bc)
+sc.tl.leiden(adata_bc)
+sc.tl.umap(adata_bc)
+sc.pl.umap(adata_bc, color=[&quot;full_clustering&quot;, &quot;has_ir&quot;, &quot;leiden&quot;], ncols=1)
 </pre></div>
 </div>
 </div>
@@ -1045,14 +1045,14 @@ title="Print to PDF"
 <p><strong>Leiden Clusters</strong>: Above we clustered the gene expression data via the Leiden algorithm. We can now use the resulting groups to performance any kind of sequence analysis, e.g. spectratyping. For that, we simply replace the entry which defines the group parameter (here: color) with the column name of the Leiden clustering (“leiden”).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
-    <span class="n">adata_bc</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
-    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span>
-    <span class="n">curve_layout</span><span class="o">=</span><span class="s2">&quot;shifted&quot;</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">]},</span>
-    <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kde_norm&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ir.pl.spectratype(
+    adata_bc,
+    color=&quot;leiden&quot;,
+    viztype=&quot;curve&quot;,
+    curve_layout=&quot;shifted&quot;,
+    fig_kws={&quot;figsize&quot;: [8, 4]},
+    kde_kws={&quot;kde_norm&quot;: False},
+)
 </pre></div>
 </div>
 </div>
@@ -1071,7 +1071,7 @@ title="Print to PDF"
 <p><strong>Marker Genes</strong>: Next, we can define our groups based on individual genes. As an example, we here pick Interferon Gamma as a marker for pro-inflammatory immune response. This will provide us with a selection of cells which are currently initiating an immune response.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;IFNG&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata_tc, color=&quot;IFNG&quot;)
 </pre></div>
 </div>
 </div>
@@ -1082,9 +1082,9 @@ title="Print to PDF"
 <p>When visualizing it, we observe, that it is present in a subset of CD8 effector T cells. Next, we will select cells with high IFNg score (arbitrary threshold: 2.5) and annotate this selection in the AnnData object. To use it as category, we will store it as string. We can visualize the selected cells in the UMAP.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[:,</span> <span class="s2">&quot;IFNG&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span>
-<span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_tc.obs[&quot;elevated_IFNG&quot;] = adata_tc[:, &quot;IFNG&quot;].X.todense() &gt; 3
+adata_tc.obs[&quot;elevated_IFNG&quot;] = adata_tc.obs[&quot;elevated_IFNG&quot;].astype(str)
+sc.pl.umap(adata_tc, color=&quot;elevated_IFNG&quot;, groups=&quot;True&quot;)
 </pre></div>
 </div>
 </div>
@@ -1098,34 +1098,34 @@ title="Print to PDF"
 <p>Next, we will generate frequency plots to see, whether the TCRs from cells with elevated IFNg expression, follow specific sequence patterns compared to the remaining cells. First, we select all cells with annotated CDR3β, followed by separation into background cells and cells with elevated IFNg. Finally, we construct the motifs and plot them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">palmotif</span> <span class="kn">import</span> <span class="n">compute_pal_motif</span><span class="p">,</span> <span class="n">mpl_logo</span><span class="p">,</span> <span class="n">svg_logo</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from palmotif import compute_pal_motif, mpl_logo, svg_logo
+from IPython.display import SVG
 
-<span class="n">df_sequences</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span>
-    <span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span> <span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span>
-<span class="p">]</span>
+df_sequences = adata_tc[~adata_tc.obs[&quot;IR_VDJ_1_junction_aa&quot;].isna()].obs[
+    [&quot;IR_VDJ_1_junction_aa&quot;, &quot;elevated_IFNG&quot;]
+]
 
-<span class="n">seqs_elevated</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">][</span>
-    <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span>
-<span class="p">]</span>
-<span class="n">seqs_background</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">][</span>
-    <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span>
-<span class="p">]</span>
-<span class="n">centroid</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+seqs_elevated = df_sequences[df_sequences[&quot;elevated_IFNG&quot;] == &quot;True&quot;][
+    &quot;IR_VDJ_1_junction_aa&quot;
+]
+seqs_background = df_sequences[df_sequences[&quot;elevated_IFNG&quot;] == &quot;False&quot;][
+    &quot;IR_VDJ_1_junction_aa&quot;
+]
+centroid = df_sequences[&quot;IR_VDJ_1_junction_aa&quot;].value_counts().index[0]
 
-<span class="n">motif_ifng</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_pal_motif</span><span class="p">(</span>
-    <span class="n">seqs</span><span class="o">=</span><span class="n">seqs_elevated</span><span class="p">,</span>
-    <span class="n">centroid</span><span class="o">=</span><span class="n">centroid</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">motif_back</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_pal_motif</span><span class="p">(</span>
-    <span class="n">seqs</span><span class="o">=</span><span class="n">seqs_background</span><span class="p">,</span>
-    <span class="n">centroid</span><span class="o">=</span><span class="n">centroid</span><span class="p">,</span>
-<span class="p">)</span>
+motif_ifng, _ = compute_pal_motif(
+    seqs=seqs_elevated,
+    centroid=centroid,
+)
+motif_back, _ = compute_pal_motif(
+    seqs=seqs_background,
+    centroid=centroid,
+)
 
-<span class="n">svg_logo</span><span class="p">(</span><span class="n">motif_ifng</span><span class="p">,</span> <span class="s2">&quot;tmp/motif_ifng.svg&quot;</span><span class="p">)</span>
-<span class="n">svg_logo</span><span class="p">(</span><span class="n">motif_back</span><span class="p">,</span> <span class="s2">&quot;tmp/motif_back.svg&quot;</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">SVG</span><span class="p">(</span><span class="s2">&quot;tmp/motif_ifng.svg&quot;</span><span class="p">))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">SVG</span><span class="p">(</span><span class="s2">&quot;tmp/motif_back.svg&quot;</span><span class="p">))</span>
+svg_logo(motif_ifng, &quot;tmp/motif_ifng.svg&quot;)
+svg_logo(motif_back, &quot;tmp/motif_back.svg&quot;)
+display(SVG(&quot;tmp/motif_ifng.svg&quot;))
+display(SVG(&quot;tmp/motif_back.svg&quot;))
 </pre></div>
 </div>
 </div>
@@ -1136,8 +1136,8 @@ title="Print to PDF"
 <p><strong>Cell Type</strong>: Here, we apply the diversity between different cell types annotated on the transcriptomic level (stored in “full_clustering”). We see, that proliferating and effector CD8+ T cells have the lowest diversity. Since these cell types contain larger clones, this was to be expected. Such an analysis could be used as a sanity check for the cell type assignment or to compare the diversity of cell types over multiple studies.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: remove clonotype definition once this is handled by clonotype chapter</span>
-<span class="c1"># ir.pl.alpha_diversity(adata_tc, groupby=&quot;full_clustering&quot;, target_col=&quot;clone_id&quot;, figsize=[8, 4])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO: remove clonotype definition once this is handled by clonotype chapter
+# ir.pl.alpha_diversity(adata_tc, groupby=&quot;full_clustering&quot;, target_col=&quot;clone_id&quot;, figsize=[8, 4])
 </pre></div>
 </div>
 </div>
@@ -1154,8 +1154,8 @@ title="Print to PDF"
 <p>As for the previous subsection, the selected condition and analysis are highly depended on your research question. In the previous notebooks, we annotated these conditions in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>. Since they can, hence, be applied for DEG analysis in the same fashion, we will only showcase DEG by &lt;what_ever_works_best&gt;.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.rank_genes_groups(adata_tc, groupby=&quot;elevated_IFNG&quot;)
+sc.pl.rank_genes_groups(adata_tc, groupby=&quot;elevated_IFNG&quot;)
 </pre></div>
 </div>
 </div>
@@ -1168,7 +1168,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO adapt to disease specific cells =&gt; Covid B cells against rest</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO adapt to disease specific cells =&gt; Covid B cells against rest
 </pre></div>
 </div>
 </div>
@@ -1190,7 +1190,7 @@ title="Print to PDF"
 <p>All multimodal approaches, require paired GEX and AIR data. We will therefore start by filtering all cells without CDR3β.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_tc = adata_tc[~adata_tc.obs[&quot;IR_VDJ_1_junction_aa&quot;].isna()].copy()
 </pre></div>
 </div>
 </div>
@@ -1210,17 +1210,17 @@ title="Print to PDF"
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span>
-<span class="n">df_tcr</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;contig_id&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>df_tcr = adata_tc.obs
+df_tcr.index.name = &quot;contig_id&quot;
 
-<span class="c1"># trimm cdr3 sequence</span>
-<span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]]</span>
+# trimm cdr3 sequence
+df_tcr[&quot;cdr3&quot;] = [seq[1:-1] for seq in df_tcr[&quot;IR_VDJ_1_junction_aa&quot;]]
 
-<span class="c1"># select only columns needed</span>
-<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="p">[[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]]</span>
+# select only columns needed
+df_tcr = df_tcr[[&quot;cdr3&quot;]]
 
-<span class="n">df_tcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_tcrs.csv&quot;</span><span class="p">)</span>
-<span class="n">df_tcr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+df_tcr.to_csv(f&quot;{path_tmp}/TESSA_tcrs.csv&quot;)
+df_tcr.head(5)
 </pre></div>
 </div>
 </div>
@@ -1278,9 +1278,9 @@ title="Print to PDF"
 <p>We will filter the 10% most variable genes, as done in the TESSA publication.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_genes</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">10</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="n">n_genes</span><span class="p">)</span>
-<span class="n">adata_tessa</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[:,</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_genes = adata_tc.shape[1] // 10
+sc.pp.highly_variable_genes(adata_tc, n_top_genes=n_genes)
+adata_tessa = adata_tc[:, adata_tc.var[&quot;highly_variable&quot;]].copy()
 </pre></div>
 </div>
 </div>
@@ -1288,17 +1288,17 @@ title="Print to PDF"
 <p>We now store the GEX matrix to a “.csv”-File. TESSA requires the transposed matrix of the adata object. I.e. the rows represent the different genes and the columns indicate a specific cell. For this, we will store the count data in a DataFrame with the right index and column names. Following, we transpose the DataFrame.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">count_mat</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span>
-<span class="n">df_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_mat</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>count_mat = adata_tessa.X.A
+df_counts = pd.DataFrame(count_mat)
 
-<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span>
+df_counts.index = adata_tessa.obs.index
+df_counts.index.name = &quot;&quot;
+df_counts.columns = adata_tessa.var.index
 
-<span class="n">df_counts</span> <span class="o">=</span> <span class="n">df_counts</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+df_counts = df_counts.transpose()
 
-<span class="n">df_counts</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_gex.csv&quot;</span><span class="p">)</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+df_counts.to_csv(f&quot;{path_tmp}/TESSA_gex.csv&quot;)
+df_counts.head()
 </pre></div>
 </div>
 </div>
@@ -1476,19 +1476,19 @@ title="Print to PDF"
 <p>We need to provide different setting options, most of which specify input or output directories. We will summarize them in a dictionary first.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">settings_full</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="c1"># Input files</span>
-    <span class="s2">&quot;tcr&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_tcrs.csv&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_gex.csv&quot;</span><span class="p">,</span>
-    <span class="c1"># TESSA models</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;TESSA/BriseisEncoder/TrainedEncoder.h5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;embeding_vectors&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;TESSA/BriseisEncoder/Atchley_factors.csv&quot;</span><span class="p">,</span>
-    <span class="c1"># Output files</span>
-    <span class="s2">&quot;output_TCR&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_tcr_embedding.csv&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;output_log&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_log.log&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;output_tessa&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;within_sample_networks&quot;</span><span class="p">:</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>settings_full = {
+    # Input files
+    &quot;tcr&quot;: f&quot;{path_tmp}/TESSA_tcrs.csv&quot;,
+    &quot;exp&quot;: f&quot;{path_tmp}/TESSA_gex.csv&quot;,
+    # TESSA models
+    &quot;model&quot;: f&quot;TESSA/BriseisEncoder/TrainedEncoder.h5&quot;,
+    &quot;embeding_vectors&quot;: f&quot;TESSA/BriseisEncoder/Atchley_factors.csv&quot;,
+    # Output files
+    &quot;output_TCR&quot;: f&quot;{path_res}/TESSA_tcr_embedding.csv&quot;,
+    &quot;output_log&quot;: f&quot;{path_res}/TESSA_log.log&quot;,
+    &quot;output_tessa&quot;: f&quot;{path_res}&quot;,
+    &quot;within_sample_networks&quot;: &quot;FALSE&quot;,
+}
 </pre></div>
 </div>
 </div>
@@ -1496,13 +1496,13 @@ title="Print to PDF"
 <p>In the next step, we will create the command for running TESSA by adding setting key and setting option.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_tessa</span> <span class="o">=</span> <span class="s2">&quot;source ~/.bashrc &amp;&amp;&quot;</span>
-<span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="s2">&quot;conda activate TESSA &amp;&amp; &quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cmd_tessa = &quot;source ~/.bashrc &amp;&amp;&quot;
+cmd_tessa += &quot;conda activate TESSA &amp;&amp; &quot;
 
-<span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="s2">&quot;python TESSA/Tessa_main.py&quot;</span>
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">settings_full</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; -</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="n">cmd_tessa</span>
+cmd_tessa += &quot;python TESSA/Tessa_main.py&quot;
+for key, value in settings_full.items():
+    cmd_tessa += f&quot; -{key} {value}&quot;
+cmd_tessa
 </pre></div>
 </div>
 </div>
@@ -1515,7 +1515,7 @@ title="Print to PDF"
 <p>Finally, we run the model on the specified settings by calling the command. Depending on your compute ressources this might take several minutes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">$cmd_tessa</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!$cmd_tessa
 </pre></div>
 </div>
 </div>
@@ -6581,10 +6581,10 @@ Iteration round: 1000
 <p>Here, we will use the first two files as embedding and clustering. We will store them in AnnData format for easier handling. To avoid the clustering to be dominated by highly expanded clones, we reduce the cell-level data to a clone-level by removing duplicate TCRs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_tcr_embedding.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-<span class="n">tessa_obs</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span><span class="o">.</span><span class="n">obs</span>
-<span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">tessa_obs</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tessa_embedding = pd.read_csv(f&quot;{path_res}/TESSA_tcr_embedding.csv&quot;, index_col=0)
+tessa_embedding = tessa_embedding.drop_duplicates()
+tessa_obs = adata_tc[adata_tc.obs.index.isin(tessa_embedding.index)].obs
+tessa_embedding = sc.AnnData(X=tessa_embedding.values, obs=tessa_obs)
 </pre></div>
 </div>
 </div>
@@ -6592,13 +6592,13 @@ Iteration round: 1000
 <p>Next, we will add the TESSA cluster assignment to the AnnData object. Since TESSA internally changes the barcode slightly, we will need to adjust for that. Additionally, we drop the duplicate TCRs within a cluster.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clustering</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/result_meta.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">clustering</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
-<span class="n">clustering</span> <span class="o">=</span> <span class="n">clustering</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
-<span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clustering</span><span class="p">[</span><span class="s2">&quot;cluster_number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>clustering = pd.read_csv(f&quot;{path_res}/result_meta.csv&quot;, index_col=0)
+clustering.index = clustering.index.str.replace(&quot;.&quot;, &quot;-&quot;)
+clustering = clustering[clustering.index.isin(tessa_embedding.obs.index)]
+tessa_embedding.obs[&quot;TESSA_cluster&quot;] = clustering[&quot;cluster_number&quot;].values
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique clones: </span><span class="si">{</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cdr3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique clusters: </span><span class="si">{</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;TESSA_cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+print(f&quot;Unique clones: {tessa_embedding.obs[&#39;cdr3&#39;].nunique()}&quot;)
+print(f&quot;Unique clusters: {tessa_embedding.obs[&#39;TESSA_cluster&#39;].nunique()}&quot;)
 </pre></div>
 </div>
 </div>
@@ -6612,15 +6612,15 @@ Unique clusters: 132
 <p>You can see, that 751 clones were grouped to 144 clusters, which have similar TCR sequences and are likely to be functionally related. For TSNE visualisation {cite}’’, we will highlight the ten largest clusters in the TCR embedding space.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(tessa_embedding)
+sc.tl.tsne(tessa_embedding)
 
-<span class="n">top_10_clusters</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
-<span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clusters</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="p">)</span>
+top_10_clusters = tessa_embedding.obs[&quot;TESSA_cluster&quot;].value_counts().head(10).index
+tessa_embedding.obs[&quot;TESSA_cluster_top10&quot;] = tessa_embedding.obs[&quot;TESSA_cluster&quot;].apply(
+    lambda x: x if x in top_10_clusters else np.nan
+)
 
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">)</span>
+sc.pl.tsne(tessa_embedding, color=&quot;TESSA_cluster_top10&quot;)
 </pre></div>
 </div>
 </div>
@@ -6636,13 +6636,13 @@ Unique clusters: 132
 <p>For plotting the cluster assignemnt in the GEX space, we add the assignment to the original adata object. When plotting, we can see that TESSA clusters also share similar phenotypes at GEX level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span> <span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
-<span class="p">)</span>
-<span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-    <span class="n">mapping_dict</span>
-<span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mapping_dict = dict(
+    tessa_embedding.obs[[&quot;IR_VDJ_1_junction_aa&quot;, &quot;TESSA_cluster_top10&quot;]].values
+)
+adata_tc.obs[&quot;TESSA_cluster_top10&quot;] = adata_tc.obs[&quot;IR_VDJ_1_junction_aa&quot;].map(
+    mapping_dict
+)
+sc.pl.umap(adata_tc, color=&quot;TESSA_cluster_top10&quot;)
 </pre></div>
 </div>
 </div>
@@ -6665,19 +6665,19 @@ Unique clusters: 132
 <p>CoNGA conveniently supports several input types for the gene expression matrix including h5ad-files. For the clonotype information, we need to create a clone_file first by running a preprocessing script on the Cell Ranger output.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">conga</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import conga
 
-<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_read_aligned.csv&quot;</span><span class="p">,</span>
-    <span class="c1"># index_col=&#39;barcode&#39;,</span>
-<span class="p">)</span>
-<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Unnamed: 0&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="p">[</span><span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+df_tcr = pd.read_csv(
+    f&quot;{path_data}/TCR_00_read_aligned.csv&quot;,
+    # index_col=&#39;barcode&#39;,
+)
+df_tcr = df_tcr.drop(&quot;Unnamed: 0&quot;, axis=1)
+df_tcr = df_tcr[df_tcr[&quot;barcode&quot;].isin(adata_tc.obs.index)]
 
-<span class="n">path_reduced_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_tcrs.csv&quot;</span>
-<span class="n">df_tcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_reduced_tcr</span><span class="p">)</span>
+path_reduced_tcr = f&quot;{path_tmp}/conga_tcrs.csv&quot;
+df_tcr.to_csv(path_reduced_tcr)
 
-<span class="n">path_conga_clones</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_clone_file.tsv&quot;</span>
+path_conga_clones = f&quot;{path_tmp}/conga_clone_file.tsv&quot;
 </pre></div>
 </div>
 </div>
@@ -6690,19 +6690,19 @@ Unique clusters: 132
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_conga_pp</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;python conga/scripts/setup_10x_for_conga.py &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--filtered_contig_annotations_csvfile </span><span class="si">{</span><span class="n">path_reduced_tcr</span><span class="si">}</span><span class="s2"> &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--output_clones_file </span><span class="si">{</span><span class="n">path_conga_clones</span><span class="si">}</span><span class="s2"> &quot;</span>
-    <span class="s2">&quot;--organism human&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cmd_conga_pp = (
+    &quot;python conga/scripts/setup_10x_for_conga.py &quot;
+    f&quot;--filtered_contig_annotations_csvfile {path_reduced_tcr} &quot;
+    f&quot;--output_clones_file {path_conga_clones} &quot;
+    &quot;--organism human&quot;
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">$cmd_conga_pp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!$cmd_conga_pp
 </pre></div>
 </div>
 </div>
@@ -6728,11 +6728,11 @@ DONE
 <p>The CoNGA pipeline requires unlogged counts for the gene expression. Since this is not provided in our SARS-CoV-2 dataset, we will revert the log1p transformation by its inverse and save the results to a separate file. If you run the analysis on your own dataset, you can directly link to your raw count data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_conga_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_gex.h5ad&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>path_conga_gex = f&quot;{path_tmp}/conga_gex.h5ad&quot;
 
-<span class="n">adata_conga</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata_conga</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata_conga</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">path_conga_gex</span><span class="p">)</span>
+adata_conga = adata_tc.copy()
+adata_conga.X = np.expm1(adata_tc.X)
+sc.write(adata=adata_conga, filename=path_conga_gex)
 </pre></div>
 </div>
 </div>
@@ -6743,22 +6743,22 @@ DONE
 <p>We can execute the main CoNGA pipeline via the following command line call, which specifies the input and output directories.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_conga</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2"> &amp;&amp; &quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cmd_conga = f&quot;cd {path_res} &amp;&amp; &quot;
 
-<span class="n">cmd_conga</span> <span class="o">+=</span> <span class="p">(</span>
-    <span class="s2">&quot;python ../../conga/scripts/run_conga.py &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--graph_vs_graph --graph_vs_graph_stats --graph_vs_features --tcr_clumping --find_hotspot_features &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--gex_data ../../</span><span class="si">{</span><span class="n">path_conga_gex</span><span class="si">}</span><span class="s2"> --gex_data_type h5ad &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--clones_file ../../</span><span class="si">{</span><span class="n">path_conga_clones</span><span class="si">}</span><span class="s2"> &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;--organism human --outfile_prefix conga&quot;</span>
-<span class="p">)</span>
+cmd_conga += (
+    &quot;python ../../conga/scripts/run_conga.py &quot;
+    f&quot;--graph_vs_graph --graph_vs_graph_stats --graph_vs_features --tcr_clumping --find_hotspot_features &quot;
+    f&quot;--gex_data ../../{path_conga_gex} --gex_data_type h5ad &quot;
+    f&quot;--clones_file ../../{path_conga_clones} &quot;
+    f&quot;--organism human --outfile_prefix conga&quot;
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">$cmd_conga</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!$cmd_conga
 </pre></div>
 </div>
 </div>
@@ -7065,14 +7065,14 @@ DONE
 <p>mvTCR relies on the AnnData format and we therefore need to prepare our AnnData object for training. For that, the several functions are provided.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sys
 
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mvTCR&quot;</span><span class="p">)</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+sys.path.append(&quot;mvTCR&quot;)
+sys.path.append(&quot;.&quot;)
 
-<span class="kn">import</span> <span class="nn">tcr_embedding.utils_training</span> <span class="k">as</span> <span class="nn">utils</span>
-<span class="kn">from</span> <span class="nn">tcr_embedding.models.model_selection</span> <span class="kn">import</span> <span class="n">run_model_selection</span>
-<span class="kn">from</span> <span class="nn">tcr_embedding.utils_preprocessing</span> <span class="kn">import</span> <span class="n">group_shuffle_split</span><span class="p">,</span> <span class="n">encode_tcr</span>
+import tcr_embedding.utils_training as utils
+from tcr_embedding.models.model_selection import run_model_selection
+from tcr_embedding.utils_preprocessing import group_shuffle_split, encode_tcr
 </pre></div>
 </div>
 </div>
@@ -7080,16 +7080,16 @@ DONE
 <p>The AnnData object requires a clonotype assignement (see notebook X). Since mvTCR uses both chains of the primary receptor, we will use this information for defining the clonotype as well. # todo =&gt; use the one provided</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_mvtcr</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_mvtcr = adata_tc[~adata_tc.obs[&quot;IR_VJ_1_junction_aa&quot;].isna()].copy()
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clonotypes</span><span class="p">(</span>
-    <span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;clonotype&quot;</span><span class="p">,</span> <span class="n">receptor_arms</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">dual_ir</span><span class="o">=</span><span class="s2">&quot;primary_only&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ir.tl.define_clonotypes(
+    adata_mvtcr, key_added=&quot;clonotype&quot;, receptor_arms=&quot;all&quot;, dual_ir=&quot;primary_only&quot;
+)
 </pre></div>
 </div>
 </div>
@@ -7102,16 +7102,16 @@ DONE
 <p>The model requires a numeric encoding of the CDR3α and CDR3β chain. For that, we need to provide the columns containing the amino acid sequences. Additional, the pad attribute indicates the maximal length of the sequence. If we do not want to embedd aditional data afterwards, we can set it to the maximal sequence length.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pad</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
-    <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-    <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-<span class="p">)</span>
-<span class="n">encode_tcr</span><span class="p">(</span>
-    <span class="n">adata_mvtcr</span><span class="p">,</span>
-    <span class="n">column_cdr3a</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">,</span>
-    <span class="n">column_cdr3b</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
-    <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pad = max(
+    adata_mvtcr.obs[&quot;IR_VJ_1_junction_aa&quot;].str.len().max(),
+    adata_mvtcr.obs[&quot;IR_VDJ_1_junction_aa&quot;].str.len().max(),
+)
+encode_tcr(
+    adata_mvtcr,
+    column_cdr3a=&quot;IR_VJ_1_junction_aa&quot;,
+    column_cdr3b=&quot;IR_VDJ_1_junction_aa&quot;,
+    pad=pad,
+)
 </pre></div>
 </div>
 </div>
@@ -7119,9 +7119,9 @@ DONE
 <p>The data needs to be divided into a training and validation data. This is done by setting the values <code class="docutils literal notranslate"><span class="pre">train</span></code> or <code class="docutils literal notranslate"><span class="pre">val</span></code> for each cell in <code class="docutils literal notranslate"><span class="pre">adata.obs['set']</span></code>. By choosing the <code class="docutils literal notranslate"><span class="pre">clonotype</span></code> and 0.2, the dataset used to evaluate the model’s performance will contain approximately 20% of unique clonotypes to the training set. This setting can generally be used for data analysis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">group_shuffle_split</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">group_col</span><span class="o">=</span><span class="s2">&quot;clonotype&quot;</span><span class="p">,</span> <span class="n">val_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span>
-<span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;val&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>train, val = group_shuffle_split(adata_mvtcr, group_col=&quot;clonotype&quot;, val_split=0.2)
+adata_mvtcr.obs[&quot;set&quot;] = &quot;train&quot;
+adata_mvtcr.obs.loc[val.obs.index, &quot;set&quot;] = &quot;val&quot;
 </pre></div>
 </div>
 </div>
@@ -7129,13 +7129,13 @@ DONE
 <p>We need to provide various information, that are used during training:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_experiment</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;study_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_haniffa&quot;</span><span class="p">,</span>  <span class="c1"># Name that identifies the study</span>
-    <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;moe&quot;</span><span class="p">,</span>  <span class="c1"># Type of mixture model used during training, authors suggest using Mixture of Export (moe)</span>
-    <span class="s2">&quot;balanced_sampling&quot;</span><span class="p">:</span> <span class="s2">&quot;clonotype&quot;</span><span class="p">,</span>  <span class="c1"># Column containing the id for clonotypes</span>
-    <span class="s2">&quot;comet_workspace&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Can be used to log experiments via comet-ml</span>
-    <span class="s2">&quot;save_path&quot;</span><span class="p">:</span> <span class="n">path_res</span><span class="p">,</span>  <span class="c1"># Output path, were the selected models are stored</span>
-<span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>params_experiment = {
+    &quot;study_name&quot;: &quot;test_haniffa&quot;,  # Name that identifies the study
+    &quot;model_name&quot;: &quot;moe&quot;,  # Type of mixture model used during training, authors suggest using Mixture of Export (moe)
+    &quot;balanced_sampling&quot;: &quot;clonotype&quot;,  # Column containing the id for clonotypes
+    &quot;comet_workspace&quot;: None,  # Can be used to log experiments via comet-ml
+    &quot;save_path&quot;: path_res,  # Output path, were the selected models are stored
+}
 </pre></div>
 </div>
 </div>
@@ -7143,10 +7143,10 @@ DONE
 <p>mvTCR runs a hyperparameter optimization to choose the best model architecture. For general analysis, the optimization mode <code class="docutils literal notranslate"><span class="pre">pseudo_metric</span></code> is most suited. Here, the best model is determined by the capability of preserving multiple characteristics of the dataset. In the following, we choose identical TCR sequence (<code class="docutils literal notranslate"><span class="pre">clonotype</span></code>) and cell type (<code class="docutils literal notranslate"><span class="pre">functional.cluster</span></code>) both equally weighted (1 and 1). If after training the model, the latent space is dominated by one modality, we can rerun the model with different weightings.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_optimization</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pseudo_metric&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;prediction_labels&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clonotype&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;full_clustering&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-<span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>params_optimization = {
+    &quot;name&quot;: &quot;pseudo_metric&quot;,
+    &quot;prediction_labels&quot;: {&quot;clonotype&quot;: 1, &quot;full_clustering&quot;: 1},
+}
 </pre></div>
 </div>
 </div>
@@ -7154,8 +7154,8 @@ DONE
 <p>Finally, we can run the model selection. Especially for larger datasets an extensive model search was used by the authors. As a showcase, we here only train one model. We recommend using a computer with GPU, even then the model will train several minutes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_runs</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">run_model_selection</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">params_experiment</span><span class="p">,</span> <span class="n">params_optimization</span><span class="p">,</span> <span class="n">n_runs</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_runs = 1
+run_model_selection(adata_mvtcr, params_experiment, params_optimization, n_runs)
 </pre></div>
 </div>
 </div>
@@ -7179,9 +7179,9 @@ Best trial:
 <p>We now have a trained model, that we can use to embed data to a representation capturing TCR and GEX, simultaneously. For this, we will load the best model from our studies folder.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_trial</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">path_model</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;../data/res/trial_</span><span class="si">{</span><span class="n">best_trial</span><span class="si">}</span><span class="s2">/best_model_by_metric.pt&quot;</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">path_model</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>best_trial = 0
+path_model = f&quot;../data/res/trial_{best_trial}/best_model_by_metric.pt&quot;
+model = utils.load_model(adata_mvtcr, path_model)
 </pre></div>
 </div>
 </div>
@@ -7189,8 +7189,8 @@ Best trial:
 <p>In a next step, we can now embed this data and assign the annotation to our new embedded AnnData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mvtcr_embedding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">[])</span>
-<span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mvtcr_embedding = model.get_latent(adata_mvtcr, metadata=[])
+mvtcr_embedding.obs = adata_mvtcr.obs.copy()
 </pre></div>
 </div>
 </div>
@@ -7198,10 +7198,10 @@ Best trial:
 <p>This embedding can now be used for data analysis such as visualization. For this we will select the top 10 most abundant clonotypes within the sample.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_10_clones</span> <span class="o">=</span> <span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
-<span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotypes_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clones</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>top_10_clones = mvtcr_embedding.obs[&quot;clonotype&quot;].value_counts().head(10).index
+mvtcr_embedding.obs[&quot;clonotypes_top10&quot;] = mvtcr_embedding.obs[&quot;clonotype&quot;].apply(
+    lambda x: x if x in top_10_clones else np.nan
+)
 </pre></div>
 </div>
 </div>
@@ -7209,9 +7209,9 @@ Best trial:
 <p>Now, we will be using UMAPs to show cell type assignment and the top 10 clonotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;clonotypes_top10&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(mvtcr_embedding)
+sc.tl.umap(mvtcr_embedding)
+sc.pl.umap(mvtcr_embedding, color=[&quot;full_clustering&quot;, &quot;clonotypes_top10&quot;], ncols=1)
 </pre></div>
 </div>
 </div>
@@ -7238,10 +7238,10 @@ Best trial:
 <p>Due to long runtime, we first subsample the B-cell dataset to 1000 cells of one donor.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_bc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_bc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
-<span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[</span><span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;sample_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MH9143275&quot;</span><span class="p">]</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of cells: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_benisse = adata_bc[~adata_bc.obs[&quot;IR_VDJ_1_junction_aa&quot;].isna()]
+adata_benisse = adata_benisse[adata_benisse.obs[&quot;sample_id&quot;] == &quot;MH9143275&quot;]
+sc.pp.subsample(adata_benisse, n_obs=1000, random_state=0)
+print(f&quot;Amount of cells: {len(adata_benisse)}&quot;)
 </pre></div>
 </div>
 </div>
@@ -7253,15 +7253,15 @@ Best trial:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_bcr</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span>
-<span class="n">df_bcr</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;contigs&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>df_bcr = adata_benisse.obs
+df_bcr.index.name = &quot;contigs&quot;
 
-<span class="n">df_bcr</span> <span class="o">=</span> <span class="n">df_bcr</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">:</span> <span class="s2">&quot;cdr3&quot;</span><span class="p">})</span>
+df_bcr = df_bcr.rename(columns={&quot;IR_VDJ_1_junction_aa&quot;: &quot;cdr3&quot;})
 
-<span class="n">df_bcr</span> <span class="o">=</span> <span class="n">df_bcr</span><span class="p">[[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]]</span>
+df_bcr = df_bcr[[&quot;cdr3&quot;]]
 
-<span class="n">df_bcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcrs.csv&quot;</span><span class="p">)</span>
-<span class="n">df_bcr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+df_bcr.to_csv(f&quot;{path_tmp}/BENISSE_bcrs.csv&quot;)
+df_bcr.head(5)
 </pre></div>
 </div>
 </div>
@@ -7319,20 +7319,20 @@ Best trial:
 <p>We will filter the 1,000 most variable genes, as provided in the sample data file in the GitHub repository.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[:,</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.highly_variable_genes(adata_benisse, n_top_genes=1000)
+adata_benisse = adata_benisse[:, adata_benisse.var[&quot;highly_variable&quot;]].copy()
 
-<span class="n">count_mat</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span>
-<span class="n">df_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_mat</span><span class="p">)</span>
+count_mat = adata_benisse.X.A
+df_counts = pd.DataFrame(count_mat)
 
-<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span>
+df_counts.index = adata_benisse.obs.index
+df_counts.index.name = &quot;&quot;
+df_counts.columns = adata_benisse.var.index
 
-<span class="n">df_counts</span> <span class="o">=</span> <span class="n">df_counts</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+df_counts = df_counts.transpose()
 
-<span class="n">df_counts</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_gex.csv&quot;</span><span class="p">)</span>
-<span class="n">df_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+df_counts.to_csv(f&quot;{path_tmp}/BENISSE_gex.csv&quot;)
+df_counts.head()
 </pre></div>
 </div>
 </div>
@@ -7507,10 +7507,10 @@ Best trial:
 <p>Unlike TESSA, BENISSE additionally requires an adapted contigs file as specified from the 10x cellranger output. Here, we will filter the original contigs file to contain only the barcodes of the selected donors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_bcr_contigs</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_00_read_aligned.csv&quot;</span>
-<span class="n">df_bcr_contigs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_bcr_contigs</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">df_bcr_contigs</span> <span class="o">=</span> <span class="n">df_bcr_contigs</span><span class="p">[</span><span class="n">df_bcr_contigs</span><span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
-<span class="n">df_bcr_contigs</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcr_contigs.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>path_bcr_contigs = f&quot;{path_data}/BCR_00_read_aligned.csv&quot;
+df_bcr_contigs = pd.read_csv(path_bcr_contigs, index_col=0, low_memory=False)
+df_bcr_contigs = df_bcr_contigs[df_bcr_contigs[&quot;barcode&quot;].isin(adata_benisse.obs.index)]
+df_bcr_contigs.to_csv(f&quot;{path_tmp}/BENISSE_bcr_contigs.csv&quot;)
 </pre></div>
 </div>
 </div>
@@ -7520,24 +7520,24 @@ Best trial:
 <p>First, we need to embed the BCR sequences via the pre-trained encoder:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">settings_embedding</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;input_data&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcrs.csv&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;output_data&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/BENISSE_encoded_bcrs.csv&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cuda&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>settings_embedding = {
+    &quot;input_data&quot;: f&quot;{path_tmp}/BENISSE_bcrs.csv&quot;,
+    &quot;output_data&quot;: f&quot;{path_res}/BENISSE_encoded_bcrs.csv&quot;,
+    &quot;cuda&quot;: &quot;True&quot;,
+}
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_bcr_embedding</span> <span class="o">=</span> <span class="s2">&quot;source ~/.bashrc &amp;&amp; &quot;</span>
-<span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="s2">&quot;conda activate BENISSE &amp;&amp; &quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cmd_bcr_embedding = &quot;source ~/.bashrc &amp;&amp; &quot;
+cmd_bcr_embedding += &quot;conda activate BENISSE &amp;&amp; &quot;
 
-<span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="s2">&quot;python Benisse/AchillesEncoder.py&quot;</span>
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">settings_embedding</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; --</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="n">cmd_bcr_embedding</span>
+cmd_bcr_embedding += &quot;python Benisse/AchillesEncoder.py&quot;
+for key, value in settings_embedding.items():
+    cmd_bcr_embedding += f&quot; --{key} {value}&quot;
+cmd_bcr_embedding
 </pre></div>
 </div>
 </div>
@@ -7549,7 +7549,7 @@ Best trial:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">$cmd_bcr_embedding</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!$cmd_bcr_embedding
 </pre></div>
 </div>
 </div>
@@ -7566,20 +7566,20 @@ BCR successfully encoded. The output file is generated here:  ./data/res/BENISSE
 <p>Following, we need to create the graph representation. We will use the default values provided by the authors here.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">cmd_benisse</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;source ~/.bashrc &amp;&amp;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;conda activate BENISSE &amp;&amp;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;export R_LIBS=$CONDA_PREFIX/lib/R/library &amp;&amp;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Rscript Benisse/Benisse.R&quot;</span><span class="p">,</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_gex.csv&quot;</span><span class="p">,</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcr_contigs.csv&quot;</span><span class="p">,</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/BENISSE_encoded_bcrs.csv&quot;</span><span class="p">,</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="sa">f</span><span class="s2">&quot;1610 1 </span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> 1 1 10 1e-10&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-<span class="n">cmd_benisse</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd_benisse</span><span class="p">)</span>
-<span class="n">cmd_benisse</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>max_iter = 100
+cmd_benisse = [
+    &quot;source ~/.bashrc &amp;&amp;&quot;,
+    &quot;conda activate BENISSE &amp;&amp;&quot;,
+    &quot;export R_LIBS=$CONDA_PREFIX/lib/R/library &amp;&amp;&quot;,
+    &quot;Rscript Benisse/Benisse.R&quot;,
+    f&quot;{path_tmp}/BENISSE_gex.csv&quot;,
+    f&quot;{path_tmp}/BENISSE_bcr_contigs.csv&quot;,
+    f&quot;{path_res}/BENISSE_encoded_bcrs.csv&quot;,
+    f&quot;{path_res}&quot;,
+    f&quot;1610 1 {max_iter} 1 1 10 1e-10&quot;,
+]
+cmd_benisse = &quot; &quot;.join(cmd_benisse)
+cmd_benisse
 </pre></div>
 </div>
 </div>
@@ -7592,7 +7592,7 @@ BCR successfully encoded. The output file is generated here:  ./data/res/BENISSE
 <p>Even with reduced number of iteration, running the code might take several minutes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">$cmd_benisse</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!$cmd_benisse
 </pre></div>
 </div>
 </div>
@@ -7665,9 +7665,9 @@ Warning messages:
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">IFrame</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from IPython.display import IFrame
 
-<span class="n">IFrame</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/connectionplot.pdf&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+IFrame(f&quot;{path_res}/connectionplot.pdf&quot;, width=600, height=600)
 </pre></div>
 </div>
 </div>
@@ -7686,24 +7686,24 @@ Warning messages:
 <p>The connection plot prowides us with a visualisation of the graph build by Benisse. Each clonotype is represented by a node in the learned embedding space. These clustering is informed by BCR as well as gene expression similarity.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">benisse_clusters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/clone_annotation.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-<span class="n">adata_benisse_out</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[</span>
-    <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;benisse_clusters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">benisse_clusters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
-<span class="p">][</span><span class="s2">&quot;graph_label&quot;</span><span class="p">]</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>benisse_clusters = pd.read_csv(f&quot;{path_res}/clone_annotation.csv&quot;, index_col=0)
+benisse_clusters.index = [el.replace(&quot;.&quot;, &quot;-&quot;) for el in benisse_clusters.index]
+adata_benisse_out = adata_benisse[
+    adata_benisse.obs.index.isin(benisse_clusters.index)
+].copy()
+adata_benisse_out.obs[&quot;benisse_clusters&quot;] = benisse_clusters.loc[
+    adata_benisse_out.obs.index
+][&quot;graph_label&quot;]
+sc.pp.neighbors(adata_benisse_out)
+sc.tl.umap(adata_benisse_out)
 
-<span class="n">top_10_clusters</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;benisse_clusters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
-<span class="p">)</span>
-<span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clusters_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span>
-    <span class="s2">&quot;benisse_clusters&quot;</span>
-<span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clusters</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters_top10&quot;</span><span class="p">)</span>
+top_10_clusters = (
+    adata_benisse_out.obs[&quot;benisse_clusters&quot;].value_counts().head(10).index
+)
+adata_benisse_out.obs[&quot;clusters_top10&quot;] = adata_benisse_out.obs[
+    &quot;benisse_clusters&quot;
+].apply(lambda x: x if x in top_10_clusters else np.nan)
+sc.pl.umap(adata_benisse_out, color=&quot;clusters_top10&quot;)
 </pre></div>
 </div>
 </div>

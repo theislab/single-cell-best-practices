@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>24. Normalization &#8212; Multimodal single-cell analysis</title>
+    <title>24. Normalization &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -767,12 +767,12 @@ We cover the two most widely used ideas methods that require different input dat
 <h2><span class="section-number">24.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import muon as mu
+import pandas as pd
+import warnings
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+warnings.simplefilter(action=&quot;ignore&quot;, category=UserWarning)
+warnings.simplefilter(action=&quot;ignore&quot;, category=FutureWarning)
 </pre></div>
 </div>
 </div>
@@ -788,11 +788,11 @@ We cover the two most widely used ideas methods that require different input dat
 <h2><span class="section-number">24.3. </span>Loading the data<a class="headerlink" href="#loading-the-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_mu_path</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_raw.h5mu&quot;</span>
-<span class="p">)</span>
-<span class="n">filtered_qc_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc.h5mu&quot;</span>
-<span class="n">filtered_norm_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm.h5mu&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>raw_mu_path = (
+    &quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_raw.h5mu&quot;
+)
+filtered_qc_mu_path = &quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc.h5mu&quot;
+filtered_norm_mu_path = &quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm.h5mu&quot;
 </pre></div>
 </div>
 </div>
@@ -800,8 +800,8 @@ We cover the two most widely used ideas methods that require different input dat
 <p>We are simply loading the saved MuData object from the quality control chapter back in.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">raw</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">raw_mu_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
+raw = mu.read(raw_mu_path)
 </pre></div>
 </div>
 </div>
@@ -814,8 +814,8 @@ Wall time: 16min 4s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">filtered</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filtered_qc_mu_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
+filtered = mu.read(filtered_qc_mu_path)
 </pre></div>
 </div>
 </div>
@@ -828,7 +828,7 @@ Wall time: 6.07 s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filtered
 </pre></div>
 </div>
 </div>
@@ -852,29 +852,29 @@ values of the isotype controls to normalize technical differences.</p>
 <p>We are calling the normalization function <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.dsb</span></code> with the filtered and raw mudata object as well as the names of the isotype controls.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">isotype_controls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mouse-IgG1&quot;</span><span class="p">,</span> <span class="s2">&quot;Mouse-IgG2a&quot;</span><span class="p">,</span> <span class="s2">&quot;Mouse-IgG2b&quot;</span><span class="p">,</span> <span class="s2">&quot;Rat-IgG2b&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>isotype_controls = [&quot;Mouse-IgG1&quot;, &quot;Mouse-IgG2a&quot;, &quot;Mouse-IgG2b&quot;, &quot;Rat-IgG2b&quot;]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filtered[&quot;prot&quot;].layers[&quot;counts&quot;] = filtered[&quot;prot&quot;].X
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filtered[&quot;prot&quot;].X = filtered[&quot;prot&quot;].layers[&quot;counts&quot;]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">mu</span><span class="o">.</span><span class="n">prot</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">dsb</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">isotype_controls</span><span class="o">=</span><span class="n">isotype_controls</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
+mu.prot.pp.dsb(filtered, raw, isotype_controls=isotype_controls)
 </pre></div>
 </div>
 </div>
@@ -888,7 +888,7 @@ Wall time: 8min 32s
 <p>Let’s have a look at counts before denoising and normalization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">][:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pd.Series(filtered[&quot;prot&quot;].layers[&quot;counts&quot;][:100, :100].A.flatten()).value_counts()
 </pre></div>
 </div>
 </div>
@@ -912,7 +912,7 @@ Length: 524, dtype: int64
 <p>See after denoise and normalization the range changed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pd.Series(filtered[&quot;prot&quot;].X[:100, :100].flatten()).value_counts()
 </pre></div>
 </div>
 </div>
@@ -939,7 +939,7 @@ Length: 9999, dtype: int64
 <p>If you don’t have the unfiltered data available, you can also normalize the ADT data with <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.clr</span></code>, implementing <strong>C</strong>entered <strong>L</strong>og-<strong>R</strong>atio normalization. There is no denoising in this type of normalization. We instead assume that the geometric mean is a good reference to make all else relative to (divide by)<span id="id4">[<a class="reference internal" href="#id363" title="Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. Bioinformatics, 34(16):2870–2878, Aug 2018. doi:10.1093/bioinformatics/bty175.">Quinn <em>et al.</em>, 2018</a>]</span>. We are in fact taking the natural log ratio of each protein in each cell relative to either other proteins or other cells, depending on the implementation. At first, it was done across proteins, but then it was changed to across cells. This change made the normalization less dependent on the antibody panel<span id="id5">[<a class="reference internal" href="#id353" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filtered
 </pre></div>
 </div>
 </div>
@@ -957,7 +957,7 @@ Length: 9999, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filtered_norm_mu_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filtered.write(filtered_norm_mu_path)
 </pre></div>
 </div>
 </div>

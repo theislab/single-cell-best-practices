@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>11. Clustering &#8212; Multimodal single-cell analysis</title>
+    <title>11. Clustering &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -745,10 +745,10 @@ We can derive clusters by minimizing the intra-cluster distance in the reduced e
 <p>As mentioned before, the Leiden algorithm is implemented in scanpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
 
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+sc.settings.verbosity = 0
+sc.settings.set_figure_params(dpi=80, facecolor=&quot;white&quot;, frameon=False)
 </pre></div>
 </div>
 </div>
@@ -760,7 +760,7 @@ We can derive clusters by minimizing the intra-cluster distance in the reduced e
 <p>This dataset was normalized with log1pPF, scran and scTransform. We will focus on the scran normalized version of the dataset in this notebook as recommended in the preprocessing chapter to better identify substates of individual cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read(&quot;s4d8_subset_gex.h5ad&quot;)
 </pre></div>
 </div>
 </div>
@@ -769,8 +769,8 @@ We can derive clusters by minimizing the intra-cluster distance in the reduced e
 <p>Visualizing the clustering can help us to understand the results, we therefore embed our cells into a UMAP embedding. More information on UMAP visualizations can be found in the visualization section. TODO LINK THIS LATER</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata, n_pcs=30)
+sc.tl.umap(adata)
 </pre></div>
 </div>
 </div>
@@ -785,7 +785,7 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>We can now call the Leiden algorithm.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.leiden(adata)
 </pre></div>
 </div>
 </div>
@@ -793,9 +793,9 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>The default resolution parameter in scanpy is 1.0. However, in many cases the analyst may want to try different resolution parameters to control the coarseness of the clustering. Hence, we recommend to save the clustering result under a specified key which indicates the selected resolution.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;leiden_res0_25&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;leiden_res0_5&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;leiden_res1&quot;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.leiden(adata, key_added=&quot;leiden_res0_25&quot;, resolution=0.25)
+sc.tl.leiden(adata, key_added=&quot;leiden_res0_5&quot;, resolution=0.5)
+sc.tl.leiden(adata, key_added=&quot;leiden_res1&quot;, resolution=1.0)
 </pre></div>
 </div>
 </div>
@@ -803,11 +803,11 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <p>We now visualize the different clustering results obtained with the Leiden algorithm at different resolutions. As we can see, the resolution heavily influences how coarse our clustering is. Higher resolution parameters lead to more communities, i.e. more identifies clusters, while lower resolution parameters lead to fewer communities. The resolution parameter therefore controls how densly clustered regions in the knn-embedding are grouped together by the algorithm. This will become especially important for annotating the clusters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;leiden_res0_25&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden_res0_5&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden_res1&quot;</span><span class="p">],</span>
-    <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
+    adata,
+    color=[&quot;leiden_res0_25&quot;, &quot;leiden_res0_5&quot;, &quot;leiden_res1&quot;],
+    legend_loc=&quot;on data&quot;,
+)
 </pre></div>
 </div>
 </div>

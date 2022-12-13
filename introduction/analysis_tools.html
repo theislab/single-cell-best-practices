@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>4. Analysis frameworks and tools &#8212; Multimodal single-cell analysis</title>
+    <title>4. Analysis frameworks and tools &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -1077,10 +1077,10 @@ conda install -c conda-forge anndata
 <p>Let us create a simple AnnData object with sparse count information which may for example represent gene expression counts. First, we import the required packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import pandas as pd
+import anndata as ad
+from scipy.sparse import csr_matrix
 </pre></div>
 </div>
 </div>
@@ -1088,9 +1088,9 @@ conda install -c conda-forge anndata
 <p>As a next step we initialize an AnnData object with random poisson distributed data. It is an unwritten rule to name the primary AnnData object of the analysis <code class="docutils literal notranslate"><span class="pre">adata</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>counts = csr_matrix(np.random.poisson(1, size=(100, 2000)), dtype=np.float32)
+adata = ad.AnnData(counts)
+adata
 </pre></div>
 </div>
 </div>
@@ -1103,7 +1103,7 @@ conda install -c conda-forge anndata
 <p>The obtained AnnData object has 100 observations and 2000 variables. This would correspond to 100 cells with 2000 genes. The initial data we passed are accessible as a sparse matrix using <code class="docutils literal notranslate"><span class="pre">adata.X</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.X
 </pre></div>
 </div>
 </div>
@@ -1117,9 +1117,9 @@ conda install -c conda-forge anndata
 <p>Now, we provide the index to both the <code class="docutils literal notranslate"><span class="pre">obs</span></code> and <code class="docutils literal notranslate"><span class="pre">var</span></code> axes using <code class="docutils literal notranslate"><span class="pre">.obs_names</span></code> and <code class="docutils literal notranslate"><span class="pre">.var_names</span></code> respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Cell_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)]</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Gene_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">)]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs_names = [f&quot;Cell_{i:d}&quot; for i in range(adata.n_obs)]
+adata.var_names = [f&quot;Gene_{i:d}&quot; for i in range(adata.n_vars)]
+print(adata.obs_names[:10])
 </pre></div>
 </div>
 </div>
@@ -1139,9 +1139,9 @@ conda install -c conda-forge anndata
 <p>The core of our AnnData object is now in place. As a next step we add metadata at both, the observational and variable levels. Remember, we store such annotations in the <code class="docutils literal notranslate"><span class="pre">.obs</span></code> and <code class="docutils literal notranslate"><span class="pre">.var</span></code> slots of the AnnData object for cell and gene annotations respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Monocyte&quot;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,))</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>  <span class="c1"># Categoricals are preferred for efficiency</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ct = np.random.choice([&quot;B&quot;, &quot;T&quot;, &quot;Monocyte&quot;], size=(adata.n_obs,))
+adata.obs[&quot;cell_type&quot;] = pd.Categorical(ct)  # Categoricals are preferred for efficiency
+adata.obs
 </pre></div>
 </div>
 </div>
@@ -1220,7 +1220,7 @@ conda install -c conda-forge anndata
 <p>If we examine the representation of the AnnData object again now, we will notice that it got updated as well with the <code class="docutils literal notranslate"><span class="pre">cell_type</span></code> information in <code class="docutils literal notranslate"><span class="pre">obs</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
 </pre></div>
 </div>
 </div>
@@ -1237,8 +1237,8 @@ conda install -c conda-forge anndata
 <p>We can also subset the AnnData object with the randomly generated cell types. The slicing and masking of the AnnData object behaves similarly to the access of data in Pandas DataFrames or R matrices. More details on this can be found below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bdata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">]</span>
-<span class="n">bdata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>bdata = adata[adata.obs.cell_type == &quot;B&quot;]
+bdata
 </pre></div>
 </div>
 </div>
@@ -1257,9 +1257,9 @@ conda install -c conda-forge anndata
 <p>Let us start with a randomly generated matrix that we can interpret as a UMAP embedding of the data we would like to store, as well as some random gene-level metadata.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s2">&quot;gene_stuff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obsm[&quot;X_umap&quot;] = np.random.normal(0, 1, size=(adata.n_obs, 2))
+adata.varm[&quot;gene_stuff&quot;] = np.random.normal(0, 1, size=(adata.n_vars, 5))
+adata.obsm
 </pre></div>
 </div>
 </div>
@@ -1272,7 +1272,7 @@ conda install -c conda-forge anndata
 <p>Again, the AnnData representation is updated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
 </pre></div>
 </div>
 </div>
@@ -1296,8 +1296,8 @@ conda install -c conda-forge anndata
 <p>As mentioned above, AnnData has <em>.uns</em>, which allows for any unstructured metadata. This can be anything, like a list or a dictionary with some general information that was useful in the analysis of our data. Try to only use this slot for data which cannot be efficiently stored in the other slots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">uns</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.uns[&quot;random&quot;] = [1, 2, 3]
+adata.uns
 </pre></div>
 </div>
 </div>
@@ -1316,8 +1316,8 @@ With overloaded keys:
 <p>Finally, we may have different forms of our original core data, perhaps one that is normalized and one that is not. These can be stored in different layers in AnnData. For example, let us log transform the original data and store it in a layer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.layers[&quot;log_transformed&quot;] = np.log1p(adata.X)
+adata
 </pre></div>
 </div>
 </div>
@@ -1335,7 +1335,7 @@ With overloaded keys:
 <p>Our original matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> was not modified and is still accessible. We can verify this by comparing the original <code class="docutils literal notranslate"><span class="pre">X</span></code> to the new layer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">!=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">nnz</span> <span class="o">==</span> <span class="mi">0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(adata.X != adata.layers[&quot;log_transformed&quot;]).nnz == 0
 </pre></div>
 </div>
 </div>
@@ -1351,7 +1351,7 @@ With overloaded keys:
 <p>It is possible to obtain a Pandas DataFrame from one of the layers.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.to_df(layer=&quot;log_transformed&quot;)
 </pre></div>
 </div>
 </div>
@@ -1673,14 +1673,14 @@ With overloaded keys:
 <p>AnnData objects can be saved on disk to hierarchical array stores like <a class="reference external" href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> or <a class="reference external" href="https://zarr.readthedocs.io/en/stable/index.html">Zarr</a> to enable similar structures in disk and on memory. AnnData comes with its own persistent HDF5-based file format: <code class="docutils literal notranslate"><span class="pre">h5ad</span></code>. If string columns with small number of categories are not yet categoricals, AnnData will auto-transform them to categoricals. We will now save our AnnData object in <code class="docutils literal notranslate"><span class="pre">h5ad</span></code> format.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;my_results.h5ad&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;gzip&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.write(&quot;my_results.h5ad&quot;, compression=&quot;gzip&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>h5ls <span class="s1">&#39;my_results.h5ad&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!h5ls &#39;my_results.h5ad&#39;
 </pre></div>
 </div>
 </div>
@@ -1699,8 +1699,8 @@ varm                     Group
 <p>… and read it back in.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_new</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;my_results.h5ad&quot;</span><span class="p">)</span>
-<span class="n">adata_new</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_new = ad.read_h5ad(&quot;my_results.h5ad&quot;)
+adata_new
 </pre></div>
 </div>
 </div>
@@ -1723,17 +1723,17 @@ varm                     Group
 <p>For the fun of it, let us look at another metadata use case. Imagine that the observations come from instruments characterizing 10 readouts in a multi-year study with samples taken from different subjects at different sites. We would typically get that information in some format and then store it in a DataFrame:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;time_yr&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
-        <span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;subject 1&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 2&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 4&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 8&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span>
-        <span class="p">),</span>
-        <span class="s2">&quot;instrument_type&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;type a&quot;</span><span class="p">,</span> <span class="s2">&quot;type b&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
-        <span class="s2">&quot;site&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;site x&quot;</span><span class="p">,</span> <span class="s2">&quot;site y&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
-    <span class="p">},</span>
-    <span class="n">index</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>  <span class="c1"># these are the same IDs of observations as above!</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>obs_meta = pd.DataFrame(
+    {
+        &quot;time_yr&quot;: np.random.choice([0, 2, 4, 8], adata.n_obs),
+        &quot;subject_id&quot;: np.random.choice(
+            [&quot;subject 1&quot;, &quot;subject 2&quot;, &quot;subject 4&quot;, &quot;subject 8&quot;], adata.n_obs
+        ),
+        &quot;instrument_type&quot;: np.random.choice([&quot;type a&quot;, &quot;type b&quot;], adata.n_obs),
+        &quot;site&quot;: np.random.choice([&quot;site x&quot;, &quot;site y&quot;], adata.n_obs),
+    },
+    index=adata.obs.index,  # these are the same IDs of observations as above!
+)
 </pre></div>
 </div>
 </div>
@@ -1741,8 +1741,8 @@ varm                     Group
 <p>This is how we join the readout data with the metadata. Of course, the first argument of the following call for <em>X</em> could also just be a DataFrame. This will result in a single data container which tracks everything.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs_meta</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = ad.AnnData(adata.X, obs=obs_meta, var=adata.var)
+adata
 </pre></div>
 </div>
 </div>
@@ -1762,7 +1762,7 @@ varm                     Group
 <p>You can get an actual AnnData object from a view by calling <code class="docutils literal notranslate"><span class="pre">.copy()</span></code> on the view. Usually, this is not necessary, as any modification of elements of a view (calling <code class="docutils literal notranslate"><span class="pre">.[]</span></code> on an attribute of the view) internally calls <code class="docutils literal notranslate"><span class="pre">.copy()</span></code> and makes the view an AnnData object that holds actual data. See the example below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
 </pre></div>
 </div>
 </div>
@@ -1776,8 +1776,8 @@ varm                     Group
 <p><strong>Note</strong> Indexing into AnnData will assume that integer arguments to <code class="docutils literal notranslate"><span class="pre">[]</span></code> behave like <code class="docutils literal notranslate"><span class="pre">.iloc</span></code> in pandas, whereas string arguments behave like <code class="docutils literal notranslate"><span class="pre">.loc</span></code>. <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> always assumes string indices.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_view</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Gene_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene_3&quot;</span><span class="p">]]</span>
-<span class="n">adata_view</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_view = adata[:5, [&quot;Gene_1&quot;, &quot;Gene_3&quot;]]
+adata_view
 </pre></div>
 </div>
 </div>
@@ -1791,7 +1791,7 @@ varm                     Group
 <p>This is a view! This can be verified by examining the AnnData object again.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
 </pre></div>
 </div>
 </div>
@@ -1805,7 +1805,7 @@ varm                     Group
 <p>The dimensions of the AnnData object have not changed it still contains the same data. If we want an AnnData that holds the data in memory we have to call <code class="docutils literal notranslate"><span class="pre">.copy()</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_subset</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Gene_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene_3&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_subset = adata[:5, [&quot;Gene_1&quot;, &quot;Gene_3&quot;]].copy()
 </pre></div>
 </div>
 </div>
@@ -1813,9 +1813,9 @@ varm                     Group
 <p>For a view, we can also set the first 3 elements of a column.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">adata</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gene_1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-<span class="n">adata</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gene_1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">adata</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gene_1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(adata[:3, &quot;Gene_1&quot;].X.toarray().tolist())
+adata[:3, &quot;Gene_1&quot;].X = [0, 0, 0]
+print(adata[:3, &quot;Gene_1&quot;].X.toarray().tolist())
 </pre></div>
 </div>
 </div>
@@ -1829,8 +1829,8 @@ varm                     Group
 <p>If you try to access parts of a view of an AnnData, the content will be auto-copied and a data-storing object will be generated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_subset</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Gene_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Gene_2&quot;</span><span class="p">]]</span>
-<span class="n">adata_subset</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_subset = adata[:3, [&quot;Gene_1&quot;, &quot;Gene_2&quot;]]
+adata_subset
 </pre></div>
 </div>
 </div>
@@ -1843,7 +1843,7 @@ varm                     Group
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_subset</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_subset.obs[&quot;foo&quot;] = range(3)
 </pre></div>
 </div>
 </div>
@@ -1856,7 +1856,7 @@ varm                     Group
 <p>Now <code class="docutils literal notranslate"><span class="pre">adata_subset</span></code> stores the actual data and is no longer just a reference to adata.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_subset</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_subset
 </pre></div>
 </div>
 </div>
@@ -1870,7 +1870,7 @@ varm                     Group
 <p>Evidently, you can use all of pandas to slice with sequences or boolean indices.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">time_yr</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])]</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata[adata.obs.time_yr.isin([2, 4])].obs.head()
 </pre></div>
 </div>
 </div>
@@ -1945,14 +1945,14 @@ varm                     Group
 <p>If a single <code class="docutils literal notranslate"><span class="pre">h5ad</span></code> file is very large, you can partially read it into memory by using backed mode or with the currently experimental <a class="reference external" href="https://anndata.readthedocs.io/en/latest/generated/anndata.experimental.read_elem.html">read_elem</a> API.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;my_results.h5ad&quot;</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = ad.read(&quot;my_results.h5ad&quot;, backed=&quot;r&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">isbacked</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.isbacked
 </pre></div>
 </div>
 </div>
@@ -1965,7 +1965,7 @@ varm                     Group
 <p>If you do this, you will need to remember that the AnnData object has an open connection to the file used for reading.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">filename</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.filename
 </pre></div>
 </div>
 </div>
@@ -1978,7 +1978,7 @@ varm                     Group
 <p>As we are using it in read-only mode, we cannot damage anything. To proceed with this tutorial, we still need to explicitly close it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.file.close()
 </pre></div>
 </div>
 </div>
@@ -2025,10 +2025,10 @@ All functions with their corresponding parameters and potentially example plots 
 <p>As a first step we import scanpy and define defaults for our following quick scanpy demo. We use scanpy’s setting object to  set the Matplotlib plotting defaults for all of scanpy’s plots and finally print scanpy’s header. This header contains the versions of all relevant Python packages in the current environment including Scanpy and AnnData. This output is especially useful when reporting bugs to the scverse team and for reproducibility reasons.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
 
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_header</span><span class="p">()</span>
+sc.settings.set_figure_params(dpi=80, facecolor=&quot;white&quot;)
+sc.logging.print_header()
 </pre></div>
 </div>
 </div>
@@ -2041,8 +2041,8 @@ All functions with their corresponding parameters and potentially example plots 
 <p>Next, we get the 3k PBMC dataset with scanpy as an AnnData object. The dataset is automatically downloaded and saved to a path which can be also specified with scanpy’s settings object. By default it is the folder <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">pbmc3k</span><span class="p">()</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.datasets.pbmc3k()
+adata
 </pre></div>
 </div>
 </div>
@@ -2059,7 +2059,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>The returned AnnData object has 2700 cells with 32738 genes. The <code class="docutils literal notranslate"><span class="pre">var</span></code> slot further contains the gene IDs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.var
 </pre></div>
 </div>
 </div>
@@ -2142,7 +2142,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>As mentioned above, all of scanpy’s analysis functions are accessible <em>via</em> <code class="docutils literal notranslate"><span class="pre">sc.[pp,</span> <span class="pre">tl,</span> <span class="pre">pl]</span></code>. As a first step to get an overview over our data, we use scanpy to show those genes that yield the highest fraction of counts in each single cell, across all cells. We simply call the <code class="docutils literal notranslate"><span class="pre">sc.pl.highest_expr_genes</span></code> function, pass the AnnData object which is in pretty much all cases the first parameter of any scanpy function, and specify that we want the top 20 expressed genes to be shown.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highest_expr_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_top</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.highest_expr_genes(adata, n_top=20)
 </pre></div>
 </div>
 </div>
@@ -2154,8 +2154,8 @@ All functions with their corresponding parameters and potentially example plots 
 <p>We now filter cells with less than 200 detected genes and genes which were found in less than 3 cells for a rough quality threshold with scanpy’s preprocessing module.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.filter_cells(adata, min_genes=200)
+sc.pp.filter_genes(adata, min_cells=3)
 </pre></div>
 </div>
 </div>
@@ -2163,7 +2163,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>A common step in single-cell RNA-Seq analysis is dimensionality reduction with for example principal component analysis (PCA) to unveil the main axes of variation. This also denoises the data. scanpy offers PCA as a <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">tools</span></code> function. These are equivalent. Here, we use the version in <code class="docutils literal notranslate"><span class="pre">tools</span></code> for no particular reason.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">&quot;arpack&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.pca(adata, svd_solver=&quot;arpack&quot;)
 </pre></div>
 </div>
 </div>
@@ -2171,7 +2171,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>The corresponding plotting function allows us to pass genes to the color argument. The corresponding values are automatically extracted from the AnnData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;CST3&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.pca(adata, color=&quot;CST3&quot;)
 </pre></div>
 </div>
 </div>
@@ -2182,7 +2182,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>A fundamental step for any advanced embedding and downstream calculations is the calculating of the neighborhood graph using the PCA representation of the data matrix. It is automatically used for other tools that require it such as the calculation of a UMAP.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
 </pre></div>
 </div>
 </div>
@@ -2190,14 +2190,14 @@ All functions with their corresponding parameters and potentially example plots 
 <p>We now use the calculating neighborhood graph to embed the cells with a UMAP, one of many advanced dimension reduction <a class="reference internal" href="../glossary.html#term-Algorithm"><span class="xref std std-term">algorithm</span></a>s implemented in scanpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.umap(adata)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CST3&quot;</span><span class="p">,</span> <span class="s2">&quot;NKG7&quot;</span><span class="p">,</span> <span class="s2">&quot;PPBP&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata, color=[&quot;CST3&quot;, &quot;NKG7&quot;, &quot;PPBP&quot;])
 </pre></div>
 </div>
 </div>
@@ -2232,7 +2232,7 @@ conda install -c conda-forge mudata
 <p>We will start by importing MuData from the mudata package.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mudata</span> <span class="k">as</span> <span class="nn">md</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import mudata as md
 </pre></div>
 </div>
 </div>
@@ -2240,12 +2240,12 @@ conda install -c conda-forge mudata
 <p>To create an example MuData object we require simulated data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n, d, k = 1000, 100, 10
 
-<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-<span class="n">y</span><span class="o">.</span><span class="n">shape</span>
+z = np.random.normal(loc=np.arange(k), scale=np.arange(k) * 2, size=(n, k))
+w = np.random.normal(size=(d, k))
+y = np.dot(z, w.T)
+y.shape
 </pre></div>
 </div>
 </div>
@@ -2258,10 +2258,10 @@ conda install -c conda-forge mudata
 <p>To create a MuData object we require the unimodal AnnData objects first. Therefore, we create two AnnData objects with <em>data for the same observations</em>, but for <em>different variables</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;obs_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;var_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = ad.AnnData(y)
+adata.obs_names = [f&quot;obs_{i+1}&quot; for i in range(n)]
+adata.var_names = [f&quot;var_{j+1}&quot; for j in range(d)]
+adata
 </pre></div>
 </div>
 </div>
@@ -2273,14 +2273,14 @@ conda install -c conda-forge mudata
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">w2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>d2 = 50
+w2 = np.random.normal(size=(d2, k))
+y2 = np.dot(z, w2.T)
 
-<span class="n">adata2</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>
-<span class="n">adata2</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;obs_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-<span class="n">adata2</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;var2_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d2</span><span class="p">)]</span>
-<span class="n">adata2</span>
+adata2 = ad.AnnData(y2)
+adata2.obs_names = [f&quot;obs_{i+1}&quot; for i in range(n)]
+adata2.var_names = [f&quot;var2_{j+1}&quot; for j in range(d2)]
+adata2
 </pre></div>
 </div>
 </div>
@@ -2293,8 +2293,8 @@ conda install -c conda-forge mudata
 <p>These two AnnData objects (two “modalities”) can then be wrapped into a single MuData object. Here, we name modality one <code class="docutils literal notranslate"><span class="pre">A</span></code> and modality two <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">MuData</span><span class="p">({</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="n">adata2</span><span class="p">})</span>
-<span class="n">mdata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata = md.MuData({&quot;A&quot;: adata, &quot;B&quot;: adata2})
+mdata
 </pre></div>
 </div>
 </div>
@@ -2312,7 +2312,7 @@ conda install -c conda-forge mudata
 <p>Modalities are stored in a collection accessible via the <code class="docutils literal notranslate"><span class="pre">.mod</span></code> attribute of the MuData object with names of modalities as keys and AnnData objects as values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>list(mdata.mod.keys())
 </pre></div>
 </div>
 </div>
@@ -2325,8 +2325,8 @@ conda install -c conda-forge mudata
 <p>Individual modalities can be accessed with their names via the <code class="docutils literal notranslate"><span class="pre">.mod</span></code> attribute or via the MuData object itself as a shorthand.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(mdata.mod[&quot;A&quot;])
+print(mdata[&quot;A&quot;])
 </pre></div>
 </div>
 </div>
@@ -2342,9 +2342,9 @@ AnnData object with n_obs × n_vars = 1000 × 100
 <p>The MuData object’s shape is represented by two numbers calculated as a sum of the shapes of individual modalities — one for the number of observations and one for the number of variables.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(mdata.shape)
+print(mdata.n_obs)
+print(mdata.n_vars)
 </pre></div>
 </div>
 </div>
@@ -2359,7 +2359,7 @@ AnnData object with n_obs × n_vars = 1000 × 100
 <p>By default, variables are always counted as belonging uniquely to a single modality while observations with the same name are counted as the same observation, which has variables across multiple modalities measured for.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">adata</span> <span class="ow">in</span> <span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>[adata.shape for adata in mdata.mod.values()]
 </pre></div>
 </div>
 </div>
@@ -2372,16 +2372,16 @@ AnnData object with n_obs × n_vars = 1000 × 100
 <p>If the shape of a modality is changed, <code class="docutils literal notranslate"><span class="pre">MuData.update()</span></code> has to be run to bring the respective updates to the MuData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata2</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;var_ad2_&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">adata2</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata2.var_names = [&quot;var_ad2_&quot; + e.split(&quot;_&quot;)[1] for e in adata2.var_names]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outdated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
-<span class="n">mdata</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&quot;Outdated variables names: ...,&quot;, &quot;, &quot;.join(mdata.var_names[-3:]))
+mdata.update()
+print(f&quot;Updated variables names: ...,&quot;, &quot;, &quot;.join(mdata.var_names[-3:]))
 </pre></div>
 </div>
 </div>
@@ -2395,16 +2395,16 @@ Updated variables names: ..., var_ad2_48, var_ad2_49, var_ad2_50
 <p>Importantly, individual modalities are stored as references to the original objects. Hence, if the original AnnData is changed the change will also be reflected in the MuData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add some unstructured data to the original object</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;misc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;adata&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Add some unstructured data to the original object
+adata.uns[&quot;misc&quot;] = {&quot;adata&quot;: True}
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Access modality A via the .mod attribute</span>
-<span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;misc&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Access modality A via the .mod attribute
+mdata.mod[&quot;A&quot;].uns[&quot;misc&quot;]
 </pre></div>
 </div>
 </div>
@@ -2420,7 +2420,7 @@ Updated variables names: ..., var_ad2_48, var_ad2_49, var_ad2_50
 <p>Upon construction of a MuData object, a global binary mapping between observations and individual modalities is created as well as between variables and modalities. Since all the observations are the same across modalities in <code class="docutils literal notranslate"><span class="pre">mdata</span></code>, all the values in the observations mappings are set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="n">n</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.sum(mdata.obsm[&quot;A&quot;]) == np.sum(mdata.obsm[&quot;B&quot;]) == n
 </pre></div>
 </div>
 </div>
@@ -2433,7 +2433,7 @@ Updated variables names: ..., var_ad2_48, var_ad2_49, var_ad2_50
 <p>For variables however, those are 150-long vectors. The A modality has 100 True values followed by 50 False values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata.varm[&quot;A&quot;]
 </pre></div>
 </div>
 </div>
@@ -2465,9 +2465,9 @@ Updated variables names: ..., var_ad2_48, var_ad2_49, var_ad2_50
 <p>Analogous to the behavior of AnnData objects, slicing MuData objects returns views of the original data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">view</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">1000</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">is_view</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">view</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">is_view</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>view = mdata[:100, :1000]
+print(view.is_view)
+print(view[&quot;A&quot;].is_view)
 </pre></div>
 </div>
 </div>
@@ -2481,8 +2481,8 @@ True
 <p>Subsetting MuData objects is special since it slices them across modalities. I.e. the slicing operation for a set of <code class="docutils literal notranslate"><span class="pre">obs_names</span></code> and/or <code class="docutils literal notranslate"><span class="pre">var_names</span></code> will be performed for each modality and not only for the global multimodal annotation. This behavior makes workflows memory-efficient, which is especially important when working with large datasets. If the object is to be modified however, a copy of it should be created, which is not a view anymore and has no dependance on the original object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_sub</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">mdata_sub</span><span class="o">.</span><span class="n">is_view</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata_sub = view.copy()
+mdata_sub.is_view
 </pre></div>
 </div>
 </div>
@@ -2502,9 +2502,9 @@ True
 <p>Similarly to AnnData objects, MuData objects were designed to be serialized into HDF5 based <code class="docutils literal notranslate"><span class="pre">.h5mu</span></code> files. All modalities are stored under their respective names in the <code class="docutils literal notranslate"><span class="pre">/mod</span></code> HDF5 group of the <code class="docutils literal notranslate"><span class="pre">.h5mu</span> <span class="pre">file</span></code>. Each individual modality, e.g. <code class="docutils literal notranslate"><span class="pre">/mod/A</span></code>, is stored in the same way as it would be stored in the <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> file. MuData objects can be read and written as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;my_mudata.h5mu&quot;</span><span class="p">)</span>
-<span class="n">mdata_r</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;my_mudata.h5mu&quot;</span><span class="p">,</span> <span class="n">backed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mdata_r</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata.write(&quot;my_mudata.h5mu&quot;)
+mdata_r = md.read(&quot;my_mudata.h5mu&quot;, backed=True)
+mdata_r
 </pre></div>
 </div>
 </div>
@@ -2518,7 +2518,7 @@ True
 <p>Individual modalities are backed as well inside the <code class="docutils literal notranslate"><span class="pre">.h5mu</span></code> file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_r</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isbacked</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata_r[&quot;A&quot;].isbacked
 </pre></div>
 </div>
 </div>
@@ -2531,9 +2531,9 @@ True
 <p>If the original object is backed, the filename has to be provided to the <code class="docutils literal notranslate"><span class="pre">.copy()</span></code> call, and the resulting object will be backed at a new location.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_sub</span> <span class="o">=</span> <span class="n">mdata_r</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s2">&quot;mdata_sub.h5mu&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata_sub</span><span class="o">.</span><span class="n">is_view</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata_sub</span><span class="o">.</span><span class="n">isbacked</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata_sub = mdata_r.copy(&quot;mdata_sub.h5mu&quot;)
+print(mdata_sub.is_view)
+print(mdata_sub.isbacked)
 </pre></div>
 </div>
 </div>
@@ -2550,8 +2550,8 @@ True
 <p>When the MuData object is prepared, it is up to multimodal methods to be used to make sense of the data. The most simple and naïve approach is to concatenate matrices from multiple modalities to perform for example dimensionality reduction.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">])</span>
-<span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = np.hstack([mdata.mod[&quot;A&quot;].X, mdata.mod[&quot;B&quot;].X])
+x.shape
 </pre></div>
 </div>
 </div>
@@ -2565,24 +2565,24 @@ True
 <p>To calculate for example a principal component analysis (PCA) for the joint values of the modalities, we horizontally stack the values stored in the individual modalities and then perform the PCA on the stacked matrix. This is possible because the number of observations matches across modalities (remember, the number of features does per modality does not have to match).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">simple_pca</span><span class="p">(</span><span class="n">mdata</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">decomposition</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def simple_pca(mdata):
+    from sklearn import decomposition
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">m</span><span class="o">.</span><span class="n">X</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+    x = np.hstack([m.X for m in mdata.mod.values()])
 
-    <span class="n">pca</span> <span class="o">=</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">components</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    pca = decomposition.PCA(n_components=2)
+    components = pca.fit_transform(x)
 
-    <span class="c1"># By default, methods operate in-place and embeddings are stored in the .obsm slot</span>
-    <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">components</span>
+    # By default, methods operate in-place and embeddings are stored in the .obsm slot
+    mdata.obsm[&quot;X_pca&quot;] = components
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simple_pca</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>simple_pca(mdata)
+print(mdata)
 </pre></div>
 </div>
 </div>
@@ -2633,16 +2633,16 @@ True
 <p>The dataset for our demo is a publicly available 10x Genomics Multiome dataset for human PBMCs. Let us import muon and get the dataset with mudatasets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mudatasets</span> <span class="k">as</span> <span class="nn">mds</span>
-<span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import mudatasets as mds
+import muon as mu
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mds</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;pbmc10k_multiome&quot;</span><span class="p">,</span> <span class="n">with_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">mdata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mdata, _ = mds.load(&quot;pbmc10k_multiome&quot;, with_info=True, full=True)
+mdata.var_names_make_unique()
 </pre></div>
 </div>
 </div>
@@ -2681,7 +2681,7 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>As a first step we subset to the ATAC modality.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atac</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;atac&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>atac = mdata.mod[&quot;atac&quot;]
 </pre></div>
 </div>
 </div>
@@ -2690,14 +2690,14 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>Let us start with some quality control by filtering out cells with too few peaks and peaks detected in too few cells. For now, we will filter out cells that do not pass QC.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">percent_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log1p</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.calculate_qc_metrics(atac, percent_top=None, log1p=False, inplace=True)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;total_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">],</span> <span class="n">jitter</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">multi_panel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.violin(atac, [&quot;total_counts&quot;, &quot;n_genes_by_counts&quot;], jitter=0.4, multi_panel=True)
 </pre></div>
 </div>
 </div>
@@ -2716,10 +2716,10 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>Filter peaks whose expression is not detected.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_var</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="s2">&quot;n_cells_by_counts&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span>
-<span class="c1"># This is analogous to</span>
-<span class="c1">#   sc.pp.filter_genes(rna, min_cells=10)</span>
-<span class="c1"># but does in-place filtering and avoids copying the object</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mu.pp.filter_var(atac, &quot;n_cells_by_counts&quot;, lambda x: x &gt;= 10)
+# This is analogous to
+#   sc.pp.filter_genes(rna, min_cells=10)
+# but does in-place filtering and avoids copying the object
 </pre></div>
 </div>
 </div>
@@ -2727,20 +2727,20 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>We also filter the cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_obs</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">2000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">15000</span><span class="p">))</span>
-<span class="c1"># This is analogous to</span>
-<span class="c1">#   sc.pp.filter_cells(atac, max_genes=15000)</span>
-<span class="c1">#   sc.pp.filter_cells(atac, min_genes=2000)</span>
-<span class="c1"># but does in-place filtering avoiding copying the object</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mu.pp.filter_obs(atac, &quot;n_genes_by_counts&quot;, lambda x: (x &gt;= 2000) &amp; (x &lt;= 15000))
+# This is analogous to
+#   sc.pp.filter_cells(atac, max_genes=15000)
+#   sc.pp.filter_cells(atac, min_genes=2000)
+# but does in-place filtering avoiding copying the object
 
-<span class="n">mu</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_obs</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">40000</span><span class="p">))</span>
+mu.pp.filter_obs(atac, &quot;total_counts&quot;, lambda x: (x &gt;= 4000) &amp; (x &lt;= 40000))
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">],</span> <span class="n">jitter</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">multi_panel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.violin(atac, [&quot;n_genes_by_counts&quot;, &quot;total_counts&quot;], jitter=0.4, multi_panel=True)
 </pre></div>
 </div>
 </div>
@@ -2751,7 +2751,7 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>muon also provides histograms which allows for a different view on the metrics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mu.pl.histogram(atac, [&quot;n_genes_by_counts&quot;, &quot;total_counts&quot;])
 </pre></div>
 </div>
 </div>
@@ -2762,19 +2762,19 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>Now that we rudimentary filtered out cells with too few peaks and peaks detected in too few cells, we can start with ATAC specific quality control with muon. muon has modality specific preprocessing functions in corresponding modules. We import the ATAC module to access the ATAC specific preprocessing functions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">muon</span> <span class="kn">import</span> <span class="n">atac</span> <span class="k">as</span> <span class="n">ac</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from muon import atac as ac
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Perform rudimentary quality control with muon&#39;s ATAC module</span>
-<span class="n">atac</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;NS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">ac</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">nucleosome_signal</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
-<span class="n">ac</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">get_gene_annotation_from_rna</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">tss</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">tss_enrichment</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">n_tss</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">ac</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">tss_enrichment</span><span class="p">(</span><span class="n">tss</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Perform rudimentary quality control with muon&#39;s ATAC module
+atac.obs[&quot;NS&quot;] = 1
+ac.tl.nucleosome_signal(atac, n=1e6)
+ac.tl.get_gene_annotation_from_rna(mdata[&quot;rna&quot;]).head(3)
+tss = ac.tl.tss_enrichment(mdata, n_tss=1000)
+ac.pl.tss_enrichment(tss)
 </pre></div>
 </div>
 </div>
@@ -2788,12 +2788,12 @@ Fetching Regions...: 100%|██████████| 1000/1000 [00:19&lt;00
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save original counts, normalize data and select highly variable genes with scanpy</span>
-<span class="n">atac</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atac</span><span class="o">.</span><span class="n">X</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">counts_per_cell_after</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">atac</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">min_mean</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">max_mean</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">min_disp</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">atac</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">atac</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Save original counts, normalize data and select highly variable genes with scanpy
+atac.layers[&quot;counts&quot;] = atac.X
+sc.pp.normalize_per_cell(atac, counts_per_cell_after=1e4)
+sc.pp.log1p(atac)
+sc.pp.highly_variable_genes(atac, min_mean=0.05, max_mean=1.5, min_disp=0.5)
+atac.raw = atac
 </pre></div>
 </div>
 </div>
@@ -2801,29 +2801,29 @@ Fetching Regions...: 100%|██████████| 1000/1000 [00:19&lt;00
 <p>Although PCA is also commonly used for ATAC data, latent semantic indexing (LSI) is another popular option. It is implemented in muon’s ATAC module.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ac</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">lsi</span><span class="p">(</span><span class="n">atac</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ac.tl.lsi(atac)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_lsi&quot;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(atac, use_rep=&quot;X_lsi&quot;, n_neighbors=10, n_pcs=30)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.leiden(atac, resolution=0.5)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">],</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.umap(atac, spread=1.5, min_dist=0.5, random_state=20)
+sc.pl.umap(atac, color=[&quot;leiden&quot;, &quot;n_genes_by_counts&quot;], legend_loc=&quot;on data&quot;)
 </pre></div>
 </div>
 </div>
@@ -2834,7 +2834,7 @@ Fetching Regions...: 100%|██████████| 1000/1000 [00:19&lt;00
 <p>We can use the functionality of the ATAC module in muon to color plots by cut values in peaks corresponding to a certain gene.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ac</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">atac</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KLF4&quot;</span><span class="p">],</span> <span class="n">average</span><span class="o">=</span><span class="s2">&quot;peak_type&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ac.pl.umap(atac, color=[&quot;KLF4&quot;], average=&quot;peak_type&quot;)
 </pre></div>
 </div>
 </div>

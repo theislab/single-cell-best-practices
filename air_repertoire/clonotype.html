@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>30. Clonotype analysis &#8212; Multimodal single-cell analysis</title>
+    <title>30. Clonotype analysis &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -854,29 +854,29 @@ title="Print to PDF"
 <p>Here, as well as in the pre-processing step, we will use the utilities from the <em>Scirpy</em> library to perform the analysis and locate the results in the <em>AnnData</em> object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import warnings
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
-    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+warnings.filterwarnings(
+    &quot;ignore&quot;,
+    &quot;.*IProgress not found*&quot;,
+)
+warnings.simplefilter(action=&quot;ignore&quot;, category=FutureWarning)
 
-<span class="kn">from</span> <span class="nn">palmotif</span> <span class="kn">import</span> <span class="n">compute_motif</span><span class="p">,</span> <span class="n">svg_logo</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+from palmotif import compute_motif, svg_logo
+import scanpy as sc
+import scirpy as ir
+import pandas as pd
+import numpy as np
+import seaborn as sb
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+warnings.simplefilter(action=&quot;ignore&quot;, category=pd.errors.DtypeWarning)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_versions</span><span class="p">()</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sc.logging.print_versions()
 </pre></div>
 </div>
 </div>
@@ -1001,10 +1001,10 @@ Session information updated at 2022-08-12 11:05
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;/home/icb/juan.henao/BestPracticeStart/data&quot;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>path_data = &quot;/home/icb/juan.henao/BestPracticeStart/data&quot;
 
-<span class="n">path_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_filtered.h5ad&quot;</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex</span><span class="p">)</span>
+path_gex = f&quot;{path_data}/TCR_filtered.h5ad&quot;
+adata = sc.read(path_gex)
 </pre></div>
 </div>
 </div>
@@ -1014,19 +1014,19 @@ Session information updated at 2022-08-12 11:05
 <p>To do so, we have chosen six samples ensuring the different centers and medical statuses were represented.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
-    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;patient_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-        <span class="p">[</span><span class="s2">&quot;COVID-014&quot;</span><span class="p">,</span> <span class="s2">&quot;CV0902&quot;</span><span class="p">,</span> <span class="s2">&quot;AP6&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-045&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-066&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-067&quot;</span><span class="p">]</span>
-    <span class="p">)</span>
-<span class="p">]</span>
-<span class="c1"># adata[adata.obs[&#39;Status&#39;] == &#39;Healthy&#39;].obs[&#39;patient_id&#39;]</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>adata = adata[
+    adata.obs[&quot;patient_id&quot;].isin(
+        [&quot;COVID-014&quot;, &quot;CV0902&quot;, &quot;AP6&quot;, &quot;COVID-045&quot;, &quot;COVID-066&quot;, &quot;COVID-067&quot;]
+    )
+]
+# adata[adata.obs[&#39;Status&#39;] == &#39;Healthy&#39;].obs[&#39;patient_id&#39;]
+_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;patient_id&quot;,
+    target_col=&quot;chain_pairing&quot;,
+    normalize=True,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1044,7 +1044,7 @@ Session information updated at 2022-08-12 11:05
 <p>One way to define the clonotypes is by detecting all identical sequences for VJ CDR3 and VDJ CDR3. It is the most used one due to allowing to define trustable cell lineages. However, another way to deal with this problem is finding a distance between sequences, this method is restrictive, and it could be useful to test some hypotheses regarding complex immunological phenotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">ir_dist</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ir.pp.ir_dist(adata, sequence=&quot;aa&quot;)
 </pre></div>
 </div>
 </div>
@@ -1053,9 +1053,9 @@ Session information updated at 2022-08-12 11:05
 <p>The set of parameters to define clonotypes should be the same as used previously. In our case, the sequences of amino acids must be compared using identity as a metric. In addition, we are setting the additional parameters to define clonotypes if the V(D)J are identical using the most abundant pair as the target sequence.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clonotype_clusters</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">,</span> <span class="n">receptor_arms</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">dual_ir</span><span class="o">=</span><span class="s2">&quot;primary_only&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ir.tl.define_clonotype_clusters(
+    adata, sequence=&quot;aa&quot;, receptor_arms=&quot;all&quot;, dual_ir=&quot;primary_only&quot;
+)
 </pre></div>
 </div>
 </div>
@@ -1068,7 +1068,7 @@ Session information updated at 2022-08-12 11:05
 <p>To generate the network, it is necessary to establish the layout to be plotted afterward. This parameter should be one of the igraph library layouts. Furthermore, it is recommended to set at least <em>min_cells</em> &gt;=2 to avoid overcrowding the plot with singletons (clonotypes with only one cell as a member). Here, this parameter is established as &gt;= 50 to show just the biggest clonotypes to easier the observation of the expected result.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clonotype_network</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="s2">&quot;aa&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ir.tl.clonotype_network(adata, min_cells=50, sequence=&quot;aa&quot;)
 </pre></div>
 </div>
 </div>
@@ -1077,14 +1077,14 @@ Session information updated at 2022-08-12 11:05
 <p>On the other hand, we set the color according to the samples to observe if a clonotype appears in two or more samples, those clonotypes are called <em>public clonotypes</em> and are of high interest due to they represent shared immunological responses, and therefore they are candidates to explain general response over the disease/phenotype under study. Otherwise, there are <em>privet clonotypes</em> which represent patient/sample specific clonal response, and it could be interesting for analysis regarding personalized medicine. As you can see below, the highest clonotypes are composed just of private clonotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonotype_network</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
-    <span class="n">base_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">label_fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
-    <span class="n">panel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.clonotype_network(
+    adata,
+    color=&quot;patient_id&quot;,
+    base_size=10,
+    label_fontsize=9,
+    panel_size=(10, 10),
+    legend_fontsize=15,
+)
 </pre></div>
 </div>
 </div>
@@ -1097,7 +1097,7 @@ Session information updated at 2022-08-12 11:05
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;cc_aa_identity&quot;] = adata.obs[&quot;cc_aa_identity&quot;].astype(&quot;str&quot;)
 </pre></div>
 </div>
 </div>
@@ -1105,14 +1105,14 @@ Session information updated at 2022-08-12 11:05
 <p>As mentioned previously, the detected clonotypes are labeled with a number we can use to extract more information. For instance, we are extracting the immune sequences for clonotype number 0.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;receptor_subtype&quot;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;n_cells&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>adata.obs.loc[adata.obs[&quot;cc_aa_identity&quot;] == &quot;0&quot;, :].groupby(
+    [
+        &quot;IR_VJ_1_junction_aa&quot;,
+        &quot;IR_VDJ_1_junction_aa&quot;,
+        &quot;receptor_subtype&quot;,
+    ],
+    observed=True,
+).size().reset_index(name=&quot;n_cells&quot;)
 </pre></div>
 </div>
 </div>
@@ -1160,16 +1160,16 @@ Session information updated at 2022-08-12 11:05
 <p>Once the clonal expansion has been identified, it is easy to observe that, plotting the number of cells per cell type corresponding to expanded clones as a stacked bar plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ir.tl.clonal_expansion(adata, target_col=&quot;cc_aa_identity&quot;)
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
-    <span class="n">clip_at</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+_ = ir.pl.clonal_expansion(
+    adata,
+    groupby=&quot;initial_clustering&quot;,
+    target_col=&quot;cc_aa_identity&quot;,
+    clip_at=4,
+    normalize=False,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1181,9 +1181,9 @@ Session information updated at 2022-08-12 11:05
 <p>Another way to observe clonal expansion is by normalizing the size of cell-type clusters. Here, the clonal expansion differences between CD4+ and CD8+ are easier to observe.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.clonal_expansion(
+    adata, &quot;initial_clustering&quot;, target_col=&quot;cc_aa_identity&quot;, figsize=[10, 10]
+)
 </pre></div>
 </div>
 </div>
@@ -1195,9 +1195,9 @@ Session information updated at 2022-08-12 11:05
 <p>The plot below reflects this assumption, the alpha diversity of CD8+ is lower than CD4+ due to the possible clonal expansion from CD8+ effector cells reducing their diversity in consideration of the total cells conforming to the CD8+ cluster. The same observation is repeated for clusters NK_16hi and gdT-cell, which are highly expanded, as the clonal expansion plot demonstrates (see above).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">alpha_diversity</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.alpha_diversity(
+    adata, groupby=&quot;initial_clustering&quot;, target_col=&quot;cc_aa_identity&quot;, figsize=[10, 10]
+)
 </pre></div>
 </div>
 </div>
@@ -1212,13 +1212,13 @@ Session information updated at 2022-08-12 11:05
 <p>The next function helps to plot the most abundant clonotypes showing the ID, the number of cells and the cluster (cell type) the specific clonotype belongs to. Here, we highlight the ten most abundant clonotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;cc_aa_identity&quot;,
+    target_col=&quot;initial_clustering&quot;,
+    max_cols=10,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1268,27 +1268,27 @@ Using categorical units to plot a list of strings that are all parsable as float
 <p>Furthermore, the clonal expansion is expected to occur in response to an immune event, which means it is expected to the total, or at least the majority of the most expanded clones belong to the COVID set of patients.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># By condition</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span># By condition
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;Status&quot;</span><span class="p">,</span>
-    <span class="n">max_cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;cc_aa_identity&quot;,
+    target_col=&quot;Status&quot;,
+    max_cols=15,
+    fig_kws={&quot;dpi&quot;: 100},
+    figsize=[10, 10],
+)
 
-<span class="c1"># By sample</span>
+# By sample
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
-    <span class="n">max_cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">},</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;cc_aa_identity&quot;,
+    target_col=&quot;patient_id&quot;,
+    max_cols=15,
+    fig_kws={&quot;dpi&quot;: 100},
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1323,25 +1323,25 @@ Using categorical units to plot a list of strings that are all parsable as float
 <p>We calculated the abundances for the V segment in the VJ chain using the same function to clone abundance calculation. The sequence with ID TRAV19 was the most abundant V gene, and it was present in CD8+ cells mainly. Otherwise, the second most abundant V segment (TRAV29/DV5) was mostly selected for the CD4+ cell cluster.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_v_call&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;IR_VJ_1_v_call&quot;,
+    target_col=&quot;initial_clustering&quot;,
+    normalize=False,
+    max_cols=10,
+    figsize=[10, 10],
+)
 
-<span class="c1"># Normalized abundances</span>
+# Normalized abundances
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_v_call&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">max_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+_ = ir.pl.group_abundance(
+    adata,
+    groupby=&quot;IR_VJ_1_v_call&quot;,
+    target_col=&quot;initial_clustering&quot;,
+    normalize=True,
+    max_cols=10,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1354,18 +1354,18 @@ Using categorical units to plot a list of strings that are all parsable as float
 <p>Here, we are showing a list of four V segments for the VDJ chain. From them, the TRBV18 segment was the most abundant in the majority of cell clusters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;TRBV19&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV10-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-9&quot;</span><span class="p">]</span>
-        <span class="p">),</span>
-        <span class="p">:,</span>
-    <span class="p">],</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.group_abundance(
+    adata[
+        adata.obs[&quot;IR_VDJ_1_v_call&quot;].isin(
+            [&quot;TRBV19&quot;, &quot;TRBV10-1&quot;, &quot;TRBV11-1&quot;, &quot;TRBV7-9&quot;]
+        ),
+        :,
+    ],
+    groupby=&quot;initial_clustering&quot;,
+    target_col=&quot;IR_VDJ_1_v_call&quot;,
+    normalize=True,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1381,13 +1381,13 @@ Using categorical units to plot a list of strings that are all parsable as float
 <p>One assumption for this graphic would be the most abundant segments are combined expecting a kind of linear representation. However, those segments are independent of each other in the random somatic recombination, therefore, this assumption is not true.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">vdj_usage</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">full_combination</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">max_segments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_ribbons</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.vdj_usage(
+    adata,
+    full_combination=False,
+    max_segments=None,
+    max_ribbons=30,
+    fig_kws={&quot;figsize&quot;: [10, 10]},
+)
 </pre></div>
 </div>
 </div>
@@ -1399,7 +1399,7 @@ Using categorical units to plot a list of strings that are all parsable as float
 <p>As well as the previous plots, it is possible to plot the combination of segments for a set of specific observations. In this case, we focused attention checking the combination of V(D)J segments for a set of clonotypes with positive detection of the TRBD2 segment highlighted above. In the next example, we used the first five clonotype IDs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_d_call&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRBD2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cc_aa_identity</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>adata.obs[adata.obs[&quot;IR_VDJ_1_d_call&quot;] == &quot;TRBD2&quot;].cc_aa_identity.value_counts()
 </pre></div>
 </div>
 </div>
@@ -1422,14 +1422,14 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">vdj_usage</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;5150&quot;</span><span class="p">,</span> <span class="s2">&quot;1815&quot;</span><span class="p">,</span> <span class="s2">&quot;4427&quot;</span><span class="p">,</span> <span class="s2">&quot;3500&quot;</span><span class="p">,</span> <span class="s2">&quot;4078&quot;</span><span class="p">]),</span> <span class="p">:</span>
-    <span class="p">],</span>
-    <span class="n">max_ribbons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_segments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.vdj_usage(
+    adata[
+        adata.obs[&quot;cc_aa_identity&quot;].isin([&quot;5150&quot;, &quot;1815&quot;, &quot;4427&quot;, &quot;3500&quot;, &quot;4078&quot;]), :
+    ],
+    max_ribbons=None,
+    max_segments=100,
+    fig_kws={&quot;figsize&quot;: [10, 10]},
+)
 </pre></div>
 </div>
 </div>
@@ -1444,14 +1444,14 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>Below, we plotted the abundances for VDJ sequences and the most common length was 15, closely followed by 14 amino acids detected in a variety of cell clusters, mainly CD4+ and CD8+. We highlight the last cell type, which was previously detected as highly clonal expanded. However, we found even VDJ sequences with lengths of 10 or 21 amino acids. However, they were strongly less represented in the general set of VDJ sequences.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">},</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.spectratype(
+    adata,
+    cdr3_col=&quot;IR_VDJ_1_junction_aa&quot;,
+    color=&quot;initial_clustering&quot;,
+    viztype=&quot;bar&quot;,
+    fig_kws={&quot;dpi&quot;: 120},
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1462,15 +1462,15 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>Furthermore, it is possible to visualize the V(D)J sequence length distributions individually for each cluster of cells, which provides a better perspective of those clusters closer to the most abundant sequence length. The plot below shows how the distribution of CD4+ and CD8+ is related to the previous analysis for general length abundances and how heterogenic the distribution per cluster is, for example, in the case of gdT-cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span>
-    <span class="n">curve_layout</span><span class="o">=</span><span class="s2">&quot;shifted&quot;</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-    <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kde_norm&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.spectratype(
+    adata,
+    cdr3_col=&quot;IR_VDJ_1_junction_aa&quot;,
+    color=&quot;initial_clustering&quot;,
+    viztype=&quot;curve&quot;,
+    curve_layout=&quot;shifted&quot;,
+    fig_kws={&quot;figsize&quot;: [10, 10]},
+    kde_kws={&quot;kde_norm&quot;: False},
+)
 </pre></div>
 </div>
 </div>
@@ -1485,19 +1485,19 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>By exploiting the commodities provided by the AnnData object, we can extract more specific information from spectratype analysis easily. For instance, we can visualize the distribution of sequence lengths regarding a specific V(D)J gene segment according to their fraction in the cluster of cells. Here, we selected the four V segments from V(D)J chain illustrated in the last gene usage plot. Once again, they were represented mainly by sequences of length 15. TRBV5-1 was the most abundant, followed by TRBV11-3, which was represented mainly by this specific length.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;TRBV5-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-3&quot;</span><span class="p">]</span>
-        <span class="p">),</span>
-        <span class="p">:,</span>
-    <span class="p">],</span>
-    <span class="n">cdr3_col</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">,</span>
-    <span class="n">normalize</span><span class="o">=</span><span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">},</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.spectratype(
+    adata[
+        adata.obs[&quot;IR_VDJ_1_v_call&quot;].isin(
+            [&quot;TRBV5-1&quot;, &quot;TRBV11-2&quot;, &quot;TRBV7-2&quot;, &quot;TRBV11-3&quot;]
+        ),
+        :,
+    ],
+    cdr3_col=&quot;IR_VDJ_1_junction_aa&quot;,
+    color=&quot;IR_VDJ_1_v_call&quot;,
+    normalize=&quot;initial_clustering&quot;,
+    fig_kws={&quot;dpi&quot;: 120},
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -1517,28 +1517,28 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>To perform this plot, we used the <em>palmotif</em> python library, this is implemented in other libraries for TCR analysis, such as <em>TCRdist3</em>. This library uses as input a list of sequences and saves the logo plot directly to a designated file path.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">motif</span> <span class="o">=</span> <span class="n">compute_motif</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="p">(</span>
-            <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-                <span class="p">[</span><span class="s2">&quot;TRBV5-1&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV7-2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRBV11-3&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">:,</span>
-    <span class="p">]</span>
-    <span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>motif = compute_motif(
+    adata[
+        (
+            adata.obs[&quot;IR_VDJ_1_v_call&quot;].isin(
+                [&quot;TRBV5-1&quot;, &quot;TRBV11-2&quot;, &quot;TRBV7-2&quot;, &quot;TRBV11-3&quot;]
+            )
+        )
+        &amp; (adata.obs[&quot;IR_VDJ_1_junction_aa&quot;].str.len() == 15),
+        :,
+    ]
+    .obs[&quot;IR_VDJ_1_junction_aa&quot;]
+    .to_list()
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">svg_logo</span><span class="p">(</span>
-    <span class="n">motif</span><span class="p">,</span> <span class="s2">&quot;../_static/images/air_repertoire/logo_motif.svg&quot;</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="s2">&quot;taylor&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = svg_logo(
+    motif, &quot;../_static/images/air_repertoire/logo_motif.svg&quot;, color_scheme=&quot;taylor&quot;
+)
 </pre></div>
 </div>
 </div>
@@ -1552,16 +1552,16 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>The IR repertoires can be used to identify similarities between samples, which could help to understand the general response regarding the experimental perturbation. <em>Scirpy</em> allows the comparison between samples through the construction of a matrix with the abundances of clonotypes per sample (<code class="docutils literal notranslate"><span class="pre">df</span></code>), a Jaccard distance between samples (<code class="docutils literal notranslate"><span class="pre">dst</span></code>), and a linkage for hierarchical clustering (<code class="docutils literal notranslate"><span class="pre">lk</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">lk</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>df, dst, lk = ir.tl.repertoire_overlap(
+    adata, &quot;patient_id&quot;, target_col=&quot;cc_aa_identity&quot;, inplace=False
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>df
 </pre></div>
 </div>
 </div>
@@ -1783,7 +1783,7 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>dst
 </pre></div>
 </div>
 </div>
@@ -1797,7 +1797,7 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">lk</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>lk
 </pre></div>
 </div>
 </div>
@@ -1814,9 +1814,9 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>The previous data can be displayed as a heatmap which facilitates the interpretation of the results. For instance, the patients <em>COVID-066</em> and <em>CV0902</em> are the most similar, although with a low distance between them. Curiously both samples come from different centers, <em>COVID-066</em> from Newcastle and <em>CV0902</em> from Cambridge.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;cc_aa_identity&quot;</span><span class="p">,</span> <span class="n">heatmap_cats</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Centre&quot;</span><span class="p">]</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ir.pl.repertoire_overlap(
+    adata, &quot;patient_id&quot;, target_col=&quot;cc_aa_identity&quot;, heatmap_cats=[&quot;Centre&quot;]
+)
 </pre></div>
 </div>
 </div>
@@ -1831,12 +1831,12 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>The scatterplot below shows that both samples are characterized by a high number of clonotypes with small size. Specifically, <em>COVID-067</em> presents a few clonotypes with high number of cells (size) than <em>CV0902</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">repertoire_overlap</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
-    <span class="n">pair_to_plot</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;COVID-067&quot;</span><span class="p">,</span> <span class="s2">&quot;CV0902&quot;</span><span class="p">],</span>
-    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ir.pl.repertoire_overlap(
+    adata,
+    &quot;patient_id&quot;,
+    pair_to_plot=[&quot;COVID-067&quot;, &quot;CV0902&quot;],
+    fig_kws={&quot;figsize&quot;: [10, 10]},
+)
 </pre></div>
 </div>
 </div>
@@ -1855,35 +1855,35 @@ Name: cc_aa_identity, Length: 14181, dtype: int64
 <p>Here, we use <strong>Dandelion</strong>, a python library focused on BCR analysis which interoperates with <em>Scanpy</em> and <em>Scirpy</em> and provides a BCR distance-based method for clone definition, which is explained below in more detail <span id="id12">[<a class="reference internal" href="ir_profiling.html#id380" title="Emily Stephenson, Gary Reynolds, Rachel A Botting, Fernando J Calero-Nieto, Michael D Morgan, Zewen Kelvin Tuong, Karsten Bach, Waradon Sungnak, Kaylee B Worlock, Masahiro Yoshida, and others. Single-cell multi-omics analysis of the immune response in covid-19. Nature medicine, 27(5):904–916, 2021.">Stephenson <em>et al.</em>, 2021</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import warnings
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
-    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+warnings.filterwarnings(
+    &quot;ignore&quot;,
+    &quot;.*IProgress not found*&quot;,
+)
+warnings.simplefilter(action=&quot;ignore&quot;, category=FutureWarning)
 
-<span class="kn">from</span> <span class="nn">palmotif</span> <span class="kn">import</span> <span class="n">compute_motif</span><span class="p">,</span> <span class="n">svg_logo</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">dandelion</span> <span class="k">as</span> <span class="nn">ddl</span>
-<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+from palmotif import compute_motif, svg_logo
+import scanpy as sc
+import dandelion as ddl
+import scirpy as ir
+import pandas as pd
+import numpy as np
+import seaborn as sb
 
-<span class="kn">import</span> <span class="nn">os</span>
+import os
 
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+warnings.simplefilter(action=&quot;ignore&quot;, category=pd.errors.DtypeWarning)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_versions</span><span class="p">()</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sc.logging.print_versions()
 </pre></div>
 </div>
 </div>
@@ -2043,17 +2043,17 @@ Session information updated at 2022-09-20 21:27
 <p>As well as the TCR analysis described previously, we need to load the data as <em>.h5ad</em> format obtained after the pre-processing step. Besides, to improve the runtime of this tutorial, we will work with a subset of samples that allow us to explore the BCR receptors properly and perform the necessary comparisons between conditions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;/home/icb/juan.henao/BestPracticeStart/data&quot;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>path_data = &quot;/home/icb/juan.henao/BestPracticeStart/data&quot;
 
-<span class="n">path_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_filtered.h5ad&quot;</span>
-<span class="n">adata_bcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex</span><span class="p">)</span>
+path_gex = f&quot;{path_data}/BCR_filtered.h5ad&quot;
+adata_bcr = sc.read(path_gex)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata_bcr</span><span class="p">[</span><span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;patient_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;COVID-064&quot;</span><span class="p">,</span> <span class="s2">&quot;COVID-014&quot;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>adata = adata_bcr[adata_bcr.obs[&quot;patient_id&quot;].isin([&quot;COVID-064&quot;, &quot;COVID-014&quot;])].copy()
 </pre></div>
 </div>
 </div>
@@ -2065,8 +2065,8 @@ Session information updated at 2022-09-20 21:27
 <p>Previously, we loaded our pre-processed data into an annData object. Therefore, we should relocate the information into the correct format to use Dandelion. The next piece of code shows how easy is the interoperability between both objects.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">vdjx</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">from_scirpy</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">vdjx</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>vdjx = ddl.from_scirpy(adata)
+vdjx
 </pre></div>
 </div>
 </div>
@@ -2087,16 +2087,16 @@ Session information updated at 2022-09-20 21:27
 <p>Before the clonotype definition for our BCR data, the empty cells (<em>NA data</em>) should be removed, and receptor lengths must be calculated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;v_call&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>vdjx.data[&quot;v_call&quot;].replace(&quot;&quot;, np.nan, inplace=True)
+vdjx.data.dropna(subset=[&quot;v_call&quot;], inplace=True)
 
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;j_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;j_call&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+vdjx.data[&quot;j_call&quot;].replace(&quot;&quot;, np.nan, inplace=True)
+vdjx.data.dropna(subset=[&quot;j_call&quot;], inplace=True)
 
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+vdjx.data[&quot;junction_aa&quot;].replace(&quot;&quot;, np.nan, inplace=True)
+vdjx.data.dropna(subset=[&quot;junction_aa&quot;], inplace=True)
 
-<span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">vdjx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;junction_aa&quot;</span><span class="p">]]</span>
+vdjx.data[&quot;junction_length&quot;] = [len(a) for a in vdjx.data[&quot;junction_aa&quot;]]
 </pre></div>
 </div>
 </div>
@@ -2209,8 +2209,8 @@ Session information updated at 2022-09-20 21:27
 <p>The clonotype definition based on distance requires a threshold value definition to allow the separation into close related receptor sequences, which are interpreted as clonal related. Dandelion wrapped the functionalities from <strong>Immcantation</strong> to choose this value based on distance calculation for those receptor sequences with the same V and J segment and the same length. The distribution of the distances is expected to be bimodal, being the first mode composed by closed-related sequences, and the second mode by singletons <span id="id22">[<a class="reference internal" href="#id431" title="Namita T Gupta, Jason A Vander Heiden, Mohamed Uduman, Daniel Gadala-Maria, Gur Yaari, and Steven H Kleinstein. Change-o: a toolkit for analyzing large-scale b cell immunoglobulin repertoire sequencing data. Bioinformatics, 31(20):3356–3358, 2015.">Gupta <em>et al.</em>, 2015</a>]</span>. The threshold is selected as the breakpoint between both modes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_threshold</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;hh_s5f&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">vdjx</span><span class="o">.</span><span class="n">threshold</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.pp.calculate_threshold(vdjx, model=&quot;hh_s5f&quot;, plot=False)
+vdjx.threshold
 </pre></div>
 </div>
 </div>
@@ -2228,7 +2228,7 @@ R[write to console]: Error in (function (db, sequenceColumn = &quot;junction&quo
 <p>We have already chosen the model to calculate the distances between receptors and performed the threshold value selection. Therefore, the next step is the clonotype definition by itself.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clones</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;hh_s5f&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.define_clones(vdjx, key_added=&quot;changeo_clone_id&quot;, model=&quot;hh_s5f&quot;)
 </pre></div>
 </div>
 </div>
@@ -2266,9 +2266,9 @@ RECORDS&gt; 6828
 <p>Once the clonotypes are defined, we need to create the network layout for visualization. Dandelion, as well as <em>Scirpy</em>, use <em>igraph</em> layouts to visualize clonotype networks. Here, we used <strong>sfdp</strong> because it is computationally less expensive than the rest of the methods available.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">generate_network</span><span class="p">(</span>
-    <span class="n">vdjx</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sequence_alignment&quot;</span><span class="p">,</span> <span class="n">layout_method</span><span class="o">=</span><span class="s2">&quot;sfdp&quot;</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.generate_network(
+    vdjx, key=&quot;sequence_alignment&quot;, layout_method=&quot;sfdp&quot;, clone_key=&quot;changeo_clone_id&quot;
+)
 </pre></div>
 </div>
 </div>
@@ -2292,21 +2292,21 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>To visualize the results, <em>Dandelion</em> takes advantage of the interoperability with <em>Scanpy</em>. Therefore, it is necessary to do the translation from the Dandelion into an annData object to perform the visualization. Additionally, considering that the clonotype definition was based on a distance between the different BCR sequences, it is useful to add an additional feature related to the weight (distance) between BCRs (nodes), improving the final plot observation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span> <span class="n">expanded_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.transfer(adata, vdjx, clone_key=&quot;changeo_clone_id&quot;, expanded_only=True)
 
-<span class="n">edgeweights</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">e</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">extract_edge_weights</span><span class="p">(</span><span class="n">vdjx</span><span class="p">)</span>
-<span class="p">]</span>  <span class="c1"># invert and add 1 to each edge weight (e) so that distance of 0 becomes the thickest edge</span>
-<span class="c1"># therefore, the thicker the line, the shorter the edit distance.</span>
+edgeweights = [
+    1 / (e + 1) for e in ddl.tl.extract_edge_weights(vdjx)
+]  # invert and add 1 to each edge weight (e) so that distance of 0 becomes the thickest edge
+# therefore, the thicker the line, the shorter the edit distance.
 
-<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;isotype_status&quot;</span><span class="p">],</span>
-    <span class="n">legend_fontoutline</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">edges_width</span><span class="o">=</span><span class="n">edgeweights</span><span class="p">,</span>
-    <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-<span class="p">)</span>
+sc.set_figure_params(figsize=[10, 10])
+_ = ddl.pl.clone_network(
+    adata,
+    color=[&quot;isotype_status&quot;],
+    legend_fontoutline=3,
+    edges_width=edgeweights,
+    size=50,
+)
 </pre></div>
 </div>
 </div>
@@ -2350,24 +2350,24 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>Compared to <em>Scirpy</em>, the clonotypes visualization in <em>Dandelion</em> does not show their sizes (number of cells). This process should be done separately, i.e., first, it is necessary to calculate the size of the clones and transfer this information to the <em>annData</em> object to performe the visualization via <em>Scanpy</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_size</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">)</span>
-<span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.clone_size(vdjx, clone_key=&quot;changeo_clone_id&quot;)
+ddl.tl.transfer(adata, vdjx, clone_key=&quot;changeo_clone_id&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sc.set_figure_params(figsize=[10, 10])
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;changeo_clone_id_size&quot;</span><span class="p">],</span>
-    <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-    <span class="n">legend_fontoutline</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">edges_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="p">)</span>
+_ = ddl.pl.clone_network(
+    adata,
+    color=[&quot;changeo_clone_id_size&quot;],
+    legend_loc=&quot;none&quot;,
+    legend_fontoutline=3,
+    edges_width=1,
+    size=10,
+)
 </pre></div>
 </div>
 </div>
@@ -2378,23 +2378,23 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>Additionally, it is possible to fix a maximum size to establish a threshold to get a grouped visualization of the clonotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clone_size</span><span class="p">(</span><span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.clone_size(vdjx, clone_key=&quot;changeo_clone_id&quot;, max_size=50)
+ddl.tl.transfer(adata, vdjx, clone_key=&quot;changeo_clone_id&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">clone_network</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;changeo_clone_id_size_max_50&quot;</span><span class="p">],</span>
-    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">legend_fontoutline</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">edges_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
-    <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ddl.pl.clone_network(
+    adata,
+    color=[&quot;changeo_clone_id_size_max_50&quot;],
+    ncols=2,
+    legend_fontoutline=3,
+    edges_width=1,
+    palette=&quot;tab20c&quot;,
+    size=20,
+)
 </pre></div>
 </div>
 </div>
@@ -2410,14 +2410,14 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>Let us take the V gene segment in the heavy chain (V(D)J) for the clonotypes composed of more than 50 cells. Notice we are ignoring multi-chain, given they are not viable receptors. <em>Dandelion</em> by default, do not remove them. It could be a source of misinterpretations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
-    <span class="n">vdjx</span><span class="p">[</span><span class="n">vdjx</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">isotype_status</span> <span class="o">!=</span> <span class="s2">&quot;Multi&quot;</span><span class="p">],</span>
-    <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;v_call_VDJ&quot;</span><span class="p">,</span>
-    <span class="n">min_clone_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>mpl.rcParams.update(mpl.rcParamsDefault)
+_ = ddl.pl.barplot(
+    vdjx[vdjx.metadata.isotype_status != &quot;Multi&quot;],
+    clone_key=&quot;changeo_clone_id&quot;,
+    color=&quot;v_call_VDJ&quot;,
+    min_clone_size=50,
+    figsize=[15, 8],
+)
 </pre></div>
 </div>
 </div>
@@ -2429,20 +2429,20 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>The previous analysis can be improved by just adding information for the visualization. For example, let us see if those privilege V segments are shared between isotypes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">stackedbarplot</span><span class="p">(</span>
-        <span class="n">vdjx</span><span class="p">[</span><span class="n">vdjx</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">isotype_status</span> <span class="o">!=</span> <span class="s2">&quot;Multi&quot;</span><span class="p">],</span>
-        <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;v_call_VDJ&quot;</span><span class="p">,</span>
-        <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;isotype_status&quot;</span><span class="p">,</span>
-        <span class="n">min_clone_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-        <span class="n">xtick_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
-        <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = (
+    ddl.pl.stackedbarplot(
+        vdjx[vdjx.metadata.isotype_status != &quot;Multi&quot;],
+        clone_key=&quot;changeo_clone_id&quot;,
+        color=&quot;v_call_VDJ&quot;,
+        groupby=&quot;isotype_status&quot;,
+        min_clone_size=50,
+        xtick_rotation=90,
+        figsize=(18, 8),
+        normalize=True,
+    ),
+)
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+_ = plt.legend(bbox_to_anchor=(1, 1), loc=&quot;upper left&quot;, frameon=False)
 </pre></div>
 </div>
 </div>
@@ -2454,13 +2454,13 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>This fact was supported by the plot showed below. The abundance of isotypes in the biggest clonotypes (size &gt; 50 cells) is represented by IgG almost entirely. However, this plot provided additional evidence about the immune response triggered by the samples.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
-    <span class="n">vdjx</span><span class="p">[</span><span class="n">vdjx</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">isotype_status</span> <span class="o">!=</span> <span class="s2">&quot;Multi&quot;</span><span class="p">],</span>
-    <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;isotype_status&quot;</span><span class="p">,</span>
-    <span class="n">min_clone_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ddl.pl.barplot(
+    vdjx[vdjx.metadata.isotype_status != &quot;Multi&quot;],
+    clone_key=&quot;changeo_clone_id&quot;,
+    color=&quot;isotype_status&quot;,
+    min_clone_size=50,
+    figsize=[10, 10],
+)
 </pre></div>
 </div>
 </div>
@@ -2475,17 +2475,17 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>The plot below shown an interesting behaviour, despite the clear spectratype dominance reflected in our previous TCR analysis. Here, two squence lengths rased, the first and the most dominant conformed by sequences of 23 aminoacids, and the second one composed by 15 aminoacids.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ddl</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
-    <span class="n">vdjx</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">vdjx</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">isotype_status</span> <span class="o">!=</span> <span class="s2">&quot;Multi&quot;</span><span class="p">)</span>
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">vdjx</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">changeo_clone_id_size</span> <span class="o">&gt;</span> <span class="mf">50.0</span><span class="p">)</span>
-    <span class="p">],</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;junction_length&quot;</span><span class="p">,</span>
-    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;v_call&quot;</span><span class="p">,</span>
-    <span class="n">locus</span><span class="o">=</span><span class="s2">&quot;IGH&quot;</span><span class="p">,</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = ddl.pl.spectratype(
+    vdjx[
+        (vdjx.metadata.isotype_status != &quot;Multi&quot;)
+        &amp; (vdjx.metadata.changeo_clone_id_size &gt; 50.0)
+    ],
+    color=&quot;junction_length&quot;,
+    groupby=&quot;v_call&quot;,
+    locus=&quot;IGH&quot;,
+    figsize=(10, 10),
+)
+_ = plt.legend(bbox_to_anchor=(1, 1), loc=&quot;upper left&quot;, frameon=False)
 </pre></div>
 </div>
 </div>
@@ -2499,31 +2499,31 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>The results from spectratype gave us a hint about which sequences to compare, looking for a possible amino acid motif. In this case, we analyzed the V segment for <strong>IGHV3-48</strong> and <strong>IGHV1-18</strong> with a sequence length of 15 and 23 amino acids. Let us start with the first comparison (length = 15).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">ddl</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">vdjx</span><span class="p">,</span> <span class="n">clone_key</span><span class="o">=</span><span class="s2">&quot;changeo_clone_id&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ddl.tl.transfer(adata, vdjx, clone_key=&quot;changeo_clone_id&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">motif</span> <span class="o">=</span> <span class="n">compute_motif</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;IGHV3-48&quot;</span><span class="p">,</span> <span class="s2">&quot;IGHV1-18&quot;</span><span class="p">]))</span>
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;junction_aa_VDJ&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">:,</span>
-    <span class="p">]</span>
-    <span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;junction_aa_VDJ&quot;</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>motif = compute_motif(
+    adata[
+        (adata.obs[&quot;IR_VDJ_1_v_call&quot;].isin([&quot;IGHV3-48&quot;, &quot;IGHV1-18&quot;]))
+        &amp; (adata.obs[&quot;junction_aa_VDJ&quot;].str.len() == 15),
+        :,
+    ]
+    .obs[&quot;junction_aa_VDJ&quot;]
+    .to_list()
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">svg_logo</span><span class="p">(</span>
-    <span class="n">motif</span><span class="p">,</span> <span class="s2">&quot;../_static/images/air_repertoire/bcr_logo_motif.svg&quot;</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="s2">&quot;taylor&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = svg_logo(
+    motif, &quot;../_static/images/air_repertoire/bcr_logo_motif.svg&quot;, color_scheme=&quot;taylor&quot;
+)
 </pre></div>
 </div>
 </div>
@@ -2533,24 +2533,24 @@ Linking edges : 100%|██████████| 4450/4450 [00:02&lt;00:00, 
 <p>On the other hand, we analyzed the same V gene segments for the V(D)J chain but with a sequence lentgh of 23 aminoacids.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">motif</span> <span class="o">=</span> <span class="n">compute_motif</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_v_call&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;IGHV3-48&quot;</span><span class="p">,</span> <span class="s2">&quot;IGHV1-18&quot;</span><span class="p">]))</span>
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;junction_aa_VDJ&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">23</span><span class="p">),</span>
-        <span class="p">:,</span>
-    <span class="p">]</span>
-    <span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;junction_aa_VDJ&quot;</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>motif = compute_motif(
+    adata[
+        (adata.obs[&quot;IR_VDJ_1_v_call&quot;].isin([&quot;IGHV3-48&quot;, &quot;IGHV1-18&quot;]))
+        &amp; (adata.obs[&quot;junction_aa_VDJ&quot;].str.len() == 23),
+        :,
+    ]
+    .obs[&quot;junction_aa_VDJ&quot;]
+    .to_list()
+)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">svg_logo</span><span class="p">(</span>
-    <span class="n">motif</span><span class="p">,</span> <span class="s2">&quot;../_static/images/air_repertoire/bcr2_logo_motif.svg&quot;</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="s2">&quot;taylor&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_ = svg_logo(
+    motif, &quot;../_static/images/air_repertoire/bcr2_logo_motif.svg&quot;, color_scheme=&quot;taylor&quot;
+)
 </pre></div>
 </div>
 </div>

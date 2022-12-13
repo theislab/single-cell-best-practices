@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>28. Annotation &#8212; Multimodal single-cell analysis</title>
+    <title>28. Annotation &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -738,17 +738,17 @@ This can be mitigated by annotating (additionally) on the ADT level.</p>
 <h2><span class="section-number">28.2. </span>Manual annotation<a class="headerlink" href="#manual-annotation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
+import matplotlib.pyplot as plt
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+plt.rcParams[&quot;figure.dpi&quot;] = 200
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/lustre/groups/ml01/workspace/daniel.strobl/neurips_cite_pp.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read(&quot;/lustre/groups/ml01/workspace/daniel.strobl/neurips_cite_pp.h5ad&quot;)
 </pre></div>
 </div>
 </div>
@@ -756,7 +756,7 @@ This can be mitigated by annotating (additionally) on the ADT level.</p>
 <p>First, we check the expression of CD45. CD45 is one of the most abundant proteins in the T-cell plasma membrane and required for TCR signaling. It activates Lck, which in turn is required to phosphorylate the TCR complex <span id="id1">[<a class="reference internal" href="#id360" title="Adam H Courtney, Alexey A Shvets, Wen Lu, Gloria Griffante, Marianne Mollenauer, Veronika Horkova, Wan-Lin Lo, Steven Yu, Ondrej Stepanek, Arup K Chakraborty, and Arthur Weiss. Cd45 functions as a signaling gatekeeper in t cells. Sci. Signal., 12(604):eaaw8151, October 2019.">Courtney <em>et al.</em>, 2019</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;CD45&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata, frameon=False, color=&quot;CD45&quot;)
 </pre></div>
 </div>
 </div>
@@ -768,7 +768,7 @@ This can be mitigated by annotating (additionally) on the ADT level.</p>
 We look up an example gene name (CD38) to exemplary find the exact nomenclature in our variable names:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">gene_ids</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;CD38&quot;</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.var[adata.var.gene_ids.str.contains(&quot;CD38&quot;)]
 </pre></div>
 </div>
 </div>
@@ -820,14 +820,14 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 <p>We cluster the cells with a relatively low resolution to start with and similarly to RNA annotation, it is possible to increase the resolution for more fine-grained annotations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.leiden(adata, resolution=0.3)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.rank_genes_groups(adata, groupby=&quot;leiden&quot;)
 </pre></div>
 </div>
 </div>
@@ -856,7 +856,7 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 <p>To check which surface markers are present in which cell type, we use the scanpy rank genes groups function. We can already identify clusters 1,2 and 11 as T cell populations by CD3 expression, and cluster 4 as B cells by CD19 expression.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_dotplot</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_genes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">values_to_plot</span><span class="o">=</span><span class="s2">&quot;logfoldchanges&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.rank_genes_groups_dotplot(adata, n_genes=3, values_to_plot=&quot;logfoldchanges&quot;)
 </pre></div>
 </div>
 </div>
@@ -866,7 +866,7 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata, color=&quot;leiden&quot;)
 </pre></div>
 </div>
 </div>
@@ -877,8 +877,8 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 <p>We’ll check a few known markers for major immune cell types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># B cells</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD19-1&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># B cells
+sc.pl.umap(adata, frameon=False, color=[&quot;CD19-1&quot;])
 </pre></div>
 </div>
 </div>
@@ -890,8 +890,8 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 <p>Let’s look into the T cells in more detail and separate them into CD4 and CD8 cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># T cells</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD3&quot;</span><span class="p">,</span> <span class="s2">&quot;CD4-1&quot;</span><span class="p">,</span> <span class="s2">&quot;CD8&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># T cells
+sc.pl.umap(adata, color=[&quot;CD3&quot;, &quot;CD4-1&quot;, &quot;CD8&quot;])
 </pre></div>
 </div>
 </div>
@@ -901,9 +901,9 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># NKT cells are CD3+ and CD56+</span>
-<span class="c1"># NK cells are CD3- and CD56+</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD56&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># NKT cells are CD3+ and CD56+
+# NK cells are CD3- and CD56+
+sc.pl.umap(adata, color=[&quot;CD56&quot;], frameon=False)
 </pre></div>
 </div>
 </div>
@@ -913,10 +913,10 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Myeloid cells</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Myeloid cells
 
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD11b&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD14-1&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+sc.pl.umap(adata, color=[&quot;CD11b&quot;], frameon=False)
+sc.pl.umap(adata, color=[&quot;CD14-1&quot;], frameon=False)
 </pre></div>
 </div>
 </div>
@@ -927,8 +927,8 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dendridic</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD11c&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Dendridic
+sc.pl.umap(adata, color=[&quot;CD11c&quot;], frameon=False)
 </pre></div>
 </div>
 </div>
@@ -938,8 +938,8 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Neutrophil</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD16&quot;</span><span class="p">,</span> <span class="s2">&quot;CD32&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Neutrophil
+sc.pl.umap(adata, color=[&quot;CD16&quot;, &quot;CD32&quot;], frameon=False)
 </pre></div>
 </div>
 </div>
@@ -949,8 +949,8 @@ We look up an example gene name (CD38) to exemplary find the exact nomenclature 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Erythrocyte</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CD235&quot;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Erythrocyte
+sc.pl.umap(adata, color=[&quot;CD235&quot;], frameon=False)
 </pre></div>
 </div>
 </div>

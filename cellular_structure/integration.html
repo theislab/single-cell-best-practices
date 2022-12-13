@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>12. Data integration &#8212; Multimodal single-cell analysis</title>
+    <title>12. Data integration &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -986,26 +986,26 @@ Fig. I1: Overview of different types of integration methods with examples.</p>
 <p>In the rest of this chapter, we demonstrate some of the best-performing methods and quickly demonstrate how integration performance can be evaluated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python packages</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">scvi</span>
-<span class="kn">import</span> <span class="nn">bbknn</span>
-<span class="kn">import</span> <span class="nn">scib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Python packages
+import scanpy as sc
+import scvi
+import bbknn
+import scib
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
 
-<span class="c1"># R interface</span>
-<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
-<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
-<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
+# R interface
+from rpy2.robjects import pandas2ri
+from rpy2.robjects import r
+import rpy2.rinterface_lib.callbacks
+import anndata2ri
 
-<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
-<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+pandas2ri.activate()
+anndata2ri.activate()
 
-<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+%load_ext rpy2.ipython
 </pre></div>
 </div>
 </div>
@@ -1025,7 +1025,7 @@ Fig. I1: Overview of different types of integration methods with examples.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 # R packages
 library(Seurat)
 </pre></div>
@@ -1056,11 +1056,11 @@ library(Seurat)
 <p>Let’s read in the dataset using <strong>scanpy</strong> to get an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_raw</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span>
-    <span class="s2">&quot;../../datasets/openproblems_bmmc_multiome_genes_filtered.h5ad&quot;</span>
-<span class="p">)</span>
-<span class="n">adata_raw</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_raw</span><span class="o">.</span><span class="n">X</span>
-<span class="n">adata_raw</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_raw = sc.read_h5ad(
+    &quot;../../datasets/openproblems_bmmc_multiome_genes_filtered.h5ad&quot;
+)
+adata_raw.layers[&quot;logcounts&quot;] = adata_raw.X
+adata_raw
 </pre></div>
 </div>
 </div>
@@ -1205,8 +1205,8 @@ library(Seurat)
 <p>We define variables to hold these names so that it is clear how we are using them in the code. This also helps with reproducibility because if we decided to change one of them for whatever reason we can be sure it has changed in the whole notebook.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_key</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span>
-<span class="n">batch_key</span> <span class="o">=</span> <span class="s2">&quot;batch&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>label_key = &quot;cell_type&quot;
+batch_key = &quot;batch&quot;
 </pre></div>
 </div>
 </div>
@@ -1219,7 +1219,7 @@ library(Seurat)
 <p>Let’s have a look at the different batches and how many cells we have for each.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_raw</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_raw.obs[batch_key].value_counts()
 </pre></div>
 </div>
 </div>
@@ -1245,9 +1245,9 @@ Name: batch, dtype: int64
 <p>There are 13 different batches in the dataset. During this experiment, multiple samples were taken from a set of donors and sequenced at different facilities so the names here are a combination of the sample number (eg. “s1”) and the donor (eg. “d2”). For simplicity, and to reduce computational time, we will select three samples to use.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">keep_batches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s1d3&quot;</span><span class="p">,</span> <span class="s2">&quot;s2d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s3d7&quot;</span><span class="p">]</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">adata_raw</span><span class="p">[</span><span class="n">adata_raw</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">keep_batches</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>keep_batches = [&quot;s1d3&quot;, &quot;s2d1&quot;, &quot;s3d7&quot;]
+adata = adata_raw[adata_raw.obs[batch_key].isin(keep_batches)].copy()
+adata
 </pre></div>
 </div>
 </div>
@@ -1271,7 +1271,7 @@ Name: batch, dtype: int64
 <p>Let’s have a look at the feature types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;feature_types&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.var[&quot;feature_types&quot;].value_counts()
 </pre></div>
 </div>
 </div>
@@ -1286,9 +1286,9 @@ Name: feature_types, dtype: int64
 <p>We can see that there are over 100,000 ATAC features but only around 13,000 gene expression (“GEX”) features. Integration of multiple modalities is a complex problem that will be described in the <a class="reference internal" href="../multimodal_integration/advanced_integration.html#multimodal-integration-advanced-integration"><span class="std std-ref">multimodal integration chapter</span></a>, so for now we will subset to only the gene expression features. We also perform simple filtering to make sure we have no features with zero counts (this is necessary because by selecting a subset of samples we may have removed all the cells which expressed a particular feature).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;feature_types&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GEX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = adata[:, adata.var[&quot;feature_types&quot;] == &quot;GEX&quot;].copy()
+sc.pp.filter_genes(adata, min_cells=1)
+adata
 </pre></div>
 </div>
 </div>
@@ -1306,10 +1306,10 @@ Name: feature_types, dtype: int64
 <p>Because of the subsetting we also need to re-normalise the data. Here we just normalise using global scaling by the total counts per cell.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.X = adata.layers[&quot;counts&quot;].copy()
+sc.pp.normalize_total(adata)
+sc.pp.log1p(adata)
+adata.layers[&quot;logcounts&quot;] = adata.X.copy()
 </pre></div>
 </div>
 </div>
@@ -1330,11 +1330,11 @@ Name: feature_types, dtype: int64
 <p>We will perform highly variable gene (HVG) selection, PCA and UMAP dimensionality reduction as we have seen in previous chapters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.highly_variable_genes(adata)
+sc.tl.pca(adata)
+sc.pp.neighbors(adata)
+sc.tl.umap(adata)
+adata
 </pre></div>
 </div>
 </div>
@@ -1355,12 +1355,12 @@ Name: feature_types, dtype: int64
 <p>Let’s plot the UMAP, colouring the points by cell identity and batch labels. If the dataset had not already been labelled (which is often the case) we would only be able to consider the batch labels.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="n">batch_key</span> <span class="o">+</span> <span class="s2">&quot;_colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;#1b9e77&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;#d95f02&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;#7570b3&quot;</span><span class="p">,</span>
-<span class="p">]</span>  <span class="c1"># Set custom colours for batches</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">label_key</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.uns[batch_key + &quot;_colors&quot;] = [
+    &quot;#1b9e77&quot;,
+    &quot;#d95f02&quot;,
+    &quot;#7570b3&quot;,
+]  # Set custom colours for batches
+sc.pl.umap(adata, color=[label_key, batch_key], wspace=1)
 </pre></div>
 </div>
 </div>
@@ -1385,11 +1385,11 @@ Name: feature_types, dtype: int64
 <p>We can perform batch-aware highly variable gene selection by setting the <code class="docutils literal notranslate"><span class="pre">batch_key</span></code> argument in the <strong>scanpy</strong> <code class="docutils literal notranslate"><span class="pre">highly_variable_genes()</span></code> function. <strong>scanpy</strong> will then calculate HVGs for each batch separately and combine the results by selecting those genes that are highly variable in the highest number of batches. We use the <strong>scanpy</strong> function here because it has this batch awareness built in. For other methods, we would have to run them on each batch individually and then manually combine the results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;cell_ranger&quot;</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="n">batch_key</span>
-<span class="p">)</span>
-<span class="n">adata</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">var</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.highly_variable_genes(
+    adata, n_top_genes=2000, flavor=&quot;cell_ranger&quot;, batch_key=batch_key
+)
+adata
+adata.var
 </pre></div>
 </div>
 </div>
@@ -1578,9 +1578,9 @@ Name: feature_types, dtype: int64
 <p>Let’s check how many batches each gene was variable in:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_batches</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable_nbatches&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">n_batches</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
-<span class="n">n_batches</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_batches = adata.var[&quot;highly_variable_nbatches&quot;].value_counts()
+ax = n_batches.plot(kind=&quot;bar&quot;)
+n_batches
 </pre></div>
 </div>
 </div>
@@ -1603,8 +1603,8 @@ Name: highly_variable_nbatches, dtype: int64
 <p>We will create an object with just the selected genes to use for integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_hvg</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata_hvg</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_hvg = adata[:, adata.var[&quot;highly_variable&quot;]].copy()
+adata_hvg
 </pre></div>
 </div>
 </div>
@@ -1628,7 +1628,7 @@ Name: highly_variable_nbatches, dtype: int64
 <p>First, let’s make a copy of our dataset to use for this integration. Normally it is not necessary to do this but as we will demonstrate multiple integration methods making a copy makes it easier to show what has been added by each method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_scvi</span> <span class="o">=</span> <span class="n">adata_hvg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_scvi = adata_hvg.copy()
 </pre></div>
 </div>
 </div>
@@ -1638,8 +1638,8 @@ Name: highly_variable_nbatches, dtype: int64
 <p>The first step in using <strong>scVI</strong> is to prepare our AnnData object. This step stores some information required by <strong>scVI</strong> such as which expression matrix to use and what the batch key is.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SCVI</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span><span class="n">adata_scvi</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="n">batch_key</span><span class="p">)</span>
-<span class="n">adata_scvi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scvi.model.SCVI.setup_anndata(adata_scvi, layer=&quot;counts&quot;, batch_key=batch_key)
+adata_scvi
 </pre></div>
 </div>
 </div>
@@ -1663,8 +1663,8 @@ Name: highly_variable_nbatches, dtype: int64
 <p>We can now construct an <strong>scVI</strong> model object. As well as the <strong>scVI</strong> model we use here, the <strong>scvi-tools</strong> package contains various other models (we will use the <strong>scANVI</strong> model below).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_scvi</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SCVI</span><span class="p">(</span><span class="n">adata_scvi</span><span class="p">)</span>
-<span class="n">model_scvi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model_scvi = scvi.model.SCVI(adata_scvi)
+model_scvi
 </pre></div>
 </div>
 </div>
@@ -1683,7 +1683,7 @@ Training status: Not Trained
 <p>We can also print a more detailed description of the model that shows us where things are stored in the associated AnnData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_scvi</span><span class="o">.</span><span class="n">view_anndata_setup</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model_scvi.view_anndata_setup()
 </pre></div>
 </div>
 </div>
@@ -1751,8 +1751,8 @@ Training status: Not Trained
 <p>The model will be trained for a given number of <em>epochs</em>, a training iteration where every cell is passed through the network. By default <strong>scVI</strong> uses the following heuristic to set the number of epochs. For datasets with fewer than 20,000 cells, 400 epochs will be used and as the number of cells grows above 20,000 the number of epochs is continuously reduced. The reasoning behind this is that as the network sees more cells during each epoch it can learn the same amount of information as it would from more epochs with fewer cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_epochs_scvi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="nb">round</span><span class="p">((</span><span class="mi">20000</span> <span class="o">/</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span><span class="p">),</span> <span class="mi">400</span><span class="p">])</span>
-<span class="n">max_epochs_scvi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>max_epochs_scvi = np.min([round((20000 / adata.n_obs) * 400), 400])
+max_epochs_scvi
 </pre></div>
 </div>
 </div>
@@ -1765,7 +1765,7 @@ Training status: Not Trained
 <p>We now train the model for the selected number of epochs (this will take ~20-40 minutes depending on the computer you are using).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_scvi</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model_scvi.train()
 </pre></div>
 </div>
 </div>
@@ -1797,7 +1797,7 @@ HPU available: False, using: 0 HPUs
 <p>The main result we want to extract from the trained model is the latent representation for each cell. This is a multi-dimensional embedding where the batch effects have been removed that can be used in a similar way to how we use PCA dimensions when analysing a single dataset. We store this in <code class="docutils literal notranslate"><span class="pre">obsm</span></code> with the key <code class="docutils literal notranslate"><span class="pre">X_scvi</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_scvi</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_scVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_scvi</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_scvi.obsm[&quot;X_scVI&quot;] = model_scvi.get_latent_representation()
 </pre></div>
 </div>
 </div>
@@ -1808,9 +1808,9 @@ HPU available: False, using: 0 HPUs
 <p>We will now visualise the data as we did before integration. We calculate a new UMAP embedding but instead of finding nearest neighbors in PCA space, we start with the corrected representation from <strong>scVI</strong>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_scvi</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_scVI&quot;</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_scvi</span><span class="p">)</span>
-<span class="n">adata_scvi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata_scvi, use_rep=&quot;X_scVI&quot;)
+sc.tl.umap(adata_scvi)
+adata_scvi
 </pre></div>
 </div>
 </div>
@@ -1830,7 +1830,7 @@ HPU available: False, using: 0 HPUs
 <p>Once we have the new UMAP representation we can plot it coloured by batch and identity labels as before.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_scvi</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">label_key</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata_scvi, color=[label_key, batch_key], wspace=1)
 </pre></div>
 </div>
 </div>
@@ -1860,13 +1860,13 @@ HPU available: False, using: 0 HPUs
 <p>We start by creating a <strong>scANVI</strong> model object. Note that because <strong>scANVI</strong> refines an already trained <strong>scVI</strong> model, we provide the scVI model rather than an AnnData object. If we had not already trained an <strong>scVI</strong> model we would need to do that first. We also provide a key for the column of <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code> which contains our cell labels as well as the label which corresponds to unlabelled cells. In this case all of our cells are labelled so we just provide a dummy value. In most cases, it is important to check that this is set correctly so that <strong>scANVI</strong> knows which label to ignore during training.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normally we would need to run scVI first but we have already done that here</span>
-<span class="c1"># model_scvi = scvi.model.SCVI(adata_scvi) etc.</span>
-<span class="n">model_scanvi</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SCANVI</span><span class="o">.</span><span class="n">from_scvi_model</span><span class="p">(</span>
-    <span class="n">model_scvi</span><span class="p">,</span> <span class="n">labels_key</span><span class="o">=</span><span class="n">label_key</span><span class="p">,</span> <span class="n">unlabeled_category</span><span class="o">=</span><span class="s2">&quot;unlabelled&quot;</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model_scanvi</span><span class="p">)</span>
-<span class="n">model_scanvi</span><span class="o">.</span><span class="n">view_anndata_setup</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Normally we would need to run scVI first but we have already done that here
+# model_scvi = scvi.model.SCVI(adata_scvi) etc.
+model_scanvi = scvi.model.SCANVI.from_scvi_model(
+    model_scvi, labels_key=label_key, unlabeled_category=&quot;unlabelled&quot;
+)
+print(model_scanvi)
+model_scanvi.view_anndata_setup()
 </pre></div>
 </div>
 </div>
@@ -1961,8 +1961,8 @@ Training status: Not Trained
 <p>Again, we have a heuristic for selecting the number of training epochs. Note that this is much fewer than before as we are just refining the <strong>scVI</strong> model, rather than training a whole network from scratch.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_epochs_scanvi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">max_epochs_scvi</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)])]))</span>
-<span class="n">model_scanvi</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="n">max_epochs_scanvi</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>max_epochs_scanvi = int(np.min([10, np.max([2, round(max_epochs_scvi / 3.0)])]))
+model_scanvi.train(max_epochs=max_epochs_scanvi)
 </pre></div>
 </div>
 </div>
@@ -1990,11 +1990,11 @@ HPU available: False, using: 0 HPUs
 <p>We can extract the new latent representation from the model and create a new UMAP embedding as we did for <strong>scVI</strong>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_scanvi</span> <span class="o">=</span> <span class="n">adata_scvi</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata_scanvi</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_scANVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_scanvi</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_scanvi</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_scANVI&quot;</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_scanvi</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_scanvi</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">label_key</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_scanvi = adata_scvi.copy()
+adata_scanvi.obsm[&quot;X_scANVI&quot;] = model_scanvi.get_latent_representation()
+sc.pp.neighbors(adata_scanvi, use_rep=&quot;X_scANVI&quot;)
+sc.tl.umap(adata_scanvi)
+sc.pl.umap(adata_scanvi, color=[label_key, batch_key], wspace=1)
 </pre></div>
 </div>
 </div>
@@ -2018,8 +2018,8 @@ HPU available: False, using: 0 HPUs
 <p>An important parameter for <strong>BBKNN</strong> is the number of neighbors per batch. A suggested heuristic for this is to use 25 if there are more than 100,000 cells or the default of 3 if there are fewer than 100,000.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neighbors_within_batch</span> <span class="o">=</span> <span class="mi">25</span> <span class="k">if</span> <span class="n">adata_hvg</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">&gt;</span> <span class="mi">100000</span> <span class="k">else</span> <span class="mi">3</span>
-<span class="n">neighbors_within_batch</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>neighbors_within_batch = 25 if adata_hvg.n_obs &gt; 100000 else 3
+neighbors_within_batch
 </pre></div>
 </div>
 </div>
@@ -2032,9 +2032,9 @@ HPU available: False, using: 0 HPUs
 <p>Before using <strong>BBKNN</strong> we first perform a PCA as we would before building a normal KNN graph. Unlike <strong>scVI</strong> which models raw counts here, we start with the log-normalised expression matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bbknn</span> <span class="o">=</span> <span class="n">adata_hvg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">adata_bbknn</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_bbknn</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_bbknn</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_bbknn = adata_hvg.copy()
+adata_bbknn.X = adata_bbknn.layers[&quot;logcounts&quot;].copy()
+sc.pp.pca(adata_bbknn)
 </pre></div>
 </div>
 </div>
@@ -2042,10 +2042,10 @@ HPU available: False, using: 0 HPUs
 <p>We can now run <strong>BBKNN</strong>, replacing the call to the <strong>scanpy</strong> <code class="docutils literal notranslate"><span class="pre">neighbors()</span></code> function in a standard workflow. An important difference is to make sure the <code class="docutils literal notranslate"><span class="pre">batch_key</span></code> argument is set which specifies a column in <code class="docutils literal notranslate"><span class="pre">adata_hvg.obs</span></code> that contains batch labels.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bbknn</span><span class="o">.</span><span class="n">bbknn</span><span class="p">(</span>
-    <span class="n">adata_bbknn</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="n">batch_key</span><span class="p">,</span> <span class="n">neighbors_within_batch</span><span class="o">=</span><span class="n">neighbors_within_batch</span>
-<span class="p">)</span>
-<span class="n">adata_bbknn</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>bbknn.bbknn(
+    adata_bbknn, batch_key=batch_key, neighbors_within_batch=neighbors_within_batch
+)
+adata_bbknn
 </pre></div>
 </div>
 </div>
@@ -2066,8 +2066,8 @@ HPU available: False, using: 0 HPUs
 <p>We can use this new integrated graph just like we would a normal KNN graph to construct a UMAP embedding.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bbknn</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bbknn</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">label_key</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.umap(adata_bbknn)
+sc.pl.umap(adata_bbknn, color=[label_key, batch_key], wspace=1)
 </pre></div>
 </div>
 </div>
@@ -2091,13 +2091,13 @@ HPU available: False, using: 0 HPUs
 <p>As <strong>Seurat</strong> is an R package we must transfer our data from Python to R. Here we prepare the AnnData to convert so that it can be handled by <strong>rpy2</strong> and <strong>anndata2ri</strong>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_seurat</span> <span class="o">=</span> <span class="n">adata_hvg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="c1"># Convert categorical columns to strings</span>
-<span class="n">adata_seurat</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_seurat</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">batch_key</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="n">adata_seurat</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_seurat</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_key</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="c1"># Delete uns as this can contain arbitrary objects which are difficult to convert</span>
-<span class="k">del</span> <span class="n">adata_seurat</span><span class="o">.</span><span class="n">uns</span>
-<span class="n">adata_seurat</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_seurat = adata_hvg.copy()
+# Convert categorical columns to strings
+adata_seurat.obs[batch_key] = adata_seurat.obs[batch_key].astype(str)
+adata_seurat.obs[label_key] = adata_seurat.obs[label_key].astype(str)
+# Delete uns as this can contain arbitrary objects which are difficult to convert
+del adata_seurat.uns
+adata_seurat
 </pre></div>
 </div>
 </div>
@@ -2116,7 +2116,7 @@ HPU available: False, using: 0 HPUs
 <p>The prepared AnnDAta is now available in R as a SingleCellExperiment object thanks to <strong>anndata2ri</strong>. Note that this is transposed compared to an AnnData object so our observations (cells) are now the columns and our variables (genes) are now the rows.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_seurat
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_seurat
 adata_seurat
 </pre></div>
 </div>
@@ -2161,7 +2161,7 @@ altExpNames(0):
 <p><strong>Seurat</strong> uses its own object to store data. Helpfully the authors provide a function to convert from SingleCellExperiment. We just provide the SingleCellExperiment object and tell <strong>Seurat</strong> which assays (layers in our AnnData object) contain raw counts and normalised expression (which <strong>Seurat</strong> stores in a slot called “data”).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_seurat
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_seurat
 seurat &lt;- as.Seurat(adata_seurat, counts = &quot;counts&quot;, data = &quot;logcounts&quot;)
 seurat
 </pre></div>
@@ -2187,7 +2187,7 @@ Active assay: originalexp (2000 features, 0 variable features)
 <p>Unlike some of the other methods, we have seen which take a single object and a batch key, the <strong>Seurat</strong> integration functions require a list of objects. We create this using the <code class="docutils literal notranslate"><span class="pre">SplitObject()</span></code> function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i batch_key
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i batch_key
 batch_list &lt;- SplitObject(seurat, split.by = batch_key)
 batch_list
 </pre></div>
@@ -2218,7 +2218,7 @@ Active assay: originalexp (2000 features, 0 variable features)
 <p>We can now use this list to find anchors for each pair of datasets. Usually, you would identify batch-aware highly variable genes first (using the <code class="docutils literal notranslate"><span class="pre">FindVariableFeatures()</span></code> and <code class="docutils literal notranslate"><span class="pre">SelectIntegrationFeatures()</span></code> functions) but as we have done that already we tell <strong>Seurat</strong> to use all the features in the object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 anchors &lt;- FindIntegrationAnchors(batch_list, anchor.features = rownames(seurat))
 anchors
 </pre></div>
@@ -2236,7 +2236,7 @@ An AnchorSet object containing 25352 anchors between 3 Seurat objects
 <p><strong>Seurat</strong> can then use the anchors to compute a transformation that maps one dataset onto another. This is done in a pairwise way until all the datasets are merged. By default <strong>Seurat</strong> will determine a merge order so that more similar datasets are merged together first but it is also possible to define this order.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 integrated &lt;- IntegrateData(anchors)
 integrated
 </pre></div>
@@ -2255,7 +2255,7 @@ Active assay: integrated (2000 features, 2000 variable features)
 <p>Here we extract that matrix and prepare it for transfer back to Python.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o integrated_expr
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -o integrated_expr
 # Extract the integrated expression matrix
 integrated_expr &lt;- GetAssayData(integrated)
 # Make sure the rows and columns are in the same order as the original object
@@ -2308,10 +2308,10 @@ CCGTTACTCAATGTGC-3-s1d3 -4.910886e-02  0.0317359576
 <p>We will now store the corrected expression matrix as a layer in our AnnData object. We also set <code class="docutils literal notranslate"><span class="pre">adata.X</span></code> to use this matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_seurat</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">integrated_expr</span>
-<span class="n">adata_seurat</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;seurat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">integrated_expr</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">adata_seurat</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_seurat.X = integrated_expr
+adata_seurat.layers[&quot;seurat&quot;] = integrated_expr
+print(adata_seurat)
+adata.X
 </pre></div>
 </div>
 </div>
@@ -2334,16 +2334,16 @@ CCGTTACTCAATGTGC-3-s1d3 -4.910886e-02  0.0317359576
 <p>Now that we have the results of our integration we can calculate a UMAP and plot it as we have for the other methods (we could also have done this in R).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reset the batch colours because we deleted them earlier</span>
-<span class="n">adata_seurat</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="n">batch_key</span> <span class="o">+</span> <span class="s2">&quot;_colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;#1b9e77&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;#d95f02&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;#7570b3&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_seurat</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_seurat</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_seurat</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_seurat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">label_key</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Reset the batch colours because we deleted them earlier
+adata_seurat.uns[batch_key + &quot;_colors&quot;] = [
+    &quot;#1b9e77&quot;,
+    &quot;#d95f02&quot;,
+    &quot;#7570b3&quot;,
+]
+sc.tl.pca(adata_seurat)
+sc.pp.neighbors(adata_seurat)
+sc.tl.umap(adata_seurat)
+sc.pl.umap(adata_seurat, color=[label_key, batch_key], wspace=1)
 </pre></div>
 </div>
 </div>
@@ -2376,15 +2376,15 @@ CCGTTACTCAATGTGC-3-s1d3 -4.910886e-02  0.0317359576
 <p>Let’s run the metrics for each of the integrations we have performed above, as well as the unintegrated data (after highly variable gene selection).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_scvi</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics_fast</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">adata_scvi</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">,</span> <span class="n">label_key</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="s2">&quot;X_scVI&quot;</span>
-<span class="p">)</span>
-<span class="n">metrics_scanvi</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics_fast</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">adata_scanvi</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">,</span> <span class="n">label_key</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="s2">&quot;X_scANVI&quot;</span>
-<span class="p">)</span>
-<span class="n">metrics_bbknn</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics_fast</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_bbknn</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">,</span> <span class="n">label_key</span><span class="p">)</span>
-<span class="n">metrics_seurat</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics_fast</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_seurat</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">,</span> <span class="n">label_key</span><span class="p">)</span>
-<span class="n">metrics_hvg</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics_fast</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_hvg</span><span class="p">,</span> <span class="n">batch_key</span><span class="p">,</span> <span class="n">label_key</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_scvi = scib.metrics.metrics_fast(
+    adata, adata_scvi, batch_key, label_key, embed=&quot;X_scVI&quot;
+)
+metrics_scanvi = scib.metrics.metrics_fast(
+    adata, adata_scanvi, batch_key, label_key, embed=&quot;X_scANVI&quot;
+)
+metrics_bbknn = scib.metrics.metrics_fast(adata, adata_bbknn, batch_key, label_key)
+metrics_seurat = scib.metrics.metrics_fast(adata, adata_seurat, batch_key, label_key)
+metrics_hvg = scib.metrics.metrics_fast(adata, adata_hvg, batch_key, label_key)
 </pre></div>
 </div>
 </div>
@@ -2416,7 +2416,7 @@ Graph connectivity...
 <p>Here is an example of what one of the metrics results looks like for a single integration:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_hvg</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_hvg
 </pre></div>
 </div>
 </div>
@@ -2507,32 +2507,32 @@ Graph connectivity...
 <p>To compare the methods it is useful to have all the metrics results in one table. This code combines them and tidies them into a more convenient format.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Concatenate metrics results</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">metrics_scvi</span><span class="p">,</span> <span class="n">metrics_scanvi</span><span class="p">,</span> <span class="n">metrics_bbknn</span><span class="p">,</span> <span class="n">metrics_seurat</span><span class="p">,</span> <span class="n">metrics_hvg</span><span class="p">],</span>
-    <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># Set methods as column names</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">&quot;scVI&quot;</span><span class="p">,</span> <span class="s2">&quot;scANVI&quot;</span><span class="p">,</span> <span class="s2">&quot;BBKNN&quot;</span><span class="p">,</span> <span class="s2">&quot;Seurat&quot;</span><span class="p">,</span> <span class="s2">&quot;Unintegrated&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
-<span class="p">)</span>
-<span class="c1"># Select only the fast metrics</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="p">[</span>
-        <span class="s2">&quot;ASW_label&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ASW_label/batch&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PCR_batch&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;isolated_label_silhouette&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;graph_conn&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;hvg_overlap&quot;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="p">:,</span>
-<span class="p">]</span>
-<span class="c1"># Transpose so that metrics are columns and methods are rows</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">T</span>
-<span class="c1"># Remove the HVG overlap metric because it&#39;s not relevant to embedding outputs</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hvg_overlap&quot;</span><span class="p">])</span>
-<span class="n">metrics</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Concatenate metrics results
+metrics = pd.concat(
+    [metrics_scvi, metrics_scanvi, metrics_bbknn, metrics_seurat, metrics_hvg],
+    axis=&quot;columns&quot;,
+)
+# Set methods as column names
+metrics = metrics.set_axis(
+    [&quot;scVI&quot;, &quot;scANVI&quot;, &quot;BBKNN&quot;, &quot;Seurat&quot;, &quot;Unintegrated&quot;], axis=&quot;columns&quot;
+)
+# Select only the fast metrics
+metrics = metrics.loc[
+    [
+        &quot;ASW_label&quot;,
+        &quot;ASW_label/batch&quot;,
+        &quot;PCR_batch&quot;,
+        &quot;isolated_label_silhouette&quot;,
+        &quot;graph_conn&quot;,
+        &quot;hvg_overlap&quot;,
+    ],
+    :,
+]
+# Transpose so that metrics are columns and methods are rows
+metrics = metrics.T
+# Remove the HVG overlap metric because it&#39;s not relevant to embedding outputs
+metrics = metrics.drop(columns=[&quot;hvg_overlap&quot;])
+metrics
 </pre></div>
 </div>
 </div>
@@ -2610,7 +2610,7 @@ Graph connectivity...
 <p>We now have all the scores in one table with metrics as columns and methods as rows. Styling the table with a gradient can make it easier to see the differences between scores.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics.style.background_gradient(cmap=&quot;Blues&quot;)
 </pre></div>
 </div>
 </div>
@@ -2744,8 +2744,8 @@ Graph connectivity...
 <p>For some metrics, the scores tend to be in a relatively small range. To emphasise the differences between methods and place each metric on the same scale, we scale them so that the worst performer gets a score of 0, the best performer gets a score of 1 and the others are somewhere in between.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">metrics</span> <span class="o">-</span> <span class="n">metrics</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">metrics</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
-<span class="n">metrics_scaled</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_scaled = (metrics - metrics.min()) / (metrics.max() - metrics.min())
+metrics_scaled.style.background_gradient(cmap=&quot;Blues&quot;)
 </pre></div>
 </div>
 </div>
@@ -2876,13 +2876,13 @@ Graph connectivity...
 <p>The evaluation metrics can be grouped into two categories, those that measure the removal of batch effects and those that measure the conservation of biological variation. We can calculate summary scores for each of these categories by taking the mean of the scaled values for each group. This kind of summary score wouldn’t make sense with raw values as some metrics consistently produce higher scores than others (and therefore have a greater effect on the mean).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_scaled</span><span class="p">[</span><span class="s2">&quot;Batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics_scaled</span><span class="p">[</span>
-    <span class="p">[</span><span class="s2">&quot;ASW_label/batch&quot;</span><span class="p">,</span> <span class="s2">&quot;PCR_batch&quot;</span><span class="p">,</span> <span class="s2">&quot;graph_conn&quot;</span><span class="p">]</span>
-<span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">metrics_scaled</span><span class="p">[</span><span class="s2">&quot;Bio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics_scaled</span><span class="p">[[</span><span class="s2">&quot;ASW_label&quot;</span><span class="p">,</span> <span class="s2">&quot;isolated_label_silhouette&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-<span class="p">)</span>
-<span class="n">metrics_scaled</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_scaled[&quot;Batch&quot;] = metrics_scaled[
+    [&quot;ASW_label/batch&quot;, &quot;PCR_batch&quot;, &quot;graph_conn&quot;]
+].mean(axis=1)
+metrics_scaled[&quot;Bio&quot;] = metrics_scaled[[&quot;ASW_label&quot;, &quot;isolated_label_silhouette&quot;]].mean(
+    axis=1
+)
+metrics_scaled.style.background_gradient(cmap=&quot;Blues&quot;)
 </pre></div>
 </div>
 </div>
@@ -3052,25 +3052,25 @@ Graph connectivity...
 <p>Plotting the two summary scores against each other gives an indication of the priorities of each method. Some will be biased towards batch correction while others will favour retaining biological variation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">metrics_scaled</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Batch&quot;</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Bio&quot;</span><span class="p">,</span>
-    <span class="n">c</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metrics_scaled</span><span class="p">)),</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1)
+metrics_scaled.plot.scatter(
+    x=&quot;Batch&quot;,
+    y=&quot;Bio&quot;,
+    c=range(len(metrics_scaled)),
+    ax=ax,
+)
 
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics_scaled</span><span class="p">[[</span><span class="s2">&quot;Batch&quot;</span><span class="p">,</span> <span class="s2">&quot;Bio&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-        <span class="n">k</span><span class="p">,</span>
-        <span class="n">v</span><span class="p">,</span>
-        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-        <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
-        <span class="n">family</span><span class="o">=</span><span class="s2">&quot;sans-serif&quot;</span><span class="p">,</span>
-        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-    <span class="p">)</span>
+for k, v in metrics_scaled[[&quot;Batch&quot;, &quot;Bio&quot;]].iterrows():
+    ax.annotate(
+        k,
+        v,
+        xytext=(6, -3),
+        textcoords=&quot;offset points&quot;,
+        family=&quot;sans-serif&quot;,
+        fontsize=12,
+    )
 </pre></div>
 </div>
 </div>
@@ -3082,8 +3082,8 @@ Graph connectivity...
 <p>To get an overall score for each method we can combine the two summary scores. The <strong>scIB</strong> paper suggests a weighting of 40% batch correction and 60% biological conservation but you may prefer to weight things differently depending on the priorities for your dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_scaled</span><span class="p">[</span><span class="s2">&quot;Overall&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">metrics_scaled</span><span class="p">[</span><span class="s2">&quot;Batch&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">metrics_scaled</span><span class="p">[</span><span class="s2">&quot;Bio&quot;</span><span class="p">]</span>
-<span class="n">metrics_scaled</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_scaled[&quot;Overall&quot;] = 0.4 * metrics_scaled[&quot;Batch&quot;] + 0.6 * metrics_scaled[&quot;Bio&quot;]
+metrics_scaled.style.background_gradient(cmap=&quot;Blues&quot;)
 </pre></div>
 </div>
 </div>
@@ -3271,7 +3271,7 @@ Graph connectivity...
 <p>Let’s make a quick bar chart to visualise the overall performance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_scaled</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;Overall&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>metrics_scaled.plot.bar(y=&quot;Overall&quot;)
 </pre></div>
 </div>
 </div>
@@ -3307,9 +3307,9 @@ Graph connectivity...
 <h3><span class="section-number">12.13.1. </span>Python<a class="headerlink" href="#python" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">session_info</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import session_info
 
-<span class="n">session_info</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+session_info.show()
 </pre></div>
 </div>
 </div>
@@ -3466,7 +3466,7 @@ Session information updated at 2022-11-10 12:53
 <h3><span class="section-number">12.13.2. </span>R<a class="headerlink" href="#r" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 sessioninfo::session_info()
 </pre></div>
 </div>

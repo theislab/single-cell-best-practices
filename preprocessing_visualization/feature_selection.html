@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>9. Feature selection &#8212; Multimodal single-cell analysis</title>
+    <title>9. Feature selection &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -713,42 +713,42 @@ title="Print to PDF"
 <p>We start by setting up our environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
+import anndata2ri
+import logging
+import numpy as np
 
-<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span> <span class="k">as</span> <span class="nn">rcb</span>
-<span class="kn">import</span> <span class="nn">rpy2.robjects</span> <span class="k">as</span> <span class="nn">ro</span>
+import rpy2.rinterface_lib.callbacks as rcb
+import rpy2.robjects as ro
 
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span>
-    <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
-    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
-    <span class="c1"># color_map=&quot;YlGnBu&quot;,</span>
-    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
+sc.settings.verbosity = 0
+sc.settings.set_figure_params(
+    dpi=80,
+    facecolor=&quot;white&quot;,
+    # color_map=&quot;YlGnBu&quot;,
+    frameon=False,
+)
 
-<span class="n">rcb</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
-<span class="n">ro</span><span class="o">.</span><span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
-<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+rcb.logger.setLevel(logging.ERROR)
+ro.pandas2ri.activate()
+anndata2ri.activate()
 
-<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+%load_ext rpy2.ipython
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TOOD switch to figshare afterwards</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex_qc_norm.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TOOD switch to figshare afterwards
+adata = sc.read(&quot;s4d8_subset_gex_qc_norm.h5ad&quot;)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 library(scry)
 </pre></div>
 </div>
@@ -757,7 +757,7 @@ library(scry)
 <p>Similar to before, we save the AnnData object in our R environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ro</span><span class="o">.</span><span class="n">globalenv</span><span class="p">[</span><span class="s2">&quot;adata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ro.globalenv[&quot;adata&quot;] = adata
 </pre></div>
 </div>
 </div>
@@ -765,7 +765,7 @@ library(scry)
 <p>We can now directly call feature selection with deviance on the non-normalized counts matrix and export the bionomial deviance values as a vector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 sce = devianceFeatureSelection(adata, assay=&quot;X&quot;)
 </pre></div>
 </div>
@@ -773,7 +773,7 @@ sce = devianceFeatureSelection(adata, assay=&quot;X&quot;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binomial_deviance</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s2">&quot;rowData(sce)$binomial_deviance&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>binomial_deviance = ro.r(&quot;rowData(sce)$binomial_deviance&quot;).T
 </pre></div>
 </div>
 </div>
@@ -781,18 +781,18 @@ sce = devianceFeatureSelection(adata, assay=&quot;X&quot;)
 <p>As a next step, we now sort the vector an select the top 4,000 highly deviant genes and save them as an additional column in <code class="docutils literal notranslate"><span class="pre">.var</span></code> as ‘highly_deviant’.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">binomial_deviance</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="o">-</span><span class="mi">4000</span><span class="p">:]</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-<span class="n">mask</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>idx = binomial_deviance.argsort()[-4000:]
+mask = np.zeros(adata.var_names.shape, dtype=bool)
+mask[idx] = True
 
-<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_deviant&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+adata.var[&quot;highly_deviant&quot;] = mask
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex_qc_norm_fs.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.write(&quot;s4d8_subset_gex_qc_norm_fs.h5ad&quot;)
 </pre></div>
 </div>
 </div>

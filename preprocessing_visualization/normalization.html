@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>8. Normalization &#8212; Multimodal single-cell analysis</title>
+    <title>8. Normalization &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -102,7 +102,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -751,35 +751,35 @@ title="Print to PDF"
 <p>We first import all required Python packages and load the dataset for which we removed ambient RNA, doublets and filtered low quality cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">issparse</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
+import anndata2ri
+import logging
+from scipy.sparse import issparse
 
-<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span> <span class="k">as</span> <span class="nn">rcb</span>
-<span class="kn">import</span> <span class="nn">rpy2.robjects</span> <span class="k">as</span> <span class="nn">ro</span>
+import rpy2.rinterface_lib.callbacks as rcb
+import rpy2.robjects as ro
 
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span>
-    <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
-    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
-    <span class="c1"># color_map=&quot;YlGnBu&quot;,</span>
-    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
+sc.settings.verbosity = 0
+sc.settings.set_figure_params(
+    dpi=80,
+    facecolor=&quot;white&quot;,
+    # color_map=&quot;YlGnBu&quot;,
+    frameon=False,
+)
 
-<span class="n">rcb</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
-<span class="n">ro</span><span class="o">.</span><span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
-<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+rcb.logger.setLevel(logging.ERROR)
+ro.pandas2ri.activate()
+anndata2ri.activate()
 
-<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+%load_ext rpy2.ipython
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># switch to figshare afterwards</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex_qc.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># switch to figshare afterwards
+adata = sc.read(&quot;s4d8_subset_gex_qc.h5ad&quot;)
 </pre></div>
 </div>
 </div>
@@ -797,14 +797,14 @@ title="Print to PDF"
 <p>log1pPF and PFlog1pPF can be easily computed with scanpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># proportional fitting to mean of cell depth</span>
-<span class="n">proportional_fitting</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># log1p transform</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log1pPF_normalization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">proportional_fitting</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">])</span>
-<span class="c1"># proportional fitting</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;PFlog1pPF_normalization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span>
-    <span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;log1pPF_normalization&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">)[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># proportional fitting to mean of cell depth
+proportional_fitting = sc.pp.normalize_total(adata, target_sum=None, inplace=False)
+# log1p transform
+adata.layers[&quot;log1pPF_normalization&quot;] = sc.pp.log1p(proportional_fitting[&quot;X&quot;])
+# proportional fitting
+adata.layers[&quot;PFlog1pPF_normalization&quot;] = sc.pp.normalize_total(
+    adata, target_sum=None, layer=&quot;log1pPF_normalization&quot;, inplace=False
+)[&quot;X&quot;]
 </pre></div>
 </div>
 </div>
@@ -816,14 +816,14 @@ title="Print to PDF"
 <p>We first load the additionally required Python and R packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">issparse</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.sparse import csr_matrix, issparse
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 library(scran)
 library(BiocParallel)
 </pre></div>
@@ -833,13 +833,13 @@ library(BiocParallel)
 <p>scran requires a coarse clustering input to improve size factor esimation performance. In this tutorial, we use a simple preprocessing approach and cluster the data at a low resolution to get an input for the size factor estimation. The basic preprocessing includes assuming all size factors are equal (library size normalization to counts per million - CPM) and log-transforming the count data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preliminary clustering for differentiated normalisation</span>
-<span class="n">adata_pp</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">counts_per_cell_after</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Preliminary clustering for differentiated normalisation
+adata_pp = adata.copy()
+sc.pp.normalize_per_cell(adata_pp, counts_per_cell_after=1e6)
+sc.pp.log1p(adata_pp)
+sc.pp.pca(adata_pp, n_comps=15)
+sc.pp.neighbors(adata_pp)
+sc.tl.leiden(adata_pp, key_added=&quot;groups&quot;)
 </pre></div>
 </div>
 </div>
@@ -847,17 +847,17 @@ library(BiocParallel)
 <p>We now add <code class="docutils literal notranslate"><span class="pre">data_mat</span></code> and our computed groups into our R environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scipy
 
-<span class="n">data_mat</span> <span class="o">=</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span>
-<span class="c1"># convert to CSC if possible. See https://github.com/MarioniLab/scran/issues/70</span>
-<span class="k">if</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">data_mat</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">data_mat</span><span class="o">.</span><span class="n">nnz</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">data_mat</span> <span class="o">=</span> <span class="n">data_mat</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">data_mat</span> <span class="o">=</span> <span class="n">data_mat</span><span class="o">.</span><span class="n">tocsc</span><span class="p">()</span>
-<span class="n">ro</span><span class="o">.</span><span class="n">globalenv</span><span class="p">[</span><span class="s2">&quot;data_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_mat</span>
-<span class="n">ro</span><span class="o">.</span><span class="n">globalenv</span><span class="p">[</span><span class="s2">&quot;input_groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span>
+data_mat = adata_pp.X.T
+# convert to CSC if possible. See https://github.com/MarioniLab/scran/issues/70
+if scipy.sparse.issparse(data_mat):
+    if data_mat.nnz &gt; 2**31 - 1:
+        data_mat = data_mat.tocoo()
+    else:
+        data_mat = data_mat.tocsc()
+ro.globalenv[&quot;data_mat&quot;] = data_mat
+ro.globalenv[&quot;input_groups&quot;] = adata_pp.obs[&quot;groups&quot;]
 </pre></div>
 </div>
 </div>
@@ -865,7 +865,7 @@ library(BiocParallel)
 <p>We can now also delete the copy of our anndata object, as we obtained all objects needed in order to run scran.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">adata_pp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del adata_pp
 </pre></div>
 </div>
 </div>
@@ -873,7 +873,7 @@ library(BiocParallel)
 <p>We now compute the size factors based on the groups of cells we calculated before.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o size_factors
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -o size_factors
 
 size_factors = sizeFactors(
     computeSumFactors(
@@ -891,9 +891,9 @@ size_factors = sizeFactors(
 <p>We save <code class="docutils literal notranslate"><span class="pre">size_factors</span></code> in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> and are now able to normalize the data and subsequently apply a log1p transformation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;size_factors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size_factors</span>
-<span class="n">scran</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">/</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;size_factors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;scran_normalization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">scran</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;size_factors&quot;] = size_factors
+scran = adata.X / adata.obs[&quot;size_factors&quot;].values[:, None]
+adata.layers[&quot;scran_normalization&quot;] = csr_matrix(sc.pp.log1p(scran))
 </pre></div>
 </div>
 </div>
@@ -906,7 +906,7 @@ size_factors = sizeFactors(
 <p>We first load the additionally required python and R packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 library(Seurat)
 library(sctransform)
 </pre></div>
@@ -916,10 +916,10 @@ library(sctransform)
 <p>The dataset used in this chapter has a sparse representation of the count matrix, so we sort the indices and add the AnnData object to the R environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">issparse</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">has_sorted_indices</span><span class="p">:</span>
-        <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sort_indices</span><span class="p">()</span>
-<span class="n">ro</span><span class="o">.</span><span class="n">globalenv</span><span class="p">[</span><span class="s2">&quot;adata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>if issparse(adata.X):
+    if not adata.X.has_sorted_indices:
+        adata.X.sort_indices()
+ro.globalenv[&quot;adata&quot;] = adata
 </pre></div>
 </div>
 </div>
@@ -927,7 +927,7 @@ library(sctransform)
 <p>The object is now transformed into a Seurat object with original expression annotated as “RNA” and we can call sctransform with the “glmGamPoi” method. Sctranform allows the user to only keep variable genes, we set this option to False as we are only interested in the normalization of the data. We additionally set the number of subsampling cells <code class="docutils literal notranslate"><span class="pre">ncells</span></code> to 3000 to reduce the runtime of sctransform. This number is used to build the NB regression and the default is 5000. You can adjust this number based on the compute power you have at hand.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
 seurat_obj = as.Seurat(adata, counts=&quot;X&quot;, data = NULL)
 seurat_obj = RenameAssays(seurat_obj, originalexp = &quot;RNA&quot;)
 res = SCTransform(object=seurat_obj, method = &quot;glmGamPoi&quot;, return.only.var.genes = FALSE)
@@ -951,8 +951,8 @@ res = SCTransform(object=seurat_obj, method = &quot;glmGamPoi&quot;, return.only
 <p>We now extract the residuals and save it to the AnnData object. As <code class="docutils literal notranslate"><span class="pre">sctransform</span></code> returns a gene by cell matrix, we transpose it and save it as a new layer. The residuals can then be used for further downstream analysis steps.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">norm_x</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s2">&quot;res@assays$SCT@scale.data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;scTransform_normalization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm_x</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>norm_x = ro.r(&quot;res@assays$SCT@scale.data&quot;).T
+adata.layers[&quot;scTransform_normalization&quot;] = norm_x
 </pre></div>
 </div>
 </div>
@@ -960,7 +960,7 @@ res = SCTransform(object=seurat_obj, method = &quot;glmGamPoi&quot;, return.only
 <p>We applied different normalization techniques to our dataset and saved them as separate layers to our anndata object. Depending on the downstream analysis task it can be favourable to use a differently normalized layer and assess the result.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex_qc_norm.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.write(&quot;s4d8_subset_gex_qc_norm.h5ad&quot;)
 </pre></div>
 </div>
 </div>

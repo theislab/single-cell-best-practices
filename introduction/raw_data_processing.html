@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>3. Raw data processing &#8212; Multimodal single-cell analysis</title>
+    <title>3. Raw data processing &#8212; Single-cell best practices</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -104,7 +104,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Multimodal single-cell analysis</h1>
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -726,14 +726,26 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mapping-the-data">
-     3.8.2. Mapping the data
+    <a class="reference internal nav-link" href="#simplified-raw-data-processing-pipeline">
+     3.8.2. Simplified raw data processing pipeline
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#processing-the-mapped-reads">
-     3.8.3. processing the mapped reads
+    <a class="reference internal nav-link" href="#the-complete-alevin-fry-pipeline">
+     3.8.3. The complete alevin-fry pipeline
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#building-the-index">
+       3.8.3.1. Building the index
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mapping-and-quantification">
+       3.8.3.2. Mapping and quantification
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -916,14 +928,26 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mapping-the-data">
-     3.8.2. Mapping the data
+    <a class="reference internal nav-link" href="#simplified-raw-data-processing-pipeline">
+     3.8.2. Simplified raw data processing pipeline
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#processing-the-mapped-reads">
-     3.8.3. processing the mapped reads
+    <a class="reference internal nav-link" href="#the-complete-alevin-fry-pipeline">
+     3.8.3. The complete alevin-fry pipeline
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#building-the-index">
+       3.8.3.1. Building the index
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mapping-and-quantification">
+       3.8.3.2. Mapping and quantification
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -968,7 +992,6 @@ title="Print to PDF"
 <span id="raw-proc"></span><h1><span class="section-number">3. </span>Raw data processing<a class="headerlink" href="#raw-data-processing" title="Permalink to this headline">#</a></h1>
 <p>In this section, we discuss some of the fundamental issues surrounding what is commonly called “preprocessing” of single-cell and single-nucleus RNA-sequencing (sc/snRNA-seq) data. Though this is common terminology, it seems a bit of a misnomer, as this process involves several
 steps that make important decisions about how to deal with and represent the data that can enable or preclude subsequent analyses. Here, we will primarily refer to this phase of processing as “raw data processing”, and our focus will be on the phase of data analysis that begins with lane-demultiplexed FASTQ files, and ends with a count matrix representing the estimated number of distinct molecules arising from each gene within each quantified cell, potentially stratified by the inferred splicing status of each molecule (<a class="reference internal" href="#raw-proc-fig-overview"><span class="std std-numref">Fig. 3.1</span></a>).</p>
-<p>^</p>
 <figure class="align-default" id="raw-proc-fig-overview">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/overview_raw_data_processing.jpg"><img alt="Chapter Overview" class="bg-primary mb-1" src="../_images/overview_raw_data_processing.jpg" style="width: 800px;" /></a>
 <figcaption>
@@ -1280,106 +1303,202 @@ While this “knee” method is intuitive and can often estimate a reasonable th
 </section>
 <section id="a-real-world-example">
 <span id="raw-proc-example-workflow"></span><h2><span class="section-number">3.8. </span>A real-world example<a class="headerlink" href="#a-real-world-example" title="Permalink to this headline">#</a></h2>
-<p>Given that we have now covered the concepts underlying approaches for raw data processing, we now turn our attention to demonstrating how a specific tool (in this case, <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>) can be used to process a small example dataset. To start, we need the sequenced read records in <a class="reference external" href="https://en.wikipedia.org/wiki/FASTQ_format">FASTQ format</a> and the reference of the sample against which the reads will be mapped. Usually, a reference includes the genome sequences and the corresponding gene annotations of the sequenced species in the <a class="reference external" href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> and <a class="reference external" href="https://useast.ensembl.org/info/website/upload/gff.html">GTF</a> format, respectively.</p>
-<p>In this example, we will use <em>chromosome 5</em> of the human genome and its related gene annotations as the reference, which is a subset of the <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A">Human reference, GRCh38 (GENCODE v32/Ensembl 98) reference</a> from the 10x Genomics. Correspondingly, we extract the subset of reads that map to the generated reference from a <a class="reference external" href="https://www.10xgenomics.com/resources/datasets/200-sorted-cells-from-human-glioblastoma-multiforme-3-lt-v-3-1-3-1-low-6-0-0">human brain tumor dataset</a> from the 10x Genomics.</p>
-<p><a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">Alevin-fry</span></code></a><span id="id80">[<a class="reference internal" href="#id118" title="Dongze He, Mohsen Zakeri, Hirak Sarkar, Charlotte Soneson, Avi Srivastava, and Rob Patro. Alevin-fry unlocks rapid, accurate and memory-frugal quantification of single-cell RNA-seq data. Nature Methods, 19(3):316–322, 2022.">He <em>et al.</em>, 2022</a>]</span> is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool. Here we show how to process the example dataset described above using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> from the command line. While simplified <a class="reference external" href="https://github.com/COMBINE-lab/simpleaf">wrappers</a> and <a class="reference external" href="https://github.com/COMBINE-lab/quantaf">workflows</a> exist to process data with this tool, we will describe here the full set of commands to outline
-where the steps described in this section occur and to convey what different processing options are possible. These commands will be run from the command line, and <a class="reference external" href="https://docs.conda.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">conda</span></code></a> will be used for installing all of the software required for running this example.</p>
+<p>Given that we have covered the concepts underlying various approaches for raw data processing, we now turn our attention to demonstrating how a specific tool (in this case, <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>) can be used to process a small example dataset. To start, we need the sequenced reads from a single-cell experiment in <a class="reference external" href="https://en.wikipedia.org/wiki/FASTQ_format">FASTQ format</a> and the reference (e.g., transcriptome) against which the reads will be mapped. Usually, a reference includes the genome sequences and the corresponding gene annotations of the sequenced species in the <a class="reference external" href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> and <a class="reference external" href="https://useast.ensembl.org/info/website/upload/gff.html">GTF</a> format, respectively.</p>
+<p>In this example, we will use <em>chromosome 5</em> of the human genome and its related gene annotations as the reference, which is a subset of the Human reference, <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A">GRCh38 (GENCODE v32/Ensembl 98) reference</a> from the 10x Genomics reference build. Correspondingly, we extract the subset of reads that map to the generated reference from a <a class="reference external" href="https://www.10xgenomics.com/resources/datasets/200-sorted-cells-from-human-glioblastoma-multiforme-3-lt-v-3-1-3-1-low-6-0-0">human brain tumor dataset</a> from 10x Genomics.</p>
+<p><a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">Alevin-fry</span></code></a><span id="id80">[<a class="reference internal" href="#id118" title="Dongze He, Mohsen Zakeri, Hirak Sarkar, Charlotte Soneson, Avi Srivastava, and Rob Patro. Alevin-fry unlocks rapid, accurate and memory-frugal quantification of single-cell RNA-seq data. Nature Methods, 19(3):316–322, 2022.">He <em>et al.</em>, 2022</a>]</span> is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool. <a class="reference external" href="https://github.com/COMBINE-lab/simpleaf">Simpleaf</a> is a program, written in <a class="reference external" href="https://www.rust-lang.org/">rust</a>, that exposes a unified and simplified interface for processing some of the most common protocols and data types using the <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> pipeline. A nextflow-based <a class="reference external" href="https://github.com/COMBINE-lab/quantaf">workflow</a> tool also exists to process extensive collections of single-cell data. Here we will first show how to process single-cell raw data using two <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> commands. Then, we describe the complete set of <code class="docutils literal notranslate"><span class="pre">salmon</span> <span class="pre">alevin</span></code> and <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> commands to which these <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> commands correspond, to outline where the steps described in this section occur and to convey the possible different processing options. These commands will be run from the command line, and <a class="reference external" href="https://docs.conda.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">conda</span></code></a> will be used for installing all of the software required for running this example.</p>
 <section id="preparation">
 <span id="raw-proc-example-prep"></span><h3><span class="section-number">3.8.1. </span>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">#</a></h3>
-<p>Before we start, we create a conda environment in the terminal and install the required packages. In this procedure, we will install <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code></a>, <a class="reference external" href="https://salmon.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">salmon</span></code></a> and <a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">pyroe</span></code></a>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n af_xmpl -y -c bioconda <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 salmon alevin-fry pyroe
-conda activate af_xmpl
+<p>Before we start, we create a conda environment in the terminal and install the required package. <code class="docutils literal notranslate"><span class="pre">Simpleaf</span></code> depends on <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code></a>, <a class="reference external" href="https://salmon.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">salmon</span></code></a> and <a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">pyroe</span></code></a>. They are all available on <code class="docutils literal notranslate"><span class="pre">bioconda</span></code> and will be automatically installed when installing <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n af -y -c bioconda simpleaf
+conda activate af
 </pre></div>
 </div>
-<div class="admonition-note-on-using-an-m1-m2-based-device admonition">
-<p class="admonition-title">Note on using an M1/M2-based device</p>
+<div class="admonition-note-on-using-an-apple-silicon-based-device admonition">
+<p class="admonition-title">Note on using an Apple silicon-based device</p>
 <p>Conda does not currently build most packages natively for Apple silicon. Therefore, if you
 are using a non-Intel-based Apple computer (e.g., with an M1(Pro/Max/Ultra) or M2 chip), you
 should make sure to specify that your environment uses the Rosetta2 translation layer.
 To do this, you can replace the above commands with the following (instructions adopted
 from <a class="reference external" href="https://github.com/Haydnspass/miniforge#rosetta-on-mac-with-apple-silicon-hardware">here</a>):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CONDA_SUBDIR</span><span class="o">=</span>osx-64 conda create -n af_xmpl -y -c bioconda <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 salmon alevin-fry pyroe   <span class="c1"># create a new environment</span>
-conda activate af_xmpl
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CONDA_SUBDIR</span><span class="o">=</span>osx-64 conda create -n af -y -c bioconda simpleaf   <span class="c1"># create a new environment</span>
+conda activate af
 conda env config vars <span class="nb">set</span> <span class="nv">CONDA_SUBDIR</span><span class="o">=</span>osx-64  <span class="c1"># subsequent commands use intel packages</span>
 </pre></div>
 </div>
 </div>
-<p>Next, we create a working directory <code class="docutils literal notranslate"><span class="pre">af_xmpl_run</span></code>, and download and uncompress the example dataset from a remote host.</p>
+<p>Next, we create a working directory, <code class="docutils literal notranslate"><span class="pre">af_xmpl_run</span></code>, and download and uncompress the example dataset from a remote host.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a working dir and go to the working directory</span>
 <span class="c1">## The &amp;&amp; operator helps execute two commands using a single line of code.</span>
 mkdir af_xmpl_run <span class="o">&amp;&amp;</span> <span class="nb">cd</span> af_xmpl_run
 
-<span class="c1"># Download the example dataset and CB permit list and decompress them</span>
+<span class="c1"># Fetch the example dataset and CB permit list and decompress them</span>
 <span class="c1">## The pipe operator (|) passes the output of the wget command to the tar command.</span>
 <span class="c1">## The dash operator (-) after `tar xzf` captures the output of the first command.</span>
 <span class="c1">## - example dataset</span>
 wget -qO- https://umd.box.com/shared/static/lx2xownlrhz3us8496tyu9c4dgade814.gz <span class="p">|</span> tar xzf - --strip-components<span class="o">=</span><span class="m">1</span> -C .
+<span class="c1">## The fetched folder containing the fastq files are called toy_read_fastq.</span>
+<span class="nv">fastq_dir</span><span class="o">=</span><span class="s2">&quot;toy_read_fastq&quot;</span>
+<span class="c1">## The fetched folder containing the human ref files is called toy_human_ref.</span>
+<span class="nv">ref_dir</span><span class="o">=</span><span class="s2">&quot;toy_human_ref&quot;</span>
 
-<span class="c1"># Download CB permit list</span>
-<span class="c1">## the right chevron (&gt;) redirects the STDOUT to a file</span>
+<span class="c1"># Fetch CB permit list</span>
+<span class="c1">## the right chevron (&gt;) redirects the STDOUT to a file.</span>
 wget -qO- https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/python/cellranger/barcodes/3M-february-2018.txt.gz <span class="p">|</span> gunzip - &gt; 3M-february-2018.txt
 </pre></div>
 </div>
+<p>With the reference files (the genome FASTA file and the gene annotation GTF file) and read records (the FASTQ files) ready, we can now apply the raw data processing pipeline discussed above to generate the gene count matrix.</p>
 </section>
-<section id="mapping-the-data">
-<span id="raw-proc-example-map"></span><h3><span class="section-number">3.8.2. </span>Mapping the data<a class="headerlink" href="#mapping-the-data" title="Permalink to this headline">#</a></h3>
-<p>Now, we process the data to obtain the mapping information. This includes three steps:</p>
+<section id="simplified-raw-data-processing-pipeline">
+<span id="raw-proc-example-simpleaf"></span><h3><span class="section-number">3.8.2. </span>Simplified raw data processing pipeline<a class="headerlink" href="#simplified-raw-data-processing-pipeline" title="Permalink to this headline">#</a></h3>
+<p><a class="reference external" href="https://github.com/COMBINE-lab/simpleaf">Simpleaf</a> is designed to simplify the <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> interface for single-cell and nucleus raw data processing. It encapsulates the whole processing pipeline into two steps:</p>
 <ol class="simple">
-<li><p>Build the <em>splici</em> reference (<u>splic</u>ed transcripts + <u>i</u>ntrons), using the genome and gene annotation file.</p></li>
-<li><p>Index the <em>splici</em> reference.</p></li>
-<li><p>Map the reads against the <em>splici</em> index.</p></li>
+<li><p><a class="reference external" href="https://simpleaf.readthedocs.io/en/latest/index-command.html"><code class="docutils literal notranslate"><span class="pre">simpleaf</span> <span class="pre">index</span></code></a> indexes the provided reference or makes a <em>splici</em> reference (<u>splic</u>ed transcripts + <u>i</u>ntrons) and index it.</p></li>
+<li><p><a class="reference external" href="https://simpleaf.readthedocs.io/en/latest/quant-command.html"><code class="docutils literal notranslate"><span class="pre">simpleaf</span> <span class="pre">quant</span></code></a> maps the sequencing reads against the indexed reference and quantifies the mapping records to generate a gene count matrix.</p></li>
+</ol>
+<p>More advanced usages and options for mapping with <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> can be found <a class="reference external" href="https://simpleaf.readthedocs.io/en/latest/">here</a>.</p>
+<p>When running <code class="docutils literal notranslate"><span class="pre">simpleaf</span> <span class="pre">index</span></code>, if a genome FASTA file (<code class="docutils literal notranslate"><span class="pre">-f</span></code>) and a gene annotation GTF file(<code class="docutils literal notranslate"><span class="pre">-g</span></code>) are provided, it will gererate a <em>splici</em> reference and index it; if only a transcriptome FASTA file is provided (<code class="docutils literal notranslate"><span class="pre">--refseq</span></code>), it will directly index it. Currently, we recommend the <em>splici</em> index.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># simpleaf needs the environment variable ALEVIN_FRY_HOME to store configuration and data.</span>
+<span class="c1"># For example, the paths to the underlying programs it uses and the CB permit list</span>
+mkdir alevin_fry_home <span class="p">&amp;</span> <span class="nb">export</span> <span class="nv">ALEVIN_FRY_HOME</span><span class="o">=</span><span class="s1">&#39;alevin_fry_home&#39;</span>
+
+<span class="c1"># the simpleaf set-paths command finds the path to the required tools and write a configuration JSON file in the ALEVIN_FRY_HOME folder.</span>
+simpleaf set-paths
+
+<span class="c1"># simpleaf index</span>
+<span class="c1"># Usage: simpleaf index -o out_dir [-f genome_fasta -g gene_annotation_GTF|--refseq transcriptome_fasta] -r read_length -t number_of_threads</span>
+<span class="c1">## The -r read_lengh is the number of sequencing cycles performed by the sequencer to generate biological reads (read2 in Illumina).</span>
+<span class="c1">## Publicly available datasets usually have the read length in the description. Sometimes they are called the number of cycles.</span>
+simpleaf index <span class="se">\</span>
+-o simpleaf_index <span class="se">\</span>
+-f toy_human_ref/fasta/genome.fa <span class="se">\</span>
+-g toy_human_ref/genes/genes.gtf <span class="se">\</span>
+-r <span class="m">90</span> <span class="se">\</span>
+-t <span class="m">8</span>
+</pre></div>
+</div>
+<p>In the output directory <code class="docutils literal notranslate"><span class="pre">simpleaf_index</span></code>, the <code class="docutils literal notranslate"><span class="pre">ref</span></code> folder contains the <em>splici</em> reference; The <code class="docutils literal notranslate"><span class="pre">index</span></code> folder contains the salmon index built upon the <em>splici</em> reference.</p>
+<p>The next step, <code class="docutils literal notranslate"><span class="pre">simpleaf</span> <span class="pre">quant</span></code>, consumes an index directory and the mapping record FASTQ files to generate a gene count matrix. This command encapsulates all the major steps discussed in this section, including mapping, cell barcode correction, and UMI resolution.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collecting sequencing read files</span>
+<span class="c1">## The reads1 and reads2 variables are defined by finding the filenames with the pattern &quot;_R1_&quot; and &quot;_R2_&quot; from the toy_read_fastq directory.</span>
+<span class="nv">reads1_pat</span><span class="o">=</span><span class="s2">&quot;_R1_&quot;</span>
+<span class="nv">reads2_pat</span><span class="o">=</span><span class="s2">&quot;_R2_&quot;</span>
+
+<span class="c1">## The read files must be sorted and separated by a comma.</span>
+<span class="c1">### The find command finds the files in the fastq_dir with the name pattern</span>
+<span class="c1">### The sort command sorts the file names</span>
+<span class="c1">### The awk command and the paste command together convert the file names into a comma-separated string.</span>
+<span class="nv">reads1</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="si">${</span><span class="nv">fastq_dir</span><span class="si">}</span> -name <span class="s2">&quot;*</span><span class="nv">$reads1_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> sort <span class="p">|</span> awk -v <span class="nv">OFS</span><span class="o">=</span>, <span class="s1">&#39;{$1=$1;print}&#39;</span> <span class="p">|</span> paste -sd,<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">reads2</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="si">${</span><span class="nv">fastq_dir</span><span class="si">}</span> -name <span class="s2">&quot;*</span><span class="nv">$reads2_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> sort <span class="p">|</span> awk -v <span class="nv">OFS</span><span class="o">=</span>, <span class="s1">&#39;{$1=$1;print}&#39;</span> <span class="p">|</span> paste -sd,<span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># simpleaf quant</span>
+<span class="c1">## Usage: simpleaf quant -c chemistry -t threads -1 reads1 -2 reads2 -i index -u [unspliced permit list] -r resolution -m t2g_3col -o output_dir</span>
+simpleaf quant <span class="se">\</span>
+-c 10xv3 -t <span class="m">8</span> <span class="se">\</span>
+-1 <span class="nv">$reads1</span> -2 <span class="nv">$reads2</span> <span class="se">\</span>
+-i simpleaf_index/index <span class="se">\</span>
+-u -r cr-like <span class="se">\</span>
+-m simpleaf_index/index/t2g_3col.tsv <span class="se">\</span>
+-o simpleaf_quant
+</pre></div>
+</div>
+<p>After running these commands, the resulting quantification information can be found in the <code class="docutils literal notranslate"><span class="pre">simpleaf_quant/af_quant/alevin</span></code> folder. Within this directory, there are three files: <code class="docutils literal notranslate"><span class="pre">quants_mat.mtx</span></code>, <code class="docutils literal notranslate"><span class="pre">quants_mat_cols.txt</span></code>, and <code class="docutils literal notranslate"><span class="pre">quants_mat_rows.txt</span></code>, which correspond, respectively, to the count matrix, the gene names for each column of this matrix, and the corrected, filtered cell barcodes for each row of this matrix. The tail lines of these files are shown below. Of note here is the fact that <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> was run in the USA-mode (<u>u</u>nspliced, <u>s</u>pliced, and <u>a</u>mbiguous mode), and so quantification was performed for both the spliced and unspliced status of each gene — the resulting <code class="docutils literal notranslate"><span class="pre">quants_mat_cols.txt</span></code> file will then have a number of rows equal to 3 times the number of annotated genes which correspond, to the names used for the spliced (S), unspliced (U), and splicing-ambiguous variants (A) of each gene.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Each line in `quants_mat.mtx` represents</span>
+<span class="c1"># a non-zero entry in the format row column entry</span>
+$ tail -3 simpleaf_quant/af_quant/alevin/quants_mat.mtx
+<span class="m">138</span> <span class="m">58</span> <span class="m">1</span>
+<span class="m">139</span> <span class="m">9</span> <span class="m">1</span>
+<span class="m">139</span> <span class="m">37</span> <span class="m">1</span>
+
+<span class="c1"># Each line in `quants_mat_cols.txt` is a splice status</span>
+<span class="c1"># of a gene in the format (gene name)-(splice status)</span>
+$ tail -3 simpleaf_quant/af_quant/alevin/quants_mat_cols.txt
+ENSG00000120705-A
+ENSG00000198961-A
+ENSG00000245526-A
+
+<span class="c1"># Each line in `quants_mat_rows.txt` is a corrected</span>
+<span class="c1"># (and, potentially, filtered) cell barcode</span>
+$ tail -3 simpleaf_quant/af_quant/alevin/quants_mat_rows.txt
+TTCGATTTCTGAATCG
+TGCTCGTGTTCGAAGG
+ACTGTGAAGAAATTGC
+</pre></div>
+</div>
+<p>We can load the count matrix into Python as an <a class="reference external" href="https://anndata.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">AnnData</span></code></a> object using the <code class="docutils literal notranslate"><span class="pre">load_fry</span></code> function from <a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">pyroe</span></code></a>. A similar function, <a class="reference external" href="https://rdrr.io/github/mikelove/fishpond/man/loadFry.html">loadFry</a>, has been implemented in the <a class="reference external" href="https://github.com/mikelove/fishpond"><code class="docutils literal notranslate"><span class="pre">fishpond</span></code></a> R package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyroe</span>
+
+<span class="n">quant_dir</span> <span class="o">=</span> <span class="s1">&#39;simpleaf_quant/af_quant&#39;</span>
+<span class="n">adata_sa</span> <span class="o">=</span> <span class="n">pyroe</span><span class="o">.</span><span class="n">load_fry</span><span class="p">(</span><span class="n">quant_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default behavior loads the <code class="docutils literal notranslate"><span class="pre">X</span></code> layer of the <code class="docutils literal notranslate"><span class="pre">Anndata</span></code> object as the sum of the spliced and ambiguous counts for each gene. However, recent work<span id="id81">[<a class="reference internal" href="#id142" title="Allan-Hermann Pool, Helen Poldsam, Sisi Chen, Matt Thomson, and Yuki Oka. Enhanced recovery of single-cell term`RNA`-sequencing reads for missing gene expression data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/04/27/2022.04.26.489449, arXiv:https://www.biorxiv.org/content/early/2022/04/27/2022.04.26.489449.full.pdf, doi:10.1101/2022.04.26.489449.">Pool <em>et al.</em>, 2022</a>]</span> and <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/release-notes">updated practices</a> suggest that the inclusion of intronic counts, even in single-cell RNA-seq data, may increase sensitivity and benefit downstream analyses. While the best way to make use of this information is the subject of ongoing research, since <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> automatically quantifies spliced, unspliced, and ambiguous reads in each sample, the count matrix containing the total counts for each gene can be simply obtained as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyroe</span>
+
+<span class="n">quant_dir</span> <span class="o">=</span> <span class="s1">&#39;simpleaf_quant/af_quant&#39;</span>
+<span class="n">adata_usa</span> <span class="o">=</span> <span class="n">pyroe</span><span class="o">.</span><span class="n">load_fry</span><span class="p">(</span><span class="n">quant_dir</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">]})</span>
+</pre></div>
+</div>
+</section>
+<section id="the-complete-alevin-fry-pipeline">
+<span id="raw-proc-example-map"></span><h3><span class="section-number">3.8.3. </span>The complete alevin-fry pipeline<a class="headerlink" href="#the-complete-alevin-fry-pipeline" title="Permalink to this headline">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Simpleaf</span></code> makes it possible to process single-cell raw data in the “standard” way with a few commands. Next, we will show how to generate the identical quantification result by explicitly calling the <code class="docutils literal notranslate"><span class="pre">pyroe</span></code>, <code class="docutils literal notranslate"><span class="pre">salmon</span></code>, and <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> commands. On top of the pedagogical value, knowing the exact command of each step will be helpful if only a part of the pipeline needs to be rerun or if some parameters not currently exposed by <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> need to be specified.</p>
+<p>Please note that the commands in the <a class="reference internal" href="#raw-proc-example-prep"><span class="std std-ref">Preparation</span></a> section should be executed in advance. All the tools called in the following commands, <code class="docutils literal notranslate"><span class="pre">pyroe</span></code>, <code class="docutils literal notranslate"><span class="pre">salmon</span></code>, and <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>, have already been installed when installing <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code>.</p>
+<section id="building-the-index">
+<h4><span class="section-number">3.8.3.1. </span>Building the index<a class="headerlink" href="#building-the-index" title="Permalink to this headline">#</a></h4>
+<p>First, we process the genome FASTA file and gene annotation GTF file to obtain the <em>splici</em> index. The commands in the following code chunk are analogous the <code class="docutils literal notranslate"><span class="pre">simpleaf</span> <span class="pre">index</span></code> command discussed above. This includes two steps:</p>
+<ol class="simple">
+<li><p>Building the <em>splici</em> reference (<u>splic</u>ed transcripts + <u>i</u>ntrons) by calling <code class="docutils literal notranslate"><span class="pre">pyroe</span> <span class="pre">make-splici</span></code>, using the genome and gene annotation file</p></li>
+<li><p>Indexing the <em>splici</em> reference by calling <code class="docutils literal notranslate"><span class="pre">salmon</span> <span class="pre">index</span></code></p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># make splici reference</span>
 <span class="c1">## Usage: pyroe make-splici genome_file gtf_file read_length out_dir</span>
 <span class="c1">## The read_lengh is the number of sequencing cycles performed by the sequencer. Ask your technician if you are not sure about it.</span>
 <span class="c1">## Publicly available datasets usually have the read length in the description.</span>
 pyroe make-splici <span class="se">\</span>
-toy_human_ref/fasta/genome.fa <span class="se">\</span>
-toy_human_ref/genes/genes.gtf <span class="se">\</span>
+<span class="si">${</span><span class="nv">ref_dir</span><span class="si">}</span>/fasta/genome.fa <span class="se">\</span>
+<span class="si">${</span><span class="nv">ref_dir</span><span class="si">}</span>/genes/genes.gtf <span class="se">\</span>
 <span class="m">90</span> <span class="se">\</span>
-splici_ref
+splici_rl90_ref
 
 <span class="c1"># Index the reference</span>
 <span class="c1">## Usage: salmon index -t extend_txome.fa -i idx_out_dir -p num_threads</span>
-<span class="c1">## The $() expression runs the command inside and put the output in place.</span>
-<span class="c1">## Please make sure that there is only one file ending with &quot;.fa&quot; in the `splici_ref` folder.</span>
+<span class="c1">## The $() expression runs the command inside and puts the output in place.</span>
+<span class="c1">## Please ensure that only one file ends with &quot;.fa&quot; in the `splici_ref` folder.</span>
 salmon index <span class="se">\</span>
--t <span class="k">$(</span>ls splici_ref/*<span class="se">\.</span>fa<span class="k">)</span> <span class="se">\</span>
--i splici_idx <span class="se">\</span>
+-t <span class="k">$(</span>ls splici_rl90_ref/*<span class="se">\.</span>fa<span class="k">)</span> <span class="se">\</span>
+-i salmon_index <span class="se">\</span>
 -p <span class="m">8</span>
-
-<span class="c1"># Collect FASTQ files</span>
-<span class="c1">## The reads1 and reads2 variable are defined by finding the filenames with the pattern &quot;_R1_&quot; and &quot;_R2_&quot; from the toy_read_fastq directory.</span>
-<span class="c1">## The filenames are sorted to make sure that the order of files in reads1 and reads2 are the same, which is required by salmon.</span>
-<span class="nv">fastq_dir</span><span class="o">=</span><span class="s2">&quot;toy_read_fastq&quot;</span>
-<span class="nv">reads1_pat</span><span class="o">=</span><span class="s2">&quot;_R1_&quot;</span>
-<span class="nv">reads2_pat</span><span class="o">=</span><span class="s2">&quot;_R2_&quot;</span>
-<span class="nv">reads1</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="nv">$fastq_dir</span> -name <span class="s2">&quot;*</span><span class="nv">$reads1_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> xargs <span class="p">|</span> sort <span class="p">|</span> awk <span class="s1">&#39;{print $0}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nv">reads2</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="nv">$fastq_dir</span> -name <span class="s2">&quot;*</span><span class="nv">$reads2_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> xargs <span class="p">|</span> sort <span class="p">|</span> awk <span class="s1">&#39;{print $0}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>The <em>splici</em> index can be found in the <code class="docutils literal notranslate"><span class="pre">salmon_index</span></code> directory.</p>
+</section>
+<section id="mapping-and-quantification">
+<span id="raw-proc-example-quant"></span><h4><span class="section-number">3.8.3.2. </span>Mapping and quantification<a class="headerlink" href="#mapping-and-quantification" title="Permalink to this headline">#</a></h4>
+<p>Next, we will map the sequencing reads recorded against the <em>splici</em> index by calling <a class="reference external" href="https://salmon.readthedocs.io/en/latest/alevin.html"><code class="docutils literal notranslate"><span class="pre">salmon</span> <span class="pre">alevin</span></code></a>. This will produce an output folder called <code class="docutils literal notranslate"><span class="pre">salmon_alevin</span></code> that contains all the information we need to process the mapped reads using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collect FASTQ files</span>
+<span class="c1">## The filenames are sorted and separated by space.</span>
+<span class="nv">reads1</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="nv">$fastq_dir</span> -name <span class="s2">&quot;*</span><span class="nv">$reads1_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> sort <span class="p">|</span> awk <span class="s1">&#39;{$1=$1;print}&#39;</span> <span class="p">|</span> paste -sd<span class="s1">&#39; &#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">reads2</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find -L <span class="nv">$fastq_dir</span> -name <span class="s2">&quot;*</span><span class="nv">$reads2_pat</span><span class="s2">*&quot;</span> -type f <span class="p">|</span> sort <span class="p">|</span> awk <span class="s1">&#39;{$1=$1;print}&#39;</span> <span class="p">|</span> paste -sd<span class="s1">&#39; &#39;</span><span class="k">)</span><span class="s2">&quot;</span>
 
 <span class="c1"># Mapping</span>
-<span class="c1">## Usage: salmon alevin -i idx_out_dir -l library_type -1 reads1_files -2 reads2_files -p num_threads -o map_out_dir</span>
+<span class="c1">## Usage: salmon alevin -i index_dir -l library_type -1 reads1_files -2 reads2_files -p num_threads -o output_dir</span>
 <span class="c1">## The variable reads1 and reads2 defined above are passed in using ${}.</span>
 salmon alevin <span class="se">\</span>
--i splici_idx <span class="se">\</span>
+-i salmon_index <span class="se">\</span>
 -l ISR <span class="se">\</span>
 -1 <span class="si">${</span><span class="nv">reads1</span><span class="si">}</span> <span class="se">\</span>
 -2 <span class="si">${</span><span class="nv">reads2</span><span class="si">}</span> <span class="se">\</span>
 -p <span class="m">8</span> <span class="se">\</span>
--o alevin_map <span class="se">\</span>
+-o salmon_alevin <span class="se">\</span>
 --chromiumV3 <span class="se">\</span>
 --sketch
 </pre></div>
 </div>
-<p>This will produce an output folder called <code class="docutils literal notranslate"><span class="pre">alevin_map</span></code> that contains all the information we need to process the mapped reads using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>.</p>
-</section>
-<section id="processing-the-mapped-reads">
-<span id="raw-proc-example-quant"></span><h3><span class="section-number">3.8.3. </span>processing the mapped reads<a class="headerlink" href="#processing-the-mapped-reads" title="Permalink to this headline">#</a></h3>
-<p>Next, we run the cell barcode correction, and UMI resolution step described previously using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>. This procedure involves three <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> commands:</p>
+<p>Then, we execute the cell barcode correction and UMI resolution step using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code>. This procedure involves three <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> commands:</p>
 <ol class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">generate-permit-list</span></code> command is used for cell barcode correction.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">collate</span></code> command filters out invalid mapping records, corrects cell barcodes, and collates mapping records originating from the same corrected cell barcode.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">quant</span></code> command performs UMI resolution and quantification.</p></li>
+<li><p>The <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/generate_permit_list.html"><code class="docutils literal notranslate"><span class="pre">generate-permit-list</span></code></a> command is used for cell barcode correction.</p></li>
+<li><p>The <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/collate.html"><code class="docutils literal notranslate"><span class="pre">collate</span></code></a> command filters out invalid mapping records, corrects cell barcodes and collates mapping records originating from the same corrected cell barcode.</p></li>
+<li><p>The <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/quant.html"><code class="docutils literal notranslate"><span class="pre">quant</span></code></a> command performs UMI resolution and quantification.</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cell barcode correction</span>
 <span class="c1">## Usage: alevin-fry generate-permit-list -u CB_permit_list -d expected_orientation -o gpl_out_dir</span>
@@ -1387,76 +1506,41 @@ salmon alevin <span class="se">\</span>
 alevin-fry generate-permit-list <span class="se">\</span>
 -u 3M-february-2018.txt <span class="se">\</span>
 -d fw <span class="se">\</span>
--i alevin_map <span class="se">\</span>
--o gpl
+-i salmon_alevin <span class="se">\</span>
+-o alevin_fry_gpl
 
 <span class="c1"># Filter mapping information</span>
 <span class="c1">## Usage: alevin-fry collate -i gpl_out_dir -r alevin_map_dir -t num_threads</span>
 alevin-fry collate <span class="se">\</span>
--i gpl <span class="se">\</span>
--r alevin_map <span class="se">\</span>
+-i alevin_fry_gpl <span class="se">\</span>
+-r salmon_alevin <span class="se">\</span>
 -t <span class="m">8</span>
 
 <span class="c1"># UMI resolution + quantification</span>
 <span class="c1">## Usage: alevin-fry quant -r resolution -m txp_to_gene_mapping -i gpl_out_dir -o quant_out_dir -t num_threads</span>
 <span class="c1">## The file ends with `3col.tsv` in the splici_ref folder will be passed to the -m argument.</span>
-<span class="c1">## Please make sure that there is only one such file in the `splici_ref` folder.</span>
+<span class="c1">## Please ensure that there is only one such file in the `splici_ref` folder.</span>
 alevin-fry quant -r cr-like <span class="se">\</span>
--m <span class="k">$(</span>ls splici_ref/*3col.tsv<span class="k">)</span> <span class="se">\</span>
--i gpl <span class="se">\</span>
--o quant <span class="se">\</span>
+-m <span class="k">$(</span>ls splici_rl90_ref/*3col.tsv<span class="k">)</span> <span class="se">\</span>
+-i alevin_fry_gpl <span class="se">\</span>
+-o alevin_fry_quant <span class="se">\</span>
 -t <span class="m">8</span>
 </pre></div>
 </div>
-<p>After running these commands, the resulting quantification information can be found in <code class="docutils literal notranslate"><span class="pre">quant/alevin</span></code>. Within this directory, there are three files: <code class="docutils literal notranslate"><span class="pre">quants_mat.mtx</span></code>, <code class="docutils literal notranslate"><span class="pre">quants_mat_cols.txt</span></code>, and <code class="docutils literal notranslate"><span class="pre">quants_mat_rows.txt</span></code>, which correspond, respectively, to the count matrix, the gene names for each column of this matrix, and the corrected, filtered cell barcodes for each row of this matrix. The tail lines of these files are shown below. Of note here is the fact that <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> was run in the USA-mode (<u>u</u>nspliced, <u>s</u>pliced, and <u>a</u>mbiguous mode), and so quantification was performed for both the spliced and unspliced status of each gene — the resulting <code class="docutils literal notranslate"><span class="pre">quants_mat_cols.txt</span></code> file will then have a number of rows equal to 3 times the number of annotated genes which correspond, to the names used for the spliced (S), unspliced (U), and splicing-ambiguous variants (A) of each gene. Other relevant information concerning the mapping, CB correction, and UMI resolution steps can be found in the <code class="docutils literal notranslate"><span class="pre">alevin_map</span></code>, <code class="docutils literal notranslate"><span class="pre">gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">quant</span></code> folders, respectively.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Each line in `quants_mat.mtx` represents</span>
-<span class="c1"># a non-zero entry in the format row column entry</span>
-$ tail -3 quant/alevin/quants_mat.mtx
-<span class="m">138</span> <span class="m">59</span> <span class="m">1</span>
-<span class="m">139</span> <span class="m">10</span> <span class="m">1</span>
-<span class="m">139</span> <span class="m">38</span> <span class="m">1</span>
-
-<span class="c1"># Each line in `quants_mat_cols.txt` is a splice status</span>
-<span class="c1"># of a gene in the format (gene name)-(splice status)</span>
-$ tail -3 quant/alevin/quants_mat_cols.txt
-ENSG00000134352-A
-ENSG00000120705-A
-ENSG00000198961-A
-
-<span class="c1"># Each line in `quants_mat_rows.txt` is a corrected</span>
-<span class="c1"># (and, potentially, filtered) cell barcode</span>
-$ tail -3 quant/alevin/quants_mat_rows.txt
-TTCGATTTCCGCTTAC
-TGCTCGTGTTCGAAGG
-ACTGTGAAGAAATTGC
-</pre></div>
-</div>
-<p>We can load the count matrix into python as an <a class="reference external" href="https://anndata.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">AnnData</span></code></a> object using the <code class="docutils literal notranslate"><span class="pre">load_fry</span></code> function from <a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">pyroe</span></code></a>. A similar function has been implemented in the <a class="reference external" href="https://github.com/COMBINE-lab/roe"><code class="docutils literal notranslate"><span class="pre">roe</span></code></a> R package.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyroe</span>
-
-<span class="n">quant_dir</span> <span class="o">=</span> <span class="s1">&#39;quant&#39;</span>
-<span class="n">anndata</span> <span class="o">=</span> <span class="n">pyroe</span><span class="o">.</span><span class="n">load_fry</span><span class="p">(</span><span class="n">quant_dir</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The default behavior loads the <code class="docutils literal notranslate"><span class="pre">X</span></code> layer of the <code class="docutils literal notranslate"><span class="pre">anndata</span></code> object as the sum of the spliced and ambiguous counts for each gene. However, recent work<span id="id81">[<a class="reference internal" href="#id142" title="Allan-Hermann Pool, Helen Poldsam, Sisi Chen, Matt Thomson, and Yuki Oka. Enhanced recovery of single-cell term`RNA`-sequencing reads for missing gene expression data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/04/27/2022.04.26.489449, arXiv:https://www.biorxiv.org/content/early/2022/04/27/2022.04.26.489449.full.pdf, doi:10.1101/2022.04.26.489449.">Pool <em>et al.</em>, 2022</a>]</span> and <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/release-notes">updated practices</a> suggest that the inclusion of intronic counts, even in single-cell RNA-seq data, may increase sensitivity and benefit downstream analyses. While the best way to make use of this information is the subject of ongoing research since <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> automatically quantifies spliced, unspliced, and ambiguous reads in each sample, the count matrix containing the total counts for each gene can be simply obtained as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyroe</span>
-
-<span class="n">quant_dir</span> <span class="o">=</span> <span class="s1">&#39;quant&#39;</span>
-<span class="n">anndata</span> <span class="o">=</span> <span class="n">pyroe</span><span class="o">.</span><span class="n">load_fry</span><span class="p">(</span><span class="n">quant_dir</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">]})</span>
-</pre></div>
-</div>
-<p>In the example given here, we demonstrate using <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> to process a 10x Chromium 3’ v3 dataset. <code class="docutils literal notranslate"><span class="pre">Alevin-fry</span></code> provides many other options for processing different single-cell protocols, including but not limited to Dropseq<span id="id82">[<a class="reference internal" href="#id150" title="Evan Z. Macosko, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, Allison R. Bialas, Nolan Kamitaki, Emily M. Martersteck, John J. Trombetta, David A. Weitz, Joshua R. Sanes, Alex K. Shalek, Aviv Regev, and Steven A. McCarroll. Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets. Cell, 161(5):1202-1214, May 2015. URL: https://doi.org/10.1016/j.cell.2015.05.002, doi:10.1016/j.cell.2015.05.002.">Macosko <em>et al.</em>, 2015</a>]</span>, sci-RNAseq3<span id="id83">[<a class="reference internal" href="#id148" title="Junyue Cao, Malte Spielmann, Xiaojie Qiu, Xingfan Huang, Daniel M. Ibrahim, Andrew J. Hill, Fan Zhang, Stefan Mundlos, Lena Christiansen, Frank J. Steemers, Cole Trapnell, and Jay Shendure. The single-cell transcriptional landscape of mammalian organogenesis. Nature, 566(7745):496–502, February 2019. URL: https://doi.org/10.1038/s41586-019-0969-x, doi:10.1038/s41586-019-0969-x.">Cao <em>et al.</em>, 2019</a>]</span> and other 10x Chromium platforms. A more comprehensive list and description of available options for different stages of processing can be found in the <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> documentation</a>. <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> also provides a <a class="reference external" href="https://www.nextflow.io/docs/latest/">nextflow</a>-based workflow, called <a class="reference external" href="https://github.com/COMBINE-lab/quantaf">quantaf</a>, for conveniently processing many samples from a simply-defined sample sheet.</p>
-<p>Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including <a class="reference external" href="https://github.com/sdparekh/zUMIs/wiki"><code class="docutils literal notranslate"><span class="pre">zUMIs</span></code></a><span id="id84">[<a class="reference internal" href="#id121" title="Swati Parekh, Christoph Ziegenhain, Beate Vieth, Wolfgang Enard, and Ines Hellmann. zUMIs - a fast and flexible pipeline to process term`RNA` sequencing data with UMIs. GigaScience, May 2018. URL: https://doi.org/10.1093/gigascience/giy059, doi:10.1093/gigascience/giy059.">Parekh <em>et al.</em>, 2018</a>]</span>, <a class="reference external" href="https://salmon.readthedocs.io/en/latest/alevin.html"><code class="docutils literal notranslate"><span class="pre">alevin</span></code></a><span id="id85">[<a class="reference internal" href="#id111" title="Avi Srivastava, Laraib Malik, Tom Smith, Ian Sudbery, and Rob Patro. Alevin efficiently estimates accurate gene abundances from dscRNA-seq data. Genome biology, 20(1):1–16, 2019.">Srivastava <em>et al.</em>, 2019</a>]</span>, <a class="reference external" href="https://www.kallistobus.tools/"><code class="docutils literal notranslate"><span class="pre">kallisto|bustools</span></code></a><span id="id86">[<a class="reference internal" href="#id116" title="Páll Melsted, A. Sina Booeshaghi, Lauren Liu, Fan Gao, Lambda Lu, Kyung Hoi Min, Eduardo da Veiga Beltrame, Kristján Eldjárn Hjörleifsson, Jase Gehring, and Lior Pachter. Modular, efficient and constant-memory single-cell rna-seq preprocessing. Nature Biotechnology, 39(7):813–818, April 2021. URL: https://doi.org/10.1038/s41587-021-00870-2, doi:10.1038/s41587-021-00870-2.">Melsted <em>et al.</em>, 2021</a>]</span>, <a class="reference external" href="https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md"><code class="docutils literal notranslate"><span class="pre">STARsolo</span></code></a><span id="id87">[<a class="reference internal" href="#id115" title="Benjamin Kaminow, Dinar Yunusov, and Alexander Dobin. STARsolo: accurate, fast and versatile mapping/quantification of single-cell and single-nucleus term`RNA`-seq data. bioRxiv, 2021.">Kaminow <em>et al.</em>, 2021</a>]</span> and <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger"><code class="docutils literal notranslate"><span class="pre">CellRanger</span></code></a>. The <a class="reference external" href="https://nf-co.re/scrnaseq"><code class="docutils literal notranslate"><span class="pre">scrnaseq</span></code></a> pipeline from <a class="reference external" href="https://nf-co.re/"><code class="docutils literal notranslate"><span class="pre">nf-core</span></code></a> also provides a nextflow-based pipeline for processing single-cell RNA-seq data generated using a range of different chemistries, and integrates several of the tools described in this section.</p>
+<p>After running these commands, the resulting quantification information can be found in <code class="docutils literal notranslate"><span class="pre">alevin_fry_quant/alevin</span></code>. Other relevant information concerning the mapping, CB correction, and UMI resolution steps can be found in the <code class="docutils literal notranslate"><span class="pre">salmon_alevin</span></code>, <code class="docutils literal notranslate"><span class="pre">alevin_fry_gpl</span></code>, and <code class="docutils literal notranslate"><span class="pre">alevin_fry_quant</span></code> folders, respectively.</p>
+<p>In the example given here, we demonstrate using <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> and <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> to process a 10x Chromium 3’ v3 dataset. <code class="docutils literal notranslate"><span class="pre">Alevin-fry</span></code> and <code class="docutils literal notranslate"><span class="pre">simpleaf</span></code> provide many other options for processing different single-cell protocols, including but not limited to Dropseq<span id="id82">[<a class="reference internal" href="#id150" title="Evan Z. Macosko, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, Allison R. Bialas, Nolan Kamitaki, Emily M. Martersteck, John J. Trombetta, David A. Weitz, Joshua R. Sanes, Alex K. Shalek, Aviv Regev, and Steven A. McCarroll. Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets. Cell, 161(5):1202-1214, May 2015. URL: https://doi.org/10.1016/j.cell.2015.05.002, doi:10.1016/j.cell.2015.05.002.">Macosko <em>et al.</em>, 2015</a>]</span>, sci-RNA-seq3<span id="id83">[<a class="reference internal" href="#id148" title="Junyue Cao, Malte Spielmann, Xiaojie Qiu, Xingfan Huang, Daniel M. Ibrahim, Andrew J. Hill, Fan Zhang, Stefan Mundlos, Lena Christiansen, Frank J. Steemers, Cole Trapnell, and Jay Shendure. The single-cell transcriptional landscape of mammalian organogenesis. Nature, 566(7745):496–502, February 2019. URL: https://doi.org/10.1038/s41586-019-0969-x, doi:10.1038/s41586-019-0969-x.">Cao <em>et al.</em>, 2019</a>]</span> and other 10x Chromium platforms. A more comprehensive list and description of available options for different stages of processing can be found in the <a class="reference external" href="https://alevin-fry.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code></a> and <a class="reference external" href="https://github.com/COMBINE-lab/simpleaf"><code class="docutils literal notranslate"><span class="pre">simpleaf</span></code></a> documentation. <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> also provides a <a class="reference external" href="https://www.nextflow.io/docs/latest/">nextflow</a>-based workflow, called <a class="reference external" href="https://github.com/COMBINE-lab/quantaf">quantaf</a>, for conveniently processing many samples from a simply-defined sample sheet.</p>
+<p>Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including <a class="reference external" href="https://github.com/sdparekh/zUMIs/wiki"><code class="docutils literal notranslate"><span class="pre">zUMIs</span></code></a><span id="id84">[<a class="reference internal" href="#id121" title="Swati Parekh, Christoph Ziegenhain, Beate Vieth, Wolfgang Enard, and Ines Hellmann. zUMIs - a fast and flexible pipeline to process term`RNA` sequencing data with UMIs. GigaScience, May 2018. URL: https://doi.org/10.1093/gigascience/giy059, doi:10.1093/gigascience/giy059.">Parekh <em>et al.</em>, 2018</a>]</span>, <a class="reference external" href="https://salmon.readthedocs.io/en/latest/alevin.html"><code class="docutils literal notranslate"><span class="pre">alevin</span></code></a><span id="id85">[<a class="reference internal" href="#id111" title="Avi Srivastava, Laraib Malik, Tom Smith, Ian Sudbery, and Rob Patro. Alevin efficiently estimates accurate gene abundances from dscRNA-seq data. Genome biology, 20(1):1–16, 2019.">Srivastava <em>et al.</em>, 2019</a>]</span>, <a class="reference external" href="https://www.kallistobus.tools/"><code class="docutils literal notranslate"><span class="pre">kallisto|bustools</span></code></a><span id="id86">[<a class="reference internal" href="#id116" title="Páll Melsted, A. Sina Booeshaghi, Lauren Liu, Fan Gao, Lambda Lu, Kyung Hoi Min, Eduardo da Veiga Beltrame, Kristján Eldjárn Hjörleifsson, Jase Gehring, and Lior Pachter. Modular, efficient and constant-memory single-cell rna-seq preprocessing. Nature Biotechnology, 39(7):813–818, April 2021. URL: https://doi.org/10.1038/s41587-021-00870-2, doi:10.1038/s41587-021-00870-2.">Melsted <em>et al.</em>, 2021</a>]</span>, <a class="reference external" href="https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md"><code class="docutils literal notranslate"><span class="pre">STARsolo</span></code></a><span id="id87">[<a class="reference internal" href="#id115" title="Benjamin Kaminow, Dinar Yunusov, and Alexander Dobin. STARsolo: accurate, fast and versatile mapping/quantification of single-cell and single-nucleus term`RNA`-seq data. bioRxiv, 2021.">Kaminow <em>et al.</em>, 2021</a>]</span> and <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger"><code class="docutils literal notranslate"><span class="pre">CellRanger</span></code></a>. The <a class="reference external" href="https://nf-co.re/scrnaseq"><code class="docutils literal notranslate"><span class="pre">scrnaseq</span></code></a> pipeline from <a class="reference external" href="https://nf-co.re/"><code class="docutils literal notranslate"><span class="pre">nf-core</span></code></a> also provides a nextflow-based pipeline for processing single-cell RNA-seq data generated using a range of different chemistries and integrates several of the tools described in this section.</p>
+</section>
 </section>
 </section>
 <section id="useful-links">
 <span id="raw-proc-useful-links"></span><h2><span class="section-number">3.9. </span>Useful links<a class="headerlink" href="#useful-links" title="Permalink to this headline">#</a></h2>
 <p><a class="reference external" href="https://combine-lab.github.io/alevin-fry-tutorials/">Alevin-fry tutorials</a> provide tutorials for processing different types of data.</p>
-<p><a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">pyroe</span></code></a> in python and <a class="reference external" href="https://github.com/COMBINE-lab/roe"><code class="docutils literal notranslate"><span class="pre">roe</span></code></a> in R provide helper functions for processing <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> quantification information. They also provide an interface to the preprocessed datasets in <a class="reference external" href="https://combine-lab.github.io/quantaf"><code class="docutils literal notranslate"><span class="pre">quantaf</span></code></a>.</p>
-<p><a class="reference external" href="https://github.com/COMBINE-lab/quantaf"><code class="docutils literal notranslate"><span class="pre">quantaf</span></code></a> is a nextflow-based workflow of the <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> pipeline for conveniently processing a large number of single-cell and single-nucleus data based on the input sheets. The preprocessed quantification information of publicly available single-cell datasets is available on its <a class="reference external" href="https://combine-lab.github.io/quantaf">webpage</a>.</p>
-<p><a class="reference external" href="https://github.com/COMBINE-lab/simpleaf"><code class="docutils literal notranslate"><span class="pre">simpleaf</span></code></a> is a wrapper of the alevin-fry workflow that allows executing the whole pipeline, from making <em>splici</em> reference to quanfitication as shown in the above example, using only two commands.</p>
+<p><a class="reference external" href="https://github.com/COMBINE-lab/pyroe"><code class="docutils literal notranslate"><span class="pre">Pyroe</span></code></a> in python and <a class="reference external" href="https://github.com/COMBINE-lab/roe"><code class="docutils literal notranslate"><span class="pre">roe</span></code></a> in R provide helper functions for processing <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> quantification information. They also provide an interface to the preprocessed datasets in <a class="reference external" href="https://combine-lab.github.io/quantaf"><code class="docutils literal notranslate"><span class="pre">quantaf</span></code></a>.</p>
+<p><a class="reference external" href="https://github.com/COMBINE-lab/quantaf"><code class="docutils literal notranslate"><span class="pre">Quantaf</span></code></a> is a nextflow-based workflow of the <code class="docutils literal notranslate"><span class="pre">alevin-fry</span></code> pipeline for conveniently processing a large number of single-cell and single-nucleus data based on the input sheets. The preprocessed quantification information of publicly available single-cell datasets is available on its <a class="reference external" href="https://combine-lab.github.io/quantaf">webpage</a>.</p>
+<p><a class="reference external" href="https://github.com/COMBINE-lab/simpleaf"><code class="docutils literal notranslate"><span class="pre">Simpleaf</span></code></a> is a wrapper of the alevin-fry workflow that allows executing the whole pipeline, from making <em>splici</em> reference to quanfitication as shown in the above example, using only two commands.</p>
 <p>Tutorials for processing scRNA-seq raw data from <a class="reference external" href="https://galaxyproject.org/">the galaxy project</a> can be found at <a class="reference external" href="https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing-tenx/tutorial.html">here</a> and <a class="reference external" href="https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing/tutorial.html">here</a>.</p>
-<p>Tutorials for explaining and evaluating <code class="docutils literal notranslate"><span class="pre">FastQC</span></code> report from <a class="reference external" href="https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/">MSU</a>, <a class="reference external" href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html">the HBC training program</a>, <a class="reference external" href="https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html">Galaxy Training</a> and <a class="reference external" href="https://sequencing.qcfail.com/software/fastqc/">the QC Fail website</a>.</p>
+<p>Tutorials for explaining and evaluating FastQC report are available from <a class="reference external" href="https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/">MSU</a>, <a class="reference external" href="https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html">the HBC training program</a>, <a class="reference external" href="https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html">Galaxy Training</a> and <a class="reference external" href="https://sequencing.qcfail.com/software/fastqc/">the QC Fail website</a>.</p>
 </section>
 <section id="references">
 <span id="raw-proc-references"></span><h2><span class="section-number">3.10. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
