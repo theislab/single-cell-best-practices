@@ -29,19 +29,7 @@ This book does not cover fundamental basics of biology or computer science, incl
 
 ## Structure of the book
 
-Each chapter in this book corresponds to a different stage of a typical single-cell data analysis project. Generally, an analysis workflow would follow the order of the chapters. Chapters are labeled as basic or advanced. Newcomers are recommended to start with all basic chapters and potentially revisit the advanced chapters of interest afterwards. Advanced chapters introduce analysis steps that may require more prerequisites compared to other chapters of the book. Most single-cell data analysts do not conduct all advanced analyses in their daily work, but being aware of the possibilities is still beneficial.
-
-Chapters are additionally labeled with a traffic light system. We differentiate the chapters into three groups:
-
-- Chapters labeled with white are rather novel and no best practices exist in any way. For these, we cannot recommend the best analysis tool and hence, we show one way to tackle the underlying task.
-
-- For yellow chapters, no clear, community-agreed, best practices exist. A few independent benchmarks may exist, but they might be in preprint or evidence might be sparse. In this chapter, we recommend analysis workflows that proved well-working according to our vast experience, and we can therefore wholeheartedly recommend the stated tools.
-
-- Green chapters are validated by several independent benchmarks and there is a strong community agreement on the preferred tool that should be used for this analysis step. Generally, we are confident in our recommendations and strongly recommend readers to take our suggestions into account for their own analyses.
-
-SHOW SOME OF MESHALS COOL IMAGES HERE
-
-All of our chapters feature extensive lists of references, and we encourage readers to consult the primary sources for our statements. Our summaries cannot always capture the full reasoning for our recommendations, although we try to provide the required background whenever possible.
+Each chapter in this book corresponds to a different stage of a typical single-cell data analysis project. Generally, an analysis workflow would follow the order of the chapters with some flexibility concerning downstream analysis objectives. All of our chapters feature extensive lists of references, and we encourage readers to consult the primary sources for our statements. Our summaries cannot always capture the full reasoning for our recommendations, although we try to provide the required background whenever possible.
 
 ## Prerequisites
 
@@ -56,6 +44,10 @@ Bioinformatics is a challenging research field for newcomers as it requires know
 - Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
 - Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through _Molecular Biology of the Cell_ by Bruce Alberts et al.
+
+## Peer-review
+
+Although most of our chapters have been reviewed by the editors of this book and external experts, this book has not been officially peer-reviewed. However, we strongly encourage readers to review our chapters and to provide constructive feedback. We are more than happy to adapt, improve or overhaul the content if necessary.
 
 ## Citation
 
