@@ -47,7 +47,7 @@ Bioinformatics is a challenging research field for newcomers as it requires know
 
 ## Peer-review
 
-Although most of our chapters have been reviewed by the editors of this book and external experts, this book has not been officially peer-reviewed. However, we strongly encourage readers to review our chapters and to provide constructive feedback. We are more than happy to adapt, improve or overhaul the content if necessary.
+Although most of our chapters have been reviewed by multiple authors and the editors of this book and external experts, this book has not been officially peer-reviewed. We therefore strongly encourage readers to review our chapters and to kindly provide constructive feedback. We are more than happy to adapt, improve or overhaul the content if necessary.
 
 ## Citation
 
