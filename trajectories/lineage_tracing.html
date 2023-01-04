@@ -1079,7 +1079,7 @@ title="Print to PDF"
 <p>This data is publicly hosted on <a class="reference external" href="https://zenodo.org/record/5847462#.YrFDKuzMI6A">Zenodo</a> and we can download the data as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!wget &quot;https://zenodo.org/record/5847462/files/KPTracer-Data.tar.gz?download=1&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget<span class="w"> </span><span class="s2">&quot;https://zenodo.org/record/5847462/files/KPTracer-Data.tar.gz?download=1&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1100,7 +1100,7 @@ KPTracer-Data.tar.g 100%[===================&gt;]   1.21G  1.49MB/s    in 7m 3s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!tar -xvzf KPTracer-Data.tar.gz?download=1
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>tar<span class="w"> </span>-xvzf<span class="w"> </span>KPTracer-Data.tar.gz?download<span class="o">=</span><span class="m">1</span>
 </pre></div>
 </div>
 </div>
@@ -1111,13 +1111,13 @@ KPTracer-Data.tar.g 100%[===================&gt;]   1.21G  1.49MB/s    in 7m 3s
 <p>Before we enter this notebook’s analysis, let’s set up our environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import cassiopeia as cas
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import scanpy as sc
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cassiopeia</span> <span class="k">as</span> <span class="nn">cas</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
 
-from cassiopeia.preprocess import lineage_utils
+<span class="kn">from</span> <span class="nn">cassiopeia.preprocess</span> <span class="kn">import</span> <span class="n">lineage_utils</span>
 </pre></div>
 </div>
 </div>
@@ -1130,11 +1130,11 @@ from cassiopeia.preprocess import lineage_utils
 <p>Other metadata can also be stored in this table such as the total number of UMIs and reads associated with the target site molecule, which cell the molecule came from, and which tumor that cell belongs to.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>allele_table = pd.read_csv(
-    &quot;KPTracer-Data/KPTracer.alleleTable.FINAL.txt&quot;, sep=&quot;\t&quot;, index_col=0
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">allele_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">&quot;KPTracer-Data/KPTracer.alleleTable.FINAL.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
 
-allele_table.head(5)
+<span class="n">allele_table</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1258,14 +1258,14 @@ allele_table.head(5)
 <p>We’ll focus on the data from KP tumors without any additional perturbations:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>all_tumors = allele_table[&quot;Tumor&quot;].unique()
-primary_nt_tumors = [
-    tumor
-    for tumor in all_tumors
-    if &quot;NT&quot; in tumor and tumor.split(&quot;_&quot;)[2].startswith(&quot;T&quot;)
-]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_tumors</span> <span class="o">=</span> <span class="n">allele_table</span><span class="p">[</span><span class="s2">&quot;Tumor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">primary_nt_tumors</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">tumor</span>
+    <span class="k">for</span> <span class="n">tumor</span> <span class="ow">in</span> <span class="n">all_tumors</span>
+    <span class="k">if</span> <span class="s2">&quot;NT&quot;</span> <span class="ow">in</span> <span class="n">tumor</span> <span class="ow">and</span> <span class="n">tumor</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="p">]</span>
 
-primary_nt_allele_table = allele_table[allele_table[&quot;Tumor&quot;].isin(primary_nt_tumors)]
+<span class="n">primary_nt_allele_table</span> <span class="o">=</span> <span class="n">allele_table</span><span class="p">[</span><span class="n">allele_table</span><span class="p">[</span><span class="s2">&quot;Tumor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">primary_nt_tumors</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -1277,10 +1277,10 @@ primary_nt_allele_table = allele_table[allele_table[&quot;Tumor&quot;].isin(prim
 <p>In recent applications (<span id="id55">[<a class="reference internal" href="#id306" title="Dian Yang, Matthew G Jones, Santiago Naranjo, William M Rideout III, Kyung Hoi Joseph Min, Raymond Ho, Wei Wu, Joseph M Replogle, Jennifer L Page, Jeffrey J Quinn, and others. Lineage tracing reveals the phylodynamics, plasticity, and paths of tumor evolution. Cell, 185(11):1905–1923, 2022.">Yang <em>et al.</em>, 2022</a>]</span>), we find that high-quality clones typically have between 5 and 30 intBCs (corresponding to 15-90 characters). In plotting the number of intBCs per tumor, we can make sure there are not outliers tumors that we’d like to filter out before reconstruction.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>primary_nt_allele_table.groupby([&quot;Tumor&quot;]).agg({&quot;intBC&quot;: &quot;nunique&quot;}).plot(kind=&quot;bar&quot;)
-plt.ylabel(&quot;Number of unique intBCs&quot;)
-plt.title(&quot;Number of intBCs per Tumor&quot;)
-plt.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">primary_nt_allele_table</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Tumor&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;intBC&quot;</span><span class="p">:</span> <span class="s2">&quot;nunique&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of unique intBCs&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Number of intBCs per Tumor&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1295,13 +1295,13 @@ plt.show()
 <p>We are also interested in the size of the tumors that will be reconstructed. It’s typical to observe clones between 100 and 10,000 cells. Once again, we’ll want to make sure there are no clear outliers - specifically, clones that are too small for reconstruction (usually fewer than 100 cells).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>primary_nt_allele_table.groupby([&quot;Tumor&quot;]).agg({&quot;cellBC&quot;: &quot;nunique&quot;}).sort_values(
-    by=&quot;cellBC&quot;, ascending=False
-).plot(kind=&quot;bar&quot;)
-plt.yscale(&quot;log&quot;)
-plt.ylabel(&quot;Number of cells (log)&quot;)
-plt.title(&quot;Size of each tumor&quot;)
-plt.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">primary_nt_allele_table</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Tumor&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;cellBC&quot;</span><span class="p">:</span> <span class="s2">&quot;nunique&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">by</span><span class="o">=</span><span class="s2">&quot;cellBC&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of cells (log)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Size of each tumor&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1319,11 +1319,11 @@ plt.show()
 <p>In observing the frequencies of observed indels, we see that a few indels (small deletions or insertions) appear quite often in clones. On the other hand, we also observe several edits observed in a single clone. Because of the difference in frequencies, an analyst should try to incorporate these observed biases into downstream analyses.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>indel_priors = cas.pp.compute_empirical_indel_priors(
-    allele_table, grouping_variables=[&quot;intBC&quot;, &quot;MetFamily&quot;]
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indel_priors</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">compute_empirical_indel_priors</span><span class="p">(</span>
+    <span class="n">allele_table</span><span class="p">,</span> <span class="n">grouping_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;intBC&quot;</span><span class="p">,</span> <span class="s2">&quot;MetFamily&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 
-indel_priors.sort_values(by=&quot;count&quot;, ascending=False).head()
+<span class="n">indel_priors</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1387,7 +1387,7 @@ indel_priors.sort_values(by=&quot;count&quot;, ascending=False).head()
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>indel_priors.sort_values(by=&quot;count&quot;).head(5)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indel_priors</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1461,130 +1461,130 @@ indel_priors.sort_values(by=&quot;count&quot;, ascending=False).head()
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># utility functions for computing summary statistics
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># utility functions for computing summary statistics</span>
 
 
-def compute_percent_indels(character_matrix):
-    &quot;&quot;&quot;Computes the percentage of sites carrying indels in a character matrix.
+<span class="k">def</span> <span class="nf">compute_percent_indels</span><span class="p">(</span><span class="n">character_matrix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the percentage of sites carrying indels in a character matrix.</span>
 
-    Args:
-        character_matrix: A pandas Dataframe summarizing the mutation status of each cell.
+<span class="sd">    Args:</span>
+<span class="sd">        character_matrix: A pandas Dataframe summarizing the mutation status of each cell.</span>
 
-    Returns:
-        A percentage of sites in cells that contain an edit.
-    &quot;&quot;&quot;
-    all_vals = character_matrix.values.ravel()
-    num_not_missing = len([n for n in all_vals if n != -1])
-    num_uncut = len([n for n in all_vals if n == 0])
+<span class="sd">    Returns:</span>
+<span class="sd">        A percentage of sites in cells that contain an edit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_vals</span> <span class="o">=</span> <span class="n">character_matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">num_not_missing</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">all_vals</span> <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">num_uncut</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">all_vals</span> <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
 
-    return 1.0 - (num_uncut / num_not_missing)
-
-
-def compute_percent_uncut(cell):
-    &quot;&quot;&quot;Computes the percentage of sites uncut in a cell.
-
-    Args:
-        A vector containing the edited sites for a particular cell.
-
-    Returns:
-        The number of sites uncut in a cell.
-    &quot;&quot;&quot;
-    uncut = 0
-    for i in cell:
-        if i == 0:
-            uncut += 1
-    return uncut / max(1, len([i for i in cell if i != -1]))
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">num_uncut</span> <span class="o">/</span> <span class="n">num_not_missing</span><span class="p">)</span>
 
 
-def summarize_tumor_quality(
-    allele_table,
-    minimum_intbc_thresh=0.2,
-    minimum_number_of_cells=2,
-    maximum_percent_uncut_in_cell=0.8,
-    allele_rep_thresh=0.98,
-):
-    &quot;&quot;&quot;Compute QC statistics for each tumor.
+<span class="k">def</span> <span class="nf">compute_percent_uncut</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the percentage of sites uncut in a cell.</span>
 
-    Computes statistics for each clone that will be used for filtering tumors for downstream lineage reconstruction.
+<span class="sd">    Args:</span>
+<span class="sd">        A vector containing the edited sites for a particular cell.</span>
 
-    Args:
-        allele_table: A Cassipoeia allele table summarizing the indels on each molecule in each cell.
-        min_intbc_thresh: The minimum proportion of cells that an intBC must appear in to be considered
-            for downstream reconstruction.
-        minimum_number_of_cells: Minimum number of cells in a tumor to be processed in this QC pipeline.
-        maximum_percent_uncut_in_cell: The maximum percentage of sites allowed to be uncut in a cell. If
-            a cell exceeds this threshold, it is filtered out.
-        allele_rep_thresh: Maximum allele representation in a single cut site allowed. If a character has
-            less diversity than allowed, it is filtered out.
+<span class="sd">    Returns:</span>
+<span class="sd">        The number of sites uncut in a cell.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uncut</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cell</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">uncut</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">uncut</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cell</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
-    Returns:
-        A pandas Dataframe summarizing the quality-control information for each tumor.
-    &quot;&quot;&quot;
 
-    tumor_statistics = {}
-    NUMBER_OF_SITES_PER_INTBC = 3
+<span class="k">def</span> <span class="nf">summarize_tumor_quality</span><span class="p">(</span>
+    <span class="n">allele_table</span><span class="p">,</span>
+    <span class="n">minimum_intbc_thresh</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">minimum_number_of_cells</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">maximum_percent_uncut_in_cell</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">allele_rep_thresh</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute QC statistics for each tumor.</span>
 
-    # iterate through Tumors and compute summary statistics
-    for tumor_name, tumor_allele_table in allele_table.groupby(&quot;Tumor&quot;):
+<span class="sd">    Computes statistics for each clone that will be used for filtering tumors for downstream lineage reconstruction.</span>
 
-        if tumor_allele_table[&quot;cellBC&quot;].nunique() &lt; minimum_number_of_cells:
-            continue
+<span class="sd">    Args:</span>
+<span class="sd">        allele_table: A Cassipoeia allele table summarizing the indels on each molecule in each cell.</span>
+<span class="sd">        min_intbc_thresh: The minimum proportion of cells that an intBC must appear in to be considered</span>
+<span class="sd">            for downstream reconstruction.</span>
+<span class="sd">        minimum_number_of_cells: Minimum number of cells in a tumor to be processed in this QC pipeline.</span>
+<span class="sd">        maximum_percent_uncut_in_cell: The maximum percentage of sites allowed to be uncut in a cell. If</span>
+<span class="sd">            a cell exceeds this threshold, it is filtered out.</span>
+<span class="sd">        allele_rep_thresh: Maximum allele representation in a single cut site allowed. If a character has</span>
+<span class="sd">            less diversity than allowed, it is filtered out.</span>
 
-        tumor_allele_table = allele_table[allele_table[&quot;Tumor&quot;] == tumor_name].copy()
-        tumor_allele_table[&quot;lineageGrp&quot;] = tumor_allele_table[&quot;Tumor&quot;].copy()
-        lineage_group = lineage_utils.filter_intbcs_final_lineages(
-            tumor_allele_table, min_intbc_thresh=minimum_intbc_thresh
-        )[0]
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas Dataframe summarizing the quality-control information for each tumor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        number_of_cutsites = (
-            len(lineage_group[&quot;intBC&quot;].unique()) * NUMBER_OF_SITES_PER_INTBC
-        )
+    <span class="n">tumor_statistics</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">NUMBER_OF_SITES_PER_INTBC</span> <span class="o">=</span> <span class="mi">3</span>
 
-        character_matrix, _, _ = cas.pp.convert_alleletable_to_character_matrix(
-            lineage_group, allele_rep_thresh=allele_rep_thresh
-        )
+    <span class="c1"># iterate through Tumors and compute summary statistics</span>
+    <span class="k">for</span> <span class="n">tumor_name</span><span class="p">,</span> <span class="n">tumor_allele_table</span> <span class="ow">in</span> <span class="n">allele_table</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Tumor&quot;</span><span class="p">):</span>
 
-        # We&#39;ll hit this if we filter out all characters with the specified allele_rep_thresh
-        if character_matrix.shape[1] == 0:
-            character_matrix, _, _ = cas.pp.convert_alleletable_to_character_matrix(
-                lineage_group, allele_rep_thresh=1.0
-            )
+        <span class="k">if</span> <span class="n">tumor_allele_table</span><span class="p">[</span><span class="s2">&quot;cellBC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">minimum_number_of_cells</span><span class="p">:</span>
+            <span class="k">continue</span>
 
-        number_dropped_intbcs = number_of_cutsites - character_matrix.shape[1]
-        percent_uncut = character_matrix.apply(
-            lambda x: compute_percent_uncut(x.values), axis=1
-        )
+        <span class="n">tumor_allele_table</span> <span class="o">=</span> <span class="n">allele_table</span><span class="p">[</span><span class="n">allele_table</span><span class="p">[</span><span class="s2">&quot;Tumor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">tumor_name</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">tumor_allele_table</span><span class="p">[</span><span class="s2">&quot;lineageGrp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tumor_allele_table</span><span class="p">[</span><span class="s2">&quot;Tumor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">lineage_group</span> <span class="o">=</span> <span class="n">lineage_utils</span><span class="o">.</span><span class="n">filter_intbcs_final_lineages</span><span class="p">(</span>
+            <span class="n">tumor_allele_table</span><span class="p">,</span> <span class="n">min_intbc_thresh</span><span class="o">=</span><span class="n">minimum_intbc_thresh</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        # drop normal cells from lineage (cells without editing)
-        character_matrix_filtered = character_matrix[
-            percent_uncut &lt; maximum_percent_uncut_in_cell
-        ]
+        <span class="n">number_of_cutsites</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">lineage_group</span><span class="p">[</span><span class="s2">&quot;intBC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">*</span> <span class="n">NUMBER_OF_SITES_PER_INTBC</span>
+        <span class="p">)</span>
 
-        percent_unique = (
-            character_matrix_filtered.drop_duplicates().shape[0]
-            / character_matrix_filtered.shape[0]
-        )
-        tumor_statistics[tumor_name] = (
-            percent_unique,
-            compute_percent_indels(character_matrix_filtered),
-            number_dropped_intbcs,
-            1.0 - (number_dropped_intbcs / number_of_cutsites),
-            character_matrix_filtered.shape[0],
-        )
+        <span class="n">character_matrix</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">convert_alleletable_to_character_matrix</span><span class="p">(</span>
+            <span class="n">lineage_group</span><span class="p">,</span> <span class="n">allele_rep_thresh</span><span class="o">=</span><span class="n">allele_rep_thresh</span>
+        <span class="p">)</span>
 
-    tumor_clone_statistics = pd.DataFrame.from_dict(
-        tumor_statistics,
-        orient=&quot;index&quot;,
-        columns=[
-            &quot;PercentUnique&quot;,
-            &quot;CutRate&quot;,
-            &quot;NumSaturatedTargets&quot;,
-            &quot;PercentUnsaturatedTargets&quot;,
-            &quot;NumCells&quot;,
-        ],
-    )
+        <span class="c1"># We&#39;ll hit this if we filter out all characters with the specified allele_rep_thresh</span>
+        <span class="k">if</span> <span class="n">character_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">character_matrix</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">convert_alleletable_to_character_matrix</span><span class="p">(</span>
+                <span class="n">lineage_group</span><span class="p">,</span> <span class="n">allele_rep_thresh</span><span class="o">=</span><span class="mf">1.0</span>
+            <span class="p">)</span>
 
-    return tumor_clone_statistics
+        <span class="n">number_dropped_intbcs</span> <span class="o">=</span> <span class="n">number_of_cutsites</span> <span class="o">-</span> <span class="n">character_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">percent_uncut</span> <span class="o">=</span> <span class="n">character_matrix</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">compute_percent_uncut</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="c1"># drop normal cells from lineage (cells without editing)</span>
+        <span class="n">character_matrix_filtered</span> <span class="o">=</span> <span class="n">character_matrix</span><span class="p">[</span>
+            <span class="n">percent_uncut</span> <span class="o">&lt;</span> <span class="n">maximum_percent_uncut_in_cell</span>
+        <span class="p">]</span>
+
+        <span class="n">percent_unique</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">character_matrix_filtered</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">/</span> <span class="n">character_matrix_filtered</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">tumor_statistics</span><span class="p">[</span><span class="n">tumor_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">percent_unique</span><span class="p">,</span>
+            <span class="n">compute_percent_indels</span><span class="p">(</span><span class="n">character_matrix_filtered</span><span class="p">),</span>
+            <span class="n">number_dropped_intbcs</span><span class="p">,</span>
+            <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">number_dropped_intbcs</span> <span class="o">/</span> <span class="n">number_of_cutsites</span><span class="p">),</span>
+            <span class="n">character_matrix_filtered</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="n">tumor_clone_statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="n">tumor_statistics</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;PercentUnique&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CutRate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NumSaturatedTargets&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PercentUnsaturatedTargets&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NumCells&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tumor_clone_statistics</span>
 </pre></div>
 </div>
 </div>
@@ -1594,57 +1594,57 @@ def summarize_tumor_quality(
 <h4><span class="section-number">16.5.4.2. </span>Calculate and visualize tumors’ statistics<a class="headerlink" href="#calculate-and-visualize-tumors-statistics" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tumor_clone_statistics = summarize_tumor_quality(primary_nt_allele_table)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tumor_clone_statistics</span> <span class="o">=</span> <span class="n">summarize_tumor_quality</span><span class="p">(</span><span class="n">primary_nt_allele_table</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>NUM_CELLS_THRESH = 100
-PERCENT_UNIQUE_THRESH = 0.05
-PERCENT_UNSATURATED_TARGETS_THRESH = 0.2
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NUM_CELLS_THRESH</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">PERCENT_UNIQUE_THRESH</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">PERCENT_UNSATURATED_TARGETS_THRESH</span> <span class="o">=</span> <span class="mf">0.2</span>
 
-low_qc = tumor_clone_statistics[
-    (tumor_clone_statistics[&quot;PercentUnique&quot;] &lt;= PERCENT_UNIQUE_THRESH)
-    | (
-        tumor_clone_statistics[&quot;PercentUnsaturatedTargets&quot;]
-        &lt;= PERCENT_UNSATURATED_TARGETS_THRESH
-    )
-].index
-small = tumor_clone_statistics[
-    (tumor_clone_statistics[&quot;NumCells&quot;] &lt; NUM_CELLS_THRESH)
-].index
+<span class="n">low_qc</span> <span class="o">=</span> <span class="n">tumor_clone_statistics</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">tumor_clone_statistics</span><span class="p">[</span><span class="s2">&quot;PercentUnique&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">PERCENT_UNIQUE_THRESH</span><span class="p">)</span>
+    <span class="o">|</span> <span class="p">(</span>
+        <span class="n">tumor_clone_statistics</span><span class="p">[</span><span class="s2">&quot;PercentUnsaturatedTargets&quot;</span><span class="p">]</span>
+        <span class="o">&lt;=</span> <span class="n">PERCENT_UNSATURATED_TARGETS_THRESH</span>
+    <span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">index</span>
+<span class="n">small</span> <span class="o">=</span> <span class="n">tumor_clone_statistics</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">tumor_clone_statistics</span><span class="p">[</span><span class="s2">&quot;NumCells&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">NUM_CELLS_THRESH</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">index</span>
 
-unfiltered = np.setdiff1d(tumor_clone_statistics.index, np.union1d(low_qc, small))
+<span class="n">unfiltered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">union1d</span><span class="p">(</span><span class="n">low_qc</span><span class="p">,</span> <span class="n">small</span><span class="p">))</span>
 
-h = plt.figure(figsize=(6, 6))
-plt.scatter(
-    tumor_clone_statistics.loc[unfiltered, &quot;PercentUnsaturatedTargets&quot;],
-    tumor_clone_statistics.loc[unfiltered, &quot;PercentUnique&quot;],
-    color=&quot;black&quot;,
-)
-plt.scatter(
-    tumor_clone_statistics.loc[low_qc, &quot;PercentUnsaturatedTargets&quot;],
-    tumor_clone_statistics.loc[low_qc, &quot;PercentUnique&quot;],
-    color=&quot;red&quot;,
-    label=&quot;Poor QC&quot;,
-)
-plt.scatter(
-    tumor_clone_statistics.loc[small, &quot;PercentUnsaturatedTargets&quot;],
-    tumor_clone_statistics.loc[small, &quot;PercentUnique&quot;],
-    color=&quot;orange&quot;,
-    label=&quot;Small lineages&quot;,
-)
+<span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">unfiltered</span><span class="p">,</span> <span class="s2">&quot;PercentUnsaturatedTargets&quot;</span><span class="p">],</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">unfiltered</span><span class="p">,</span> <span class="s2">&quot;PercentUnique&quot;</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">low_qc</span><span class="p">,</span> <span class="s2">&quot;PercentUnsaturatedTargets&quot;</span><span class="p">],</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">low_qc</span><span class="p">,</span> <span class="s2">&quot;PercentUnique&quot;</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Poor QC&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">small</span><span class="p">,</span> <span class="s2">&quot;PercentUnsaturatedTargets&quot;</span><span class="p">],</span>
+    <span class="n">tumor_clone_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">small</span><span class="p">,</span> <span class="s2">&quot;PercentUnique&quot;</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Small lineages&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-plt.axhline(y=PERCENT_UNIQUE_THRESH, color=&quot;red&quot;, alpha=0.5)
-plt.axvline(x=PERCENT_UNSATURATED_TARGETS_THRESH, color=&quot;red&quot;, alpha=0.5)
-plt.xlabel(&quot;Percent Unsaturated&quot;)
-plt.ylabel(&quot;Percent Unique&quot;)
-plt.title(&quot;Summary statistics for Tumor lineages&quot;)
-plt.legend(loc=&quot;lower right&quot;)
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">PERCENT_UNIQUE_THRESH</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">PERCENT_UNSATURATED_TARGETS_THRESH</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Percent Unsaturated&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Percent Unique&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Summary statistics for Tumor lineages&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1666,16 +1666,16 @@ plt.show()
 <p>The tumor <code class="docutils literal notranslate"><span class="pre">3726_NT_T1</span></code> appears to be a lineage with satisfactory tracing data quality and we will reconstruct the tumor lineage using Cassiopeia.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tumor = &quot;3726_NT_T1&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tumor</span> <span class="o">=</span> <span class="s2">&quot;3726_NT_T1&quot;</span>
 
-tumor_allele_table = primary_nt_allele_table[primary_nt_allele_table[&quot;Tumor&quot;] == tumor]
+<span class="n">tumor_allele_table</span> <span class="o">=</span> <span class="n">primary_nt_allele_table</span><span class="p">[</span><span class="n">primary_nt_allele_table</span><span class="p">[</span><span class="s2">&quot;Tumor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">tumor</span><span class="p">]</span>
 
-n_cells = tumor_allele_table[&quot;cellBC&quot;].nunique()
-n_intbc = tumor_allele_table[&quot;intBC&quot;].nunique()
+<span class="n">n_cells</span> <span class="o">=</span> <span class="n">tumor_allele_table</span><span class="p">[</span><span class="s2">&quot;cellBC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<span class="n">n_intbc</span> <span class="o">=</span> <span class="n">tumor_allele_table</span><span class="p">[</span><span class="s2">&quot;intBC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
 
-print(
-    f&quot;Tumor population {tumor} has {n_cells} cells and {n_intbc} intBCs ({n_intbc * 3} characters).&quot;
-)
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Tumor population </span><span class="si">{</span><span class="n">tumor</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">n_cells</span><span class="si">}</span><span class="s2"> cells and </span><span class="si">{</span><span class="n">n_intbc</span><span class="si">}</span><span class="s2"> intBCs (</span><span class="si">{</span><span class="n">n_intbc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="si">}</span><span class="s2"> characters).&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1687,15 +1687,15 @@ print(
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(
-    character_matrix,
-    priors,
-    state_to_indel,
-) = cas.pp.convert_alleletable_to_character_matrix(
-    tumor_allele_table, allele_rep_thresh=0.9, mutation_priors=indel_priors
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">character_matrix</span><span class="p">,</span>
+    <span class="n">priors</span><span class="p">,</span>
+    <span class="n">state_to_indel</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">convert_alleletable_to_character_matrix</span><span class="p">(</span>
+    <span class="n">tumor_allele_table</span><span class="p">,</span> <span class="n">allele_rep_thresh</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">mutation_priors</span><span class="o">=</span><span class="n">indel_priors</span>
+<span class="p">)</span>
 
-character_matrix.head(5)
+<span class="n">character_matrix</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1873,14 +1873,14 @@ character_matrix.head(5)
     Having so many algorithms at your disposal, it might seem daunting to choose the "right" one. For this reason, we often suggest that a user perform inference with a few algorithms for comparison. In addition to this, users will want to consider the size of their dataset and prior benchmarking studies as criteria for selecting the algorithms to use. As a rule of thumb, prior experience has found that the <b>HybridSolver</b> is a good balance between scalability and precision, and <b>Neighbor-Joining</b> is a convenient alternative for comparison (Neighbor-Joining also has the advantage of being a different class of algorithm [distance-based versus character-based], so it might highlight different parts of the lineage). For the tutorial purposes here, we will proceed with the GreedySolver as it is extremely efficient and often can serve as a good first-pass of the data before applying more precise (but slower) algorithms.
 </div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tree = cas.data.CassiopeiaTree(character_matrix=character_matrix, priors=priors)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">CassiopeiaTree</span><span class="p">(</span><span class="n">character_matrix</span><span class="o">=</span><span class="n">character_matrix</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>greedy_solver = cas.solver.VanillaGreedySolver()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">greedy_solver</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">VanillaGreedySolver</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1889,9 +1889,9 @@ character_matrix.head(5)
 <p>After inference, we can take advantage of the Cassiopeia visualization library to study the resulting tree structure. We’ll observe that there are some mistakes in the inference, but overall large groups of cells seem to be correctly placed. As described above, this can be a nice first-pass of the data before more time-consuming and sophisticated algorithms are deployed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>greedy_solver.solve(tree)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">greedy_solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 
-cas.pl.plot_matplotlib(tree, orient=&quot;right&quot;, allele_table=tumor_allele_table)
+<span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">allele_table</span><span class="o">=</span><span class="n">tumor_allele_table</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1934,28 +1934,28 @@ cas.pl.plot_matplotlib(tree, orient=&quot;right&quot;, allele_table=tumor_allele
 <p>From this procedure, we can sift through the nodes and highlight where expansions are occurring. For example, in <span id="id65">[<a class="reference internal" href="#id306" title="Dian Yang, Matthew G Jones, Santiago Naranjo, William M Rideout III, Kyung Hoi Joseph Min, Raymond Ho, Wei Wu, Joseph M Replogle, Jennifer L Page, Jeffrey J Quinn, and others. Lineage tracing reveals the phylodynamics, plasticity, and paths of tumor evolution. Cell, 185(11):1905–1923, 2022.">Yang <em>et al.</em>, 2022</a>]</span>, the authors present a strategy for highlighting the most important expansion event. Below, we highlight an interesting expansion event in red.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cas.tl.compute_expansion_pvalues(tree, min_clade_size=(0.15 * tree.n_cell), min_depth=1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cas</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">compute_expansion_pvalues</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">min_clade_size</span><span class="o">=</span><span class="p">(</span><span class="mf">0.15</span> <span class="o">*</span> <span class="n">tree</span><span class="o">.</span><span class="n">n_cell</span><span class="p">),</span> <span class="n">min_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># this specifies a p-value for identifying expansions unlikely to have occurred
-# in a neutral model of evolution
-probability_threshold = 0.01
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this specifies a p-value for identifying expansions unlikely to have occurred</span>
+<span class="c1"># in a neutral model of evolution</span>
+<span class="n">probability_threshold</span> <span class="o">=</span> <span class="mf">0.01</span>
 
-expanding_nodes = []
-for node in tree.depth_first_traverse_nodes():
-    if tree.get_attribute(node, &quot;expansion_pvalue&quot;) &lt; probability_threshold:
-        expanding_nodes.append(node)
+<span class="n">expanding_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">depth_first_traverse_nodes</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;expansion_pvalue&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">probability_threshold</span><span class="p">:</span>
+        <span class="n">expanding_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cas.pl.plot_matplotlib(tree, clade_colors={expanding_nodes[6]: &quot;red&quot;})
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">clade_colors</span><span class="o">=</span><span class="p">{</span><span class="n">expanding_nodes</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="s2">&quot;red&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -1973,26 +1973,26 @@ for node in tree.depth_first_traverse_nodes():
 <p>Tumors from this model consist of cells from various transcriptional states. The heterogeneity of this dataset can be observed on a low-dimensional projection of this dataset, such as those computed with UMAP:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>kptracer_adata = sc.read_h5ad(&quot;KPTracer-Data/expression/adata_processed.nt.h5ad&quot;)
-sc.pl.umap(
-    kptracer_adata,
-    color=&quot;Cluster-Name&quot;,
-    show=False,
-    title=&quot;Cluster Annotations, full dataset&quot;,
-)
-plt.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kptracer_adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;KPTracer-Data/expression/adata_processed.nt.h5ad&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">kptracer_adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Cluster Annotations, full dataset&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-# plot only tumor of interest
-fig = plt.figure(figsize=(10, 6))
-ax = plt.gca()
-sc.pl.umap(kptracer_adata[tree.leaves, :], color=&quot;Cluster-Name&quot;, show=False, ax=ax)
-sc.pl.umap(
-    kptracer_adata[np.setdiff1d(kptracer_adata.obs_names, tree.leaves), :],
-    show=False,
-    ax=ax,
-    title=f&quot;Cluster Annotations, {tumor}&quot;,
-)
-plt.show()
+<span class="c1"># plot only tumor of interest</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">kptracer_adata</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">kptracer_adata</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs_names</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">),</span> <span class="p">:],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cluster Annotations, </span><span class="si">{</span><span class="n">tumor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2006,7 +2006,7 @@ plt.show()
 <p>Separately, we can overlay the cellular state assignments onto the hierarchical structure of the tree and evaluate the heritability of cellular states. In visualizing, we can see that certain parts of the lineage are more mixed than others.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cas.pl.plot_matplotlib(tree, meta_data=[&quot;Cluster-Name&quot;])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -2021,15 +2021,15 @@ plt.show()
 <p>The <strong>instability</strong> of these cellular states has been referred to as <strong>“effective plasticity”</strong> and several algorithms can be used to quantify it. One approach is to use the Fitch-Hartigan maximum-parsimony algorithm to infer the minimum number of times that cellular states had to have changed to give rise to the observed pattern. This function is implemented in Cassiopeia and can be utilized as below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tree.cell_meta = pd.DataFrame(
-    kptracer_adata.obs.loc[tree.leaves, &quot;Cluster-Name&quot;].astype(str)
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="s2">&quot;Cluster-Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="p">)</span>
 
-parsimony = cas.tl.score_small_parsimony(tree, meta_item=&quot;Cluster-Name&quot;)
+<span class="n">parsimony</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">score_small_parsimony</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_item</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">)</span>
 
-plasticity = parsimony / len(tree.nodes)
+<span class="n">plasticity</span> <span class="o">=</span> <span class="n">parsimony</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
-print(f&quot;Observed effective plasticity score of {plasticity}.&quot;)
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Observed effective plasticity score of </span><span class="si">{</span><span class="n">plasticity</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2043,49 +2043,49 @@ print(f&quot;Observed effective plasticity score of {plasticity}.&quot;)
 <p>Often, we are more concerned with single-cell measurements of effective plasticity. We can compute a single-cell plasticity score as below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># compute plasticities for each node in the tree
-for node in tree.depth_first_traverse_nodes():
-    effective_plasticity = cas.tl.score_small_parsimony(
-        tree, meta_item=&quot;Cluster-Name&quot;, root=node
-    )
-    size_of_subtree = len(tree.leaves_in_subtree(node))
-    tree.set_attribute(
-        node, &quot;effective_plasticity&quot;, effective_plasticity / size_of_subtree
-    )
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute plasticities for each node in the tree</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">depth_first_traverse_nodes</span><span class="p">():</span>
+    <span class="n">effective_plasticity</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">score_small_parsimony</span><span class="p">(</span>
+        <span class="n">tree</span><span class="p">,</span> <span class="n">meta_item</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">node</span>
+    <span class="p">)</span>
+    <span class="n">size_of_subtree</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves_in_subtree</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+        <span class="n">node</span><span class="p">,</span> <span class="s2">&quot;effective_plasticity&quot;</span><span class="p">,</span> <span class="n">effective_plasticity</span> <span class="o">/</span> <span class="n">size_of_subtree</span>
+    <span class="p">)</span>
 
-tree.cell_meta[&quot;scPlasticity&quot;] = 0
-for leaf in tree.leaves:
-    plasticities = []
-    parent = tree.parent(leaf)
-    while True:
-        plasticities.append(tree.get_attribute(parent, &quot;effective_plasticity&quot;))
-        if parent == tree.root:
-            break
-        parent = tree.parent(parent)
+<span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span><span class="p">[</span><span class="s2">&quot;scPlasticity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">:</span>
+    <span class="n">plasticities</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">parent</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">plasticities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;effective_plasticity&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="o">==</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">parent</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
 
-    tree.cell_meta.loc[leaf, &quot;scPlasticity&quot;] = np.mean(plasticities)
+    <span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">leaf</span><span class="p">,</span> <span class="s2">&quot;scPlasticity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">plasticities</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cas.pl.plot_matplotlib(tree, meta_data=[&quot;scPlasticity&quot;])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;scPlasticity&quot;</span><span class="p">])</span>
 
-kptracer_adata.obs[&quot;scPlasticity&quot;] = np.nan
-kptracer_adata.obs.loc[tree.leaves, &quot;scPlasticity&quot;] = tree.cell_meta[&quot;scPlasticity&quot;]
+<span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;scPlasticity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="s2">&quot;scPlasticity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span><span class="p">[</span><span class="s2">&quot;scPlasticity&quot;</span><span class="p">]</span>
 
-# plot only tumor of interest
-fig = plt.figure(figsize=(10, 6))
-ax = plt.gca()
-sc.pl.umap(kptracer_adata[tree.leaves, :], color=&quot;scPlasticity&quot;, show=False, ax=ax)
-sc.pl.umap(
-    kptracer_adata[np.setdiff1d(kptracer_adata.obs_names, tree.leaves), :],
-    show=False,
-    ax=ax,
-)
-plt.title(f&quot;Single-cell Effective Plasticity, {tumor}&quot;)
-plt.show()
+<span class="c1"># plot only tumor of interest</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">kptracer_adata</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;scPlasticity&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">kptracer_adata</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs_names</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">),</span> <span class="p">:],</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Single-cell Effective Plasticity, </span><span class="si">{</span><span class="n">tumor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

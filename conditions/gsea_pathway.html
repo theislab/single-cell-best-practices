@@ -1096,63 +1096,63 @@ title="Print to PDF"
 <p>We first download the 25K PBMC data and follow the standard <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> workflow for normalisation of read counts and subsetting on the highly variable genes. The dataset contains untreated and IFN-<span class="math notranslate nohighlight">\(\beta\)</span> stimulated human PBMC cells <span id="id23">[<a class="reference internal" href="#id350" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>. We explore patterns of variation in the data with UMAP representation of 4000 highly variable genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from __future__ import annotations
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-import numpy as np
-import pandas as pd
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-import scanpy as sc
-import anndata as ad
-import decoupler
-import seaborn.objects as so
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">decoupler</span>
+<span class="kn">import</span> <span class="nn">seaborn.objects</span> <span class="k">as</span> <span class="nn">so</span>
 
-import session_info
+<span class="kn">import</span> <span class="nn">session_info</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.settings.set_figure_params(dpi=200, frameon=False)
-sc.set_figure_params(dpi=200)
-sc.set_figure_params(figsize=(4, 4))
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Filtering warnings from current version of matplotlib
-import warnings
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filtering warnings from current version of matplotlib</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
-warnings.filterwarnings(
-    &quot;ignore&quot;, message=&quot;.*Parameters &#39;cmap&#39; will be ignored.*&quot;, category=UserWarning
-)
-warnings.filterwarnings(
-    &quot;ignore&quot;, message=&quot;Tight layout not applied.*&quot;, category=UserWarning
-)
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*Parameters &#39;cmap&#39; will be ignored.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Tight layout not applied.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Setting up R dependencies
-import anndata2ri
-import rpy2
-from rpy2.robjects import r
-import random
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting up R dependencies</span>
+<span class="kn">import</span> <span class="nn">anndata2ri</span>
+<span class="kn">import</span> <span class="nn">rpy2</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
+<span class="kn">import</span> <span class="nn">random</span>
 
-%load_ext rpy2.ipython
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 
-anndata2ri.activate()
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 suppressPackageStartupMessages({
     library(SingleCellExperiment)
 })
@@ -1162,10 +1162,10 @@ suppressPackageStartupMessages({
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read(
-    &quot;kang_counts_25k.h5ad&quot;, backup_url=&quot;https://figshare.com/ndownloader/files/34464122&quot;
-)
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;kang_counts_25k.h5ad&quot;</span><span class="p">,</span> <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/34464122&quot;</span>
+<span class="p">)</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -1180,31 +1180,31 @@ adata
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Storing the counts for later use
-adata.layers[&quot;counts&quot;] = adata.X.copy()
-# Renaming label to condition
-adata.obs = adata.obs.rename({&quot;label&quot;: &quot;condition&quot;}, axis=1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Storing the counts for later use</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># Renaming label to condition</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-# Normalizing
-sc.pp.normalize_total(adata)
-sc.pp.log1p(adata)
+<span class="c1"># Normalizing</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Finding highly variable genes using count data
-sc.pp.highly_variable_genes(
-    adata, n_top_genes=4000, flavor=&quot;seurat_v3&quot;, subset=False, layer=&quot;counts&quot;
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Finding highly variable genes using count data</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;seurat_v3&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -1222,9 +1222,9 @@ sc.pp.highly_variable_genes(
 <p>While the current object comes with UMAP and PCA embeddings, these have been corrected for stimulation condition, which we don’t want for this analysis. Instead we will recompute these.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.pca(adata)
-sc.pp.neighbors(adata)
-sc.tl.umap(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1237,12 +1237,12 @@ sc.tl.umap(adata)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata,
-    color=[&quot;condition&quot;, &quot;cell_type&quot;],
-    frameon=False,
-    ncols=2,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">],</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1253,15 +1253,15 @@ sc.tl.umap(adata)
 <p>We generally recommend determining the differentially expressed genes as outlined in the <code class="docutils literal notranslate"><span class="pre">Differential</span> <span class="pre">gene</span> <span class="pre">expression</span></code> chapter. For simplicity, here we run a t-test using <code class="docutils literal notranslate"><span class="pre">rank_genes_groups</span></code> in <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> to rank genes according to their test statistics for differential expression:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;group&quot;] = adata.obs.condition.astype(&quot;string&quot;) + &quot;_&quot; + adata.obs.cell_type
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># find DE genes by t-test
-sc.tl.rank_genes_groups(adata, &quot;group&quot;, method=&quot;t-test&quot;, key_added=&quot;t-test&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># find DE genes by t-test</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1269,27 +1269,27 @@ sc.tl.rank_genes_groups(adata, &quot;group&quot;, method=&quot;t-test&quot;, key
 <p>Let’s extract the ranks for genes differentially expressed in response to IFN stimulation in the CD16 Monocyte (FCGR3A+ Monocytes) cluster. We use these ranks and the gene sets from REACTOME to find gene sets enriched in this cell population compared to all other populations using <code class="docutils literal notranslate"><span class="pre">GSEA</span></code> as implemented in decoupler.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>celltype_condition = &quot;stim_FCGR3A+ Monocytes&quot;  # &#39;stimulated_B&#39;,  &#39;stimulated_CD8 T&#39;, &#39;stimulated_CD14 Mono&#39;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">celltype_condition</span> <span class="o">=</span> <span class="s2">&quot;stim_FCGR3A+ Monocytes&quot;</span>  <span class="c1"># &#39;stimulated_B&#39;,  &#39;stimulated_CD8 T&#39;, &#39;stimulated_CD14 Mono&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># extract scores
-t_stats = (
-    # Get dataframe of DE results for condition vs. rest
-    sc.get.rank_genes_groups_df(adata, celltype_condition, key=&quot;t-test&quot;)
-    # Subset to highly variable genes
-    .set_index(&quot;names&quot;)
-    .loc[adata.var[&quot;highly_variable&quot;]]
-    # Sort by absolute score
-    .sort_values(&quot;scores&quot;, key=np.abs, ascending=False)
-    # Format for decoupler
-    [[&quot;scores&quot;]]
-    .rename_axis([&quot;stim_FCGR3A+ Monocytes&quot;], axis=1)
-)
-t_stats
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extract scores</span>
+<span class="n">t_stats</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1"># Get dataframe of DE results for condition vs. rest</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">rank_genes_groups_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">celltype_condition</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">)</span>
+    <span class="c1"># Subset to highly variable genes</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span>
+    <span class="c1"># Sort by absolute score</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Format for decoupler</span>
+    <span class="p">[[</span><span class="s2">&quot;scores&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">([</span><span class="s2">&quot;stim_FCGR3A+ Monocytes&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">t_stats</span>
 </pre></div>
 </div>
 </div>
@@ -1378,41 +1378,41 @@ t_stats
 <p>Download and read the <code class="docutils literal notranslate"><span class="pre">gmt</span></code> file for the REACTOME pathways annotated in the C2 collection of MSigDB.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Downloading reactome pathways
-from pathlib import Path
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Downloading reactome pathways</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-if not Path(&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;).is_file():
-    !wget -O &#39;c2.cp.reactome.v7.5.1.symbols.gmt&#39; https://figshare.com/ndownloader/files/35233771
+<span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+    <span class="o">!</span>wget<span class="w"> </span>-O<span class="w"> </span><span class="s1">&#39;c2.cp.reactome.v7.5.1.symbols.gmt&#39;</span><span class="w"> </span>https://figshare.com/ndownloader/files/35233771
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def gmt_to_decoupler(pth: Path) -&gt; pd.DataFrame:
-    &quot;&quot;&quot;
-    Parse a gmt file to a decoupler pathway dataframe.
-    &quot;&quot;&quot;
-    from itertools import chain, repeat
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gmt_to_decoupler</span><span class="p">(</span><span class="n">pth</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a gmt file to a decoupler pathway dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">repeat</span>
 
-    pathways = {}
+    <span class="n">pathways</span> <span class="o">=</span> <span class="p">{}</span>
 
-    with Path(pth).open(&quot;r&quot;) as f:
-        for line in f:
-            name, _, *genes = line.strip().split(&quot;\t&quot;)
-            pathways[name] = genes
+    <span class="k">with</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">genes</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">pathways</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">genes</span>
 
-    return pd.DataFrame.from_records(
-        chain.from_iterable(zip(repeat(k), v) for k, v in pathways.items()),
-        columns=[&quot;geneset&quot;, &quot;genesymbol&quot;],
-    )
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pathways</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span> <span class="s2">&quot;genesymbol&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>reactome = gmt_to_decoupler(&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reactome</span> <span class="o">=</span> <span class="n">gmt_to_decoupler</span><span class="p">(</span><span class="s2">&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1430,7 +1430,7 @@ if not Path(&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;).is_file():
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>reactome
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reactome</span>
 </pre></div>
 </div>
 </div>
@@ -1524,9 +1524,9 @@ if not Path(&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;).is_file():
 <p>First we’ll prepare our gene sets. By default <code class="docutils literal notranslate"><span class="pre">decoupler</span></code> will not filter gene sets by maximum size, which packages like <code class="docutils literal notranslate"><span class="pre">fgsea</span></code> do. Instead we will simply manually filter gene sets to have a minimum of 15 genes and a maximum of 500 genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Filtering genesets to match behaviour of fgsea
-geneset_size = reactome.groupby(&quot;geneset&quot;).size()
-gsea_genesets = geneset_size.index[(geneset_size &gt; 15) &amp; (geneset_size &lt; 500)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filtering genesets to match behaviour of fgsea</span>
+<span class="n">geneset_size</span> <span class="o">=</span> <span class="n">reactome</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;geneset&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">gsea_genesets</span> <span class="o">=</span> <span class="n">geneset_size</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">geneset_size</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geneset_size</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -1534,18 +1534,18 @@ gsea_genesets = geneset_size.index[(geneset_size &gt; 15) &amp; (geneset_size &l
 <p>We’ll uses the t-statistics from the t-test to rank the genes for the CD16 Monocyte phenotype upon IFN stimulation and computes p-values for each of the pathways.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scores, norm, pvals = decoupler.run_gsea(
-    t_stats.T,
-    reactome[reactome[&quot;geneset&quot;].isin(gsea_genesets)],
-    source=&quot;geneset&quot;,
-    target=&quot;genesymbol&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">pvals</span> <span class="o">=</span> <span class="n">decoupler</span><span class="o">.</span><span class="n">run_gsea</span><span class="p">(</span>
+    <span class="n">t_stats</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">reactome</span><span class="p">[</span><span class="n">reactome</span><span class="p">[</span><span class="s2">&quot;geneset&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">gsea_genesets</span><span class="p">)],</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;genesymbol&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-gsea_results = (
-    pd.concat({&quot;score&quot;: scores.T, &quot;norm&quot;: norm.T, &quot;pval&quot;: pvals.T}, axis=1)
-    .droplevel(level=1, axis=1)
-    .sort_values(&quot;pval&quot;)
-)
+<span class="n">gsea_results</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">({</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">scores</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="n">norm</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;pval&quot;</span><span class="p">:</span> <span class="n">pvals</span><span class="o">.</span><span class="n">T</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;pval&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1553,17 +1553,17 @@ gsea_results = (
 <p>We make a bar plot of top 20 pathways significantly enriched in stimulated CD16 Monocytes compared to all other cell types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(
-    so.Plot(
-        data=(
-            gsea_results.head(20).assign(
-                **{&quot;-log10(pval)&quot;: lambda x: -np.log10(x[&quot;pval&quot;])}
-            )
-        ),
-        x=&quot;-log10(pval)&quot;,
-        y=&quot;source&quot;,
-    ).add(so.Bar())
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">gsea_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+                <span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(pval)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;pval&quot;</span><span class="p">])}</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(pval)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1575,7 +1575,7 @@ gsea_results = (
 <p>Let’s look at the raw output of <code class="docutils literal notranslate"><span class="pre">decoupler.run_gsea</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>gsea_results.head(10)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsea_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1683,14 +1683,14 @@ gsea_results = (
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">GSEA</span></code>, we will be using the <code class="docutils literal notranslate"><span class="pre">decoupler</span></code> implementation of <code class="docutils literal notranslate"><span class="pre">AUCell</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-decoupler.run_aucell(
-    adata,
-    reactome,
-    source=&quot;geneset&quot;,
-    target=&quot;genesymbol&quot;,
-    use_raw=False,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">decoupler</span><span class="o">.</span><span class="n">run_aucell</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">reactome</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;genesymbol&quot;</span><span class="p">,</span>
+    <span class="n">use_raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1703,7 +1703,7 @@ Wall time: 1min 9s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -1723,13 +1723,13 @@ Wall time: 1min 9s
 <p>We now add the scores for the interferon-related REACTOME pathways to the <code class="docutils literal notranslate"><span class="pre">obs</span></code> field of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object and annotate the activity level of these pathways in each of the cells on the UMAP:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ifn_pathways = [
-    &quot;REACTOME_INTERFERON_SIGNALING&quot;,
-    &quot;REACTOME_INTERFERON_ALPHA_BETA_SIGNALING&quot;,
-    &quot;REACTOME_INTERFERON_GAMMA_SIGNALING&quot;,
-]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ifn_pathways</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_SIGNALING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_ALPHA_BETA_SIGNALING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_GAMMA_SIGNALING&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
-adata.obs[ifn_pathways] = adata.obsm[&quot;aucell_estimate&quot;][ifn_pathways]
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">ifn_pathways</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;aucell_estimate&quot;</span><span class="p">][</span><span class="n">ifn_pathways</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1737,13 +1737,13 @@ adata.obs[ifn_pathways] = adata.obsm[&quot;aucell_estimate&quot;][ifn_pathways]
 <p>Plot the scores on the umap</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata,
-    color=[&quot;condition&quot;, &quot;cell_type&quot;] + ifn_pathways,
-    frameon=False,
-    ncols=2,
-    wspace=0.3,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">ifn_pathways</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1761,101 +1761,101 @@ adata.obs[ifn_pathways] = adata.obsm[&quot;aucell_estimate&quot;][ifn_pathways]
 <h4><span class="section-number">19.6.4.1. </span>Create pseudo-bulk samples and explore the data<a class="headerlink" href="#create-pseudo-bulk-samples-and-explore-the-data" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def subsampled_summation(
-    adata: ad.AnnData,
-    groupby: str | list[str],
-    *,
-    n_samples_per_group: int,
-    n_cells: int,
-    random_state: None | int | np.random.RandomState = None,
-    layer: str = None,
-) -&gt; ad.AnnData:
-    &quot;&quot;&quot;
-    Sum sample of X per condition.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">subsampled_summation</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">:</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_samples_per_group</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_cells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">layer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sum sample of X per condition.</span>
 
-    Drops conditions which don&#39;t have enough samples.
+<span class="sd">    Drops conditions which don&#39;t have enough samples.</span>
 
-    Parameters
-    ----------
-    adata
-        AnnData to sum expression of
-    groupby
-        Keys in obs to groupby
-    n_samples_per_group
-        Number of samples to take per group
-    n_cells
-        Number of cells to take per sample
-    random_state
-        Random state to use when sampling cells
-    layer
-        Which layer of adata to use
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        AnnData to sum expression of</span>
+<span class="sd">    groupby</span>
+<span class="sd">        Keys in obs to groupby</span>
+<span class="sd">    n_samples_per_group</span>
+<span class="sd">        Number of samples to take per group</span>
+<span class="sd">    n_cells</span>
+<span class="sd">        Number of cells to take per sample</span>
+<span class="sd">    random_state</span>
+<span class="sd">        Random state to use when sampling cells</span>
+<span class="sd">    layer</span>
+<span class="sd">        Which layer of adata to use</span>
 
-    Returns
-    -------
-    AnnData with same var as original, obs with columns from groupby, and X.
-    &quot;&quot;&quot;
-    from scipy import sparse
-    from sklearn.utils import check_random_state
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    AnnData with same var as original, obs with columns from groupby, and X.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+    <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_random_state</span>
 
-    # Checks
-    if isinstance(groupby, str):
-        groupby = [groupby]
-    random_state = check_random_state(random_state)
+    <span class="c1"># Checks</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">groupby</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">groupby</span> <span class="o">=</span> <span class="p">[</span><span class="n">groupby</span><span class="p">]</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
 
-    indices = []
-    labels = []
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
 
-    grouped = adata.obs.groupby(groupby)
-    for k, inds in grouped.indices.items():
-        # Check size of group
-        if len(inds) &lt; (n_cells * n_samples_per_group):
-            continue
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupby</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inds</span> <span class="ow">in</span> <span class="n">grouped</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Check size of group</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inds</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">n_cells</span> <span class="o">*</span> <span class="n">n_samples_per_group</span><span class="p">):</span>
+            <span class="k">continue</span>
 
-        # Sample from group
-        condition_inds = random_state.choice(
-            inds, n_cells * n_samples_per_group, replace=False
-        )
-        for i, sample_condition_inds in enumerate(np.split(condition_inds, 3)):
-            if isinstance(k, tuple):
-                labels.append((*k, i))
-            else:  # only grouping by one variable
-                labels.append((k, i))
-            indices.append(sample_condition_inds)
+        <span class="c1"># Sample from group</span>
+        <span class="n">condition_inds</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="n">inds</span><span class="p">,</span> <span class="n">n_cells</span> <span class="o">*</span> <span class="n">n_samples_per_group</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample_condition_inds</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">condition_inds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># only grouping by one variable</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_condition_inds</span><span class="p">)</span>
 
-    # obs of output AnnData
-    new_obs = pd.DataFrame.from_records(
-        labels,
-        columns=[*groupby, &quot;sample&quot;],
-        index=[&quot;-&quot;.join(map(str, l)) for l in labels],
-    )
-    n_out = len(labels)
+    <span class="c1"># obs of output AnnData</span>
+    <span class="n">new_obs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="n">labels</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">groupby</span><span class="p">,</span> <span class="s2">&quot;sample&quot;</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">n_out</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
 
-    # Make indicator matrix
-    indptr = np.arange(0, (n_out + 1) * n_cells, n_cells)
-    indicator = sparse.csr_matrix(
-        (
-            np.ones(n_out * n_cells, dtype=bool),
-            np.concatenate(indices),
-            indptr,
-        ),
-        shape=(len(labels), adata.n_obs),
-    )
+    <span class="c1"># Make indicator matrix</span>
+    <span class="n">indptr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_out</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">)</span>
+    <span class="n">indicator</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_out</span> <span class="o">*</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span>
+            <span class="n">indptr</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
+    <span class="p">)</span>
 
-    return ad.AnnData(
-        X=indicator @ sc.get._get_obs_rep(adata, layer=layer),
-        obs=new_obs,
-        var=adata.var.copy(),
-    )
+    <span class="k">return</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">indicator</span> <span class="o">@</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">_get_obs_rep</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">),</span>
+        <span class="n">obs</span><span class="o">=</span><span class="n">new_obs</span><span class="p">,</span>
+        <span class="n">var</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pb_data = subsampled_summation(
-    adata, [&quot;cell_type&quot;, &quot;condition&quot;], n_cells=75, n_samples_per_group=3, layer=&quot;counts&quot;
-)
-pb_data
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span> <span class="o">=</span> <span class="n">subsampled_summation</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">],</span> <span class="n">n_cells</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">n_samples_per_group</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span>
+<span class="p">)</span>
+<span class="n">pb_data</span>
 </pre></div>
 </div>
 </div>
@@ -1869,8 +1869,8 @@ pb_data
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Does PC1 captures a meaningful biological or technical fact?
-pb_data.obs[&quot;lib_size&quot;] = pb_data.X.sum(1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Does PC1 captures a meaningful biological or technical fact?</span>
+<span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;lib_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1878,23 +1878,23 @@ pb_data.obs[&quot;lib_size&quot;] = pb_data.X.sum(1)
 <p>Let’s normalize this data and take a quick look at it. We won’t use a neighbor embedding here since the sample size is signifigantly reduced.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pb_data.layers[&quot;counts&quot;] = pb_data.X.copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.normalize_total(pb_data)
-sc.pp.log1p(pb_data)
-sc.pp.pca(pb_data)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.pca(pb_data, color=[&quot;cell_type&quot;, &quot;condition&quot;, &quot;lib_size&quot;], ncols=1, size=250)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">pb_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;lib_size&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1911,14 +1911,14 @@ sc.pp.pca(pb_data)
 <p>We first set up the design and contrast matrices. Let’s remind ourselves that a design matrix is a mathematical representation of group membership (i.e. the group or condition to which a sample belongs), and contrast matrices are mathematical representations of comparisons of interest for the differential test.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>groups = pb_data.obs.condition.astype(&quot;string&quot;) + &quot;_&quot; + pb_data.obs.cell_type
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groups</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i groups
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i groups
 group &lt;-  as.factor(gsub(&quot; |\\+&quot;,&quot;_&quot;, groups))
 design &lt;- model.matrix(~ 0 + group)
 head(design)
@@ -1939,7 +1939,7 @@ head(design)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 colnames(design)
 </pre></div>
 </div>
@@ -1958,7 +1958,7 @@ colnames(design)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> 
 kang_pbmc_con &lt;- limma::makeContrasts(
     
     # the effect if stimulus in CD16 Monocyte cells
@@ -1975,14 +1975,14 @@ kang_pbmc_con &lt;- limma::makeContrasts(
 <p>Index the genes annotated in each pathway in our data as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>log_norm_X = pb_data.to_df().T
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log_norm_X</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i log_norm_X -i reactome
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i log_norm_X -i reactome
 # Move pathway info from python to R
 pathways = split(reactome$genesymbol, reactome$geneset)
 # Map gene names to indices
@@ -2002,7 +2002,7 @@ idx = limma::ids2indices(pathways, rownames(log_norm_X))
 <p>As done in the <code class="docutils literal notranslate"><span class="pre">gsea</span></code> method, let’s remove gene sets with less than 15 genes</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 keep_gs &lt;- lapply(idx, FUN=function(x) length(x) &gt;= 15)
 idx &lt;- idx[unlist(keep_gs)]
 </pre></div>
@@ -2015,7 +2015,7 @@ idx &lt;- idx[unlist(keep_gs)]
 <h4><span class="section-number">19.6.4.3. </span>fry test for Stimulated vs Control<a class="headerlink" href="#fry-test-for-stimulated-vs-control" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -o fry_results
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o fry_results
 fry_results &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast = kang_pbmc_con[,1])
 </pre></div>
 </div>
@@ -2024,7 +2024,7 @@ fry_results &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast 
 <p>Taking a look at the top ranked pathways we’ll see some familiar names:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fry_results.head()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fry_results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2107,17 +2107,17 @@ fry_results &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(
-    so.Plot(
-        data=(
-            fry_results.head(20)
-            .assign(**{&quot;-log10(FDR)&quot;: lambda x: -np.log10(x[&quot;FDR&quot;])})
-            .rename_axis(index=&quot;Pathway&quot;)
-        ),
-        x=&quot;-log10(FDR)&quot;,
-        y=&quot;Pathway&quot;,
-    ).add(so.Bar())
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">fry_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;FDR&quot;</span><span class="p">])})</span>
+            <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2130,7 +2130,7 @@ fry_results &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast 
 <h4><span class="section-number">19.6.4.4. </span>fry test for the comparison between two stimulated cell types<a class="headerlink" href="#fry-test-for-the-comparison-between-two-stimulated-cell-types" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -o fry_results_negative_ctrl
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o fry_results_negative_ctrl
 fry_results_negative_ctrl &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast = kang_pbmc_con[,2])
 </pre></div>
 </div>
@@ -2138,17 +2138,17 @@ fry_results_negative_ctrl &lt;- limma::fry(log_norm_X, index = idx, design = des
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>(
-    so.Plot(
-        data=(
-            fry_results_negative_ctrl.head(20)
-            .assign(**{&quot;-log10(FDR)&quot;: lambda x: -np.log10(x[&quot;FDR&quot;])})
-            .rename_axis(index=&quot;Pathway&quot;)
-        ),
-        x=&quot;-log10(FDR)&quot;,
-        y=&quot;Pathway&quot;,
-    ).add(so.Bar())
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">fry_results_negative_ctrl</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;FDR&quot;</span><span class="p">])})</span>
+            <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2163,14 +2163,14 @@ fry_results_negative_ctrl &lt;- limma::fry(log_norm_X, index = idx, design = des
 Let’s remove genes with low expression in the data, apply <span class="math notranslate nohighlight">\(\log_2\)</span>CPM transformation and repeat the PCA plots:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>counts_df = pb_data.to_df(layer=&quot;counts&quot;).T
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_df</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">to_df</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i counts_df
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i counts_df
 keep &lt;- edgeR::filterByExpr(counts_df) # in real analysis, supply the desig matrix to the function to retain as more genes as possible
 counts_df &lt;- counts_df[keep,]
 logCPM &lt;- edgeR::cpm(counts_df, log=TRUE, prior.count = 2)
@@ -2187,7 +2187,7 @@ R[write to console]: No group or design set. Assuming all samples belong to one 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -o logCPM
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o logCPM
 logCPM = data.frame(logCPM)
 </pre></div>
 </div>
@@ -2195,21 +2195,21 @@ logCPM = data.frame(logCPM)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pb_data.uns[&quot;logCPM_FLE&quot;] = logCPM.T  # FLE for filter low exprs
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;logCPM_FLE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logCPM</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># FLE for filter low exprs</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pb_data.obsm[&quot;logCPM_FLE_pca&quot;] = sc.pp.pca(logCPM.T.to_numpy(), return_info=False)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;logCPM_FLE_pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">logCPM</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">return_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.embedding(pb_data, &quot;logCPM_FLE_pca&quot;, color=pb_data.obs, ncols=1, size=250)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">pb_data</span><span class="p">,</span> <span class="s2">&quot;logCPM_FLE_pca&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2250,7 +2250,7 @@ In practice, filtering low abundance genes and computation of normalisation fact
 <h2><span class="section-number">19.9. </span>Session info<a class="headerlink" href="#session-info" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 sessionInfo()
 </pre></div>
 </div>
@@ -2289,7 +2289,7 @@ loaded via a namespace (and not attached):
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>session_info.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">session_info</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

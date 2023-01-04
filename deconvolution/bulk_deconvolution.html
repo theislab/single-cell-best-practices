@@ -867,11 +867,11 @@ The effect of the normalization strategy is unclear with Li et al. <span id="id1
 <h3><span class="section-number">23.3.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
-import anndata
-import numpy as np
-import pandas as pd
-import scipy as sci
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">anndata</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sci</span>
 </pre></div>
 </div>
 </div>
@@ -882,12 +882,12 @@ import scipy as sci
 <p>We start by reading the single-cell and bulk data. We do not scale the data as it has been shown that deconvolution methods using scRNA-seq data as reference, perform best when applied to data in linear scale with improved accuracy after library size normalization <span id="id21">[]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data_file = &quot;/storage/groups/ml01/workspace/amit.frishberg/OriginalData/&quot;
-adata = sc.read(data_file + &quot;seurat_COVID19_freshWB_PBMC_cohort2_incl_raw.h5ad&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_file</span> <span class="o">=</span> <span class="s2">&quot;/storage/groups/ml01/workspace/amit.frishberg/OriginalData/&quot;</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;seurat_COVID19_freshWB_PBMC_cohort2_incl_raw.h5ad&quot;</span><span class="p">)</span>
 
-adata.X = adata.layers[&quot;counts&quot;]
-adata = adata[adata.obs[&quot;cells&quot;] == &quot;Whole_blood&quot;].copy()
-adata
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Whole_blood&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -903,7 +903,7 @@ adata
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;cluster_labels_res.0.8&quot;].value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -940,10 +940,10 @@ Name: cluster_labels_res.0.8, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>bulk = pd.read_csv(data_file + &quot;BulkSmall.txt&quot;, sep=&quot;\t&quot;, index_col=0)
-metadata = pd.read_csv(data_file + &quot;annoSmall.txt&quot;, sep=&quot;\t&quot;, index_col=0)
-metadata.index = metadata.index.astype(&quot;str&quot;)
-metadata = metadata.loc[bulk.transpose().index]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bulk</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;BulkSmall.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;annoSmall.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bulk</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -955,11 +955,11 @@ metadata = metadata.loc[bulk.transpose().index]
 <p><strong>Note</strong> Quality control by means of removing low quality cells and genes has already been perform on the single-cell data. So, we skip that.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = adata[
-    ~adata.obs[&quot;cluster_labels_res.0.8&quot;].isin([&quot;None&quot;, &quot;Mixed_cells&quot;, &quot;Prol. cells&quot;])
-].copy()
-ct_counts = adata.obs[&quot;cluster_labels_res.0.8&quot;].value_counts()
-adata.obs[&quot;cluster_labels_res.0.8&quot;].value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Mixed_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;Prol. cells&quot;</span><span class="p">])</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ct_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -995,11 +995,11 @@ Name: cluster_labels_res.0.8, dtype: int64
 <p>It has been shown that deconvolution methods commonly fail to predict the proportion of rare cells <span id="id22">[]</span>. In case that you want to remove rare cell types, you can limiting cell types to be above <code class="docutils literal notranslate"><span class="pre">cellTypeNumCutOff</span></code> cells. This cutoff is user-defined and should be selected based on the data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># removing very rare cells
-rare_ct_cut_off = 50  # This is a user-specific parameter based on the data
-ct_to_keep = ct_counts[ct_counts &gt; rare_ct_cut_off].index
-adata = adata[adata.obs[&quot;cluster_labels_res.0.8&quot;].isin(ct_to_keep)].copy()
-adata.obs[&quot;cluster_labels_res.0.8&quot;].value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># removing very rare cells</span>
+<span class="n">rare_ct_cut_off</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># This is a user-specific parameter based on the data</span>
+<span class="n">ct_to_keep</span> <span class="o">=</span> <span class="n">ct_counts</span><span class="p">[</span><span class="n">ct_counts</span> <span class="o">&gt;</span> <span class="n">rare_ct_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ct_to_keep</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1034,9 +1034,9 @@ Name: cluster_labels_res.0.8, dtype: int64
 <p>We need to filter for the shared genes across bulk and single-cell data before selecting highly variable genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>bulk_sc_genes = np.intersect1d(bulk.index, adata.var_names)
-bulk = bulk.loc[bulk_sc_genes, :].copy()
-adata = adata[:, bulk_sc_genes].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bulk_sc_genes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">bulk</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">bulk</span> <span class="o">=</span> <span class="n">bulk</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bulk_sc_genes</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">bulk_sc_genes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1047,11 +1047,11 @@ adata = adata[:, bulk_sc_genes].copy()
 <p>For visualization of single-cell data, we first normalize the counts, select highly-variable genes and log transform the data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.normalize_per_cell(adata, counts_per_cell_after=1e4, copy=False)
-sc.pp.highly_variable_genes(adata, flavor=&quot;cell_ranger&quot;, n_top_genes=5000)
-adata_log = sc.pp.log1p(
-    adata, copy=True
-)  # logged counts are only used for visualisation (can also work with layers)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">counts_per_cell_after</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;cell_ranger&quot;</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">adata_log</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>  <span class="c1"># logged counts are only used for visualisation (can also work with layers)</span>
 </pre></div>
 </div>
 </div>
@@ -1059,11 +1059,11 @@ adata_log = sc.pp.log1p(
 <p>We then reduce the dimensionality using PCA and visualize the data using UMAP:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.pca(adata_log)
-adata_log.obsm[&quot;X_pca&quot;] *= -1  # multiply by -1 to match Seurat
-sc.pp.neighbors(adata_log, n_neighbors=30)
-sc.tl.umap(adata_log)
-sc.pl.umap(adata_log, color=&quot;cluster_labels_res.0.8&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_log</span><span class="p">)</span>
+<span class="n">adata_log</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pca&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># multiply by -1 to match Seurat</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_log</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_log</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_log</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1078,15 +1078,15 @@ sc.pl.umap(adata_log, color=&quot;cluster_labels_res.0.8&quot;)
 <h4><span class="section-number">23.3.5.1. </span>Loading R<a class="headerlink" href="#loading-r" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># R interface
-from rpy2.robjects import pandas2ri
-from rpy2.robjects import r
-import rpy2.rinterface_lib.callbacks
-import anndata2ri
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># R interface</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
+<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
+<span class="kn">import</span> <span class="nn">anndata2ri</span>
 
-pandas2ri.activate()
-anndata2ri.activate()
-%load_ext rpy2.ipython
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 </pre></div>
 </div>
 </div>
@@ -1100,23 +1100,23 @@ anndata2ri.activate()
 <p>To use the R scripts, we need to convert the data from Python to R. In some cases, this requires sub-sampling of the data to avoid memory limitations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import random
-import itertools
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
 
-downSamplingSize = 80
-downSamplingIndexes = [
-    random.sample(
-        np.where(currCell == adata.obs[&quot;cluster_labels_res.0.8&quot;])[0].tolist(),
-        np.min(
-            [downSamplingSize, np.sum(currCell == adata.obs[&quot;cluster_labels_res.0.8&quot;])]
-        ),
-    )
-    for currCell in np.unique(adata.obs[&quot;cluster_labels_res.0.8&quot;])
-]
-downSamplingIndexes = list(itertools.chain(*downSamplingIndexes))
+<span class="n">downSamplingSize</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">downSamplingIndexes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">currCell</span> <span class="o">==</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">downSamplingSize</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">currCell</span> <span class="o">==</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])]</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">currCell</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])</span>
+<span class="p">]</span>
+<span class="n">downSamplingIndexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">downSamplingIndexes</span><span class="p">))</span>
 
-adata_r = adata[downSamplingIndexes].copy()
-adata_r
+<span class="n">adata_r</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">downSamplingIndexes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_r</span>
 </pre></div>
 </div>
 </div>
@@ -1133,8 +1133,8 @@ adata_r
 <p>If sub-sampling is not required (data is relatively small), one can simply convert the entire AnnData to an R object</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_r = adata.copy()
-adata_r
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_r</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_r</span>
 </pre></div>
 </div>
 </div>
@@ -1154,7 +1154,7 @@ adata_r
 <h4><span class="section-number">23.3.5.2. </span>Running MuSiC<a class="headerlink" href="#running-music" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 library(MuSiC)
 library(Biobase)
 </pre></div>
@@ -1168,8 +1168,8 @@ library(Biobase)
 <br>4. sc_genes - gene markers used in the MuSiC analysis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cell_subsets_r = adata_r.obs[&quot;cluster_labels_res.0.8&quot;].astype(str).copy()
-sc_genes = adata_r.var_names
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cell_subsets_r</span> <span class="o">=</span> <span class="n">adata_r</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc_genes</span> <span class="o">=</span> <span class="n">adata_r</span><span class="o">.</span><span class="n">var_names</span>
 </pre></div>
 </div>
 </div>
@@ -1177,7 +1177,7 @@ sc_genes = adata_r.var_names
 <p>MuSiC runs the deconvolution framework one sample at a time. Here, 9*** are sample names.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_r,cell_subsets_r,bulk,sc_genes -o musicRes
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_r,cell_subsets_r,bulk,sc_genes -o musicRes
 df = data.frame(cellNames = cell_subsets_r, Sample = factor(rep(1, dim(adata_r@colData)[1])))
 row.names(df) = row.names(adata_r@colData)
 df = new(&quot;AnnotatedDataFrame&quot;, data = df) # Cell type identities are stored as an AnnotatedDataFrame
@@ -1307,10 +1307,10 @@ R[write to console]: 9131 has common genes 18756 ...
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Create the final output matrix
-music_frac = pd.DataFrame(musicRes[0])
-music_frac.index = bulk.columns
-music_frac.columns = np.unique(cell_subsets_r)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the final output matrix</span>
+<span class="n">music_frac</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">musicRes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">music_frac</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">bulk</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cell_subsets_r</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1324,7 +1324,7 @@ music_frac.columns = np.unique(cell_subsets_r)
 <br>The values of each cell in the matrix represents the cell type composition of a specific cell type within a specific sample. In most cases, cell type compositions in a sample with be shown as fractions therefore, non-negative values, summing to one.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>music_frac
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">music_frac</span>
 </pre></div>
 </div>
 </div>
@@ -2555,15 +2555,15 @@ music_frac.columns = np.unique(cell_subsets_r)
 <p>In case we know the true fractions of the cell types across sample, we can validate our deconvolved compositions. Here, Neutrophil counts were measures and indeed we found high correlations between the measured values and our decovolution-based results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>neutCounts = metadata[&quot;Total.neutrophil.count...mm3.&quot;].astype(float)
-subsetCorMuSiC = pd.Series(
-    np.corrcoef(
-        music_frac.to_numpy()[~np.isnan(neutCounts.to_numpy()), :].transpose(),
-        neutCounts[~np.isnan(neutCounts.to_numpy())].astype(float),
-    )[music_frac.shape[1], 0 : music_frac.shape[1]]
-)
-subsetCorMuSiC.index = music_frac.columns
-subsetCorMuSiC.sort_values()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neutCounts</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;Total.neutrophil.count...mm3.&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">subsetCorMuSiC</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span>
+        <span class="n">music_frac</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">neutCounts</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span> <span class="p">:]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+        <span class="n">neutCounts</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">neutCounts</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+    <span class="p">)[</span><span class="n">music_frac</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span> <span class="p">:</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">subsetCorMuSiC</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">subsetCorMuSiC</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2605,17 +2605,17 @@ dtype: float64
 <p>We can also look for significant changes in cell compositions between disease patients and healthy controls. In this case, for each cell type, we calculate the p-value of this change based on student’s t-test.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>healty_vs_covid = pd.Series(
-    [
-        sci.stats.ttest_ind(
-            music_frac[cell].to_numpy()[metadata[&quot;status&quot;].to_numpy() == &quot;covid&quot;],
-            music_frac[cell].to_numpy()[metadata[&quot;status&quot;].to_numpy() == &quot;healthy&quot;],
-        )[1]
-        for cell in music_frac.columns
-    ]
-)
-healty_vs_covid.index = music_frac.columns
-healty_vs_covid.sort_values()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">healty_vs_covid</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">sci</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span>
+            <span class="n">music_frac</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;covid&quot;</span><span class="p">],</span>
+            <span class="n">music_frac</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;healthy&quot;</span><span class="p">],</span>
+        <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2651,10 +2651,10 @@ dtype: float64
 <p>Here is a boxplot presenting the differences between the two conditions</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>selected_cell = healty_vs_covid.index[np.nanargmin(healty_vs_covid.to_numpy())]
-status_df = pd.DataFrame(metadata[&quot;status&quot;])
-status_df[&quot;cellFraction&quot;] = music_frac[[selected_cell]]
-status_df.boxplot(by=&quot;status&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_cell</span> <span class="o">=</span> <span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmin</span><span class="p">(</span><span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span>
+<span class="n">status_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">])</span>
+<span class="n">status_df</span><span class="p">[</span><span class="s2">&quot;cellFraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">music_frac</span><span class="p">[[</span><span class="n">selected_cell</span><span class="p">]]</span>
+<span class="n">status_df</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

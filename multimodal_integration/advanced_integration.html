@@ -861,36 +861,36 @@ title="Print to PDF"
 <h2><span class="section-number">38.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import warnings
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
-warnings.simplefilter(action=&quot;ignore&quot;)
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
-import scglue
-import networkx as nx
-import pandas as pd
-import numpy as np
-import scanpy as sc
-import anndata
-import multigrate as mtg
-import scvi
-from scvi.model import TOTALVI
+<span class="kn">import</span> <span class="nn">scglue</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">anndata</span>
+<span class="kn">import</span> <span class="nn">multigrate</span> <span class="k">as</span> <span class="nn">mtg</span>
+<span class="kn">import</span> <span class="nn">scvi</span>
+<span class="kn">from</span> <span class="nn">scvi.model</span> <span class="kn">import</span> <span class="n">TOTALVI</span>
 
-import rpy2.rinterface_lib.callbacks
-import anndata2ri
-import logging
+<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
+<span class="kn">import</span> <span class="nn">anndata2ri</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
-import seaborn as sns
-import matplotlib.pyplot as plt
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-from rpy2.robjects import r
-from rpy2.robjects import pandas2ri
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
 
-rpy2.rinterface_lib.callbacks.logger.setLevel(logging.ERROR)
+<span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface_lib</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
-pandas2ri.activate()
-anndata2ri.activate()
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
 
-%load_ext rpy2.ipython
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 </pre></div>
 </div>
 </div>
@@ -902,7 +902,7 @@ anndata2ri.activate()
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 suppressPackageStartupMessages({
     library(SingleCellExperiment)
     library(Seurat)
@@ -944,24 +944,24 @@ set.seed(123)
 <p>We note that the batch names for Multiome and CITE-seq data are the same, but they are actually not the same cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cite_reference_batches = [
-    &quot;s1d1&quot;,
-    &quot;s1d2&quot;,
-    &quot;s1d3&quot;,
-]  # need for totalVI, multigrate and bridge (RNA part)
-multiome_reference_batches = [&quot;s1d1&quot;, &quot;s1d2&quot;, &quot;s1d3&quot;]  # need for GLUE and multigrate
-cite_query_batches = [&quot;s2d1&quot;, &quot;s2d4&quot;]  # need for totalVI, multigrate and bridge
-multiome_query_batches = [&quot;s2d1&quot;, &quot;s2d4&quot;]  # need for multigrate
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cite_reference_batches</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;s1d1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;s1d2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;s1d3&quot;</span><span class="p">,</span>
+<span class="p">]</span>  <span class="c1"># need for totalVI, multigrate and bridge (RNA part)</span>
+<span class="n">multiome_reference_batches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s1d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d2&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d3&quot;</span><span class="p">]</span>  <span class="c1"># need for GLUE and multigrate</span>
+<span class="n">cite_query_batches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s2d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s2d4&quot;</span><span class="p">]</span>  <span class="c1"># need for totalVI, multigrate and bridge</span>
+<span class="n">multiome_query_batches</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s2d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s2d4&quot;</span><span class="p">]</span>  <span class="c1"># need for multigrate</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_multiome = sc.read(
-    &quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-multiome/rna_hvg.h5ad&quot;
-)
-rna_multiome
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_multiome</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-multiome/rna_hvg.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna_multiome</span>
 </pre></div>
 </div>
 </div>
@@ -978,10 +978,10 @@ rna_multiome
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>atac_multiome = sc.read(
-    &quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/atac_hvf_muon.h5ad&quot;
-)
-atac_multiome
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atac_multiome</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/atac_hvf_muon.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">atac_multiome</span>
 </pre></div>
 </div>
 </div>
@@ -998,10 +998,10 @@ atac_multiome
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_cite = sc.read(
-    &quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-cite/rna_hvg.h5ad&quot;
-)
-rna_cite
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_cite</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-cite/rna_hvg.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna_cite</span>
 </pre></div>
 </div>
 </div>
@@ -1018,8 +1018,8 @@ rna_cite
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite = sc.read(&quot;/lustre/groups/ml01/workspace/daniel.strobl/neurips_cite_pp.h5ad&quot;)
-adt_cite
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/lustre/groups/ml01/workspace/daniel.strobl/neurips_cite_pp.h5ad&quot;</span><span class="p">)</span>
+<span class="n">adt_cite</span>
 </pre></div>
 </div>
 </div>
@@ -1039,7 +1039,7 @@ adt_cite
 <p>There are some differences in <code class="docutils literal notranslate"><span class="pre">.obs_names</span></code> of RNA and ADT of CITE-seq data, so we update them to make sure they allign between modalities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_cite.obs_names
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs_names</span>
 </pre></div>
 </div>
 </div>
@@ -1062,7 +1062,7 @@ adt_cite
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite.obs_names
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs_names</span>
 </pre></div>
 </div>
 </div>
@@ -1089,10 +1089,10 @@ adt_cite
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite.obs_names = [
-    name.split(&quot;-&quot;)[0] + &quot;-&quot; + name.split(&quot;-&quot;)[1] + &quot;-&quot; + batch
-    for batch, name in zip(adt_cite.obs[&quot;donor&quot;], adt_cite.obs_names)
-]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">batch</span>
+    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">],</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1100,9 +1100,9 @@ adt_cite
 <p>We subset to the cells that are present in both modalities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>common_idx = list(set(rna_cite.obs_names).intersection(set(adt_cite.obs_names)))
-rna_cite = rna_cite[common_idx].copy()
-adt_cite = adt_cite[common_idx].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)))</span>
+<span class="n">rna_cite</span> <span class="o">=</span> <span class="n">rna_cite</span><span class="p">[</span><span class="n">common_idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adt_cite</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="p">[</span><span class="n">common_idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1110,7 +1110,7 @@ adt_cite = adt_cite[common_idx].copy()
 <p>We also copy some of the metadata from RNA to ADT.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite.obs = adt_cite.obs.join(rna_cite.obs[[&quot;Samplename&quot;, &quot;cell_type&quot;]])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -1118,7 +1118,7 @@ adt_cite = adt_cite[common_idx].copy()
 <p>Also we make sure that cells are the same in multiome data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>assert np.sum(rna_multiome.obs_names != atac_multiome.obs_names) == 0
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">!=</span> <span class="n">atac_multiome</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
 </div>
@@ -1126,35 +1126,35 @@ adt_cite = adt_cite[common_idx].copy()
 <p>Because batch names are the same for different modalities and datasets, we will need to update a bunch of batch columns in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> so we create a helper function for this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def update_obs_column(
-    adata, obs_column_name, suffix, how=&quot;right&quot;, new_obs_column_name=None
-):
-    if new_obs_column_name is None:
-        new_obs_column_name = f&quot;new_{obs_column_name}&quot;
-    # otherwise can&#39;t use + operator with categorical columns
-    adata.obs[obs_column_name] = adata.obs[obs_column_name].astype(&quot;str&quot;).copy()
-    # create new column in .obs
-    if how == &quot;right&quot;:
-        adata.obs[new_obs_column_name] = f&quot;_{suffix}&quot;
-        adata.obs[new_obs_column_name] = (
-            adata.obs[obs_column_name] + adata.obs[new_obs_column_name]
-        )
-    else:
-        adata.obs[new_obs_column_name] = f&quot;{suffix}_&quot;
-        adata.obs[new_obs_column_name] = (
-            adata.obs[new_obs_column_name] + adata.obs[obs_column_name]
-        )
-    return adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update_obs_column</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">obs_column_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">new_obs_column_name</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">new_obs_column_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">new_obs_column_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;new_</span><span class="si">{</span><span class="n">obs_column_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># otherwise can&#39;t use + operator with categorical columns</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">obs_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">obs_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># create new column in .obs</span>
+    <span class="k">if</span> <span class="n">how</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">obs_column_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">_&quot;</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">new_obs_column_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">obs_column_name</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">adata</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_multiome = update_obs_column(rna_multiome, &quot;batch&quot;, &quot;_rna_multiome&quot;)
-atac_multiome = update_obs_column(atac_multiome, &quot;batch&quot;, &quot;_atac_multiome&quot;)
-rna_cite = update_obs_column(rna_cite, &quot;batch&quot;, &quot;_rna_cite&quot;)
-adt_cite = update_obs_column(adt_cite, &quot;donor&quot;, &quot;_adt_cite&quot;, &quot;batch&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_multiome</span> <span class="o">=</span> <span class="n">update_obs_column</span><span class="p">(</span><span class="n">rna_multiome</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="s2">&quot;_rna_multiome&quot;</span><span class="p">)</span>
+<span class="n">atac_multiome</span> <span class="o">=</span> <span class="n">update_obs_column</span><span class="p">(</span><span class="n">atac_multiome</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="s2">&quot;_atac_multiome&quot;</span><span class="p">)</span>
+<span class="n">rna_cite</span> <span class="o">=</span> <span class="n">update_obs_column</span><span class="p">(</span><span class="n">rna_cite</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="s2">&quot;_rna_cite&quot;</span><span class="p">)</span>
+<span class="n">adt_cite</span> <span class="o">=</span> <span class="n">update_obs_column</span><span class="p">(</span><span class="n">adt_cite</span><span class="p">,</span> <span class="s2">&quot;donor&quot;</span><span class="p">,</span> <span class="s2">&quot;_adt_cite&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1162,24 +1162,24 @@ adt_cite = update_obs_column(adt_cite, &quot;donor&quot;, &quot;_adt_cite&quot;,
 <p>Finally we subset to the correct batches the reference datasets and the query.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># query
-rna_multiome_query = rna_multiome[
-    rna_multiome.obs[&quot;batch&quot;].isin(multiome_query_batches)
-].copy()
-atac_multiome_query = atac_multiome[
-    atac_multiome.obs[&quot;batch&quot;].isin(multiome_query_batches)
-].copy()
-rna_cite_query = rna_cite[rna_cite.obs[&quot;batch&quot;].isin(cite_query_batches)].copy()
-adt_cite_query = adt_cite[adt_cite.obs[&quot;donor&quot;].isin(cite_query_batches)].copy()
-# reference
-rna_multiome = rna_multiome[
-    rna_multiome.obs[&quot;batch&quot;].isin(multiome_reference_batches)
-].copy()
-atac_multiome = atac_multiome[
-    atac_multiome.obs[&quot;batch&quot;].isin(multiome_reference_batches)
-].copy()
-rna_cite = rna_cite[rna_cite.obs[&quot;batch&quot;].isin(cite_reference_batches)].copy()
-adt_cite = adt_cite[adt_cite.obs[&quot;donor&quot;].isin(cite_reference_batches)].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># query</span>
+<span class="n">rna_multiome_query</span> <span class="o">=</span> <span class="n">rna_multiome</span><span class="p">[</span>
+    <span class="n">rna_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">multiome_query_batches</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">atac_multiome_query</span> <span class="o">=</span> <span class="n">atac_multiome</span><span class="p">[</span>
+    <span class="n">atac_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">multiome_query_batches</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna_cite_query</span> <span class="o">=</span> <span class="n">rna_cite</span><span class="p">[</span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cite_query_batches</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adt_cite_query</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="p">[</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cite_query_batches</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># reference</span>
+<span class="n">rna_multiome</span> <span class="o">=</span> <span class="n">rna_multiome</span><span class="p">[</span>
+    <span class="n">rna_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">multiome_reference_batches</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">atac_multiome</span> <span class="o">=</span> <span class="n">atac_multiome</span><span class="p">[</span>
+    <span class="n">atac_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">multiome_reference_batches</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna_cite</span> <span class="o">=</span> <span class="n">rna_cite</span><span class="p">[</span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cite_reference_batches</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adt_cite</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="p">[</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cite_reference_batches</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1194,11 +1194,11 @@ adt_cite = adt_cite[adt_cite.obs[&quot;donor&quot;].isin(cite_reference_batches)
 <p>We follow the GLUE tutorial on how to preprocess RNA-seq. We log-normalize the raw counts, scale and calculate PCA.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_multiome.X = rna_multiome.layers[&quot;counts&quot;].copy()
-sc.pp.normalize_total(rna_multiome)
-sc.pp.log1p(rna_multiome)
-sc.pp.scale(rna_multiome)
-sc.tl.pca(rna_multiome, n_comps=100, svd_solver=&quot;auto&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">rna_multiome</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">rna_multiome</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">rna_multiome</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">rna_multiome</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">rna_multiome</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1206,7 +1206,7 @@ sc.tl.pca(rna_multiome, n_comps=100, svd_solver=&quot;auto&quot;)
 <p>For ADT counts, we use CLR-normalized counts from <code class="docutils literal notranslate"><span class="pre">.X</span></code> and PCA calculated on the normalized values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.max(adt_cite.X)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1218,7 +1218,7 @@ sc.tl.pca(rna_multiome, n_comps=100, svd_solver=&quot;auto&quot;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.pca(adt_cite, n_comps=100, svd_solver=&quot;auto&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adt_cite</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1226,69 +1226,69 @@ sc.tl.pca(rna_multiome, n_comps=100, svd_solver=&quot;auto&quot;)
 <p>We need to make sure that protein encoding gene names and the corresponding protein names align in both data objects. We will need this later for the graph construction.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>{
-    &quot;CD103&quot;: &quot;ITGAE&quot;,
-    &quot;CD11b&quot;: &quot;ITGAM&quot;,
-    &quot;CD11c&quot;: &quot;ITGAX&quot;,
-    &quot;CD122&quot;: &quot;IL2RB&quot;,
-    &quot;CD124&quot;: &quot;IL4R&quot;,
-    &quot;CD127&quot;: &quot;IL7R&quot;,
-    &quot;CD13&quot;: &quot;ANPEP&quot;,
-    &quot;CD137&quot;: &quot;TNFRSF9&quot;,
-    &quot;CD152&quot;: &quot;CTLA4&quot;,
-    &quot;CD154&quot;: &quot;CD40LG&quot;,
-    &quot;CD16&quot;: &quot;FCGR3A&quot;,
-    &quot;CD161&quot;: &quot;KLRB1&quot;,
-    &quot;CD185&quot;: &quot;CXCR5&quot;,
-    &quot;CD194&quot;: &quot;CCR4&quot;,
-    &quot;CD196&quot;: &quot;CCR6&quot;,
-    &quot;CD20&quot;: &quot;MS4A1&quot;,
-    &quot;CD21&quot;: &quot;CR2&quot;,
-    &quot;CD23&quot;: &quot;FCER2&quot;,
-    &quot;CD25&quot;: &quot;IL2RA&quot;,
-    &quot;CD26&quot;: &quot;DPP4&quot;,
-    &quot;CD268&quot;: &quot;TNFRSF13C&quot;,
-    &quot;CD272&quot;: &quot;BTLA&quot;,
-    &quot;CD278&quot;: &quot;ICOS&quot;,
-    &quot;CD29&quot;: &quot;ITGB1&quot;,
-    &quot;CD3&quot;: &quot;CD3G&quot;,
-    &quot;CD303&quot;: &quot;CLEC4C&quot;,
-    &quot;CD304&quot;: &quot;NRP1&quot;,
-    &quot;CD314&quot;: &quot;KLRK1&quot;,
-    &quot;CD319&quot;: &quot;SLAMF7&quot;,
-    &quot;CD335&quot;: &quot;NCR1&quot;,
-    &quot;CD35&quot;: &quot;CR1&quot;,
-    &quot;CD352&quot;: &quot;SLAMF6&quot;,
-    &quot;CD39&quot;: &quot;ENTPD1&quot;,
-    &quot;CD49a&quot;: &quot;ITGA1&quot;,
-    &quot;CD49f&quot;: &quot;ITGA6&quot;,
-    &quot;CD54&quot;: &quot;ICAM1&quot;,
-    &quot;CD56&quot;: &quot;NCAM1&quot;,
-    &quot;CD62L&quot;: &quot;SELL&quot;,
-    &quot;CD71&quot;: &quot;TFRC&quot;,
-    &quot;CD73&quot;: &quot;NT5E&quot;,
-    &quot;CD79b&quot;: &quot;CD79B&quot;,
-    &quot;CD8&quot;: &quot;CD8A&quot;,
-    &quot;CD85j&quot;: &quot;LILRB1&quot;,
-    &quot;CD88&quot;: &quot;C5AR1&quot;,
-    &quot;CD94&quot;: &quot;KLRD1&quot;,
-    &quot;CD95&quot;: &quot;FAS&quot;,
-    &quot;HLA-DR&quot;: &quot;HLA-DRA&quot;,
-    &quot;IgD&quot;: &quot;IGHD&quot;,
-    &quot;IgM&quot;: &quot;IGHM&quot;,
-    &quot;TCR&quot;: &quot;TRAC&quot;,
-}
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;CD103&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGAE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD11b&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGAM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD11c&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGAX&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD122&quot;</span><span class="p">:</span> <span class="s2">&quot;IL2RB&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD124&quot;</span><span class="p">:</span> <span class="s2">&quot;IL4R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD127&quot;</span><span class="p">:</span> <span class="s2">&quot;IL7R&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD13&quot;</span><span class="p">:</span> <span class="s2">&quot;ANPEP&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD137&quot;</span><span class="p">:</span> <span class="s2">&quot;TNFRSF9&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD152&quot;</span><span class="p">:</span> <span class="s2">&quot;CTLA4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD154&quot;</span><span class="p">:</span> <span class="s2">&quot;CD40LG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD16&quot;</span><span class="p">:</span> <span class="s2">&quot;FCGR3A&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD161&quot;</span><span class="p">:</span> <span class="s2">&quot;KLRB1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD185&quot;</span><span class="p">:</span> <span class="s2">&quot;CXCR5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD194&quot;</span><span class="p">:</span> <span class="s2">&quot;CCR4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD196&quot;</span><span class="p">:</span> <span class="s2">&quot;CCR6&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD20&quot;</span><span class="p">:</span> <span class="s2">&quot;MS4A1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD21&quot;</span><span class="p">:</span> <span class="s2">&quot;CR2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD23&quot;</span><span class="p">:</span> <span class="s2">&quot;FCER2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD25&quot;</span><span class="p">:</span> <span class="s2">&quot;IL2RA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD26&quot;</span><span class="p">:</span> <span class="s2">&quot;DPP4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD268&quot;</span><span class="p">:</span> <span class="s2">&quot;TNFRSF13C&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD272&quot;</span><span class="p">:</span> <span class="s2">&quot;BTLA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD278&quot;</span><span class="p">:</span> <span class="s2">&quot;ICOS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD29&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGB1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD3&quot;</span><span class="p">:</span> <span class="s2">&quot;CD3G&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD303&quot;</span><span class="p">:</span> <span class="s2">&quot;CLEC4C&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD304&quot;</span><span class="p">:</span> <span class="s2">&quot;NRP1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD314&quot;</span><span class="p">:</span> <span class="s2">&quot;KLRK1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD319&quot;</span><span class="p">:</span> <span class="s2">&quot;SLAMF7&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD335&quot;</span><span class="p">:</span> <span class="s2">&quot;NCR1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD35&quot;</span><span class="p">:</span> <span class="s2">&quot;CR1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD352&quot;</span><span class="p">:</span> <span class="s2">&quot;SLAMF6&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD39&quot;</span><span class="p">:</span> <span class="s2">&quot;ENTPD1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD49a&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGA1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD49f&quot;</span><span class="p">:</span> <span class="s2">&quot;ITGA6&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD54&quot;</span><span class="p">:</span> <span class="s2">&quot;ICAM1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD56&quot;</span><span class="p">:</span> <span class="s2">&quot;NCAM1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD62L&quot;</span><span class="p">:</span> <span class="s2">&quot;SELL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD71&quot;</span><span class="p">:</span> <span class="s2">&quot;TFRC&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD73&quot;</span><span class="p">:</span> <span class="s2">&quot;NT5E&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD79b&quot;</span><span class="p">:</span> <span class="s2">&quot;CD79B&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD8&quot;</span><span class="p">:</span> <span class="s2">&quot;CD8A&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD85j&quot;</span><span class="p">:</span> <span class="s2">&quot;LILRB1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD88&quot;</span><span class="p">:</span> <span class="s2">&quot;C5AR1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD94&quot;</span><span class="p">:</span> <span class="s2">&quot;KLRD1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CD95&quot;</span><span class="p">:</span> <span class="s2">&quot;FAS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HLA-DR&quot;</span><span class="p">:</span> <span class="s2">&quot;HLA-DRA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IgD&quot;</span><span class="p">:</span> <span class="s2">&quot;IGHD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IgM&quot;</span><span class="p">:</span> <span class="s2">&quot;IGHM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TCR&quot;</span><span class="p">:</span> <span class="s2">&quot;TRAC&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite.var_names = adt_cite.var_names.str.strip(&quot;-1&quot;)
-adt_cite.var_names = [
-    rename_proteins[name] if name in rename_proteins else name
-    for name in adt_cite.var_names
-]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;-1&quot;</span><span class="p">)</span>
+<span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">rename_proteins</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rename_proteins</span> <span class="k">else</span> <span class="n">name</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1298,11 +1298,11 @@ adt_cite.var_names = [
 <p>Before we can run GLUE integration, we need to construct a graph with prior knowledge on how feature from the two modalities are connected. The node set has to be the union of the features from all the modalities, and the edge weights have to between 0 and 1. To integrate ADT with RNA, we construct the graph the following way: we set the edge weight to 1 if the protein name is the same as the gene name and 0 for all the other edges.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>p = np.array(adt_cite.var_names)
-r = np.array(rna_multiome.var_names)
-# mask entries are set to 1 where protein name is the same as gene name
-mask = np.repeat(p.reshape(-1, 1), r.shape[0], axis=1) == r
-mask = np.array(mask)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="c1"># mask entries are set to 1 where protein name is the same as gene name</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">r</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1310,10 +1310,10 @@ mask = np.array(mask)
 <p>We rename the features so they differ for ADT and RNA modalities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_vars = [v + &quot;_rna&quot; for v in rna_multiome.var_names]
-prot_vars = [v + &quot;_prot&quot; for v in adt_cite.var_names]
-rna_multiome.var_names = rna_vars
-adt_cite.var_names = prot_vars
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_rna&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rna_multiome</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+<span class="n">prot_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_prot&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+<span class="n">rna_multiome</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">rna_vars</span>
+<span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">prot_vars</span>
 </pre></div>
 </div>
 </div>
@@ -1321,11 +1321,11 @@ adt_cite.var_names = prot_vars
 <p>GLUE also requires each node to have an self-loop with weight 1, so we add these here too.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adj = pd.DataFrame(mask, index=prot_vars, columns=rna_vars)
-diag_edges = adj[adj &gt; 0].stack().index.tolist()
-diag_edges = [(n1, n2, {&quot;weight&quot;: 1.0, &quot;sign&quot;: 1}) for n1, n2 in diag_edges]
-self_loop_rna = [(g, g, {&quot;weight&quot;: 1.0, &quot;sign&quot;: 1}) for g in rna_vars]
-self_loop_prot = [(g, g, {&quot;weight&quot;: 1.0, &quot;sign&quot;: 1}) for g in prot_vars]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adj</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">prot_vars</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">rna_vars</span><span class="p">)</span>
+<span class="n">diag_edges</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">adj</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">diag_edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;sign&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span> <span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">diag_edges</span><span class="p">]</span>
+<span class="n">self_loop_rna</span> <span class="o">=</span> <span class="p">[(</span><span class="n">g</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;sign&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">rna_vars</span><span class="p">]</span>
+<span class="n">self_loop_prot</span> <span class="o">=</span> <span class="p">[(</span><span class="n">g</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;sign&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">prot_vars</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1333,12 +1333,12 @@ self_loop_prot = [(g, g, {&quot;weight&quot;: 1.0, &quot;sign&quot;: 1}) for g i
 <p>Next we construct the actual graph object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = nx.Graph()
-graph.add_nodes_from(rna_vars)
-graph.add_nodes_from(prot_vars)
-graph.add_edges_from(diag_edges)
-graph.add_edges_from(self_loop_prot)
-graph.add_edges_from(self_loop_rna)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">rna_vars</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">prot_vars</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">diag_edges</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">self_loop_prot</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">self_loop_rna</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1346,7 +1346,7 @@ graph.add_edges_from(self_loop_rna)
 <p>We should have 4136 nodes which corresponds to 4000 genes and 136 proteins. We also have 4186 edges with non-zero weights: 4136 self-loops and 50 connections between genes and proteins with the same name.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph.number_of_nodes(), graph.number_of_edges()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">(),</span> <span class="n">graph</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1362,14 +1362,14 @@ graph.add_edges_from(self_loop_rna)
 <p>In this section we again follow the GLUE tutorial to configure the model. First, we set up the RNA encoder-decoder pair to learn to reconstruct raw counts that we assume follow NB distribution. We specify PCA embedding to be used with in the encoder.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scglue.models.configure_dataset(
-    rna_multiome,
-    &quot;NB&quot;,
-    use_highly_variable=False,
-    use_batch=&quot;Samplename&quot;,
-    use_layer=&quot;counts&quot;,
-    use_rep=&quot;X_pca&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scglue</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">configure_dataset</span><span class="p">(</span>
+    <span class="n">rna_multiome</span><span class="p">,</span>
+    <span class="s2">&quot;NB&quot;</span><span class="p">,</span>
+    <span class="n">use_highly_variable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_batch</span><span class="o">=</span><span class="s2">&quot;Samplename&quot;</span><span class="p">,</span>
+    <span class="n">use_layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1377,13 +1377,13 @@ graph.add_edges_from(self_loop_rna)
 <p>Next, we set up the ADT encoder and decoder to reconstruct normalized counts following the normal distribution and  to use PCA embeddings.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scglue.models.configure_dataset(
-    adt_cite,
-    &quot;Normal&quot;,
-    use_highly_variable=False,
-    use_batch=&quot;Samplename&quot;,
-    use_rep=&quot;X_pca&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scglue</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">configure_dataset</span><span class="p">(</span>
+    <span class="n">adt_cite</span><span class="p">,</span>
+    <span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
+    <span class="n">use_highly_variable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_batch</span><span class="o">=</span><span class="s2">&quot;Samplename&quot;</span><span class="p">,</span>
+    <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1391,10 +1391,10 @@ graph.add_edges_from(self_loop_rna)
 <p>We initialize and train the final model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>glue = scglue.models.fit_SCGLUE(
-    {&quot;rna&quot;: rna_multiome, &quot;adt&quot;: adt_cite},
-    graph,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">glue</span> <span class="o">=</span> <span class="n">scglue</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">fit_SCGLUE</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;rna&quot;</span><span class="p">:</span> <span class="n">rna_multiome</span><span class="p">,</span> <span class="s2">&quot;adt&quot;</span><span class="p">:</span> <span class="n">adt_cite</span><span class="p">},</span>
+    <span class="n">graph</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1468,18 +1468,18 @@ Epoch 00033: reducing learning rate of group 0 to 2.0000e-05.
 <p>Now we can obtain the latent representation for both modalities and concatenate them into one AnnData object for later visualization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_multiome.obsm[&quot;X_glue&quot;] = glue.encode_data(&quot;rna&quot;, rna_multiome)
-adt_cite.obsm[&quot;X_glue&quot;] = glue.encode_data(&quot;adt&quot;, adt_cite)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_glue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">glue</span><span class="o">.</span><span class="n">encode_data</span><span class="p">(</span><span class="s2">&quot;rna&quot;</span><span class="p">,</span> <span class="n">rna_multiome</span><span class="p">)</span>
+<span class="n">adt_cite</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_glue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">glue</span><span class="o">.</span><span class="n">encode_data</span><span class="p">(</span><span class="s2">&quot;adt&quot;</span><span class="p">,</span> <span class="n">adt_cite</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite.obs[&quot;modality&quot;] = &quot;ADT&quot;
-rna_multiome.obs[&quot;modality&quot;] = &quot;RNA&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;modality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ADT&quot;</span>
+<span class="n">rna_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;modality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;RNA&quot;</span>
 
-combined = anndata.concat([rna_multiome, adt_cite])
+<span class="n">combined</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_multiome</span><span class="p">,</span> <span class="n">adt_cite</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1487,15 +1487,15 @@ combined = anndata.concat([rna_multiome, adt_cite])
 <p>Finally, we visualize the integrated latent space.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(combined, use_rep=&quot;X_glue&quot;, metric=&quot;cosine&quot;)
-sc.tl.umap(combined)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">combined</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_glue&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">combined</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(combined, color=[&quot;cell_type&quot;, &quot;modality&quot;, &quot;Samplename&quot;], ncols=1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">combined</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;modality&quot;</span><span class="p">,</span> <span class="s2">&quot;Samplename&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1513,10 +1513,10 @@ sc.tl.umap(combined)
 <p>We set the protein counts of one of the batches to zeros to model the missing proteins. This helps later with mapping of the new RNA-only queries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = rna_cite.copy()
-adata.obsm[&quot;protein_counts&quot;] = adt_cite.layers[&quot;counts&quot;].A.copy()
-adata.obsm[&quot;protein_counts&quot;][adata.obs[&quot;batch&quot;] == &quot;s1d3&quot;] = 0.0
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">rna_cite</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;protein_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt_cite</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;protein_counts&quot;</span><span class="p">][</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s1d3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -1534,12 +1534,12 @@ adata
 <p>Next, we setup the AnnData, specify the model parameters and train the model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>TOTALVI.setup_anndata(
-    adata,
-    layer=&quot;counts&quot;,
-    batch_key=&quot;batch&quot;,
-    protein_expression_obsm_key=&quot;protein_counts&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TOTALVI</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+    <span class="n">protein_expression_obsm_key</span><span class="o">=</span><span class="s2">&quot;protein_counts&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1552,15 +1552,15 @@ adata
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>arches_params = dict(
-    use_layer_norm=&quot;both&quot;,
-    use_batch_norm=&quot;none&quot;,
-    n_layers_decoder=2,
-    n_layers_encoder=2,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arches_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">use_layer_norm</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">use_batch_norm</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="n">n_layers_decoder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_layers_encoder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
 
-vae = TOTALVI(adata, **arches_params)
-vae.train()
+<span class="n">vae</span> <span class="o">=</span> <span class="n">TOTALVI</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="o">**</span><span class="n">arches_params</span><span class="p">)</span>
+<span class="n">vae</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1587,22 +1587,22 @@ Monitored metric elbo_validation did not improve in the last 45 records. Best sc
 <p>Now we obtain the latent representation and visualize it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obsm[&quot;X_totalvi&quot;] = vae.get_latent_representation()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalvi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vae</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata, use_rep=&quot;X_totalvi&quot;)
-sc.tl.umap(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_totalvi&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata, color=[&quot;cell_type&quot;, &quot;batch&quot;], ncols=1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1617,9 +1617,9 @@ sc.tl.umap(adata)
 <p>We mimic RNA-only query by setting the protein counts of one of the two batches to zero.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>query = rna_cite_query.copy()
-query.obsm[&quot;protein_counts&quot;] = adt_cite_query.layers[&quot;counts&quot;].A.copy()
-query.obsm[&quot;protein_counts&quot;][query.obs[&quot;batch&quot;] == &quot;s2d4&quot;] = 0.0
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;protein_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;protein_counts&quot;</span><span class="p">][</span><span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s2d4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
@@ -1627,18 +1627,18 @@ query.obsm[&quot;protein_counts&quot;][query.obs[&quot;batch&quot;] == &quot;s2d
 <p>We create some additional columns in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> to help with the visualization later.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;dataset_name&quot;] = &quot;Reference&quot;
-query.obs[&quot;dataset_name&quot;] = &quot;Query&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Reference&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Query&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;dataset_name_fine&quot;] = &quot;CITE reference&quot;
-adata.obs[&quot;dataset_name_fine&quot;][adata.obs[&quot;batch&quot;] == &quot;s1d3&quot;] = &quot;RNA reference&quot;
-query.obs[&quot;dataset_name_fine&quot;] = &quot;CITE query&quot;
-query.obs[&quot;dataset_name_fine&quot;][query.obs[&quot;batch&quot;] == &quot;s2d4&quot;] = &quot;RNA query&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name_fine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CITE reference&quot;</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name_fine&quot;</span><span class="p">][</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s1d3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;RNA reference&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name_fine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CITE query&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;dataset_name_fine&quot;</span><span class="p">][</span><span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s2d4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;RNA query&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1646,13 +1646,13 @@ query.obs[&quot;dataset_name_fine&quot;][query.obs[&quot;batch&quot;] == &quot;s
 <p>Next, we update and fine-tune the model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>vae_q = TOTALVI.load_query_data(
-    query,
-    vae,
-)
-vae_q.train(
-    plan_kwargs=dict(weight_decay=0.0, scale_adversarial_loss=0.0),
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vae_q</span> <span class="o">=</span> <span class="n">TOTALVI</span><span class="o">.</span><span class="n">load_query_data</span><span class="p">(</span>
+    <span class="n">query</span><span class="p">,</span>
+    <span class="n">vae</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">vae_q</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">plan_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale_adversarial_loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1678,22 +1678,22 @@ Monitored metric elbo_validation did not improve in the last 45 records. Best sc
 <p>Finally, we obtain the latent representation for the query and visualize it together with the reference. For this we concatenate reference and the query and recalculate the neighors and the UMAP.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>query.obsm[&quot;X_totalvi_scarches&quot;] = vae_q.get_latent_representation(query)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalvi_scarches&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vae_q</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obsm[&quot;X_totalvi_scarches&quot;] = adata.obsm[&quot;X_totalvi&quot;]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalvi_scarches&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalvi&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>full_data = adata.concatenate(query, batch_key=&quot;concat_batch&quot;)
-full_data
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">full_data</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;concat_batch&quot;</span><span class="p">)</span>
+<span class="n">full_data</span>
 </pre></div>
 </div>
 </div>
@@ -1709,19 +1709,19 @@ full_data
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(full_data, use_rep=&quot;X_totalvi_scarches&quot;)
-sc.tl.umap(full_data)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">full_data</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_totalvi_scarches&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">full_data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    full_data,
-    color=[&quot;cell_type&quot;, &quot;batch&quot;, &quot;dataset_name&quot;, &quot;dataset_name_fine&quot;],
-    ncols=1,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">full_data</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="s2">&quot;dataset_name&quot;</span><span class="p">,</span> <span class="s2">&quot;dataset_name_fine&quot;</span><span class="p">],</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1740,7 +1740,7 @@ sc.tl.umap(full_data)
 <p>First, let’s take a look at our reference and the query.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 ref &lt;- readRDS(cite, file = &quot;wnn_ref.rds&quot;)
 ref
 </pre></div>
@@ -1758,7 +1758,7 @@ Active assay: RNA (4000 features, 4000 variable features)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_cite_query
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_cite_query</span>
 </pre></div>
 </div>
 </div>
@@ -1776,8 +1776,8 @@ Active assay: RNA (4000 features, 4000 variable features)
 <p>We need to preprocess the query first, so we use CLR-normalized counts to calculate PCA.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.pca(rna_cite_query)
-rna_cite_query
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">rna_cite_query</span><span class="p">)</span>
+<span class="n">rna_cite_query</span>
 </pre></div>
 </div>
 </div>
@@ -1795,7 +1795,7 @@ rna_cite_query
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.max(rna_cite_query.X)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rna_cite_query</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1808,19 +1808,19 @@ rna_cite_query
 <p>Next, we move the query from Python to R.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ = sc.AnnData(rna_cite_query.X.copy())
-adata_.obs_names = rna_cite_query.obs_names.copy()
-adata_.var_names = rna_cite_query.var_names.copy()
-adata_.obs[&quot;cell_type&quot;] = rna_cite_query.obs[&quot;cell_type&quot;].copy()
-adata_.obs[&quot;batch&quot;] = rna_cite_query.obs[&quot;batch&quot;].copy()
-adata_.obsm[&quot;X_pca&quot;] = rna_cite_query.obsm[&quot;X_pca&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">rna_cite_query</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pca&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
 query = as.Seurat(adata_, data=&#39;X&#39;, counts=NULL)
 query
 </pre></div>
@@ -1838,7 +1838,7 @@ Active assay: originalexp (4000 features, 0 variable features)
 <p>Now we need to find anchors between the reference and the query. We specify that we want to use SPCA dimentionality reduction from the reference.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 anchors &lt;- FindTransferAnchors(
   reference = ref,
   query = query,
@@ -1852,7 +1852,7 @@ anchors &lt;- FindTransferAnchors(
 <p>Next, we map query onto the reference using the saved UMAP model to make sure that the UMAP projections stay the same for the reference and the query is mapped onto it. We additionally specify what information we want to transfer from the reference to the query with <code class="docutils literal notranslate"><span class="pre">refdata</span></code> parameter: in our case we want to predict the cell type and the protein counts.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 query &lt;- MapQuery(
   anchorset = anchors,
   query = query,
@@ -1872,7 +1872,7 @@ query &lt;- MapQuery(
 <p>Let’s visualize the reference and the query together and take a look at predicted vs true cell labels.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 ref$id &lt;- &#39;reference&#39;
 query$id &lt;- &#39;query&#39;
 refquery &lt;-  merge(ref, query)
@@ -1883,7 +1883,7 @@ refquery[[&quot;umap&quot;]] &lt;- merge(ref[[&quot;wnn.umap&quot;]], query[[&qu
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 p1 &lt;- DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;cell_type&quot;, label = TRUE, label.size = 3, repel = TRUE) + NoLegend()
 p2 &lt;- DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;predicted.cell_type&quot;, label = TRUE, label.size = 3, repel = TRUE) + NoLegend()
 p1 + p2
@@ -1899,7 +1899,7 @@ p1 + p2
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;id&quot;, label = TRUE, label.size = 3, repel = TRUE) + NoLegend()
 </pre></div>
 </div>
@@ -1917,16 +1917,16 @@ DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;id&quot;, label
 <p>First, we subset the datasets to reference, bridge and query as described above.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna_cite_ref = rna_cite[rna_cite.obs[&quot;batch&quot;] == &quot;s1d1&quot;].copy()
-rna_cite_bridge = rna_cite_query[rna_cite_query.obs[&quot;batch&quot;] == &quot;s2d1&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_cite_ref</span> <span class="o">=</span> <span class="n">rna_cite</span><span class="p">[</span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s1d1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna_cite_bridge</span> <span class="o">=</span> <span class="n">rna_cite_query</span><span class="p">[</span><span class="n">rna_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s2d1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adt_cite_bridge = adt_cite_query[adt_cite_query.obs[&quot;donor&quot;] == &quot;s2d1&quot;].copy()
-adt_cite_query = adt_cite_query[adt_cite_query.obs[&quot;donor&quot;] == &quot;s2d4&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt_cite_bridge</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="p">[</span><span class="n">adt_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s2d1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adt_cite_query</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="p">[</span><span class="n">adt_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s2d4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1934,17 +1934,17 @@ adt_cite_query = adt_cite_query[adt_cite_query.obs[&quot;donor&quot;] == &quot;s
 <p>Next, we prepare the reference. We move the object from Python to R, normalize the data with SCTransform and calculate PCA. We also calculate the UMAP (and keep the model) that we will later use to map query onto.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ = sc.AnnData(rna_cite_ref.layers[&quot;counts&quot;].A.copy())
-adata_.obs_names = rna_cite_ref.obs_names.copy()
-adata_.var_names = rna_cite_ref.var_names.copy()
-adata_.obs[&quot;cell_type&quot;] = rna_cite_ref.obs[&quot;cell_type&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">rna_cite_ref</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">rna_cite_ref</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">rna_cite_ref</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_cite_ref</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
 ref = as.Seurat(adata_, data=NULL, counts=&#39;X&#39;)
 ref
 </pre></div>
@@ -1960,7 +1960,7 @@ Active assay: originalexp (4000 features, 0 variable features)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 ref &lt;- RenameAssays(object = ref, originalexp = &quot;RNA&quot;, verbose=FALSE) 
 ref &lt;- SCTransform(ref, verbose=FALSE)
 ref &lt;- RunPCA(ref, verbose=FALSE)
@@ -1972,17 +1972,17 @@ ref &lt;- RunUMAP(ref, dims = 1:50, return.model=TRUE, verbose=FALSE)
 <p>Next, we prepare the bridge dataset. We move both RNA and ADT objects to R, follow the same normalization procedure as above for RNA, perform CLR-normalization and calculate PCA for ADT counts.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ = sc.AnnData(adt_cite_bridge.layers[&quot;counts&quot;].A.copy())
-adata_.obs_names = adt_cite_bridge.obs_names.copy()
-adata_.var_names = adt_cite_bridge.var_names.copy()
-adata_.obs[&quot;cell_type&quot;] = adt_cite_bridge.obs[&quot;cell_type&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">adt_cite_bridge</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">adt_cite_bridge</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">adt_cite_bridge</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt_cite_bridge</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span>
 </pre></div>
 </div>
 </div>
@@ -1995,7 +1995,7 @@ adata_.obs[&quot;cell_type&quot;] = adt_cite_bridge.obs[&quot;cell_type&quot;].c
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
 adt &lt;- as.Seurat(adata_, data=NULL, counts=&#39;X&#39;)
 </pre></div>
 </div>
@@ -2003,17 +2003,17 @@ adt &lt;- as.Seurat(adata_, data=NULL, counts=&#39;X&#39;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ = sc.AnnData(rna_cite_bridge.layers[&quot;counts&quot;].A.copy())
-adata_.obs_names = rna_cite_bridge.obs_names.copy()
-adata_.var_names = rna_cite_bridge.var_names.copy()
-adata_.obs[&quot;cell_type&quot;] = rna_cite_bridge.obs[&quot;cell_type&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">rna_cite_bridge</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">rna_cite_bridge</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">rna_cite_bridge</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_cite_bridge</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
 rna = as.Seurat(adata_, data=NULL, counts=&#39;X&#39;)
 cite &lt;- rna
 cite &lt;- RenameAssays(object = cite, originalexp = &quot;RNA&quot;) 
@@ -2024,7 +2024,7 @@ cite[[&quot;ADT&quot;]] &lt;- CreateAssayObject(counts = adt@assays$originalexp@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 DefaultAssay(cite) &lt;- &quot;RNA&quot;
 VariableFeatures(cite) &lt;- rownames(cite)
 cite &lt;- SCTransform(cite, verbose = FALSE) 
@@ -2034,7 +2034,7 @@ cite &lt;- SCTransform(cite, verbose = FALSE)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 DefaultAssay(cite) &lt;- &quot;ADT&quot;
 VariableFeatures(cite) &lt;- rownames(cite)
 cite &lt;- NormalizeData(cite, normalization.method = &#39;CLR&#39;, margin = 2, verbose=FALSE)
@@ -2046,17 +2046,17 @@ cite &lt;- ScaleData(cite, verbose=FALSE)
 <p>Finally, we prepare the ADT query the same way as the bridge ADT above.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ = sc.AnnData(adt_cite_query.layers[&quot;counts&quot;].A.copy())
-adata_.obs_names = adt_cite_query.obs_names.copy()
-adata_.var_names = adt_cite_query.var_names.copy()
-adata_.obs[&quot;cell_type&quot;] = adt_cite_query.obs[&quot;cell_type&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">adt_cite_query</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt_cite_query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i adata_
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
 query &lt;- as.Seurat(adata_, data=NULL, counts=&#39;X&#39;)
 query &lt;- RenameAssays(object = query, originalexp = &quot;ADT&quot;, verbose=FALSE) 
 VariableFeatures(query) &lt;- rownames(query)
@@ -2070,7 +2070,7 @@ query &lt;- RunPCA(query, verbose=FALSE, reduction.name = &#39;apca&#39;)
 <p>Now we can perform the bridge integration. The final step of query mapping is the same as with Seurat v4 query mapping so we can also predict cell types for the query data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 dims.adt &lt;- 1:50
 dims.rna &lt;- 1:50
 
@@ -2097,7 +2097,7 @@ obj.rna.ext &lt;- PrepareBridgeReference(
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 bridge.anchor &lt;- FindBridgeTransferAnchors(
     extended.reference = obj.rna.ext, 
     query = query,
@@ -2116,7 +2116,7 @@ bridge.anchor &lt;- FindBridgeTransferAnchors(
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 query &lt;- MapQuery(
     anchorset = bridge.anchor, 
     reference = ref, 
@@ -2134,7 +2134,7 @@ query &lt;- MapQuery(
 <p>Let’s visualize the result.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 p1 &lt;- DimPlot(query, group.by = &quot;predicted.cell_type&quot;, reduction = &quot;ref.umap&quot;, label = TRUE) + NoLegend()
 p2 &lt;- DimPlot(query, group.by = &quot;cell_type&quot;, reduction = &quot;ref.umap&quot;, label = TRUE) + NoLegend()
 p1 + p2
@@ -2147,7 +2147,7 @@ p1 + p2
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 ref$id &lt;- &#39;reference&#39;
 query$id &lt;- &#39;query&#39;
 refquery &lt;-  merge(ref, query)
@@ -2170,12 +2170,12 @@ DimPlot(refquery, group.by = &#39;id&#39;, shuffle = TRUE)
 <p>First, we load data that has 4000 highly variable genes that are common for the scRNA-seq and scRNA-seq from the CITE-seq and the multiome experiment respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna1 = sc.read(
-    &quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/rna_hvg_cite.h5ad&quot;
-)
-rna1_ref = rna1[adt_cite.obs_names].copy()
-rna1_query = rna1[adt_cite_query.obs_names].copy()
-rna1_ref.shape, rna1_query.shape
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna1</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/rna_hvg_cite.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna1_ref</span> <span class="o">=</span> <span class="n">rna1</span><span class="p">[</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">obs_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna1_query</span> <span class="o">=</span> <span class="n">rna1</span><span class="p">[</span><span class="n">adt_cite_query</span><span class="o">.</span><span class="n">obs_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna1_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">rna1_query</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
@@ -2187,12 +2187,12 @@ rna1_ref.shape, rna1_query.shape
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rna2 = sc.read(
-    &quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/rna_hvg_multiome.h5ad&quot;
-)
-rna2_ref = rna2[atac_multiome.obs_names].copy()
-rna2_query = rna2[atac_multiome_query.obs_names].copy()
-rna2_ref.shape, rna2_query.shape
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna2</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/trimodal_neurips/rna_hvg_multiome.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna2_ref</span> <span class="o">=</span> <span class="n">rna2</span><span class="p">[</span><span class="n">atac_multiome</span><span class="o">.</span><span class="n">obs_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna2_query</span> <span class="o">=</span> <span class="n">rna2</span><span class="p">[</span><span class="n">atac_multiome_query</span><span class="o">.</span><span class="n">obs_names</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rna2_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">rna2_query</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
@@ -2205,11 +2205,11 @@ rna2_ref.shape, rna2_query.shape
 <p>Next, we concatenate all the data into one AnnData object specifying how the data is paired and which layers to use.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = mtg.data.organize_multiome_anndatas(
-    adatas=[[rna1_ref, rna2_ref], [None, atac_multiome], [adt_cite, None]],
-    layers=[[&quot;counts&quot;, &quot;counts&quot;], [None, &quot;cpm&quot;], [None, None]],
-)
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">mtg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">organize_multiome_anndatas</span><span class="p">(</span>
+    <span class="n">adatas</span><span class="o">=</span><span class="p">[[</span><span class="n">rna1_ref</span><span class="p">,</span> <span class="n">rna2_ref</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">atac_multiome</span><span class="p">],</span> <span class="p">[</span><span class="n">adt_cite</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+    <span class="n">layers</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span> <span class="s2">&quot;counts&quot;</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;cpm&quot;</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+<span class="p">)</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -2226,11 +2226,11 @@ adata
 <p>Next, we register covariates that the model will correct for in the latent space.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mtg.model.MultiVAE.setup_anndata(
-    adata,
-    categorical_covariate_keys=[&quot;Modality&quot;, &quot;Samplename&quot;],
-    rna_indices_end=4000,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MultiVAE</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">categorical_covariate_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Modality&quot;</span><span class="p">,</span> <span class="s2">&quot;Samplename&quot;</span><span class="p">],</span>
+    <span class="n">rna_indices_end</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2243,23 +2243,23 @@ adata
 <p>Next, we initialize the model and train it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = mtg.model.MultiVAE(
-    adata,
-    losses=[&quot;nb&quot;, &quot;mse&quot;, &quot;mse&quot;],
-    loss_coefs={
-        &quot;kl&quot;: 1e-3,
-        &quot;integ&quot;: 10000,
-    },
-    integrate_on=&quot;Modality&quot;,
-    mmd=&quot;marginal&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mtg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MultiVAE</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">losses</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span> <span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="s2">&quot;mse&quot;</span><span class="p">],</span>
+    <span class="n">loss_coefs</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;kl&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
+        <span class="s2">&quot;integ&quot;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">integrate_on</span><span class="o">=</span><span class="s2">&quot;Modality&quot;</span><span class="p">,</span>
+    <span class="n">mmd</span><span class="o">=</span><span class="s2">&quot;marginal&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.train()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2287,9 +2287,9 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 <p>Finally, we obtain the latent representation, save in explicitely in <code class="docutils literal notranslate"><span class="pre">.obsm['latent_ref']</span></code> as we will overwrite <code class="docutils literal notranslate"><span class="pre">.obsm['latent']</span></code> later when we work with fine-tuned model after query mapping and visualize the result.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.get_latent_representation()
-adata.obsm[&quot;latent_ref&quot;] = adata.obsm[&quot;latent&quot;].copy()
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;latent_ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;latent&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -2306,15 +2306,15 @@ adata
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata, use_rep=&quot;latent&quot;)
-sc.tl.umap(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;latent&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(adata, color=[&quot;cell_type&quot;, &quot;Modality&quot;, &quot;Samplename&quot;], ncols=1, frameon=False)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;Modality&quot;</span><span class="p">,</span> <span class="s2">&quot;Samplename&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2328,25 +2328,25 @@ sc.tl.umap(adata)
 <p>We repeat the same steps for the setting up the query as for the reference before.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>query = mtg.data.organize_multiome_anndatas(
-    adatas=[
-        [rna1_query, rna2_query],
-        [None, atac_multiome_query],
-        [adt_cite_query, None],
-    ],
-    layers=[[&quot;counts&quot;, &quot;counts&quot;], [None, &quot;cpm&quot;], [None, None]],
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">mtg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">organize_multiome_anndatas</span><span class="p">(</span>
+    <span class="n">adatas</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">rna1_query</span><span class="p">,</span> <span class="n">rna2_query</span><span class="p">],</span>
+        <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">atac_multiome_query</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">adt_cite_query</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">],</span>
+    <span class="n">layers</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span> <span class="s2">&quot;counts&quot;</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;cpm&quot;</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mtg.model.MultiVAE.setup_anndata(
-    query,
-    categorical_covariate_keys=[&quot;Modality&quot;, &quot;Samplename&quot;],
-    rna_indices_end=4000,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MultiVAE</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">query</span><span class="p">,</span>
+    <span class="n">categorical_covariate_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Modality&quot;</span><span class="p">,</span> <span class="s2">&quot;Samplename&quot;</span><span class="p">],</span>
+    <span class="n">rna_indices_end</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2354,15 +2354,15 @@ sc.tl.umap(adata)
 <p>Let’s imitate unimodal queries by masking with zeros the snRNA part of one multiome batch and ADT part of one CITE-seq batch in the query. We get one ATAC-only query batch and one scRNA-only query batch respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>idx_atac_query = query.obs[&quot;Samplename&quot;] == &quot;site2_donor4_multiome&quot;
-idx_scrna_query = query.obs[&quot;Samplename&quot;] == &quot;site2_donor1_cite&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx_atac_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor4_multiome&quot;</span>
+<span class="n">idx_scrna_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor1_cite&quot;</span>
 
-idx_mutiome_query = query.obs[&quot;Samplename&quot;] == &quot;site2_donor1_multiome&quot;
-idx_cite_query = query.obs[&quot;Samplename&quot;] == &quot;site2_donor4_cite&quot;
+<span class="n">idx_mutiome_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor1_multiome&quot;</span>
+<span class="n">idx_cite_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor4_cite&quot;</span>
 
-np.sum(idx_atac_query), np.sum(idx_scrna_query), np.sum(idx_mutiome_query), np.sum(
-    idx_cite_query
-),
+<span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_atac_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_scrna_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_mutiome_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+    <span class="n">idx_cite_query</span>
+<span class="p">),</span>
 </pre></div>
 </div>
 </div>
@@ -2374,8 +2374,8 @@ np.sum(idx_atac_query), np.sum(idx_scrna_query), np.sum(idx_mutiome_query), np.s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>query[idx_atac_query, :4000].X = 0
-query[idx_scrna_query, 4000:].X = 0
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span><span class="p">[</span><span class="n">idx_atac_query</span><span class="p">,</span> <span class="p">:</span><span class="mi">4000</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">query</span><span class="p">[</span><span class="n">idx_scrna_query</span><span class="p">,</span> <span class="mi">4000</span><span class="p">:]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
 </div>
@@ -2383,14 +2383,14 @@ query[idx_scrna_query, 4000:].X = 0
 <p>We update the model by adding new weights to the new batches in the query and fine-tune those weights.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>q_model = mtg.model.MultiVAE.load_query_data(query, model)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_model</span> <span class="o">=</span> <span class="n">mtg</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MultiVAE</span><span class="o">.</span><span class="n">load_query_data</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>q_model.train(weight_decay=0)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">weight_decay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2413,14 +2413,14 @@ Monitored metric reconstruction_loss_validation did not improve in the last 50 r
 <p>We obtain the latent representation for query and the reference from the updated model. Note that the representation of the reference is the same as before up to some sampling noise.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>q_model.get_latent_representation(adata=query)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_model</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>q_model.get_latent_representation(adata=adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_model</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2433,41 +2433,41 @@ Monitored metric reconstruction_loss_validation did not improve in the last 50 r
 <p>Finally, we concatenate the reference and the query, and visualize both on a UMAP.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;reference&quot;] = &quot;reference&quot;
-query.obs[&quot;reference&quot;] = &quot;query&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;reference&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;query&quot;</span>
 
-adata.obs[&quot;type_of_query&quot;] = &quot;reference&quot;
-query.obs.loc[idx_atac_query, &quot;type_of_query&quot;] = &quot;ATAC query&quot;
-query.obs.loc[idx_scrna_query, &quot;type_of_query&quot;] = &quot;scRNA query&quot;
-query.obs.loc[idx_mutiome_query, &quot;type_of_query&quot;] = &quot;multiome query&quot;
-query.obs.loc[idx_cite_query, &quot;type_of_query&quot;] = &quot;CITE-seq query&quot;
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;type_of_query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;reference&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_atac_query</span><span class="p">,</span> <span class="s2">&quot;type_of_query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ATAC query&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_scrna_query</span><span class="p">,</span> <span class="s2">&quot;type_of_query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scRNA query&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_mutiome_query</span><span class="p">,</span> <span class="s2">&quot;type_of_query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;multiome query&quot;</span>
+<span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_cite_query</span><span class="p">,</span> <span class="s2">&quot;type_of_query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CITE-seq query&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_both = anndata.concat([adata, query])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_both</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">adata</span><span class="p">,</span> <span class="n">query</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.neighbors(adata_both, use_rep=&quot;latent&quot;)
-sc.tl.umap(adata_both)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_both</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;latent&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_both</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata_both,
-    color=[&quot;cell_type&quot;, &quot;Modality&quot;, &quot;Samplename&quot;, &quot;reference&quot;],
-    ncols=1,
-    frameon=False,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata_both</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;Modality&quot;</span><span class="p">,</span> <span class="s2">&quot;Samplename&quot;</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">],</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2477,9 +2477,9 @@ sc.tl.umap(adata_both)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata_both, color=&quot;type_of_query&quot;, ncols=1, frameon=False, groups=[&quot;ATAC query&quot;]
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata_both</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;type_of_query&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ATAC query&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2489,9 +2489,9 @@ sc.tl.umap(adata_both)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata_both, color=&quot;type_of_query&quot;, ncols=1, frameon=False, groups=[&quot;CITE-seq query&quot;]
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata_both</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;type_of_query&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CITE-seq query&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2501,9 +2501,9 @@ sc.tl.umap(adata_both)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata_both, color=&quot;type_of_query&quot;, ncols=1, frameon=False, groups=[&quot;multiome query&quot;]
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata_both</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;type_of_query&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;multiome query&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2513,9 +2513,9 @@ sc.tl.umap(adata_both)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(
-    adata_both, color=&quot;type_of_query&quot;, ncols=1, frameon=False, groups=[&quot;scRNA query&quot;]
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata_both</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;type_of_query&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;scRNA query&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2530,7 +2530,7 @@ sc.tl.umap(adata_both)
 <h2><span class="section-number">38.9. </span>Session info<a class="headerlink" href="#session-info" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 sessionInfo()
 </pre></div>
 </div>

@@ -787,23 +787,23 @@ We will elaborate more on this in the section “Doublet detection”.</p>
 <p>As a first step, we first load the dataset with scanpy which is hosted on figshare.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
 
-sc.settings.verbosity = 0
-sc.settings.set_figure_params(
-    dpi=80,
-    facecolor=&quot;white&quot;,
-    # color_map=&quot;YlGnBu&quot;,
-    frameon=False,
-)
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="c1"># color_map=&quot;YlGnBu&quot;,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># switch to figshare afterwards
-adata = sc.read_10x_h5(&quot;s4d8/filtered_feature_bc_matrix.h5&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># switch to figshare afterwards</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_h5</span><span class="p">(</span><span class="s2">&quot;s4d8/filtered_feature_bc_matrix.h5&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -817,8 +817,8 @@ Variable names are not unique. To make them unique, call `.var_names_make_unique
 <p>After reading the data, scanpy displays a warning that not all variable names are unique. This indicates that some variables (=genes) appear more than once which can lead to errors or unintended behavior for downstream analysis tasks. We execute the proposed function <code class="docutils literal notranslate"><span class="pre">var_names_make_unique()</span></code> which makes the variable name unique by appending a number string to each duplicate index element: ‘1’, ‘2’, etc.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.var_names_make_unique()
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -847,24 +847,24 @@ adata
 <p>We now load the required python and R packages needed for running SoupX.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import anndata2ri
-import logging
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata2ri</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
-import rpy2.rinterface_lib.callbacks as rcb
-import rpy2.robjects as ro
+<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span> <span class="k">as</span> <span class="nn">rcb</span>
+<span class="kn">import</span> <span class="nn">rpy2.robjects</span> <span class="k">as</span> <span class="nn">ro</span>
 
-rcb.logger.setLevel(logging.ERROR)
-ro.pandas2ri.activate()
-anndata2ri.activate()
+<span class="n">rcb</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">ro</span><span class="o">.</span><span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
 
-%load_ext rpy2.ipython
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 library(SoupX)
 </pre></div>
 </div>
@@ -875,9 +875,9 @@ library(SoupX)
 <p>Firstly, we generate a copy of our AnnData object, normalize and log1p transform it. We use simply proportional fitting (log1pPF normalization) at this point. More information on different normalization techniques can be found in the normalization chapter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_pp = adata.copy()
-sc.pp.normalize_per_cell(adata_pp)
-sc.pp.log1p(adata_pp)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pp</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -885,12 +885,12 @@ sc.pp.log1p(adata_pp)
 <p>Next, we compute the principle components of the data to obtain a lower dimentional representation. This representation is then used to generate a neighbourhood graph of the data and run leiden clustering on the KNN-graph. We add the clusters as <code class="docutils literal notranslate"><span class="pre">soupx_groups</span></code> to <code class="docutils literal notranslate"><span class="pre">.obs</span></code> and save them as a vector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.pca(adata_pp)
-sc.pp.neighbors(adata_pp)
-sc.tl.leiden(adata_pp, key_added=&quot;soupx_groups&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_pp</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;soupx_groups&quot;</span><span class="p">)</span>
 
-# Preprocess variables for SoupX
-soupx_groups = adata_pp.obs[&quot;soupx_groups&quot;]
+<span class="c1"># Preprocess variables for SoupX</span>
+<span class="n">soupx_groups</span> <span class="o">=</span> <span class="n">adata_pp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;soupx_groups&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -898,7 +898,7 @@ soupx_groups = adata_pp.obs[&quot;soupx_groups&quot;]
 <p>We can now delete the copy of our AnnData object as we generated a vector of clusters which can be used in soupX.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del adata_pp
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">adata_pp</span>
 </pre></div>
 </div>
 </div>
@@ -906,9 +906,9 @@ soupx_groups = adata_pp.obs[&quot;soupx_groups&quot;]
 <p>Next, we save the cell names, gene names and the data matirx of the filtered cellranger output. SoupX required a matrix of shape features x barcodes, so we have to transpose <code class="docutils literal notranslate"><span class="pre">.X</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cells = adata.obs_names
-genes = adata.var_names
-data = adata.X.T
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cells</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span>
+<span class="n">genes</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 </div>
@@ -916,9 +916,9 @@ data = adata.X.T
 <p>SoupX additionally required the raw gene by cells matrix which is typically called <code class="docutils literal notranslate"><span class="pre">raw_feature_bc_matrix.h5</span></code> in the cellranger output. We load this similarly as before the <code class="docutils literal notranslate"><span class="pre">filtered_feature_bc_matrix.h5</span></code> with scanpy and run <code class="docutils literal notranslate"><span class="pre">.var_names_make_unique()</span></code> on the object and transpose the respective <code class="docutils literal notranslate"><span class="pre">.X</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_raw = sc.read_10x_h5(&quot;s4d8/raw_feature_bc_matrix.h5&quot;)
-adata_raw.var_names_make_unique()
-data_tod = adata_raw.X.T
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_raw</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_h5</span><span class="p">(</span><span class="s2">&quot;s4d8/raw_feature_bc_matrix.h5&quot;</span><span class="p">)</span>
+<span class="n">adata_raw</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+<span class="n">data_tod</span> <span class="o">=</span> <span class="n">adata_raw</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 </div>
@@ -931,7 +931,7 @@ Variable names are not unique. To make them unique, call `.var_names_make_unique
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del adata_raw
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">adata_raw</span>
 </pre></div>
 </div>
 </div>
@@ -940,7 +940,7 @@ Variable names are not unique. To make them unique, call `.var_names_make_unique
 <p>We first construct a so called <code class="docutils literal notranslate"><span class="pre">SoupChannel</span></code> from the table of droplets and the table of cells. Next, we add metadata to the SoupChannel object which can be any metadata in the form of a <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>. We add here</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i data -i data_tod -i genes -i cells -i soupx_groups -o out 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i data -i data_tod -i genes -i cells -i soupx_groups -o out 
 
 # specify row and column names of data
 rownames(data) = genes
@@ -969,9 +969,9 @@ out = adjustCounts(sc, roundToInt = TRUE)
 <p>SoupX successfully inferred corrected counts, which we can now store as an additional layer. In all following analysis steps, we would like to use the SoupX corrected count matrix, so we overwrite <code class="docutils literal notranslate"><span class="pre">.X</span></code> with the soupX corrected matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.layers[&quot;counts&quot;] = adata.X
-adata.layers[&quot;soupX_counts&quot;] = out.T
-adata.X = adata.layers[&quot;soupX_counts&quot;]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;soupX_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">T</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;soupX_counts&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -992,7 +992,7 @@ adata.X = adata.layers[&quot;soupX_counts&quot;]
 <p>We first load some additional python and R packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
 library(Seurat)
 library(scater)
 library(scDblFinder)
@@ -1003,7 +1003,7 @@ library(BiocParallel)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data_mat = adata.X.T
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_mat</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 </div>
@@ -1017,7 +1017,7 @@ library(BiocParallel)
 <p>We will only output the class argument and store it in the AnnData object in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> . The other arguments can be added to the AnnData object similarly.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%R -i data_mat -o droplet_class
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i data_mat -o droplet_class
 
 set.seed(123)
 sce = scDblFinder(
@@ -1033,8 +1033,8 @@ droplet_class = sce$scDblFinder.class
 <p>scDblFinder outputs a class with the classification <code class="docutils literal notranslate"><span class="pre">Singlet</span></code> and <code class="docutils literal notranslate"><span class="pre">Doublet</span></code>. We add this to our AnnData object in <code class="docutils literal notranslate"><span class="pre">.obs</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;scDblFinder_class&quot;] = droplet_class
-adata.obs.scDblFinder_class.value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;scDblFinder_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">droplet_class</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">scDblFinder_class</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1049,10 +1049,10 @@ Name: scDblFinder_class, dtype: int64
 <p>Finally, we remove all cells that were classified as doublets from the dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&quot;Total number of cells: {adata.n_obs}&quot;)
-adata = adata[adata.obs.scDblFinder_class == &quot;singlet&quot;].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of cells: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">scDblFinder_class</span> <span class="o">==</span> <span class="s2">&quot;singlet&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-print(f&quot;Number of cells after filtering of doublets: {adata.n_obs}&quot;)
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of cells after filtering of doublets: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1077,12 +1077,12 @@ Number of cells after filtering of doublets: 13571
 <p>In QC, the first step is to calculate the QC covariates or metric. We compute these using the scanpy function <code class="docutils literal notranslate"><span class="pre">sc.pp.calculate_qc_metrics</span></code>, which can also calculate the proportions of counts for specific gene populations. We therefore define mitochondrial, ribosomal and hemoglobin genes. It is important to note that mitochondrial counts are annotated either with the prefix “mt-” or “MT-” depending on the species considered in the dataset. As mentioned, the dataset used in this notebook is human bone narrow, so mitochondrial counts are annotated with the prefix “MT-”. For mouse datasets, the prefix is usually lower case, so “mt-“.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># mitochondrial genes
-adata.var[&quot;mt&quot;] = adata.var_names.str.startswith(&quot;MT-&quot;)
-# ribosomal genes
-adata.var[&quot;ribo&quot;] = adata.var_names.str.startswith((&quot;RPS&quot;, &quot;RPL&quot;))
-# hemoglobin genes.
-adata.var[&quot;hb&quot;] = adata.var_names.str.contains((&quot;^HB[^(P)]&quot;))
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mitochondrial genes</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;mt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;MT-&quot;</span><span class="p">)</span>
+<span class="c1"># ribosomal genes</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;ribo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;RPS&quot;</span><span class="p">,</span> <span class="s2">&quot;RPL&quot;</span><span class="p">))</span>
+<span class="c1"># hemoglobin genes.</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;hb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">((</span><span class="s2">&quot;^HB[^(P)]&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1090,9 +1090,9 @@ adata.var[&quot;hb&quot;] = adata.var_names.str.contains((&quot;^HB[^(P)]&quot;)
 <p>We can now calculate the respective QC metrics with scanpy. This will add several new columns to <code class="docutils literal notranslate"><span class="pre">.var</span></code> and <code class="docutils literal notranslate"><span class="pre">.obs</span></code> as seen below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.calculate_qc_metrics(
-    adata, qc_vars=[&quot;mt&quot;, &quot;ribo&quot;, &quot;hb&quot;], inplace=True, percent_top=[20], log1p=True
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">qc_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mt&quot;</span><span class="p">,</span> <span class="s2">&quot;ribo&quot;</span><span class="p">,</span> <span class="s2">&quot;hb&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">percent_top</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="n">log1p</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1100,12 +1100,12 @@ adata.var[&quot;hb&quot;] = adata.var_names.str.contains((&quot;^HB[^(P)]&quot;)
 <p>We now plot the three QC covariates <code class="docutils literal notranslate"><span class="pre">n_genes_by_counts</span></code>, <code class="docutils literal notranslate"><span class="pre">total_counts</span></code> and <code class="docutils literal notranslate"><span class="pre">ct_counts_Mt</span></code> per sample to assess how well the respective cells were captured.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import seaborn as sns
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 
-p1 = sns.displot(adata.obs[&quot;total_counts&quot;], bins=100, kde=False)
-# sc.pl.violin(adata, &#39;total_counts&#39;)
-p2 = sc.pl.violin(adata, &quot;pct_counts_mt&quot;)
-p3 = sc.pl.scatter(adata, &quot;total_counts&quot;, &quot;n_genes_by_counts&quot;, color=&quot;pct_counts_mt&quot;)
+<span class="n">p1</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;total_counts&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># sc.pl.violin(adata, &#39;total_counts&#39;)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">)</span>
+<span class="n">p3</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1127,15 +1127,15 @@ p3 = sc.pl.scatter(adata, &quot;total_counts&quot;, &quot;n_genes_by_counts&quot
 <p>First, we define a function that takes a <code class="docutils literal notranslate"><span class="pre">metric</span></code>, i.e. a column in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> and the number of MADs (<code class="docutils literal notranslate"><span class="pre">nmad</span></code>) that is still permissive within the filtering strategy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-def is_outlier(adata, metric: str, nmads: int):
-    M = adata.obs[metric]
-    outlier = (M &lt; np.median(M) - nmads * M.mad()) | (
-        np.median(M) + nmads * M.mad() &lt; M
-    )
-    return outlier
+<span class="k">def</span> <span class="nf">is_outlier</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nmads</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+    <span class="n">outlier</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">M</span><span class="p">)</span> <span class="o">-</span> <span class="n">nmads</span> <span class="o">*</span> <span class="n">M</span><span class="o">.</span><span class="n">mad</span><span class="p">())</span> <span class="o">|</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">M</span><span class="p">)</span> <span class="o">+</span> <span class="n">nmads</span> <span class="o">*</span> <span class="n">M</span><span class="o">.</span><span class="n">mad</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">M</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">outlier</span>
 </pre></div>
 </div>
 </div>
@@ -1143,12 +1143,12 @@ def is_outlier(adata, metric: str, nmads: int):
 <p>We now apply this function to the <code class="docutils literal notranslate"><span class="pre">log1p_total_counts</span></code>, <code class="docutils literal notranslate"><span class="pre">log1p_n_genes_by_counts</span></code> and <code class="docutils literal notranslate"><span class="pre">pct_counts_in_top_20_genes</span></code> QC covariates each with a threshold of 5 MADs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;outlier&quot;] = (
-    is_outlier(adata, &quot;log1p_total_counts&quot;, 5)
-    | is_outlier(adata, &quot;log1p_n_genes_by_counts&quot;, 5)
-    | is_outlier(adata, &quot;pct_counts_in_top_20_genes&quot;, 5)
-)
-adata.obs.outlier.value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">is_outlier</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;log1p_total_counts&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="o">|</span> <span class="n">is_outlier</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;log1p_n_genes_by_counts&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="o">|</span> <span class="n">is_outlier</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;pct_counts_in_top_20_genes&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">outlier</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1163,10 +1163,10 @@ Name: outlier, dtype: int64
 <p><code class="docutils literal notranslate"><span class="pre">pct_counts_Mt</span></code> is filtered with 3 MADs. Additionally, cells with a percentage of mitochondrial counts exceeding 8 % are filtered out.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.obs[&quot;mt_outlier&quot;] = is_outlier(adata, &quot;pct_counts_mt&quot;, 3) | (
-    adata.obs[&quot;pct_counts_mt&quot;] &gt; 8
-)
-adata.obs.mt_outlier.value_counts()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mt_outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_outlier</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">8</span>
+<span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">mt_outlier</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1181,10 +1181,10 @@ Name: mt_outlier, dtype: int64
 <p>We now filter our AnnData object based on these two additional columns.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&quot;Total number of cells: {adata.n_obs}&quot;)
-adata = adata[(~adata.obs.outlier) &amp; (~adata.obs.mt_outlier)].copy()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of cells: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[(</span><span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">outlier</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">mt_outlier</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-print(f&quot;Number of cells after filtering of low quality cells: {adata.n_obs}&quot;)
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of cells after filtering of low quality cells: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1197,7 +1197,7 @@ Number of cells after filtering of low quality cells: 12714
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>p1 = sc.pl.scatter(adata, &quot;total_counts&quot;, &quot;n_genes_by_counts&quot;, color=&quot;pct_counts_mt&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1208,11 +1208,11 @@ Number of cells after filtering of low quality cells: 12714
 <p>We additionally filter out genes that are not detected in at least 20 cells as these are not informative.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&quot;Total number of genes: {adata.n_vars}&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of genes: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-# Min 20 cells - filters out 0 count genes
-sc.pp.filter_genes(adata, min_cells=20)
-print(f&quot;Number of genes after cell filter: {adata.n_vars}&quot;)
+<span class="c1"># Min 20 cells - filters out 0 count genes</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of genes after cell filter: </span><span class="si">{</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1226,7 +1226,7 @@ Number of genes after cell filter: 17882
 <p>We now removed ambient RNA, doublets and low quality cells from the dataset. During downstream clustering it might be useful to reassess quality control and the chosen parameters to potentially filter out more or less cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata.write(&quot;s4d8_subset_gex_qc.h5ad&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_subset_gex_qc.h5ad&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

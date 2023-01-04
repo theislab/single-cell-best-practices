@@ -825,10 +825,10 @@ title="Print to PDF"
 <h3><span class="section-number">14.4.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pathlib import Path
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-import scanpy as sc
-import scvelo as scv
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">scvelo</span> <span class="k">as</span> <span class="nn">scv</span>
 </pre></div>
 </div>
 </div>
@@ -838,17 +838,17 @@ import scvelo as scv
 <h3><span class="section-number">14.4.2. </span>General settings<a class="headerlink" href="#general-settings" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scv.settings.set_figure_params(&quot;scvelo&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="s2">&quot;scvelo&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>DATA_DIR = Path(&quot;../../data/&quot;)
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data/&quot;</span><span class="p">)</span>
+<span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-FILE_NAME = DATA_DIR / &quot;bone_marrow.h5ad&quot;
+<span class="n">FILE_NAME</span> <span class="o">=</span> <span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow.h5ad&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -858,11 +858,11 @@ FILE_NAME = DATA_DIR / &quot;bone_marrow.h5ad&quot;
 <h3><span class="section-number">14.4.3. </span>Data loading<a class="headerlink" href="#data-loading" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read(
-    filename=FILE_NAME,
-    backup_url=&quot;https://figshare.com/ndownloader/files/35826944&quot;,
-)
-adata
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_NAME</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/35826944&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata</span>
 </pre></div>
 </div>
 </div>
@@ -880,13 +880,13 @@ adata
 <p>To construct pseudotimes, the data must be preprocessed. Here, we filter out genes expressed in only a few number of cells (here, at least 20). Notably, the construction of the pseudotime later on is robust to the exact choice of the threshold. Following to this first gene filtering, the cell size is normalized, and counts log1p transformed to reduce the effect of outliers. As usual, we also identify and annotate highly variable genes. Finally, a nearest neighbor graph is constructed based on which we will define the pseudotime. The number of principle components is chosen based on the explained variance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.filter_genes(adata, min_counts=20)
-sc.pp.normalize_total(adata)
-sc.pp.log1p(adata)
-sc.pp.highly_variable_genes(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_counts</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 
-sc.tl.pca(adata)
-sc.pp.neighbors(adata, n_pcs=10)
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -894,7 +894,7 @@ sc.pp.neighbors(adata, n_pcs=10)
 <p>The two-dimensional t-SNE representation colored by cell type annotations shows that the cell types cluster together well. Additionally, the developmental hierarchy is visible.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scv.pl.scatter(adata, basis=&quot;tsne&quot;, color=&quot;clusters&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;tsne&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -908,7 +908,7 @@ sc.pp.neighbors(adata, n_pcs=10)
 <p>To calculate diffusion pseudotime (DPT), first, the corresponding diffusion maps need to be calculated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.diffmap(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">diffmap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -916,17 +916,17 @@ sc.pp.neighbors(adata, n_pcs=10)
 <p>The differentiation hierarchy in bone marrow is well understood. However, it is only know that the developmental process starts in the form of hematopoietic stem cells but not at which cell exactly in the corresponding cluster in our dataset. To identify a putative initial cell, we study the individual diffusion components. We identify the stem cell with the most extreme diffusion component in one dimension (in our case dimension 3).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Setting root cell as described above
-root_ixs = adata.obsm[&quot;X_diffmap&quot;][:, 3].argmin()
-scv.pl.scatter(
-    adata,
-    basis=&quot;diffmap&quot;,
-    color=[&quot;clusters&quot;],
-    legend_loc=&quot;right&quot;,
-    components=[&quot;2, 3&quot;],
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting root cell as described above</span>
+<span class="n">root_ixs</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_diffmap&quot;</span><span class="p">][:,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;diffmap&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;clusters&quot;</span><span class="p">],</span>
+    <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+    <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2, 3&quot;</span><span class="p">],</span>
+<span class="p">)</span>
 
-adata.uns[&quot;iroot&quot;] = root_ixs
+<span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;iroot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_ixs</span>
 </pre></div>
 </div>
 </div>
@@ -936,7 +936,7 @@ adata.uns[&quot;iroot&quot;] = root_ixs
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.dpt(adata)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">dpt</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -944,12 +944,12 @@ adata.uns[&quot;iroot&quot;] = root_ixs
 <p>Different pseudotime methods give different results. Sometimes, one pseudotime captures the underlying developmental processes more accurately. Here, we compare the just computed DPT with the pre-computed Palantir pseudotime (see <a class="reference external" href="https://github.com/dpeerlab/Palantir/blob/master/notebooks/Palantir_sample_notebook.ipynb">here</a> for the corresponding tutorial). One option to compare different pseudotimes is by coloring the low dimensional embedding of the data (here, t-SNE). Here, DPT is extremly high in the cluster of CLPs compared to all other cell types. Contrastingly, the Palantir pseudotime increases continuously with developmental maturity.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>scv.pl.scatter(
-    adata,
-    basis=&quot;tsne&quot;,
-    color=[&quot;dpt_pseudotime&quot;, &quot;palantir_pseudotime&quot;],
-    color_map=&quot;gnuplot2&quot;,
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;tsne&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dpt_pseudotime&quot;</span><span class="p">,</span> <span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">],</span>
+    <span class="n">color_map</span><span class="o">=</span><span class="s2">&quot;gnuplot2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -960,24 +960,24 @@ adata.uns[&quot;iroot&quot;] = root_ixs
 <p>Instead of coloring the lower dimensional representation of the data, we can study the distribution of pseudotime values assigned to each cell type cluster. This representation again shows that the CLP cluster forms an outlier in case of DPT. Additionally, clusters such as <em>HSC_1</em> and <em>HSC_2</em> include several cells with increased pseudotime. These inflated values contrast our prior biological knowledge that these clusters form the beginning of the developmental process.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.violin(
-    adata,
-    keys=[&quot;dpt_pseudotime&quot;, &quot;palantir_pseudotime&quot;],
-    groupby=&quot;clusters&quot;,
-    rotation=45,
-    order=[
-        &quot;HSC_1&quot;,
-        &quot;HSC_2&quot;,
-        &quot;Precursors&quot;,
-        &quot;Ery_1&quot;,
-        &quot;Ery_2&quot;,
-        &quot;Mono_1&quot;,
-        &quot;Mono_2&quot;,
-        &quot;CLP&quot;,
-        &quot;DCs&quot;,
-        &quot;Mega&quot;,
-    ],
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dpt_pseudotime&quot;</span><span class="p">,</span> <span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">],</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;HSC_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HSC_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Precursors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ery_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ery_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mono_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mono_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CLP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DCs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mega&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
