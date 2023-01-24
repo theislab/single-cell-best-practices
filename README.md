@@ -1,9 +1,11 @@
-# Multimodal single-cell best practices
+# Single-cell best practices
 
-Warning: This project and repository is under heavy development. We will tell you when it is ready.
+![Cover](https://user-images.githubusercontent.com/21954664/204139606-c1f9f5bb-55ed-4fc9-9a12-e3ad1ebcb14f.png)
 
-A version of the book is rendered [here](https://sc-best-practices.org).
-We are not making regular releases yet and the rendered version is likely to be out of date.
+> **Note**
+> This project and repository is under heavy development. However, many of the chapters are already in a good state, and we encourage interested readers to already start reading and to provide feedback.
+>
+> A version of the book is rendered [here](https://sc-best-practices.org).
 
 ## Mission
 
@@ -12,14 +14,13 @@ We are writing a book on the current single-cell analysis best-practices with ex
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](https://github.com/theislab/cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Adapting the notebooks to other datasets:
 
-All notebooks for the various steps can be found in the [jupyter book folder](single-cell-best-practices/tree/master/jupyter-book).
-These can easily be reused for your own projects.
+All notebooks for the various steps can be found in the [jupyter book folder](single-cell-best-practices/tree/master/jupyter-book) together with minimal Conda environments. Alternatively, the notebooks can be downloaded directly from the rendered version.
 
 ## Acknowledgements
 
