@@ -1,6 +1,5 @@
 # Single-cell best practices
 
-
 ![Cover](https://user-images.githubusercontent.com/21954664/217753288-080f727d-a5db-41d3-a439-ea5dbae1d1bc.png)
 
 > **Note**
