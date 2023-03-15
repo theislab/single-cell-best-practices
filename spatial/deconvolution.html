@@ -1,62 +1,51 @@
 
-
 <!DOCTYPE html>
 
-
-<html lang="en" >
-
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>26. Spatial deconvolution &#8212; Single-cell best practices</title>
-  
-  
-  
-  <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
-  </script>
-  
+    
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
-  
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -66,444 +55,830 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'spatial/deconvolution';</script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="27. Imputation" href="imputation.html" />
     <link rel="prev" title="25. Spatial domains" href="domains.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
 
-  
-  
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
-  
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
-  
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
       
-      <div class="bd-sidebar-primary bd-sidebar">
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
         
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-  
-
-<a class="navbar-brand logo" href="../preamble.html">
-  
-  
-  
-  
-    
-    
       
-    
-    
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
-</a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/scrna_seq.html">
+   2. Single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   5. Interoperability
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
+   6. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
+   7. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
+   8. Feature selection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
+   9. Dimensionality Reduction
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Identifying cellular structure
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/clustering.html">
+   10. Clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/annotation.html">
+   11. Annotation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/integration.html">
+   12. Data integration
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferring trajectories
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/pseudotemporal.html">
+   13. Pseudotemporal ordering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/rna_velocity.html">
+   14. RNA velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/lineage_tracing.html">
+   15. Lineage tracing
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   16. Differential gene expression analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/compositional.html">
+   17. Compositional analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/gsea_pathway.html">
+   18. Gene set enrichment and pathway analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/perturbation_modeling.html">
+   19. Perturbation modeling
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../mechanisms/grns.html">20. Gene regulatory networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/grns.html">
+   20. Gene regulatory networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
+   21. Cell-cell communication
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
+   22. Bulk deconvolution
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Spatial omics
+ </span>
+</p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">23. Single-cell data resolved in space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neighborhood.html">24. Neighborhood analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domains.html">25. Spatial domains</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">26. Spatial deconvolution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="imputation.html">27. Imputation</a></li>
-
-
-
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   23. Single-cell data resolved in space
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="neighborhood.html">
+   24. Neighborhood analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="domains.html">
+   25. Spatial domains
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   26. Spatial deconvolution
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="imputation.html">
+   27. Imputation
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Surface protein
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">31. Quality control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">32. Normalization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">33. Doublet detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">34. Dimensionality Reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">35. Batch correction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">36. Annotation</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/quality_control.html">
+   31. Quality control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/normalization.html">
+   32. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/doublet_detection.html">
+   33. Doublet detection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
+   34. Dimensionality Reduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/batch_correction.html">
+   35. Batch correction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/annotation.html">
+   36. Annotation
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">AIR repertoire</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  AIR repertoire
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">37. Immune Receptor Profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">38. Clonotype analysis</a></li>
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">42. Specificity analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">43. Integrating AIR and transcriptomics</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
+   37. Immune Receptor Profiling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/clonotype.html">
+   38. Clonotype analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/specificity.html">
+   42. Specificity analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
+   43. Integrating AIR and transcriptomics
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Multimodal integration
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">44. Paired integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">45. Advanced integration</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
+   44. Paired integration
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
+   45. Advanced integration
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">46. Reproducibility</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   46. Reproducibility
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Outlook
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../outlook.html">
+   47. Outlook
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   48. Acknowledgements
+  </a>
+ </li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   49. Glossary
+  </a>
+ </li>
 </ul>
 
     </div>
 </nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
     </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
+    <div id="rtd-footer-container"></div>
+</div>
 
 
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
+          
 
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
 <div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
 
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
-<div class="header-article-items header-article__inner">
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
   
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
-</label></div>
-      
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
     </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
   </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/spatial/deconvolution.ipynb" target="_blank"
-   class="btn btn-sm btn-source-edit-button dropdown-item"
-   title="Suggest edit"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="btn__text-container">Suggest edit</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fspatial/deconvolution.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../_sources/spatial/deconvolution.ipynb" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.ipynb</span>
-</a>
-</li>
-      
-      
-      
-      
+  <div class="menu-dropdown__content">
+    <ul>
       <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
+        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/spatial/deconvolution.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
 >
   
 
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
   </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
       
-  </ul>
+    </ul>
+  </div>
 </div>
-
-
-
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
-  title="Fullscreen mode"
-  data-bs-placement="bottom" data-bs-toggle="tooltip"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
 >
   
 
-<span class="btn__icon-container">
+<span class="headerbtn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-
-<script>
-document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
   </button>
-`);
-</script>
-
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
-</div></div>
-      
-    </div>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
   
-</div>
-</div>
-              
-              
 
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Spatial deconvolution</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">26.1. Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">26.2. A more mathematical description of deconvolution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stereoscope">26.2.1. Stereoscope</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location">26.2.2. Cell2location</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-in-practice">26.3. Cell2Location in practice</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">26.3.1. Pre-processing of the spatal and single-cell data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-reference-model">26.3.2. Fitting the reference model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-cell-type-mapping">26.3.3. Cell2Location cell type mapping</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downstream-analysis">26.3.4. Downstream analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">26.3.4.1. Cell-type specific expression of every gene in the spatial data</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-tissue-regions">26.3.4.2. Discrete tissue regions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">26.4. Further Models in Reference Based Deconvolution</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">26.5. Key takeaways</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">26.6. References</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">26.7. Contributors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">26.7.1. Authors</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">26.7.2. Reviewers</a></li>
-</ul>
-</li>
-</ul>
-            </nav>
-        </div>
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fspatial/deconvolution.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/spatial/deconvolution.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/spatial/deconvolution.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
     </div>
 </div>
 
-              
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   26.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">
+   26.2. A more mathematical description of deconvolution
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stereoscope">
+     26.2.1. Stereoscope
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cell2location">
+     26.2.2. Cell2location
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cell2location-in-practice">
+   26.3. Cell2Location in practice
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">
+     26.3.1. Pre-processing of the spatal and single-cell data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fitting-the-reference-model">
+     26.3.2. Fitting the reference model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cell2location-cell-type-mapping">
+     26.3.3. Cell2Location cell type mapping
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downstream-analysis">
+     26.3.4. Downstream analysis
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">
+       26.3.4.1. Cell-type specific expression of every gene in the spatial data
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#discrete-tissue-regions">
+       26.3.4.2. Discrete tissue regions
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">
+   26.4. Further Models in Reference Based Deconvolution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   26.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   26.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   26.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     26.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     26.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Spatial deconvolution</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   26.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">
+   26.2. A more mathematical description of deconvolution
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stereoscope">
+     26.2.1. Stereoscope
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cell2location">
+     26.2.2. Cell2location
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cell2location-in-practice">
+   26.3. Cell2Location in practice
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">
+     26.3.1. Pre-processing of the spatal and single-cell data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fitting-the-reference-model">
+     26.3.2. Fitting the reference model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cell2location-cell-type-mapping">
+     26.3.3. Cell2Location cell type mapping
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downstream-analysis">
+     26.3.4. Downstream analysis
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">
+       26.3.4.1. Cell-type specific expression of every gene in the spatial data
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#discrete-tissue-regions">
+       26.3.4.2. Discrete tissue regions
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">
+   26.4. Further Models in Reference Based Deconvolution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#key-takeaways">
+   26.5. Key takeaways
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   26.6. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   26.7. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     26.7.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     26.7.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
                 
-<div id="searchbox"></div>
-                <article class="bd-article" role="main">
-                  
+              <div>
+                
   <section class="tex2jax_ignore mathjax_ignore" id="spatial-deconvolution">
-<h1><span class="section-number">26. </span>Spatial deconvolution<a class="headerlink" href="#spatial-deconvolution" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">26. </span>Spatial deconvolution<a class="headerlink" href="#spatial-deconvolution" title="Permalink to this headline">#</a></h1>
 <section id="motivation">
-<h2><span class="section-number">26.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
 <p>Sport-based spatial transcriptomics data extends the classical readout from dissociated single-cell RNA sequencing with spatial locations. While still being sequencing based, and therefore unbiased in gene space, available methods do not have single-cell resolution. Visium, the commercial version of the original Spatial Transcriptomics protocol, for example, has circular capture areas with a diameter of 55mu. Dependet on the tissue and spatial location multiple cells map onto a single capture area. In addition, a single cell might only be partly contained within the capture area, leading to further differences from the expression profiles we are used to when dealing with classical scRNA-seq data.</p>
 <p>Since the biological entity of interest are single cells, we would like to demix the observed spatial expression profiles back to signals from individual cells. This process is referred to as deconvolution. Deconvolution comes in multiple flavours. The simplest form of deconvolution is to assign propotions of cell types to each spatial location. A more complex approach is to also identify within cell-type variation. Since spatial data by itself does not provide a clear notion of cell type, deconvolution methods usually rely on a single-cell reference.</p>
 <p>While the alignment of reference data with the spatial data can be done in different ways, a very popular approach is to perform a probabilistic mapping where mixture parameters are inferred such that compositions of single-cell expression profiles match the spatial expression.</p>
 <p>In this tutorial, we will describe two approaches, Stereoscope <span id="id1">[<a class="reference internal" href="#id497" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span> and Cell2Location <span id="id2">[<a class="reference internal" href="#id495" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span>, in more detail and provide a practical tutorial for one of them. We further name a few other methods which are worth testing when encountering the problem of deconvolution.</p>
 </section>
 <section id="a-more-mathematical-description-of-deconvolution">
-<h2><span class="section-number">26.2. </span>A more mathematical description of deconvolution<a class="headerlink" href="#a-more-mathematical-description-of-deconvolution" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.2. </span>A more mathematical description of deconvolution<a class="headerlink" href="#a-more-mathematical-description-of-deconvolution" title="Permalink to this headline">#</a></h2>
 <p>Spatial deconvolution is a rather complex approach that requires some understanding of the underlying methods. This section aims to explain the mathematical concepts of the task at hand. Readers only interested in how to apply deconvolution in practice can directly jump to the section <strong>Cell2location in practice</strong>.</p>
 <p>In spatial transciptomics, the observed transcriptome can be described as a latent variable model. The observed counts <span class="math notranslate nohighlight">\(x_{sg}\)</span> for gene <span class="math notranslate nohighlight">\(g\)</span> and spot <span class="math notranslate nohighlight">\(s\)</span> is the sum of the cell’s contributions <span class="math notranslate nohighlight">\(x_{sig}\)</span> that belong to this spot:</p>
 <div class="math notranslate nohighlight">
@@ -518,7 +893,7 @@ document.write(`
 <p>Using reference scRNA-seq measurements, is a good way to alleviate this issue. Their single-cell resolution enables to compute the prototype expression profiles <span class="math notranslate nohighlight">\(\boldsymbol{c}_{t}\)</span>. Knowing such prototypes reduces the above problem to finding the cell type proportions <span class="math notranslate nohighlight">\(\beta_{st}\)</span> within spots. Of course, such a transfer across technologies is only sensible if one can assume that the scRNA-seq profiles are representable for the measured counts in the spatial assay. Ideally, both experiments were conducted on the same tissue slice.</p>
 <p>Over the past two years, multiple methods were introduced that tackle the problem of deconvolution in spatial transcriptomics data. Among others, there are Stereoscope <span id="id3">[<a class="reference internal" href="#id497" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span>, DestVI <span id="id4">[<a class="reference internal" href="#id498" title="Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. Nature Biotechnology, 40(9):1360–1369, September 2022. URL: https://doi.org/10.1038/s41587-022-01272-8, doi:10.1038/s41587-022-01272-8.">Lopez <em>et al.</em>, 2022</a>]</span>, RCTD <span id="id5">[<a class="reference internal" href="#id499" title="Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. Nature Biotechnology, 40(4):517–526, April 2022. URL: https://doi.org/10.1038/s41587-021-00830-w, doi:10.1038/s41587-021-00830-w.">Cable <em>et al.</em>, 2022</a>]</span>, SPOTlight <span id="id6">[<a class="reference internal" href="#id500" title="Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. Nucleic Acids Research, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: https://doi.org/10.1093/nar/gkab043, doi:10.1093/nar/gkab043.">Elosua-Bayes <em>et al.</em>, 2021</a>]</span>, and Cell2Location <span id="id7">[<a class="reference internal" href="#id495" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span> which we will describe in more detail for exemplary purposes.</p>
 <section id="stereoscope">
-<h3><span class="section-number">26.2.1. </span>Stereoscope<a class="headerlink" href="#stereoscope" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.2.1. </span>Stereoscope<a class="headerlink" href="#stereoscope" title="Permalink to this headline">#</a></h3>
 <p>Stereoscope <span id="id8">[<a class="reference internal" href="#id497" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span> is a reference deconvolution model, which uses the negative binomial distribution for model both single cell and spatial transcriptomics expression data. It makes the simplifying assumption, that gene expression of cells of one cell type is constant, not just within one spot but globally in the entire dataset:</p>
 <div class="math notranslate nohighlight">
 \[c_{tsg} = c_{ts'g} \ \ , \quad  \forall s,s' \in \{1, ..., N_s\} \quad .\]</div>
@@ -534,7 +909,7 @@ document.write(`
 \[x_{sg} \sim NB(l_s e_g \sum_{t=1}^{T} \beta_{st} c_{tg} + \kappa_s \epsilon_g, p_g) \quad \]</div>
 </section>
 <section id="cell2location">
-<h3><span class="section-number">26.2.2. </span>Cell2location<a class="headerlink" href="#cell2location" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.2.2. </span>Cell2location<a class="headerlink" href="#cell2location" title="Permalink to this headline">#</a></h3>
 <p>Another deconvolution model which uses the negative binomial distribution is Cell2Location <span id="id9">[<a class="reference internal" href="#id495" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span>. In contrast to Stereoscope, it uses the mean parameterisation of the negative binomial. The cell counts for each cell type are modeled directly via the mean <span class="math notranslate nohighlight">\(\mu_{sg}\)</span> and the dispersion <span class="math notranslate nohighlight">\(a_g\)</span>, which is also shared between genes. Additionally, technical parameters <span class="math notranslate nohighlight">\(l_s\)</span>, <span class="math notranslate nohighlight">\(e_g\)</span> and <span class="math notranslate nohighlight">\(\epsilon_g\)</span> are used as in Stereoscope to account for multiplicative and additive shift:</p>
 <div class="math notranslate nohighlight">
 \[x_{sg} \sim {NB}(\mu_{sg}, a_g) =  {NB}(l_s (e_g \sum_{t=1}^{T} \beta_{st} c_{stg} + \epsilon_g), a_g)\]</div>
@@ -550,7 +925,7 @@ document.write(`
 </section>
 </section>
 <section id="cell2location-in-practice">
-<h2><span class="section-number">26.3. </span>Cell2Location in practice<a class="headerlink" href="#cell2location-in-practice" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.3. </span>Cell2Location in practice<a class="headerlink" href="#cell2location-in-practice" title="Permalink to this headline">#</a></h2>
 <p>An independent benchmark<span id="id10">[<a class="reference internal" href="imputation.html#id484" title="Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. Nature Methods, 19(6):662–670, June 2022. URL: https://doi.org/10.1038/s41592-022-01480-9, doi:10.1038/s41592-022-01480-9.">Li <em>et al.</em>, 2022</a>]</span> showed that for simulated datasets cell2location outperformed other approaches for cell type deconvolution, but requires more computational resources. For real datasets, SpatialDWLS and RCTD performed best in terms of the overall accuracy score based on four different accuracy metrics.</p>
 <p>The tutorial presented here follows parts of the tutorials available on the <a class="reference external" href="https://cell2location.readthedocs.io/en/latest/notebooks/cell2location_tutorial.html#Visualising-cell-abundance-in-spatial-coordinates">cell2location documentation</a>. Compared to other deconvolution methods cell2location requires more computational resources, especially on large datasets with many cells and cell types. The tutorial presented here was run with GPU access.</p>
 <p>The dataset we are using here measures different physiological zones and timepoints of human myocardial infarction and human control myocardium with 10x Visium <span id="id11">[<a class="reference internal" href="#id496" title="Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. Nature, 608(7924):766–777, August 2022. URL: https://doi.org/10.1038/s41586-022-05060-x, doi:10.1038/s41586-022-05060-x.">Kuppe <em>et al.</em>, 2022</a>]</span>. Kuppe et al. also profiled single-cell gene expression with snRNA-seq which we will use as reference dataset in this tutorial.</p>
@@ -581,7 +956,7 @@ document.write(`
 </div>
 </div>
 <section id="pre-processing-of-the-spatal-and-single-cell-data">
-<h3><span class="section-number">26.3.1. </span>Pre-processing of the spatal and single-cell data<a class="headerlink" href="#pre-processing-of-the-spatal-and-single-cell-data" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.3.1. </span>Pre-processing of the spatal and single-cell data<a class="headerlink" href="#pre-processing-of-the-spatal-and-single-cell-data" title="Permalink to this headline">#</a></h3>
 <p>Let us first inspect the two datasets we will leverage in this tutorial. We start with the spatial dataset for which we selected the four control samples from Kuppe et al.cite{<code class="docutils literal notranslate"><span class="pre">kuppe_spatial_2022</span></code>}.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -599,7 +974,9 @@ https://figshare.com/ndownloader/files/39347357
 ... this may take a while but only happens once
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "871455e50fb148b8b5dee00fe332bfc3", "version_major": 2, "version_minor": 0}</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 11725 × 36601
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "871455e50fb148b8b5dee00fe332bfc3", "version_major": 2, "version_minor": 0}
+</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 11725 × 36601
     obs: &#39;in_tissue&#39;, &#39;array_row&#39;, &#39;array_col&#39;, &#39;patient&#39;, &#39;patient_region_id&#39;, &#39;patient_group&#39;, &#39;major_label&#39;, &#39;batch&#39;
     var: &#39;gene_ids&#39;, &#39;feature_types&#39;, &#39;genome&#39;
     uns: &#39;spatial&#39;
@@ -616,7 +993,7 @@ https://figshare.com/ndownloader/files/39347357
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/31f1855dd3c8413aa539857d4bb862fe66ac2faa85c23c04218adb717c5ce77d.png" src="../_images/31f1855dd3c8413aa539857d4bb862fe66ac2faa85c23c04218adb717c5ce77d.png" />
+<img alt="../_images/deconvolution_13_0.png" src="../_images/deconvolution_13_0.png" />
 </div>
 </div>
 <p>The function returns one plot for each hostological image present in the dataset. Each sample comes from one patient in the control group and looks substantially different when just observing the image representation.</p>
@@ -637,7 +1014,9 @@ https://figshare.com/ndownloader/files/39347573
 ... this may take a while but only happens once
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4b8705774b3d453d840571af51d7a482", "version_major": 2, "version_minor": 0}</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 41663 × 29046
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4b8705774b3d453d840571af51d7a482", "version_major": 2, "version_minor": 0}
+</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 41663 × 29046
     obs: &#39;sample&#39;, &#39;n_counts&#39;, &#39;n_genes&#39;, &#39;percent_mito&#39;, &#39;doublet_score&#39;, &#39;dissociation_score&#39;, &#39;patient_region_id&#39;, &#39;donor_id&#39;, &#39;patient_group&#39;, &#39;major_labl&#39;, &#39;assay&#39;, &#39;disease&#39;, &#39;organism&#39;, &#39;sex&#39;, &#39;tissue&#39;, &#39;self_reported_ethnicity&#39;, &#39;development_stage&#39;, &#39;cell_type&#39;, &#39;cell_type_original&#39;
     var: &#39;feature_is_filtered&#39;, &#39;feature_name&#39;, &#39;feature_reference&#39;, &#39;feature_biotype&#39;
     uns: &#39;X_approximate_distribution&#39;, &#39;batch_condition&#39;, &#39;cell_type_colors&#39;, &#39;cell_type_original_colors&#39;, &#39;default_embedding&#39;, &#39;schema_version&#39;, &#39;title&#39;
@@ -662,7 +1041,7 @@ https://figshare.com/ndownloader/files/39347573
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/c3e3950e74a568ec03fd5c94703ab37f3497ff0d7021c63329019f9847bd9d9a.png" src="../_images/c3e3950e74a568ec03fd5c94703ab37f3497ff0d7021c63329019f9847bd9d9a.png" />
+<img alt="../_images/deconvolution_18_1.png" src="../_images/deconvolution_18_1.png" />
 </div>
 </div>
 <p>We observe the cell types adipocytes, cardiomyocyte, cycling cells, endothelial, fibroblast, lymphoid, mast, myeloid, neuronal, pericyte and vSMCs. Cell2location aims to deconvolve the spots in the spatial data in accordance to the above displayed cell types.</p>
@@ -842,7 +1221,7 @@ https://figshare.com/ndownloader/files/39347573
 </div>
 </section>
 <section id="fitting-the-reference-model">
-<h3><span class="section-number">26.3.2. </span>Fitting the reference model<a class="headerlink" href="#fitting-the-reference-model" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.3.2. </span>Fitting the reference model<a class="headerlink" href="#fitting-the-reference-model" title="Permalink to this headline">#</a></h3>
 <p>The first step when running cell2location is to fit the reference model which estimates the reference cell type signature. To ensure the reference is of high quality, cell2location recommends to perform a very permissive gene selection. For this purpose, one can use the function <code class="docutils literal notranslate"><span class="pre">filter_genes</span></code> with the default parameters <code class="docutils literal notranslate"><span class="pre">cell_count_cutoff=5</span></code>, <code class="docutils literal notranslate"><span class="pre">cell_percentage_cutoff2=0.03</span></code>, <code class="docutils literal notranslate"><span class="pre">nonz_mean_cutoff=1.12</span></code>. These parameters are a good starting point, but can also be adjusted depending on the dataset at hand. For more information on how to select these filtering parameters, we refer the reader to cell2location’s documentation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -857,7 +1236,7 @@ https://figshare.com/ndownloader/files/39347573
   result = getattr(ufunc, method)(*inputs, **kwargs)
 </pre></div>
 </div>
-<img alt="../_images/cffc913a64dbeb29f90d4f87fabe93cf95bbc2a9eac172e69085263d97982de5.png" src="../_images/cffc913a64dbeb29f90d4f87fabe93cf95bbc2a9eac172e69085263d97982de5.png" />
+<img alt="../_images/deconvolution_30_1.png" src="../_images/deconvolution_30_1.png" />
 </div>
 </div>
 <p>The respective function returns a 2D histogram, where the orange rectangle indicated genes that are excluded based on the defined theshold. The Y-axis shows the number of cells expressing that gene and the X-axis the average RNA count for cells with a detected gene.</p>
@@ -933,7 +1312,7 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e8130e37f9307007aeda94810f44f70ac8e5ba3a7c45fed4b3709ece97db5b32.png" src="../_images/e8130e37f9307007aeda94810f44f70ac8e5ba3a7c45fed4b3709ece97db5b32.png" />
+<img alt="../_images/deconvolution_39_0.png" src="../_images/deconvolution_39_0.png" />
 </div>
 </div>
 <p>By looking at the training history, we actually inspect that the loss curve is decreasing and leveling off. This indicates that the model converged.</p>
@@ -964,7 +1343,7 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <p>Cell2location provides a function for quality control of the model fit. Two plots are generated, showing:</p>
-<ol class="arabic simple">
+<ol class="simple">
 <li><p>the reconstruction accuracy. This plot should have most observations along a noisy diagonal.</p></li>
 <li><p>the estimated expression signatures, which should also be mainly have observations along the diagonal.</p></li>
 </ol>
@@ -975,8 +1354,8 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/49d303dcc9e0c9fdba2971eea96afdd7236dc1a1a84eb565e38e1986e09bde7e.png" src="../_images/49d303dcc9e0c9fdba2971eea96afdd7236dc1a1a84eb565e38e1986e09bde7e.png" />
-<img alt="../_images/096254cdc4912901f01888b789c6f84f1d687fb848576914c3ad65cc9994692b.png" src="../_images/096254cdc4912901f01888b789c6f84f1d687fb848576914c3ad65cc9994692b.png" />
+<img alt="../_images/deconvolution_43_0.png" src="../_images/deconvolution_43_0.png" />
+<img alt="../_images/deconvolution_43_1.png" src="../_images/deconvolution_43_1.png" />
 </div>
 </div>
 <p>We can see in the quality control plots that the reconstruction accuracy and the estimated expression signatures are both roughly forming a diagonal. We can now continue with our analysis and extract the inferred cell types signatures. For the subsequent spatial mapping, cell2location needs the estimated gene expression in every cell type.</p>
@@ -1128,7 +1507,7 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </section>
 <section id="cell2location-cell-type-mapping">
-<h3><span class="section-number">26.3.3. </span>Cell2Location cell type mapping<a class="headerlink" href="#cell2location-cell-type-mapping" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.3.3. </span>Cell2Location cell type mapping<a class="headerlink" href="#cell2location-cell-type-mapping" title="Permalink to this headline">#</a></h3>
 <p>Next, we can prepare the data for the actual spatial mapping with <code class="docutils literal notranslate"><span class="pre">setup_anndata</span></code> for the Cell2location model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1249,7 +1628,7 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 30000/30000: 100%|████████| 30000/30000 [1:16:21&lt;00:00,  6.55it/s, v_num=1, elbo_train=5.59e+7]
 </pre></div>
 </div>
-<img alt="../_images/2254826d2d8d1d7d8abd0f51985aba0309b87287f5f57d4ca7a60703455f1546.png" src="../_images/2254826d2d8d1d7d8abd0f51985aba0309b87287f5f57d4ca7a60703455f1546.png" />
+<img alt="../_images/deconvolution_54_4.png" src="../_images/deconvolution_54_4.png" />
 </div>
 </div>
 <p>Again, we see that the training history levels off and the model converged. We can now export the estimated cell type wise abundance in each spot and save it into the spatial data by sampling from the posterior distribution.</p>
@@ -1281,7 +1660,7 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a69d2d13cb79868ea22e912ffa7306ec1b67e3ed88251bd8ffe485cc50869638.png" src="../_images/a69d2d13cb79868ea22e912ffa7306ec1b67e3ed88251bd8ffe485cc50869638.png" />
+<img alt="../_images/deconvolution_58_0.png" src="../_images/deconvolution_58_0.png" />
 </div>
 </div>
 <p>As we can see the reconstruction accuracy roughly shows a diagonal, so we can continue with the analysis and inspecting the results.</p>
@@ -1316,7 +1695,7 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a344fe5a7551925d2fc198c11f5c355f601928b8b809ec5a4014151f25e163cc.png" src="../_images/a344fe5a7551925d2fc198c11f5c355f601928b8b809ec5a4014151f25e163cc.png" />
+<img alt="../_images/deconvolution_61_0.png" src="../_images/deconvolution_61_0.png" />
 </div>
 </div>
 <p>As one can see, the estimated cell type abundances vary between spots and cell types. Cardiomyoctes seem to be present in most spots while cell types only appear in a few spots.</p>
@@ -1341,15 +1720,15 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/34f4259a9bf815c74fae08167360c6a75c8237b70ab46f8fa53cdebbbf62b0b8.png" src="../_images/34f4259a9bf815c74fae08167360c6a75c8237b70ab46f8fa53cdebbbf62b0b8.png" />
+<img alt="../_images/deconvolution_63_0.png" src="../_images/deconvolution_63_0.png" />
 </div>
 </div>
 <p>The plot helps to identify the main cell types in the spots and assess which cell type might mainly be present in one spot. For example, we can observe that most spots are mainly formed by cardiomyocytes, but a few are also mainly composed of endothelial or mast cells.</p>
 </section>
 <section id="downstream-analysis">
-<h3><span class="section-number">26.3.4. </span>Downstream analysis<a class="headerlink" href="#downstream-analysis" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.3.4. </span>Downstream analysis<a class="headerlink" href="#downstream-analysis" title="Permalink to this headline">#</a></h3>
 <section id="cell-type-specific-expression-of-every-gene-in-the-spatial-data">
-<h4><span class="section-number">26.3.4.1. </span>Cell-type specific expression of every gene in the spatial data<a class="headerlink" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">26.3.4.1. </span>Cell-type specific expression of every gene in the spatial data<a class="headerlink" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data" title="Permalink to this headline">#</a></h4>
 <p>Cell2location can additionally compute the posterior distribution of the cell type specific expression. This step extracts the cell-type specific expression of every gene at every spatial location in the spatial data. The cell-type specific expression is saved for each cell type as an additional layer to the spatial data object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1381,12 +1760,12 @@ Sampling global variables, sample: 100%|█████████████�
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c455c7ae4f1052c2efe09d672a4f13a47dc7f8530e6478178a1dc0c7427a295f.png" src="../_images/c455c7ae4f1052c2efe09d672a4f13a47dc7f8530e6478178a1dc0c7427a295f.png" />
+<img alt="../_images/deconvolution_68_0.png" src="../_images/deconvolution_68_0.png" />
 </div>
 </div>
 </section>
 <section id="discrete-tissue-regions">
-<h4><span class="section-number">26.3.4.2. </span>Discrete tissue regions<a class="headerlink" href="#discrete-tissue-regions" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">26.3.4.2. </span>Discrete tissue regions<a class="headerlink" href="#discrete-tissue-regions" title="Permalink to this headline">#</a></h4>
 <p>Based on the computed cell abundance estimated by cell2location, we can identify tissue reagion with similar cell compositions. For this purpose we compute a KNN graph based on the 5% cell abundance and perform leiden clustering in the connectivities. The clustering is performed on all sections jointly to identify comparable tissue regions across samples.</p>
 <p>We save the resulting clustering in <code class="docutils literal notranslate"><span class="pre">adata_vis.obs['region_cluster']</span></code>.</p>
 <div class="cell docutils container">
@@ -1437,7 +1816,7 @@ running Leiden clustering
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/93593324c02f9bda58435a9c6b6af13521f4ece90b69d526a9e1d90137801279.png" src="../_images/93593324c02f9bda58435a9c6b6af13521f4ece90b69d526a9e1d90137801279.png" />
+<img alt="../_images/deconvolution_72_2.png" src="../_images/deconvolution_72_2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1447,20 +1826,20 @@ running Leiden clustering
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/76466efa7a3121767a926d12ebfb51ca4635edca866b0f8b5863c032390e86d9.png" src="../_images/76466efa7a3121767a926d12ebfb51ca4635edca866b0f8b5863c032390e86d9.png" />
+<img alt="../_images/deconvolution_73_0.png" src="../_images/deconvolution_73_0.png" />
 </div>
 </div>
 </section>
 </section>
 </section>
 <section id="further-models-in-reference-based-deconvolution">
-<h2><span class="section-number">26.4. </span>Further Models in Reference Based Deconvolution<a class="headerlink" href="#further-models-in-reference-based-deconvolution" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.4. </span>Further Models in Reference Based Deconvolution<a class="headerlink" href="#further-models-in-reference-based-deconvolution" title="Permalink to this headline">#</a></h2>
 <p>DestVI <span id="id13">[<a class="reference internal" href="#id498" title="Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. Nature Biotechnology, 40(9):1360–1369, September 2022. URL: https://doi.org/10.1038/s41587-022-01272-8, doi:10.1038/s41587-022-01272-8.">Lopez <em>et al.</em>, 2022</a>]</span> incorporates complex nonlinear relationships into the latent variable setup through the use of neural networks. It is the first model that allows for variation of cell type expression prototypes in the data set through a latent variable. These concepts combine to parameterize the mean of a standard negative binomial distribution with gene dependent success probability <span class="math notranslate nohighlight">\(p_g\)</span> as in Stereoscope.</p>
 <p>RCTD <span id="id14">[<a class="reference internal" href="#id499" title="Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. Nature Biotechnology, 40(4):517–526, April 2022. URL: https://doi.org/10.1038/s41587-021-00830-w, doi:10.1038/s41587-021-00830-w.">Cable <em>et al.</em>, 2022</a>]</span> is a reference based deconvolution model which uses the Poisson distribution instead of the more common negative binomial. For its reference cell type prototypes, it simply uses mean expressions for each cell type. This straightforward approach aims for maximum robustness and has shown particular promise in the deconvolution of cell doublets.</p>
 <p>SPOTlight <span id="id15">[<a class="reference internal" href="#id500" title="Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. Nucleic Acids Research, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: https://doi.org/10.1093/nar/gkab043, doi:10.1093/nar/gkab043.">Elosua-Bayes <em>et al.</em>, 2021</a>]</span> uses non-negative matrix factorisation to first decompose the cells by genes matrix from a reference into two parts. First, a cells by topics matrix <span class="math notranslate nohighlight">\(H\)</span> and a topics by genes matrix <span class="math notranslate nohighlight">\(W\)</span>. The matrix <span class="math notranslate nohighlight">\(W\)</span> is then transferred to ST where a spots by topics matrix <span class="math notranslate nohighlight">\(H'\)</span> is inferred. Topics are not exactly cell types and much care has to be put to ensure that correct latent features are modeled.</p>
 </section>
 <section id="key-takeaways">
-<h2><span class="section-number">26.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Reference based deconvolution methods can be used for increasing the resolution of spot-based spatial transcriptomics data.</p></li>
 <li><p>Cell2location outperformed other approaches for cell type deconvolution, but requires more computational resources.</p></li>
@@ -1468,56 +1847,44 @@ running Leiden clustering
 </ul>
 </section>
 <section id="references">
-<h2><span class="section-number">26.6. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
 <div class="docutils container" id="id16">
-<div class="citation" id="id497" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialABA+20<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
-<p>Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. <em>Communications Biology</em>, 3(1):565, October 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">https://doi.org/10.1038/s42003-020-01247-y</a>, <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">doi:10.1038/s42003-020-01247-y</a>.</p>
-</div>
-<div class="citation" id="id499" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialCMZ+22<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id14">2</a>)</span>
-<p>Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(4):517–526, April 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">https://doi.org/10.1038/s41587-021-00830-w</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">doi:10.1038/s41587-021-00830-w</a>.</p>
-</div>
-<div class="citation" id="id500" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialEBNM+21<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
-<p>Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. <em>Nucleic Acids Research</em>, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">https://doi.org/10.1093/nar/gkab043</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">doi:10.1093/nar/gkab043</a>.</p>
-</div>
-<div class="citation" id="id495" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialKSD+22<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id9">3</a>)</span>
-<p>Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(5):661–671, May 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">https://doi.org/10.1038/s41587-021-01139-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">doi:10.1038/s41587-021-01139-4</a>.</p>
-</div>
-<div class="citation" id="id496" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialKRFL+22<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id12">2</a>)</span>
-<p>Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. <em>Nature</em>, 608(7924):766–777, August 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">https://doi.org/10.1038/s41586-022-05060-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">doi:10.1038/s41586-022-05060-x</a>.</p>
-</div>
-<div class="citation" id="id491" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">spatialLZG+22</a><span class="fn-bracket">]</span></span>
-<p>Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. <em>Nature Methods</em>, 19(6):662–670, June 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">https://doi.org/10.1038/s41592-022-01480-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">doi:10.1038/s41592-022-01480-9</a>.</p>
-</div>
-<div class="citation" id="id498" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>spatialLLKS+22<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id13">2</a>)</span>
-<p>Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. <em>Nature Biotechnology</em>, 40(9):1360–1369, September 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">https://doi.org/10.1038/s41587-022-01272-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">doi:10.1038/s41587-022-01272-8</a>.</p>
-</div>
-</div>
+<dl class="citation">
+<dt class="label" id="id497"><span class="brackets">spatialABA+20</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>,<a href="#id8">3</a>)</span></dt>
+<dd><p>Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. <em>Communications Biology</em>, 3(1):565, October 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">https://doi.org/10.1038/s42003-020-01247-y</a>, <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">doi:10.1038/s42003-020-01247-y</a>.</p>
+</dd>
+<dt class="label" id="id499"><span class="brackets">spatialCMZ+22</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id14">2</a>)</span></dt>
+<dd><p>Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(4):517–526, April 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">https://doi.org/10.1038/s41587-021-00830-w</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">doi:10.1038/s41587-021-00830-w</a>.</p>
+</dd>
+<dt class="label" id="id500"><span class="brackets">spatialEBNM+21</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id15">2</a>)</span></dt>
+<dd><p>Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. <em>Nucleic Acids Research</em>, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">https://doi.org/10.1093/nar/gkab043</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">doi:10.1093/nar/gkab043</a>.</p>
+</dd>
+<dt class="label" id="id495"><span class="brackets">spatialKSD+22</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id7">2</a>,<a href="#id9">3</a>)</span></dt>
+<dd><p>Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(5):661–671, May 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">https://doi.org/10.1038/s41587-021-01139-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">doi:10.1038/s41587-021-01139-4</a>.</p>
+</dd>
+<dt class="label" id="id496"><span class="brackets">spatialKRFL+22</span><span class="fn-backref">(<a href="#id11">1</a>,<a href="#id12">2</a>)</span></dt>
+<dd><p>Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. <em>Nature</em>, 608(7924):766–777, August 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">https://doi.org/10.1038/s41586-022-05060-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">doi:10.1038/s41586-022-05060-x</a>.</p>
+</dd>
+<dt class="label" id="id491"><span class="brackets"><a class="fn-backref" href="#id10">spatialLZG+22</a></span></dt>
+<dd><p>Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. <em>Nature Methods</em>, 19(6):662–670, June 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">https://doi.org/10.1038/s41592-022-01480-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">doi:10.1038/s41592-022-01480-9</a>.</p>
+</dd>
+<dt class="label" id="id498"><span class="brackets">spatialLLKS+22</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id13">2</a>)</span></dt>
+<dd><p>Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. <em>Nature Biotechnology</em>, 40(9):1360–1369, September 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">https://doi.org/10.1038/s41587-022-01272-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">doi:10.1038/s41587-022-01272-8</a>.</p>
+</dd>
+</dl>
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">26.7. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">26.7. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
 <section id="authors">
-<h3><span class="section-number">26.7.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.7.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Leon Hetzel</p></li>
 <li><p>Anna Schaar</p></li>
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">26.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">26.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
 </ul>
@@ -1545,130 +1912,57 @@ running Leiden clustering
     </script>
     <script>kernelName = 'cell2loc_env'</script>
 
-                </article>
+              </div>
               
-
-              
-              
-                <footer class="bd-footer-article">
-                  <!-- Previous / next buttons -->
-<div class="prev-next-area">
-    <a class="left-prev"
-       href="domains.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">25. </span>Spatial domains</p>
-      </div>
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="domains.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">25. </span>Spatial domains</p>
+        </div>
     </a>
-    <a class="right-next"
-       href="imputation.html"
-       title="next page">
-      <div class="prev-next-info">
+    <a class='right-next' id="next-link" href="imputation.html" title="next page">
+    <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">27. </span>Imputation</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">26.1. Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">26.2. A more mathematical description of deconvolution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stereoscope">26.2.1. Stereoscope</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location">26.2.2. Cell2location</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-in-practice">26.3. Cell2Location in practice</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">26.3.1. Pre-processing of the spatal and single-cell data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-reference-model">26.3.2. Fitting the reference model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-cell-type-mapping">26.3.3. Cell2Location cell type mapping</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downstream-analysis">26.3.4. Downstream analysis</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">26.3.4.1. Cell-type specific expression of every gene in the spatial data</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-tissue-regions">26.3.4.2. Discrete tissue regions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">26.4. Further Models in Reference Based Deconvolution</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">26.5. Key takeaways</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">26.6. References</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">26.7. Contributors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">26.7.1. Authors</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">26.7.2. Reviewers</a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            <div class="bd-footer-content__inner">
-<div class="bd-footer-content__inner container">
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
   
-  <div class="footer-item">
-    
-<p class="component-author">
-By Lukas Heumos, Anna Schaar
-</p>
-
-  </div>
+    By Lukas Heumos, Anna Schaar<br/>
   
-  <div class="footer-item">
-    
-  <p class="copyright">
-    
-      © Copyright 2022.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-<div class="extra_footer">
-  <div>
+      &copy; Copyright 2022.<br/>
+    <div class="extra_footer">
+      <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-</div>
-  </div>
-  
-</div></div>
-          </footer>
-        
-
-      </main>
     </div>
-  </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
 
-  <footer class="bd-footer">
-  </footer>
+
   </body>
 </html>
