@@ -1,52 +1,62 @@
 
+
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>21. Cell-cell communication &#8212; Single-cell best practices</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
-    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -54,893 +64,455 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'mechanisms/cell_cell_communication';</script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="22. Bulk deconvolution" href="../deconvolution/bulk_deconvolution.html" />
     <link rel="prev" title="20. Gene regulatory networks" href="grns.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Introduction
- </span>
-</p>
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/prior_art.html">
-   1. Prior art
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/scrna_seq.html">
-   2. Single-cell RNA sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/raw_data_processing.html">
-   3. Raw data processing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/analysis_tools.html">
-   4. Analysis frameworks and tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/interoperability.html">
-   5. Interoperability
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Preprocessing and visualization
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
-   6. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
-   7. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
-   8. Feature selection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
-   9. Dimensionality Reduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Identifying cellular structure
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/clustering.html">
-   10. Clustering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/annotation.html">
-   11. Annotation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/integration.html">
-   12. Data integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Inferring trajectories
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/pseudotemporal.html">
-   13. Pseudotemporal ordering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/rna_velocity.html">
-   14. RNA velocity
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/lineage_tracing.html">
-   15. Lineage tracing
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Dealing with conditions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/differential_gene_expression.html">
-   16. Differential gene expression analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/compositional.html">
-   17. Compositional analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/gsea_pathway.html">
-   18. Gene set enrichment and pathway analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/perturbation_modeling.html">
-   19. Perturbation modeling
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Modeling mechanisms
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="grns.html">
-   20. Gene regulatory networks
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   21. Cell-cell communication
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="grns.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">21. Cell-cell communication</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Deconvolution
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
-   22. Bulk deconvolution
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Surface protein
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/quality_control.html">
-   23. Quality control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/normalization.html">
-   24. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/doublet_detection.html">
-   25. Doublet detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
-   26. Dimensionality Reduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/batch_correction.html">
-   27. Batch correction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/annotation.html">
-   28. Annotation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">23. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">24. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">25. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">26. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">27. Imputation</a></li>
+
+
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  AIR repertoire
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
-   29. Immune Receptor Profiling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/clonotype.html">
-   30. Clonotype analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/specificity.html">
-   34. Specificity analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
-   35. Integrating AIR and transcriptomics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">31. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">32. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">33. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">34. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">35. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">36. Annotation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Multimodal integration
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">AIR repertoire</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
-   36. Paired integration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
-   37. Advanced integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">37. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">38. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">42. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">43. Integrating AIR and transcriptomics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reproducibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../reproducibility/introduction.html">
-   38. Reproducibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">44. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">45. Advanced integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Outlook
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../outlook.html">
-   39. Outlook
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">46. Reproducibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Acknowledgements
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../acknowledgements.html">
-   40. Acknowledgements
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Glossary
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../glossary.html">
-   41. Glossary
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/mechanisms/cell_cell_communication.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/mechanisms/cell_cell_communication.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fmechanisms/cell_cell_communication.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/mechanisms/cell_cell_communication.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fmechanisms/cell_cell_communication.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/mechanisms/cell_cell_communication.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/mechanisms/cell_cell_communication.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   21.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#approaches">
-   21.2. Approaches
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup">
-   21.3. Environment setup
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#case-study">
-   21.4. Case Study
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ligand-receptor-inference">
-     21.4.1. Ligand-receptor inference
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#visual-exploration">
-       21.4.1.1. Visual exploration
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#generating-a-ligand-receptor-consensus-with-liana">
-       21.4.1.2. Generating a Ligand-Receptor consensus with LIANA
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#modelling-differential-intercellular-signalling-with-nichenet">
-     21.4.2. Modelling differential intercellular signalling with NicheNet
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#load-nichenet-prior-knowledge">
-       21.4.2.1. Load NicheNet Prior-Knowledge
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions">
-         21.4.2.1.1. Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types">
-         21.4.2.1.2. Step 2. Define a set of ligands that can
-         <strong>
-          potentially
-         </strong>
-         affect receiver cell types
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s">
-         21.4.2.1.3. Step 3. Define a gene set of interest in receiver cell type(s)
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-4-nichenet-ligand-activity-estimation">
-         21.4.2.1.4. Step 4. NicheNet ligand activity estimation
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands">
-         21.4.2.1.5. Step 5. Infer &amp; Visualize top-predicted target genes for top ligands
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#visualize-top-ligands-regulatory-targets">
-         21.4.2.1.6. Visualize top ligands &amp; regulatory targets
-        </a>
-       </li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#combining-nichenet-output-with-ligand-receptor-inference">
-     21.4.3. Combining NicheNet output with ligand-receptor inference
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   21.5. Key takeaways
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#assumptions-limitations">
-     21.5.1. Assumptions &amp; Limitations
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#summary-outlook">
-     21.5.2. Summary &amp; Outlook:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   21.6. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributions">
-   21.7. Contributions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     21.7.1. Authors:
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     21.7.2. Reviewers:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#session-info">
-   21.8. Session Info
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   21.9. References
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Cell-cell communication</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   21.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#approaches">
-   21.2. Approaches
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup">
-   21.3. Environment setup
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#case-study">
-   21.4. Case Study
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ligand-receptor-inference">
-     21.4.1. Ligand-receptor inference
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#visual-exploration">
-       21.4.1.1. Visual exploration
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#generating-a-ligand-receptor-consensus-with-liana">
-       21.4.1.2. Generating a Ligand-Receptor consensus with LIANA
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#modelling-differential-intercellular-signalling-with-nichenet">
-     21.4.2. Modelling differential intercellular signalling with NicheNet
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#load-nichenet-prior-knowledge">
-       21.4.2.1. Load NicheNet Prior-Knowledge
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions">
-         21.4.2.1.1. Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types">
-         21.4.2.1.2. Step 2. Define a set of ligands that can
-         <strong>
-          potentially
-         </strong>
-         affect receiver cell types
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s">
-         21.4.2.1.3. Step 3. Define a gene set of interest in receiver cell type(s)
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-4-nichenet-ligand-activity-estimation">
-         21.4.2.1.4. Step 4. NicheNet ligand activity estimation
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands">
-         21.4.2.1.5. Step 5. Infer &amp; Visualize top-predicted target genes for top ligands
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#visualize-top-ligands-regulatory-targets">
-         21.4.2.1.6. Visualize top ligands &amp; regulatory targets
-        </a>
-       </li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#combining-nichenet-output-with-ligand-receptor-inference">
-     21.4.3. Combining NicheNet output with ligand-receptor inference
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   21.5. Key takeaways
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#assumptions-limitations">
-     21.5.1. Assumptions &amp; Limitations
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#summary-outlook">
-     21.5.2. Summary &amp; Outlook:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   21.6. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributions">
-   21.7. Contributions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     21.7.1. Authors:
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     21.7.2. Reviewers:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#session-info">
-   21.8. Session Info
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   21.9. References
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Cell-cell communication</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">21.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approaches">21.2. Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">21.3. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study">21.4. Case Study</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ligand-receptor-inference">21.4.1. Ligand-receptor inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-exploration">21.4.1.1. Visual exploration</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-a-ligand-receptor-consensus-with-liana">21.4.1.2. Generating a Ligand-Receptor consensus with LIANA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelling-differential-intercellular-signalling-with-nichenet">21.4.2. Modelling differential intercellular signalling with NicheNet</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-nichenet-prior-knowledge">21.4.2.1. Load NicheNet Prior-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions">21.4.2.1.1. Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types">21.4.2.1.2. Step 2. Define a set of ligands that can <strong>potentially</strong> affect receiver cell types</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s">21.4.2.1.3. Step 3. Define a gene set of interest in receiver cell type(s)</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-nichenet-ligand-activity-estimation">21.4.2.1.4. Step 4. NicheNet ligand activity estimation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands">21.4.2.1.5. Step 5. Infer &amp; Visualize top-predicted target genes for top ligands</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-top-ligands-regulatory-targets">21.4.2.1.6. Visualize top ligands &amp; regulatory targets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-nichenet-output-with-ligand-receptor-inference">21.4.3. Combining NicheNet output with ligand-receptor inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">21.5. Key takeaways</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-limitations">21.5.1. Assumptions &amp; Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-outlook">21.5.2. Summary &amp; Outlook:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">21.6. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributions">21.7. Contributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">21.7.1. Authors:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">21.7.2. Reviewers:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-info">21.8. Session Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">21.9. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="cell-cell-communication">
-<span id="cell-cell"></span><h1><span class="section-number">21. </span>Cell-cell communication<a class="headerlink" href="#cell-cell-communication" title="Permalink to this headline">#</a></h1>
+<span id="cell-cell"></span><h1><span class="section-number">21. </span>Cell-cell communication<a class="headerlink" href="#cell-cell-communication" title="Permalink to this heading">#</a></h1>
 <p><em>TL;DR This chapter serves as a brief overview of basic concepts and assumptions of cell-cell communication inference from single-cell transcriptomics data. We provide examples of the two most common approaches for CCC inference: those that focus on ligand-receptor interactions and those that include downstream response.</em></p>
 <section id="motivation">
-<h2><span class="section-number">21.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
 <p>Cell communication is a process by which cells react to stimuli from their environment and also from themselves. In multicellular organisms, the dynamic coordination of cells, also called cell-cell communication (CCC), is involved in many biological processes, such as apoptosis and cell migration, and is consequently essential in homeostasis and disease. CCC commonly focuses on protein-mediated interactions, most typically perceived as a secreted ligand binding to its corresponding plasma membrane receptor. However, this picture can be broadened to include secreted enzymes, extra-cellular matrix proteins, transporters, and interactions that require the physical contact between cells, such as cell-cell adhesion proteins and gap junctions <span id="id1">[<a class="reference internal" href="#id389" title="Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. Nature Reviews. Genetics, 22(2):71-88, 2021. URL: http://www.nature.com/articles/s41576-020-00292-x (visited on 2021-10-05), doi:10.1038/s41576-020-00292-x.">Armingol <em>et al.</em>, 2021</a>]</span>. Cell communication is further not independent of other processes, but the contrary, as external stimuli commonly elicit a downstream response. In the case of CCC, this is typically perceived as the induction of canonical pathways and downstream transcription factors in the cells receiving the signal, or receiver cells. Ultimately these external stimuli alter the function of receiver cells, and this alteration is further propagated via the subsequent interaction of these cells with their microenvironment.
 Traditionally, the study of CCC required specialized in-situ biochemical assays, such proximity labelling proteomics, co-immunoprecipitation, and yeast two-hybrid screening <span id="id2">[<a class="reference internal" href="#id389" title="Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. Nature Reviews. Genetics, 22(2):71-88, 2021. URL: http://www.nature.com/articles/s41576-020-00292-x (visited on 2021-10-05), doi:10.1038/s41576-020-00292-x.">Armingol <em>et al.</em>, 2021</a>]</span>. Yet, the rapid developments and dropping costs of transcriptomics data generation has enabled a paradigm shift away from focusing on which types of cells are present, but rather on the relationships between them <span id="id3">[<a class="reference internal" href="#id392" title="Axel A Almet, Zixuan Cang, Suoqin Jin, and Qing Nie. The landscape of cell-cell communication through single-cell transcriptomics. Current Opinion in Systems Biology, 26:12-23, jun 2021. URL: https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081 (visited on 2021-09-06), doi:10.1016/j.coisb.2021.03.007.">Almet <em>et al.</em>, 2021</a>]</span>. As a consequence, CCC inference from single-cell data is now becoming a routine approach, capable of providing a system-level hypotheses of intercellular crosstalk in vivo.</p>
 </section>
 <section id="approaches">
-<h2><span class="section-number">21.2. </span>Approaches<a class="headerlink" href="#approaches" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.2. </span>Approaches<a class="headerlink" href="#approaches" title="Permalink to this heading">#</a></h2>
 <p>As a result of this increased interest, a number of computational tools for CCC inference from single-cell transcriptomics have emerged that can be classified as those that predict CCC interactions alone, commonly referred to as ligand-receptor inference methods (e.g. <span id="id4">[<a class="reference internal" href="#id388" title="Mirjana Efremova, Miquel Vento-Tormo, Sarah A Teichmann, and Roser Vento-Tormo. CellPhoneDB: inferring cell-cell communication from combined expression of multi-subunit ligand-receptor complexes. Nature Protocols, 15(4):1484-1506, apr 2020. URL: http://www.nature.com/articles/s41596-020-0292-x (visited on 2020-12-04), doi:10.1038/s41596-020-0292-x.">Efremova <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id405" title="Rui Hou, Elena Denisenko, Huan Ting Ong, Jordan A Ramilowski, and Alistair RR Forrest. Predicting cell-to-cell communication networks using natmi. Nature communications, 11(1):1–11, 2020.">Hou <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id391" title="Suoqin Jin, Christian F Guerrero-Juarez, Lihua Zhang, Ivan Chang, Raul Ramos, Chen-Hsiang Kuan, Peggy Myung, Maksim V Plikus, and Qing Nie. Inference and analysis of cell-cell communication using CellChat. Nature Communications, 12(1):1088, feb 2021. URL: http://dx.doi.org/10.1038/s41467-021-21246-9 (visited on 2021-10-05), doi:10.1038/s41467-021-21246-9.">Jin <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id398" title="Micha Sam Brickman Raredon, Junchen Yang, James Garritano, Meng Wang, Dan Kushnir, Jonas Christian Schupp, Taylor S Adams, Allison M Greaney, Katherine L Leiby, Naftali Kaminski, Yuval Kluger, Andre Levchenko, and Laura E Niklason. Computation and visualization of cell-cell signaling topologies in single-cell systems data using connectome. Scientific Reports, 12(1):4187, mar 2022. URL: http://dx.doi.org/10.1038/s41598-022-07959-x (visited on 2021-01-25), doi:10.1038/s41598-022-07959-x.">Raredon <em>et al.</em>, 2022</a>]</span>), and those that additionally estimate intracellular activities induced by CCC (e.g. <span id="id5">[<a class="reference internal" href="#id387" title="Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. Nature Methods, 17(2):159-162, feb 2020. URL: http://www.nature.com/articles/s41592-019-0667-5 (visited on 2021-10-05), doi:10.1038/s41592-019-0667-5.">Browaeys <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id394" title="Yuxuan Hu, Tao Peng, Lin Gao, and Kai Tan. CytoTalk: de novo construction of signal transduction networks using single-cell transcriptomic data. Science Advances, apr 2021. URL: https://advances.sciencemag.org/lookup/doi/10.1126/sciadv.abf1356 (visited on 2021-10-11), doi:10.1126/sciadv.abf1356.">Hu <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id386" title="Shuxiong Wang, Matthew Karikomi, Adam L MacLean, and Qing Nie. Cell lineage and communication network inference via optimization for single-cell transcriptomics. Nucleic Acids Research, 47(11):e66, jun 2019. URL: https://academic.oup.com/nar/article/47/11/e66/5421812 (visited on 2019-05-01), doi:10.1093/nar/gkz204.">Wang <em>et al.</em>, 2019</a>]</span>). Both categories of tools use gene expression information as a proxy of protein abundance, and typically require the clustering of cells into biologically-meaningful groups (See Annotation tutorial). These CCC tools infer intercellular crosstalk between pairs of cell groups, one group being the source and the other the receiver of a CCC event. CCC events are thus commonly represented as interactions between proteins, expressed by the source and receiver cell clusters.</p>
 <p>The information about the interacting proteins is commonly extracted from prior knowledge resources. In the case of ligand-receptor methods, the interactions can also be represented by heteromeric protein complexes, as different subunit combinations can induce distinct responses and the inclusion of protein complex information has been shown to reduce false positive rates <span id="id6">[<a class="reference internal" href="#id388" title="Mirjana Efremova, Miquel Vento-Tormo, Sarah A Teichmann, and Roser Vento-Tormo. CellPhoneDB: inferring cell-cell communication from combined expression of multi-subunit ligand-receptor complexes. Nature Protocols, 15(4):1484-1506, apr 2020. URL: http://www.nature.com/articles/s41596-020-0292-x (visited on 2020-12-04), doi:10.1038/s41596-020-0292-x.">Efremova <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id391" title="Suoqin Jin, Christian F Guerrero-Juarez, Lihua Zhang, Ivan Chang, Raul Ramos, Chen-Hsiang Kuan, Peggy Myung, Maksim V Plikus, and Qing Nie. Inference and analysis of cell-cell communication using CellChat. Nature Communications, 12(1):1088, feb 2021. URL: http://dx.doi.org/10.1038/s41467-021-21246-9 (visited on 2021-10-05), doi:10.1038/s41467-021-21246-9.">Jin <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id402" title="Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. Genome Biology, 23(1):218, oct 2022. URL: http://dx.doi.org/10.1186/s13059-022-02783-y (visited on 2022-10-20), doi:10.1186/s13059-022-02783-y.">Liu <em>et al.</em>, 2022</a>]</span>. On the other hand, the approaches that model intracellular signalling also leverage the functional information in receiver cell types, and thus require additional information such as intracellular protein-protein interaction network and/or gene regulatory interactions.</p>
 <p>Recent work has highlighted that the choice of method and/or resource leads to limited consensus in inferred predictions when using different tools <span id="id7">[<a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id402" title="Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. Genome Biology, 23(1):218, oct 2022. URL: http://dx.doi.org/10.1186/s13059-022-02783-y (visited on 2022-10-20), doi:10.1186/s13059-022-02783-y.">Liu <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id404" title="Saidi Wang, Hansi Zheng, James S Choi, Jae K Lee, Xiaoman Li, and Haiyan Hu. A systematic evaluation of the computational tools for ligand-receptor-based cell-cell interaction inference. Briefings in functional genomics, 21(5):339-356, sep 2022. URL: http://dx.doi.org/10.1093/bfgp/elac019 (visited on 2022-04-27), doi:10.1093/bfgp/elac019.">Wang <em>et al.</em>, 2022</a>]</span>, thus prompting caution when interpreting their output. The CCC field is further plagued by the lack of ground truth <span id="id8">[<a class="reference internal" href="#id392" title="Axel A Almet, Zixuan Cang, Suoqin Jin, and Qing Nie. The landscape of cell-cell communication through single-cell transcriptomics. Current Opinion in Systems Biology, 26:12-23, jun 2021. URL: https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081 (visited on 2021-09-06), doi:10.1016/j.coisb.2021.03.007.">Almet <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id389" title="Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. Nature Reviews. Genetics, 22(2):71-88, 2021. URL: http://www.nature.com/articles/s41576-020-00292-x (visited on 2021-10-05), doi:10.1038/s41576-020-00292-x.">Armingol <em>et al.</em>, 2021</a>]</span>, capable of capturing the complex and dynamic interplay between large numbers of cells and molecules. Nevertheless, independent evaluations have shown that CCC methods are fairly robust to the introduction of noise <span id="id9">[<a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id402" title="Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. Genome Biology, 23(1):218, oct 2022. URL: http://dx.doi.org/10.1186/s13059-022-02783-y (visited on 2022-10-20), doi:10.1186/s13059-022-02783-y.">Liu <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id404" title="Saidi Wang, Hansi Zheng, James S Choi, Jae K Lee, Xiaoman Li, and Haiyan Hu. A systematic evaluation of the computational tools for ligand-receptor-based cell-cell interaction inference. Briefings in functional genomics, 21(5):339-356, sep 2022. URL: http://dx.doi.org/10.1093/bfgp/elac019 (visited on 2022-04-27), doi:10.1093/bfgp/elac019.">Wang <em>et al.</em>, 2022</a>]</span>, and are largely concordant with alternative data modalities such as intracellular signalling and spatial information <span id="id10">[<a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id402" title="Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. Genome Biology, 23(1):218, oct 2022. URL: http://dx.doi.org/10.1186/s13059-022-02783-y (visited on 2022-10-20), doi:10.1186/s13059-022-02783-y.">Liu <em>et al.</em>, 2022</a>]</span>.</p>
@@ -949,7 +521,7 @@ Traditionally, the study of CCC required specialized in-situ biochemical assays,
 <p><strong>FIGURE 22.1</strong>. Cell-Cell Communication Overview</p>
 </section>
 <section id="environment-setup">
-<h2><span class="section-number">21.3. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.3. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># python libs</span>
@@ -1009,7 +581,7 @@ suppressPackageStartupMessages({
 </div>
 </section>
 <section id="case-study">
-<h2><span class="section-number">21.4. </span>Case Study<a class="headerlink" href="#case-study" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.4. </span>Case Study<a class="headerlink" href="#case-study" title="Permalink to this heading">#</a></h2>
 <p>As a simple example, we will look at ~25k PBMCs from 8 lupus patients, each before and after IFN-β stimulation <span id="id14">[<a class="reference internal" href="#id408" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>. Note that by focusing on PBMCs, for the purpose of this tutorial, we assume that coordinated events occur among them.</p>
 <p>So, let’s first download the pre-processed data.</p>
 <div class="cell docutils container">
@@ -1086,11 +658,11 @@ suppressPackageStartupMessages({
 /home/dbdimitrov/anaconda3/envs/cellcell/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:364: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
 </pre></div>
 </div>
-<img alt="../_images/cell_cell_communication_23_1.png" src="../_images/cell_cell_communication_23_1.png" />
+<img alt="../_images/a4b490b024600783118bb420c29789ab0b1e8245edbf45a8afa421e35f12fd0b.png" src="../_images/a4b490b024600783118bb420c29789ab0b1e8245edbf45a8afa421e35f12fd0b.png" />
 </div>
 </div>
 <section id="ligand-receptor-inference">
-<h3><span class="section-number">21.4.1. </span>Ligand-receptor inference<a class="headerlink" href="#ligand-receptor-inference" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.4.1. </span>Ligand-receptor inference<a class="headerlink" href="#ligand-receptor-inference" title="Permalink to this heading">#</a></h3>
 <p>First, let’s use the CellPhoneDB (v2) ligand-receptor method <span id="id15">[<a class="reference internal" href="#id388" title="Mirjana Efremova, Miquel Vento-Tormo, Sarah A Teichmann, and Roser Vento-Tormo. CellPhoneDB: inferring cell-cell communication from combined expression of multi-subunit ligand-receptor complexes. Nature Protocols, 15(4):1484-1506, apr 2020. URL: http://www.nature.com/articles/s41596-020-0292-x (visited on 2020-12-04), doi:10.1038/s41596-020-0292-x.">Efremova <em>et al.</em>, 2020</a>]</span>.</p>
 <p>We will run CellPhoneDB on the data post IFN-beta stimulation alone, as such methods were initially designed for the inference of CCC events in “steady-state” data, or in other words, they are meant to be used not across samples or conditions, but rather on a single condition or sample at a time. Note that, nevertheless, certain approaches exist to apply ligand-receptor methods across conditions but these are out of scope for this tutorial, and instead we refer to them in the <strong>Outlook</strong> section.</p>
 <div class="cell docutils container">
@@ -1289,7 +861,7 @@ under the assumption that since CCC occurs between cell types, a sufficient prop
 <p>Note that <code class="docutils literal notranslate"><span class="pre">ligand</span></code>, <code class="docutils literal notranslate"><span class="pre">receptor</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>, and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns are returned by every ligand-receptor method, while the rest of the columns can vary across the ligand-receptor methods, as each method relies on different assumptions and scoring functions, and hence each returns different ligand-receptor scores.
 Nevertheless, typically most methods use a pair of scoring functions - where one often corresponds to the <strong>magnitude</strong> (strength) of interaction and the other reflects the <strong>specificity</strong> of a given interaction to a pair of cell identities.</p>
 <section id="visual-exploration">
-<h4><span class="section-number">21.4.1.1. </span>Visual exploration<a class="headerlink" href="#visual-exploration" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">21.4.1.1. </span>Visual exploration<a class="headerlink" href="#visual-exploration" title="Permalink to this heading">#</a></h4>
 <p>We can now visualize the results that we just obtained as a dotplot, in which rows represent the prioritized interactions between source/sender (top) and target/receiver (bottom) cell types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1318,7 +890,7 @@ Nevertheless, typically most methods use a pair of scoring functions - where one
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cell_cell_communication_36_0.png" src="../_images/cell_cell_communication_36_0.png" />
+<img alt="../_images/d4cc30eec339500ccbe3f9c1a6f755db78ed259eea95cfa8820c971ad9653089.png" src="../_images/d4cc30eec339500ccbe3f9c1a6f755db78ed259eea95cfa8820c971ad9653089.png" />
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ggplot: (8783502753003)&gt;
 </pre></div>
 </div>
@@ -1329,7 +901,7 @@ Nevertheless, typically most methods use a pair of scoring functions - where one
 For example, the potential binding of HLA-B binding to CD8A/B logically occurs only when the receiver cells are CD8 T cells.</p>
 </section>
 <section id="generating-a-ligand-receptor-consensus-with-liana">
-<h4><span class="section-number">21.4.1.2. </span>Generating a Ligand-Receptor consensus with LIANA<a class="headerlink" href="#generating-a-ligand-receptor-consensus-with-liana" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">21.4.1.2. </span>Generating a Ligand-Receptor consensus with LIANA<a class="headerlink" href="#generating-a-ligand-receptor-consensus-with-liana" title="Permalink to this heading">#</a></h4>
 <p>Given the reported limited agreement between the interactions inferred by different ligand-receptor methods, as a way to further increase the confidence in a potential interaction of interest, one could check if this interaction is predicted as relevant by more than a single method. In the same manner, one could also use multiple methods and focus on their consensus, or in other words focus on interactions consistently predicted as relevant. To this end, we will run the <code class="docutils literal notranslate"><span class="pre">rank_aggregate</span></code> method of liana <span id="id16">[<a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>]</span>, which generates a probability distribution of highly ranked interactions across the methods.</p>
 <p>Let’s first examine the ligand-receptor methods in LIANA:</p>
 <div class="cell docutils container">
@@ -1646,7 +1218,7 @@ Running CellChat
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cell_cell_communication_49_0.png" src="../_images/cell_cell_communication_49_0.png" />
+<img alt="../_images/29c2f9cdf51dcd872e3d6f2c509aab86eeadbd618ed5cf592579f578c7ef07f1.png" src="../_images/29c2f9cdf51dcd872e3d6f2c509aab86eeadbd618ed5cf592579f578c7ef07f1.png" />
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ggplot: (8783489520283)&gt;
 </pre></div>
 </div>
@@ -1657,14 +1229,14 @@ Running CellChat
 </section>
 </section>
 <section id="modelling-differential-intercellular-signalling-with-nichenet">
-<h3><span class="section-number">21.4.2. </span>Modelling differential intercellular signalling with NicheNet<a class="headerlink" href="#modelling-differential-intercellular-signalling-with-nichenet" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.4.2. </span>Modelling differential intercellular signalling with NicheNet<a class="headerlink" href="#modelling-differential-intercellular-signalling-with-nichenet" title="Permalink to this heading">#</a></h3>
 <p>NicheNet is another type of CCC method that considers the <strong>intra</strong>cellular signaling effects triggered by <strong>inter</strong>cellular interactions <span id="id17">[<a class="reference internal" href="#id387" title="Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. Nature Methods, 17(2):159-162, feb 2020. URL: http://www.nature.com/articles/s41592-019-0667-5 (visited on 2021-10-05), doi:10.1038/s41592-019-0667-5.">Browaeys <em>et al.</em>, 2020</a>]</span>.</p>
 <p>In short, NicheNet infers associations between ligands and the downstream targets that they potentially modulate <span id="id18">[<a class="reference internal" href="#id387" title="Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. Nature Methods, 17(2):159-162, feb 2020. URL: http://www.nature.com/articles/s41592-019-0667-5 (visited on 2021-10-05), doi:10.1038/s41592-019-0667-5.">Browaeys <em>et al.</em>, 2020</a>]</span>. Or in other words, NicheNet assumes that a certain sender/source cell type produces a ligand, and the binding of that ligand to a specific receiver/target cell type(s) leads to a signal propagation that affects master gene regulators, or transcription factors, and subsequently their targets. Therefore, predictions on which target genes are modulated by which ligand-receptor pairs may provide interesting hypotheses concerning the ongoing CCC events. Furthermore, enrichment of target genes of a specific ligand-receptor pair in a receiver cell type can also indicate that this ligand-receptor pair is functionally active. In summary, a NicheNet analysis can thus be performed to 1) infer potential target genes of expressed ligand-receptor interactions and 2) prioritize ligand-receptor interactions based on their target gene enrichment in the receiver. This enrichment is called “ligand activity”, in analogy to transcription factor activity <a class="reference internal" href="../conditions/gsea_pathway.html#enrichment-analysis"><span class="std std-ref">Gene set enrichment and pathway analysis</span></a>.</p>
 <p>To perform these tasks, NicheNet makes use of prior knowledge about ligand-target associations. However, contrary to ligand-receptor databases, comprehensive ligand-target databases do not exist. Therefore, NicheNet predicts ligand-target associations by integrating  three layers of prior knowledge covering ligand-receptor, intracellular signaling, and gene regulatory interactions. Using these three layers of information, NicheNet calculates a regulatory potential score for each ligand-target link. This regulatory potential denotes how well prior knowledge supports that a ligand may regulate the expression of a target gene. To calculate regulatory potential, NicheNet first employs a network diffusion algorithm, known as Personalized PageRank (PPR), on the integrated signaling network to estimate the probability that a given ligand may signal to a particular regulator.  Specifically, the PPR implementation in NicheNet considers a given ligand as the seed node of interest. Hereby, nodes that are closer to the ligand in the signaling network get higher scores than more distant nodes under the assumption that regulators in the network vicinity of the ligand are more likely modulated by the ligand than more distant nodes. The application of PPR for all ligands in the database thus results in a ligand-regulator matrix of signalling probabilities that are then multiplied with a weight matrix of regulators to target genes in order to obtain ligand-target regulatory potential scores {cite}browaeys_2020. Conceptually, this implies that a ligand–target pair receives a high regulatory potential score if the ligand can signal to regulators of that target gene. These prior knowledge-derived scores are then used in conjunction with the expression data of interacting cells to prioritize ligand-receptor interactions and predict their target genes.</p>
 <p>Because NicheNet focuses on how ligands affect gene expression in potentially interacting cells, one needs to be able to define which gene expression changes may (partially) be caused by CCC processes.  To rank the ligands according to their potential ligand activity in a receiver cell type, it requires a set of genes assumed to be affected by CCC events in the receiver cell types. The authors of NicheNet recommend ideally defining those sets of genes when working with conditions, e.g. treatment  vs control. To this end, we will apply NicheNet in exactly that manner and compare the expression of the patients in our data before and after stimulation with INF-beta.</p>
 <p>For a more detailed description of the NicheNet method, we specifically refer the reader to the footprint part of the <a class="reference internal" href="../conditions/gsea_pathway.html#enrichment-analysis"><span class="std std-ref">Gene set enrichment and pathway analysis</span></a> chapter as well as NicheNet’s <a class="reference external" href="https://github.com/saeyslab/nichenetr">tutorials</a> and manuscript <span id="id19">[<a class="reference internal" href="#id387" title="Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. Nature Methods, 17(2):159-162, feb 2020. URL: http://www.nature.com/articles/s41592-019-0667-5 (visited on 2021-10-05), doi:10.1038/s41592-019-0667-5.">Browaeys <em>et al.</em>, 2020</a>]</span>.</p>
 <section id="load-nichenet-prior-knowledge">
-<h4><span class="section-number">21.4.2.1. </span>Load NicheNet Prior-Knowledge<a class="headerlink" href="#load-nichenet-prior-knowledge" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">21.4.2.1. </span>Load NicheNet Prior-Knowledge<a class="headerlink" href="#load-nichenet-prior-knowledge" title="Permalink to this heading">#</a></h4>
 <p>As mentioned above, NicheNet requires  prior knowledge about ligand-receptor interactions and ligand-target links:</p>
 <ul class="simple">
 <li><p>a ligand_target_matrix - denotes the potential that a ligand might regulate the expression of a target genes. The weights in this matrix are based on prior knowledge and are required to prioritize possible ligand-receptor interactions and affected target genes.</p></li>
@@ -1697,7 +1269,7 @@ lr_network &lt;- readRDS(url(&quot;https://zenodo.org/record/7074291/files/lr_ne
 </div>
 <p>Moreover, one may also tailor the NicheNet prior knowledge and contextualize the networks according to the data at hand using the <a class="reference external" href="https://github.com/saezlab/OmnipathR">OmnipathR</a> package.</p>
 <section id="step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions">
-<h5><span class="section-number">21.4.2.1.1. </span>Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions<a class="headerlink" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.1. </span>Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions<a class="headerlink" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions" title="Permalink to this heading">#</a></h5>
 <p>Here, we will assume that multiple cell types are able to affect the receiver cell type</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1709,7 +1281,7 @@ lr_network &lt;- readRDS(url(&quot;https://zenodo.org/record/7074291/files/lr_ne
 </div>
 </section>
 <section id="step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types">
-<h5><span class="section-number">21.4.2.1.2. </span>Step 2. Define a set of ligands that can <strong>potentially</strong> affect receiver cell types<a class="headerlink" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.2. </span>Step 2. Define a set of ligands that can <strong>potentially</strong> affect receiver cell types<a class="headerlink" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types" title="Permalink to this heading">#</a></h5>
 <p>Similarly to the ligand-receptor methods above, here we are only interested in the potential interactions that involve sufficiently expressed genes in each cell type. So, we will assume that e.g. 10% of the cells is a good threshold to reflect genes as expressed within a cell type.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1778,7 +1350,7 @@ potential_ligands &lt;- lr_network %&gt;%
 </div>
 </section>
 <section id="step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s">
-<h5><span class="section-number">21.4.2.1.3. </span>Step 3. Define a gene set of interest in receiver cell type(s)<a class="headerlink" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.3. </span>Step 3. Define a gene set of interest in receiver cell type(s)<a class="headerlink" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s" title="Permalink to this heading">#</a></h5>
 <p>This step is the most critical one in a NicheNet analysis. Here, one defines which genes are potentially modulated by cell-cell communication, i.e. the genes thought to be affected by ligand signalling. For example, one can assume that differentially expressed genes between conditions in receiver cell type(s) are driven by ligands from one of more interacting sender cell populations. Another example would be differentially expressed genes between a differentiated cell population and a progenitor population in case the differentiation is likely induced through interactions with other cell types.</p>
 <p>So, we will now use <code class="docutils literal notranslate"><span class="pre">decoupler</span></code> to generate pseudobulk profiles per cell type and sample, and then perform a differential expression analysis on those. A crucial step of pseudo-bulking is filtering out genes that are not expressed across most cells and samples, since they are very noisy and can result in unstable log-fold changes. To get robust profiles, genes are thus filtered out if again they are not expressed sufficiently per sample (min_prop) and and in not enough samples. We refer the reader to the {ref}normalization and {ref}differential-analysis chapters for more info on differential expression analysis and pseudobulk profiles.</p>
 <div class="cell docutils container">
@@ -1846,7 +1418,7 @@ potential_ligands &lt;- lr_network %&gt;%
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cell_cell_communication_73_0.png" src="../_images/cell_cell_communication_73_0.png" />
+<img alt="../_images/7322920c98729b3097ad0152c4d53c6f31d88fe980bd5ee7eb52f8eb50e2836d.png" src="../_images/7322920c98729b3097ad0152c4d53c6f31d88fe980bd5ee7eb52f8eb50e2836d.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1946,7 +1518,7 @@ potential_ligands &lt;- lr_network %&gt;%
 </div>
 </section>
 <section id="step-4-nichenet-ligand-activity-estimation">
-<h5><span class="section-number">21.4.2.1.4. </span>Step 4. NicheNet ligand activity estimation<a class="headerlink" href="#step-4-nichenet-ligand-activity-estimation" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.4. </span>Step 4. NicheNet ligand activity estimation<a class="headerlink" href="#step-4-nichenet-ligand-activity-estimation" title="Permalink to this heading">#</a></h5>
 <p>To estimate ligand activity, NicheNet uses the regulatory potential of genes (based on prior knowledge) to predict which ligand best predicts the gene set of interest.
 Or in other words, it assesses whether the genes with high regulatory potential in regards to a specific ligand, are more likely to belong to the geneset of interest that we derive for the receiver cell type(s).
 Conceptually, this is not too dissimilar from standard <a class="reference internal" href="../conditions/gsea_pathway.html#enrichment-analysis"><span class="std std-ref">Gene set enrichment and pathway analysis</span></a> and NicheNet proposes different ways to estimate ligand activity, such as the area under the receiver operating characteristic curve, or Pearson correlation <span id="id20">[<a class="reference internal" href="#id387" title="Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. Nature Methods, 17(2):159-162, feb 2020. URL: http://www.nature.com/articles/s41592-019-0667-5 (visited on 2021-10-05), doi:10.1038/s41592-019-0667-5.">Browaeys <em>et al.</em>, 2020</a>]</span>.</p>
@@ -1988,7 +1560,7 @@ head(ligand_activities, n=10)
 </div>
 </section>
 <section id="step-5-infer-visualize-top-predicted-target-genes-for-top-ligands">
-<h5><span class="section-number">21.4.2.1.5. </span>Step 5. Infer &amp; Visualize top-predicted target genes for top ligands<a class="headerlink" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.5. </span>Step 5. Infer &amp; Visualize top-predicted target genes for top ligands<a class="headerlink" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands" title="Permalink to this heading">#</a></h5>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o vis_ligand_target
@@ -2208,7 +1780,7 @@ vis_ligand_target &lt;- vis_ligand_target %&gt;%
 </div>
 </section>
 <section id="visualize-top-ligands-regulatory-targets">
-<h5><span class="section-number">21.4.2.1.6. </span>Visualize top ligands &amp; regulatory targets<a class="headerlink" href="#visualize-top-ligands-regulatory-targets" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">21.4.2.1.6. </span>Visualize top ligands &amp; regulatory targets<a class="headerlink" href="#visualize-top-ligands-regulatory-targets" title="Permalink to this heading">#</a></h5>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -2218,7 +1790,7 @@ vis_ligand_target &lt;- vis_ligand_target %&gt;%
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cell_cell_communication_83_0.png" src="../_images/cell_cell_communication_83_0.png" />
+<img alt="../_images/a415fe05827a4cc0301a2d510334979c258cac6824054db8bf11d76fcb6e2003.png" src="../_images/a415fe05827a4cc0301a2d510334979c258cac6824054db8bf11d76fcb6e2003.png" />
 </div>
 </div>
 <p>Perfect, we end up with ligands that are most probable to affect downstream signalling in the receiver cell type(s), as well as their most likely targets.</p>
@@ -2226,7 +1798,7 @@ vis_ligand_target &lt;- vis_ligand_target %&gt;%
 </section>
 </section>
 <section id="combining-nichenet-output-with-ligand-receptor-inference">
-<h3><span class="section-number">21.4.3. </span>Combining NicheNet output with ligand-receptor inference<a class="headerlink" href="#combining-nichenet-output-with-ligand-receptor-inference" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.4.3. </span>Combining NicheNet output with ligand-receptor inference<a class="headerlink" href="#combining-nichenet-output-with-ligand-receptor-inference" title="Permalink to this heading">#</a></h3>
 <p>NicheNet and ligand-receptor methods are not exclusive, but rather complimentary, as they address different questions and in different ways. Ligand-receptor methods, such as the ones that we show above, infer ligand-receptor interactions using the expression of interacting ligands and receptors, and typically work on “steady-state” data. On the contrary, NicheNet predicts which of these inferred ligand-receptor links are possibly the most functional based on gene expression changes that are induced in the target cell type(s), in a process largely dependent on prior knowledge alone. Thus, while the choice of tool depends on the research question, one could also see ligand-receptor (e.g. CellPhoneDB or LIANA) methods and intracellular signalling CCC methods (e.g. NicheNet) as complementary.</p>
 <p>For example, given the top 3 prioritized ligands, we can focus on ligand-receptor pairs that include those and the receiver cell type that we used to infer the active ligands.</p>
 <p>So, let’s see which ligand-receptor interactions that involve the top 5 potentially active ligands from NicheNet were prioritized as consistently relevant by the different methods in LIANA:</p>
@@ -2275,7 +1847,7 @@ vis_ligand_target &lt;- vis_ligand_target %&gt;%
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cell_cell_communication_90_0.png" src="../_images/cell_cell_communication_90_0.png" />
+<img alt="../_images/08d6728e2637196d24c27f3d192962b9a7dc94ac83dc94be09080a241194f02d.png" src="../_images/08d6728e2637196d24c27f3d192962b9a7dc94ac83dc94be09080a241194f02d.png" />
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ggplot: (8783461218238)&gt;
 </pre></div>
 </div>
@@ -2286,15 +1858,15 @@ vis_ligand_target &lt;- vis_ligand_target %&gt;%
 </section>
 </section>
 <section id="key-takeaways">
-<h2><span class="section-number">21.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this heading">#</a></h2>
 <section id="assumptions-limitations">
-<h3><span class="section-number">21.5.1. </span>Assumptions &amp; Limitations<a class="headerlink" href="#assumptions-limitations" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.5.1. </span>Assumptions &amp; Limitations<a class="headerlink" href="#assumptions-limitations" title="Permalink to this heading">#</a></h3>
 <p>The shared purpose of the methods considered in this work is to predict the most relevant intercellular interactions between different cell types using single-cell transcriptomics data. Thus, all methods assume that the gene expression of different cell types is an informative proxy of the CCC events that occur within the sampled tissue. While single-cell transcriptomics enables the inference of CCC events at a previously unprecedented scale, some assumptions and limitations should be kept in mind.
 Starting with the assumption that protein co-expressions reflect intercellular interactions, and consequently they are also reflective of any events preceding the interaction, including protein translation and processing, secretion, and diffusion <span id="id22">[<a class="reference internal" href="#id389" title="Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. Nature Reviews. Genetics, 22(2):71-88, 2021. URL: http://www.nature.com/articles/s41576-020-00292-x (visited on 2021-10-05), doi:10.1038/s41576-020-00292-x.">Armingol <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>]</span> (<strong>Figure 22.2</strong>). Furthermore, if cell communication within an organism is conceptualized as the combination of CCC events that occur at different ‘length scales’ or ranges <span id="id23">[<a class="reference internal" href="#id407" title="Giovanni Palla, David S Fischer, Aviv Regev, and Fabian J Theis. Spatial components of molecular tissue biology. Nature Biotechnology, 40(3):308–318, 2022.">Palla <em>et al.</em>, 2022</a>]</span>, then the CCC events that can be inferred from single-cell transcriptomics are potentially limited to only the protein-mediated events that occur at ‘local’ ranges, i.e. between the cell types were sampled. As a result, long-range signalling and CCC driven by other molecules, such as endocrine signalling and system gradients like Calcium and Oxygen concentrations, are likely not captured <span id="id24">[<a class="reference internal" href="#id399" title="Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. Nature Communications, 13(1):3224, jun 2022. URL: https://www.nature.com/articles/s41467-022-30755-0 (visited on 2021-05-31), doi:10.1038/s41467-022-30755-0.">Dimitrov <em>et al.</em>, 2022</a>]</span>.</p>
 <p>In addition, while the grouping of cell types according to their lineage is common practice to structure our data, when considering the tissue as the place where communication takes place, interactions do not necessarily occur between cell types but rather individual cells <span id="id25">[<a class="reference internal" href="#id396" title="Aaron J Wilk, Alex K Shalek, Susan Holmes, and Catherine A Blish. Comparative analysis of cell-cell communication at single-cell resolution. BioRxiv, mar 2022. URL: http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209 (visited on 2022-02-22), doi:10.1101/2022.02.04.479209.">Wilk <em>et al.</em>, 2022</a>]</span>. Also, the intercellular interactions are typically presented as one-to-one events between cell types and/or proteins. Therefore, the assumption that the potential co-expression events across cell types might not necessarily reflect true signalling as in order to fundamentally capture the events within a local community, one must identify the magnitude, directionality and biological relevance of the messages passed between the cells within that community <span id="id26">[<a class="reference internal" href="#id389" title="Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. Nature Reviews. Genetics, 22(2):71-88, 2021. URL: http://www.nature.com/articles/s41576-020-00292-x (visited on 2021-10-05), doi:10.1038/s41576-020-00292-x.">Armingol <em>et al.</em>, 2021</a>]</span>.</p>
 </section>
 <section id="summary-outlook">
-<h3><span class="section-number">21.5.2. </span>Summary &amp; Outlook:<a class="headerlink" href="#summary-outlook" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.5.2. </span>Summary &amp; Outlook:<a class="headerlink" href="#summary-outlook" title="Permalink to this heading">#</a></h3>
 <p>In this chapter we presented two applications of CCC inference methods, namely we used CellPhoneDB and LIANA to predict relevant ligand-receptor interactions from single-context (or steady-state) data and NicheNet to infer potentially active ligands and their targets in a differential-expression context.
 As the focus of the single-cell field moves further away from the definition of linages, and into characterizing changes within cell types between conditions, approaches to disentangle CCC insights across contexts are becoming essential. Thus, in addition to NicheNet, we refer the user to other approaches that enable cross-condition comparisons, such as NATMI’s differential cell-connectivity analysis <span id="id27">[<a class="reference internal" href="#id405" title="Rui Hou, Elena Denisenko, Huan Ting Ong, Jordan A Ramilowski, and Alistair RR Forrest. Predicting cell-to-cell communication networks using natmi. Nature communications, 11(1):1–11, 2020.">Hou <em>et al.</em>, 2020</a>]</span>, Crosstalker’s network topological measures <span id="id28">[<a class="reference internal" href="#id406" title="James S Nagai, Nils B Leimkühler, Michael T Schaub, Rebekka K Schneider, and Ivan G Costa. Crosstalker: analysis and visualization of ligand–receptorne tworks. Bioinformatics, 37(22):4263–4265, 2021.">Nagai <em>et al.</em>, 2021</a>]</span>, CellChat’s pathway-focused manifold learning <span id="id29">[<a class="reference internal" href="#id391" title="Suoqin Jin, Christian F Guerrero-Juarez, Lihua Zhang, Ivan Chang, Raul Ramos, Chen-Hsiang Kuan, Peggy Myung, Maksim V Plikus, and Qing Nie. Inference and analysis of cell-cell communication using CellChat. Nature Communications, 12(1):1088, feb 2021. URL: http://dx.doi.org/10.1038/s41467-021-21246-9 (visited on 2021-10-05), doi:10.1038/s41467-021-21246-9.">Jin <em>et al.</em>, 2021</a>]</span>, as well as Tensor-cell2cell’s untargetted factorization approach to infer CCC patterns across contexts <span id="id30">[<a class="reference internal" href="#id401" title="Erick Armingol, Hratch M Baghdassarian, Cameron Martino, Araceli Perez-Lopez, Caitlin Aamodt, Rob Knight, and Nathan E Lewis. Context-aware deconvolution of cell-cell communication with tensor-cell2cell. Nature Communications, 13(1):3665, jun 2022. URL: https://www.nature.com/articles/s41467-022-31369-2 (visited on 2021-09-24), doi:10.1038/s41467-022-31369-2.">Armingol <em>et al.</em>, 2022</a>]</span>.</p>
 <p>As a consequence of the ongoing developments within the single-cell and the cell-cell communication field specifically, there are is an ever-growing number of methods, some of which propose alternative ways to predict CCC events, such as those that work at the single-cell resolution <span id="id31">[<a class="reference internal" href="#id403" title="Micha Sam Brickman Raredon, Junchen Yang, Neeharika Kothapalli, Wesley Lewis, Naftali Kaminski, Laura E Niklason, and Yuval Kluger. Comprehensive visualization of cell-cell interactions in single-cell and spatial transcriptomics with NICHES. Bioinformatics, jan 2023. URL: http://dx.doi.org/10.1093/bioinformatics/btac775 (visited on 2022-01-27), doi:10.1093/bioinformatics/btac775.">Raredon <em>et al.</em>, 2023</a>, <a class="reference internal" href="#id386" title="Shuxiong Wang, Matthew Karikomi, Adam L MacLean, and Qing Nie. Cell lineage and communication network inference via optimization for single-cell transcriptomics. Nucleic Acids Research, 47(11):e66, jun 2019. URL: https://academic.oup.com/nar/article/47/11/e66/5421812 (visited on 2019-05-01), doi:10.1093/nar/gkz204.">Wang <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id396" title="Aaron J Wilk, Alex K Shalek, Susan Holmes, and Catherine A Blish. Comparative analysis of cell-cell communication at single-cell resolution. BioRxiv, mar 2022. URL: http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209 (visited on 2022-02-22), doi:10.1101/2022.02.04.479209.">Wilk <em>et al.</em>, 2022</a>]</span>. While others attempt to address some of the limitations above, e.g. by including the inference of interactions mediated by metabolites or small molecules <span id="id32">[<a class="reference internal" href="#id400" title="Luz Garcia-Alonso, Valentina Lorenzi, Cecilia Icoresi Mazzeo, João Pedro Alves-Lopes, Kenny Roberts, Carmen Sancho-Serra, Justin Engelbert, Magda Marečková, Wolfram H Gruhn, Rachel A Botting, Tong Li, Berta Crespo, Stijn van Dongen, Vladimir Yu Kiselev, Elena Prigmore, Mary Herbert, Ashley Moffett, Alain Chédotal, Omer Ali Bayraktar, Azim Surani, Muzlifah Haniffa, and Roser Vento-Tormo. Single-cell roadmap of human gonadal development. Nature, 607(7919):540-547, jul 2022. URL: https://www.nature.com/articles/s41586-022-04918-4 (visited on 2022-07-07), doi:10.1038/s41586-022-04918-4.">Garcia-Alonso <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id393" title="Yang Zhang, Tianyuan Liu, Jing Wang, Bohao Zou, Le Li, Linhui Yao, Kechen Chen, Lin Ning, Bingyi Wu, Xiaoyang Zhao, and Dong Wang. Cellinker: a platform of ligand-receptor interactions for intercellular communication analysis. Bioinformatics, jan 2021. URL: http://dx.doi.org/10.1093/bioinformatics/btab036 (visited on 2021-09-12), doi:10.1093/bioinformatics/btab036.">Zhang <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id397" title="Rongbin Zheng, Yang Zhang, Tadataka Tsuji, Lili Zhang, Yu-Hua Tseng, and Kaifu Chen. MEBOCOST: metabolic cell-cell communication modeling by single cell transcriptome. BioRxiv, may 2022. URL: http://biorxiv.org/lookup/doi/10.1101/2022.05.30.494067 (visited on 2022-06-02), doi:10.1101/2022.05.30.494067.">Zheng <em>et al.</em>, 2022</a>]</span>.</p>
@@ -2304,7 +1876,7 @@ As the focus of the single-cell field moves further away from the definition of 
 </section>
 </section>
 <section id="quiz">
-<h2><span class="section-number">21.6. </span>Quiz<a class="headerlink" href="#quiz" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.6. </span>Quiz<a class="headerlink" href="#quiz" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Q1. What are the first three limitations that come to mind when inferring CCC from single-cell transcriptomics data?</p></li>
 <li><p>Q2. What is the role of heteromeric complexes in ligand-receptor inference?</p></li>
@@ -2313,15 +1885,15 @@ As the focus of the single-cell field moves further away from the definition of 
 </ul>
 </section>
 <section id="contributions">
-<h2><span class="section-number">21.7. </span>Contributions<a class="headerlink" href="#contributions" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.7. </span>Contributions<a class="headerlink" href="#contributions" title="Permalink to this heading">#</a></h2>
 <section id="authors">
-<h3><span class="section-number">21.7.1. </span>Authors:<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.7.1. </span>Authors:<a class="headerlink" href="#authors" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Daniel Dimitrov</p></li>
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">21.7.2. </span>Reviewers:<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">21.7.2. </span>Reviewers:<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
 <li><p>Gregor Sturm</p></li>
@@ -2330,7 +1902,7 @@ As the focus of the single-cell field moves further away from the definition of 
 </section>
 </section>
 <section id="session-info">
-<h2><span class="section-number">21.8. </span>Session Info<a class="headerlink" href="#session-info" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.8. </span>Session Info<a class="headerlink" href="#session-info" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -2547,82 +2119,116 @@ Session information updated at 2023-02-19 13:46
 </div>
 </section>
 <section id="references">
-<h2><span class="section-number">21.9. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">21.9. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
 <div class="docutils container" id="id33">
-<dl class="citation">
-<dt class="label" id="id392"><span class="brackets">ACJN21</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id8">2</a>)</span></dt>
-<dd><p>Axel A Almet, Zixuan Cang, Suoqin Jin, and Qing Nie. The landscape of cell-cell communication through single-cell transcriptomics. <em>Current Opinion in Systems Biology</em>, 26:12–23, jun 2021. URL: <a class="reference external" href="https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081">https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081</a> (visited on 2021-09-06), <a class="reference external" href="https://doi.org/10.1016/j.coisb.2021.03.007">doi:10.1016/j.coisb.2021.03.007</a>.</p>
-</dd>
-<dt class="label" id="id401"><span class="brackets"><a class="fn-backref" href="#id30">ABM+22</a></span></dt>
-<dd><p>Erick Armingol, Hratch M Baghdassarian, Cameron Martino, Araceli Perez-Lopez, Caitlin Aamodt, Rob Knight, and Nathan E Lewis. Context-aware deconvolution of cell-cell communication with tensor-cell2cell. <em>Nature Communications</em>, 13(1):3665, jun 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41467-022-31369-2">https://www.nature.com/articles/s41467-022-31369-2</a> (visited on 2021-09-24), <a class="reference external" href="https://doi.org/10.1038/s41467-022-31369-2">doi:10.1038/s41467-022-31369-2</a>.</p>
-</dd>
-<dt class="label" id="id389"><span class="brackets">AOHL21</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>,<a href="#id8">3</a>,<a href="#id22">4</a>,<a href="#id26">5</a>)</span></dt>
-<dd><p>Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. <em>Nature Reviews. Genetics</em>, 22(2):71–88, 2021. URL: <a class="reference external" href="http://www.nature.com/articles/s41576-020-00292-x">http://www.nature.com/articles/s41576-020-00292-x</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41576-020-00292-x">doi:10.1038/s41576-020-00292-x</a>.</p>
-</dd>
-<dt class="label" id="id410"><span class="brackets"><a class="fn-backref" href="#id21">BCDC22</a></span></dt>
-<dd><p>Giacomo Baruzzo, Giulia Cesaro, and Barbara Di Camillo. Identify, quantify and characterize cellular communication from single-cell rna sequencing data with scseqcomm. <em>Bioinformatics</em>, 38(7):1920–1929, 2022.</p>
-</dd>
-<dt class="label" id="id387"><span class="brackets">BSS20</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id13">2</a>,<a href="#id17">3</a>,<a href="#id18">4</a>,<a href="#id19">5</a>,<a href="#id20">6</a>)</span></dt>
-<dd><p>Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. <em>Nature Methods</em>, 17(2):159–162, feb 2020. URL: <a class="reference external" href="http://www.nature.com/articles/s41592-019-0667-5">http://www.nature.com/articles/s41592-019-0667-5</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41592-019-0667-5">doi:10.1038/s41592-019-0667-5</a>.</p>
-</dd>
-<dt class="label" id="id399"><span class="brackets">DTGR+22</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id9">2</a>,<a href="#id10">3</a>,<a href="#id12">4</a>,<a href="#id16">5</a>,<a href="#id22">6</a>,<a href="#id24">7</a>)</span></dt>
-<dd><p>Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. <em>Nature Communications</em>, 13(1):3224, jun 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41467-022-30755-0">https://www.nature.com/articles/s41467-022-30755-0</a> (visited on 2021-05-31), <a class="reference external" href="https://doi.org/10.1038/s41467-022-30755-0">doi:10.1038/s41467-022-30755-0</a>.</p>
-</dd>
-<dt class="label" id="id388"><span class="brackets">EVTTVT20</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id6">2</a>,<a href="#id11">3</a>,<a href="#id15">4</a>)</span></dt>
-<dd><p>Mirjana Efremova, Miquel Vento-Tormo, Sarah A Teichmann, and Roser Vento-Tormo. CellPhoneDB: inferring cell-cell communication from combined expression of multi-subunit ligand-receptor complexes. <em>Nature Protocols</em>, 15(4):1484–1506, apr 2020. URL: <a class="reference external" href="http://www.nature.com/articles/s41596-020-0292-x">http://www.nature.com/articles/s41596-020-0292-x</a> (visited on 2020-12-04), <a class="reference external" href="https://doi.org/10.1038/s41596-020-0292-x">doi:10.1038/s41596-020-0292-x</a>.</p>
-</dd>
-<dt class="label" id="id400"><span class="brackets"><a class="fn-backref" href="#id32">GALM+22</a></span></dt>
-<dd><p>Luz Garcia-Alonso, Valentina Lorenzi, Cecilia Icoresi Mazzeo, João Pedro Alves-Lopes, Kenny Roberts, Carmen Sancho-Serra, Justin Engelbert, Magda Marečková, Wolfram H Gruhn, Rachel A Botting, Tong Li, Berta Crespo, Stijn van Dongen, Vladimir Yu Kiselev, Elena Prigmore, Mary Herbert, Ashley Moffett, Alain Chédotal, Omer Ali Bayraktar, Azim Surani, Muzlifah Haniffa, and Roser Vento-Tormo. Single-cell roadmap of human gonadal development. <em>Nature</em>, 607(7919):540–547, jul 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41586-022-04918-4">https://www.nature.com/articles/s41586-022-04918-4</a> (visited on 2022-07-07), <a class="reference external" href="https://doi.org/10.1038/s41586-022-04918-4">doi:10.1038/s41586-022-04918-4</a>.</p>
-</dd>
-<dt class="label" id="id405"><span class="brackets">HDO+20</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id27">2</a>)</span></dt>
-<dd><p>Rui Hou, Elena Denisenko, Huan Ting Ong, Jordan A Ramilowski, and Alistair RR Forrest. Predicting cell-to-cell communication networks using natmi. <em>Nature communications</em>, 11(1):1–11, 2020.</p>
-</dd>
-<dt class="label" id="id394"><span class="brackets"><a class="fn-backref" href="#id5">HPGT21</a></span></dt>
-<dd><p>Yuxuan Hu, Tao Peng, Lin Gao, and Kai Tan. CytoTalk: de novo construction of signal transduction networks using single-cell transcriptomic data. <em>Science Advances</em>, apr 2021. URL: <a class="reference external" href="https://advances.sciencemag.org/lookup/doi/10.1126/sciadv.abf1356">https://advances.sciencemag.org/lookup/doi/10.1126/sciadv.abf1356</a> (visited on 2021-10-11), <a class="reference external" href="https://doi.org/10.1126/sciadv.abf1356">doi:10.1126/sciadv.abf1356</a>.</p>
-</dd>
-<dt class="label" id="id391"><span class="brackets">JGJZ+21</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id6">2</a>,<a href="#id29">3</a>)</span></dt>
-<dd><p>Suoqin Jin, Christian F Guerrero-Juarez, Lihua Zhang, Ivan Chang, Raul Ramos, Chen-Hsiang Kuan, Peggy Myung, Maksim V Plikus, and Qing Nie. Inference and analysis of cell-cell communication using CellChat. <em>Nature Communications</em>, 12(1):1088, feb 2021. URL: <a class="reference external" href="http://dx.doi.org/10.1038/s41467-021-21246-9">http://dx.doi.org/10.1038/s41467-021-21246-9</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41467-021-21246-9">doi:10.1038/s41467-021-21246-9</a>.</p>
-</dd>
-<dt class="label" id="id408"><span class="brackets"><a class="fn-backref" href="#id14">KST+18</a></span></dt>
-<dd><p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
-</dd>
-<dt class="label" id="id402"><span class="brackets">LSW22</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id7">2</a>,<a href="#id9">3</a>,<a href="#id10">4</a>)</span></dt>
-<dd><p>Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. <em>Genome Biology</em>, 23(1):218, oct 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1186/s13059-022-02783-y">http://dx.doi.org/10.1186/s13059-022-02783-y</a> (visited on 2022-10-20), <a class="reference external" href="https://doi.org/10.1186/s13059-022-02783-y">doi:10.1186/s13059-022-02783-y</a>.</p>
-</dd>
-<dt class="label" id="id406"><span class="brackets"><a class="fn-backref" href="#id28">NLeimkuhlerS+21</a></span></dt>
-<dd><p>James S Nagai, Nils B Leimkühler, Michael T Schaub, Rebekka K Schneider, and Ivan G Costa. Crosstalker: analysis and visualization of ligand–receptorne tworks. <em>Bioinformatics</em>, 37(22):4263–4265, 2021.</p>
-</dd>
-<dt class="label" id="id407"><span class="brackets"><a class="fn-backref" href="#id23">PFRT22</a></span></dt>
-<dd><p>Giovanni Palla, David S Fischer, Aviv Regev, and Fabian J Theis. Spatial components of molecular tissue biology. <em>Nature Biotechnology</em>, 40(3):308–318, 2022.</p>
-</dd>
-<dt class="label" id="id398"><span class="brackets"><a class="fn-backref" href="#id4">RYG+22</a></span></dt>
-<dd><p>Micha Sam Brickman Raredon, Junchen Yang, James Garritano, Meng Wang, Dan Kushnir, Jonas Christian Schupp, Taylor S Adams, Allison M Greaney, Katherine L Leiby, Naftali Kaminski, Yuval Kluger, Andre Levchenko, and Laura E Niklason. Computation and visualization of cell-cell signaling topologies in single-cell systems data using connectome. <em>Scientific Reports</em>, 12(1):4187, mar 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1038/s41598-022-07959-x">http://dx.doi.org/10.1038/s41598-022-07959-x</a> (visited on 2021-01-25), <a class="reference external" href="https://doi.org/10.1038/s41598-022-07959-x">doi:10.1038/s41598-022-07959-x</a>.</p>
-</dd>
-<dt class="label" id="id403"><span class="brackets"><a class="fn-backref" href="#id31">RYK+23</a></span></dt>
-<dd><p>Micha Sam Brickman Raredon, Junchen Yang, Neeharika Kothapalli, Wesley Lewis, Naftali Kaminski, Laura E Niklason, and Yuval Kluger. Comprehensive visualization of cell-cell interactions in single-cell and spatial transcriptomics with NICHES. <em>Bioinformatics</em>, jan 2023. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bioinformatics/btac775">http://dx.doi.org/10.1093/bioinformatics/btac775</a> (visited on 2022-01-27), <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btac775">doi:10.1093/bioinformatics/btac775</a>.</p>
-</dd>
-<dt class="label" id="id404"><span class="brackets">WZC+22</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id9">2</a>)</span></dt>
-<dd><p>Saidi Wang, Hansi Zheng, James S Choi, Jae K Lee, Xiaoman Li, and Haiyan Hu. A systematic evaluation of the computational tools for ligand-receptor-based cell-cell interaction inference. <em>Briefings in functional genomics</em>, 21(5):339–356, sep 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bfgp/elac019">http://dx.doi.org/10.1093/bfgp/elac019</a> (visited on 2022-04-27), <a class="reference external" href="https://doi.org/10.1093/bfgp/elac019">doi:10.1093/bfgp/elac019</a>.</p>
-</dd>
-<dt class="label" id="id386"><span class="brackets">WKMacLeanN19</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id31">2</a>)</span></dt>
-<dd><p>Shuxiong Wang, Matthew Karikomi, Adam L MacLean, and Qing Nie. Cell lineage and communication network inference via optimization for single-cell transcriptomics. <em>Nucleic Acids Research</em>, 47(11):e66, jun 2019. URL: <a class="reference external" href="https://academic.oup.com/nar/article/47/11/e66/5421812">https://academic.oup.com/nar/article/47/11/e66/5421812</a> (visited on 2019-05-01), <a class="reference external" href="https://doi.org/10.1093/nar/gkz204">doi:10.1093/nar/gkz204</a>.</p>
-</dd>
-<dt class="label" id="id396"><span class="brackets">WSHB22</span><span class="fn-backref">(<a href="#id25">1</a>,<a href="#id31">2</a>)</span></dt>
-<dd><p>Aaron J Wilk, Alex K Shalek, Susan Holmes, and Catherine A Blish. Comparative analysis of cell-cell communication at single-cell resolution. <em>BioRxiv</em>, mar 2022. URL: <a class="reference external" href="http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209">http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209</a> (visited on 2022-02-22), <a class="reference external" href="https://doi.org/10.1101/2022.02.04.479209">doi:10.1101/2022.02.04.479209</a>.</p>
-</dd>
-<dt class="label" id="id409"><span class="brackets"><a class="fn-backref" href="#id21">ZLH+21</a></span></dt>
-<dd><p>Yang Zhang, Tianyuan Liu, Xuesong Hu, Mei Wang, Jing Wang, Bohao Zou, Puwen Tan, Tianyu Cui, Yiying Dou, Lin Ning, and others. Cellcall: integrating paired ligand–receptor and transcription factor activities for cell–cell communication. <em>Nucleic Acids Research</em>, 49(15):8520–8534, 2021.</p>
-</dd>
-<dt class="label" id="id411"><span class="brackets"><a class="fn-backref" href="#id21">ZLW+21a</a></span></dt>
-<dd><p>Yang Zhang, Tianyuan Liu, Jing Wang, Bohao Zou, Le Li, Linhui Yao, Kechen Chen, Lin Ning, Bingyi Wu, Xiaoyang Zhao, and others. Cellinker: a platform of ligand–receptor interactions for intercellular communication analysis. <em>Bioinformatics</em>, 37(14):2025–2032, 2021.</p>
-</dd>
-<dt class="label" id="id393"><span class="brackets"><a class="fn-backref" href="#id32">ZLW+21b</a></span></dt>
-<dd><p>Yang Zhang, Tianyuan Liu, Jing Wang, Bohao Zou, Le Li, Linhui Yao, Kechen Chen, Lin Ning, Bingyi Wu, Xiaoyang Zhao, and Dong Wang. Cellinker: a platform of ligand-receptor interactions for intercellular communication analysis. <em>Bioinformatics</em>, jan 2021. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bioinformatics/btab036">http://dx.doi.org/10.1093/bioinformatics/btab036</a> (visited on 2021-09-12), <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btab036">doi:10.1093/bioinformatics/btab036</a>.</p>
-</dd>
-<dt class="label" id="id397"><span class="brackets"><a class="fn-backref" href="#id32">ZZT+22</a></span></dt>
-<dd><p>Rongbin Zheng, Yang Zhang, Tadataka Tsuji, Lili Zhang, Yu-Hua Tseng, and Kaifu Chen. MEBOCOST: metabolic cell-cell communication modeling by single cell transcriptome. <em>BioRxiv</em>, may 2022. URL: <a class="reference external" href="http://biorxiv.org/lookup/doi/10.1101/2022.05.30.494067">http://biorxiv.org/lookup/doi/10.1101/2022.05.30.494067</a> (visited on 2022-06-02), <a class="reference external" href="https://doi.org/10.1101/2022.05.30.494067">doi:10.1101/2022.05.30.494067</a>.</p>
-</dd>
-</dl>
+<div class="citation" id="id392" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>ACJN21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
+<p>Axel A Almet, Zixuan Cang, Suoqin Jin, and Qing Nie. The landscape of cell-cell communication through single-cell transcriptomics. <em>Current Opinion in Systems Biology</em>, 26:12–23, jun 2021. URL: <a class="reference external" href="https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081">https://linkinghub.elsevier.com/retrieve/pii/S2452310021000081</a> (visited on 2021-09-06), <a class="reference external" href="https://doi.org/10.1016/j.coisb.2021.03.007">doi:10.1016/j.coisb.2021.03.007</a>.</p>
+</div>
+<div class="citation" id="id401" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id30">ABM+22</a><span class="fn-bracket">]</span></span>
+<p>Erick Armingol, Hratch M Baghdassarian, Cameron Martino, Araceli Perez-Lopez, Caitlin Aamodt, Rob Knight, and Nathan E Lewis. Context-aware deconvolution of cell-cell communication with tensor-cell2cell. <em>Nature Communications</em>, 13(1):3665, jun 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41467-022-31369-2">https://www.nature.com/articles/s41467-022-31369-2</a> (visited on 2021-09-24), <a class="reference external" href="https://doi.org/10.1038/s41467-022-31369-2">doi:10.1038/s41467-022-31369-2</a>.</p>
+</div>
+<div class="citation" id="id389" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>AOHL21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>,<a role="doc-backlink" href="#id8">3</a>,<a role="doc-backlink" href="#id22">4</a>,<a role="doc-backlink" href="#id26">5</a>)</span>
+<p>Erick Armingol, Adam Officer, Olivier Harismendy, and Nathan E Lewis. Deciphering cell-cell interactions and communication from gene expression. <em>Nature Reviews. Genetics</em>, 22(2):71–88, 2021. URL: <a class="reference external" href="http://www.nature.com/articles/s41576-020-00292-x">http://www.nature.com/articles/s41576-020-00292-x</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41576-020-00292-x">doi:10.1038/s41576-020-00292-x</a>.</p>
+</div>
+<div class="citation" id="id410" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">BCDC22</a><span class="fn-bracket">]</span></span>
+<p>Giacomo Baruzzo, Giulia Cesaro, and Barbara Di Camillo. Identify, quantify and characterize cellular communication from single-cell rna sequencing data with scseqcomm. <em>Bioinformatics</em>, 38(7):1920–1929, 2022.</p>
+</div>
+<div class="citation" id="id387" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>BSS20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id13">2</a>,<a role="doc-backlink" href="#id17">3</a>,<a role="doc-backlink" href="#id18">4</a>,<a role="doc-backlink" href="#id19">5</a>,<a role="doc-backlink" href="#id20">6</a>)</span>
+<p>Robin Browaeys, Wouter Saelens, and Yvan Saeys. NicheNet: modeling intercellular communication by linking ligands to target genes. <em>Nature Methods</em>, 17(2):159–162, feb 2020. URL: <a class="reference external" href="http://www.nature.com/articles/s41592-019-0667-5">http://www.nature.com/articles/s41592-019-0667-5</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41592-019-0667-5">doi:10.1038/s41592-019-0667-5</a>.</p>
+</div>
+<div class="citation" id="id399" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>DTGR+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id9">2</a>,<a role="doc-backlink" href="#id10">3</a>,<a role="doc-backlink" href="#id12">4</a>,<a role="doc-backlink" href="#id16">5</a>,<a role="doc-backlink" href="#id22">6</a>,<a role="doc-backlink" href="#id24">7</a>)</span>
+<p>Daniel Dimitrov, Dénes Türei, Martin Garrido-Rodriguez, Paul L Burmedi, James S Nagai, Charlotte Boys, Ricardo O Ramirez Flores, Hyojin Kim, Bence Szalai, Ivan G Costa, Alberto Valdeolivas, Aurélien Dugourd, and Julio Saez-Rodriguez. Comparison of methods and resources for cell-cell communication inference from single-cell RNA-seq data. <em>Nature Communications</em>, 13(1):3224, jun 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41467-022-30755-0">https://www.nature.com/articles/s41467-022-30755-0</a> (visited on 2021-05-31), <a class="reference external" href="https://doi.org/10.1038/s41467-022-30755-0">doi:10.1038/s41467-022-30755-0</a>.</p>
+</div>
+<div class="citation" id="id388" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>EVTTVT20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id11">3</a>,<a role="doc-backlink" href="#id15">4</a>)</span>
+<p>Mirjana Efremova, Miquel Vento-Tormo, Sarah A Teichmann, and Roser Vento-Tormo. CellPhoneDB: inferring cell-cell communication from combined expression of multi-subunit ligand-receptor complexes. <em>Nature Protocols</em>, 15(4):1484–1506, apr 2020. URL: <a class="reference external" href="http://www.nature.com/articles/s41596-020-0292-x">http://www.nature.com/articles/s41596-020-0292-x</a> (visited on 2020-12-04), <a class="reference external" href="https://doi.org/10.1038/s41596-020-0292-x">doi:10.1038/s41596-020-0292-x</a>.</p>
+</div>
+<div class="citation" id="id400" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id32">GALM+22</a><span class="fn-bracket">]</span></span>
+<p>Luz Garcia-Alonso, Valentina Lorenzi, Cecilia Icoresi Mazzeo, João Pedro Alves-Lopes, Kenny Roberts, Carmen Sancho-Serra, Justin Engelbert, Magda Marečková, Wolfram H Gruhn, Rachel A Botting, Tong Li, Berta Crespo, Stijn van Dongen, Vladimir Yu Kiselev, Elena Prigmore, Mary Herbert, Ashley Moffett, Alain Chédotal, Omer Ali Bayraktar, Azim Surani, Muzlifah Haniffa, and Roser Vento-Tormo. Single-cell roadmap of human gonadal development. <em>Nature</em>, 607(7919):540–547, jul 2022. URL: <a class="reference external" href="https://www.nature.com/articles/s41586-022-04918-4">https://www.nature.com/articles/s41586-022-04918-4</a> (visited on 2022-07-07), <a class="reference external" href="https://doi.org/10.1038/s41586-022-04918-4">doi:10.1038/s41586-022-04918-4</a>.</p>
+</div>
+<div class="citation" id="id405" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>HDO+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id27">2</a>)</span>
+<p>Rui Hou, Elena Denisenko, Huan Ting Ong, Jordan A Ramilowski, and Alistair RR Forrest. Predicting cell-to-cell communication networks using natmi. <em>Nature communications</em>, 11(1):1–11, 2020.</p>
+</div>
+<div class="citation" id="id394" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">HPGT21</a><span class="fn-bracket">]</span></span>
+<p>Yuxuan Hu, Tao Peng, Lin Gao, and Kai Tan. CytoTalk: de novo construction of signal transduction networks using single-cell transcriptomic data. <em>Science Advances</em>, apr 2021. URL: <a class="reference external" href="https://advances.sciencemag.org/lookup/doi/10.1126/sciadv.abf1356">https://advances.sciencemag.org/lookup/doi/10.1126/sciadv.abf1356</a> (visited on 2021-10-11), <a class="reference external" href="https://doi.org/10.1126/sciadv.abf1356">doi:10.1126/sciadv.abf1356</a>.</p>
+</div>
+<div class="citation" id="id391" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>JGJZ+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id29">3</a>)</span>
+<p>Suoqin Jin, Christian F Guerrero-Juarez, Lihua Zhang, Ivan Chang, Raul Ramos, Chen-Hsiang Kuan, Peggy Myung, Maksim V Plikus, and Qing Nie. Inference and analysis of cell-cell communication using CellChat. <em>Nature Communications</em>, 12(1):1088, feb 2021. URL: <a class="reference external" href="http://dx.doi.org/10.1038/s41467-021-21246-9">http://dx.doi.org/10.1038/s41467-021-21246-9</a> (visited on 2021-10-05), <a class="reference external" href="https://doi.org/10.1038/s41467-021-21246-9">doi:10.1038/s41467-021-21246-9</a>.</p>
+</div>
+<div class="citation" id="id408" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">KST+18</a><span class="fn-bracket">]</span></span>
+<p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
+</div>
+<div class="citation" id="id402" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>LSW22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id9">3</a>,<a role="doc-backlink" href="#id10">4</a>)</span>
+<p>Zhaoyang Liu, Dongqing Sun, and Chenfei Wang. Evaluation of cell-cell interaction methods by integrating single-cell RNA sequencing data with spatial information. <em>Genome Biology</em>, 23(1):218, oct 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1186/s13059-022-02783-y">http://dx.doi.org/10.1186/s13059-022-02783-y</a> (visited on 2022-10-20), <a class="reference external" href="https://doi.org/10.1186/s13059-022-02783-y">doi:10.1186/s13059-022-02783-y</a>.</p>
+</div>
+<div class="citation" id="id406" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id28">NLeimkuhlerS+21</a><span class="fn-bracket">]</span></span>
+<p>James S Nagai, Nils B Leimkühler, Michael T Schaub, Rebekka K Schneider, and Ivan G Costa. Crosstalker: analysis and visualization of ligand–receptorne tworks. <em>Bioinformatics</em>, 37(22):4263–4265, 2021.</p>
+</div>
+<div class="citation" id="id407" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">PFRT22</a><span class="fn-bracket">]</span></span>
+<p>Giovanni Palla, David S Fischer, Aviv Regev, and Fabian J Theis. Spatial components of molecular tissue biology. <em>Nature Biotechnology</em>, 40(3):308–318, 2022.</p>
+</div>
+<div class="citation" id="id398" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">RYG+22</a><span class="fn-bracket">]</span></span>
+<p>Micha Sam Brickman Raredon, Junchen Yang, James Garritano, Meng Wang, Dan Kushnir, Jonas Christian Schupp, Taylor S Adams, Allison M Greaney, Katherine L Leiby, Naftali Kaminski, Yuval Kluger, Andre Levchenko, and Laura E Niklason. Computation and visualization of cell-cell signaling topologies in single-cell systems data using connectome. <em>Scientific Reports</em>, 12(1):4187, mar 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1038/s41598-022-07959-x">http://dx.doi.org/10.1038/s41598-022-07959-x</a> (visited on 2021-01-25), <a class="reference external" href="https://doi.org/10.1038/s41598-022-07959-x">doi:10.1038/s41598-022-07959-x</a>.</p>
+</div>
+<div class="citation" id="id403" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id31">RYK+23</a><span class="fn-bracket">]</span></span>
+<p>Micha Sam Brickman Raredon, Junchen Yang, Neeharika Kothapalli, Wesley Lewis, Naftali Kaminski, Laura E Niklason, and Yuval Kluger. Comprehensive visualization of cell-cell interactions in single-cell and spatial transcriptomics with NICHES. <em>Bioinformatics</em>, jan 2023. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bioinformatics/btac775">http://dx.doi.org/10.1093/bioinformatics/btac775</a> (visited on 2022-01-27), <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btac775">doi:10.1093/bioinformatics/btac775</a>.</p>
+</div>
+<div class="citation" id="id404" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>WZC+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<p>Saidi Wang, Hansi Zheng, James S Choi, Jae K Lee, Xiaoman Li, and Haiyan Hu. A systematic evaluation of the computational tools for ligand-receptor-based cell-cell interaction inference. <em>Briefings in functional genomics</em>, 21(5):339–356, sep 2022. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bfgp/elac019">http://dx.doi.org/10.1093/bfgp/elac019</a> (visited on 2022-04-27), <a class="reference external" href="https://doi.org/10.1093/bfgp/elac019">doi:10.1093/bfgp/elac019</a>.</p>
+</div>
+<div class="citation" id="id386" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>WKMacLeanN19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id31">2</a>)</span>
+<p>Shuxiong Wang, Matthew Karikomi, Adam L MacLean, and Qing Nie. Cell lineage and communication network inference via optimization for single-cell transcriptomics. <em>Nucleic Acids Research</em>, 47(11):e66, jun 2019. URL: <a class="reference external" href="https://academic.oup.com/nar/article/47/11/e66/5421812">https://academic.oup.com/nar/article/47/11/e66/5421812</a> (visited on 2019-05-01), <a class="reference external" href="https://doi.org/10.1093/nar/gkz204">doi:10.1093/nar/gkz204</a>.</p>
+</div>
+<div class="citation" id="id396" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>WSHB22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id25">1</a>,<a role="doc-backlink" href="#id31">2</a>)</span>
+<p>Aaron J Wilk, Alex K Shalek, Susan Holmes, and Catherine A Blish. Comparative analysis of cell-cell communication at single-cell resolution. <em>BioRxiv</em>, mar 2022. URL: <a class="reference external" href="http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209">http://biorxiv.org/lookup/doi/10.1101/2022.02.04.479209</a> (visited on 2022-02-22), <a class="reference external" href="https://doi.org/10.1101/2022.02.04.479209">doi:10.1101/2022.02.04.479209</a>.</p>
+</div>
+<div class="citation" id="id409" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">ZLH+21</a><span class="fn-bracket">]</span></span>
+<p>Yang Zhang, Tianyuan Liu, Xuesong Hu, Mei Wang, Jing Wang, Bohao Zou, Puwen Tan, Tianyu Cui, Yiying Dou, Lin Ning, and others. Cellcall: integrating paired ligand–receptor and transcription factor activities for cell–cell communication. <em>Nucleic Acids Research</em>, 49(15):8520–8534, 2021.</p>
+</div>
+<div class="citation" id="id411" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">ZLW+21a</a><span class="fn-bracket">]</span></span>
+<p>Yang Zhang, Tianyuan Liu, Jing Wang, Bohao Zou, Le Li, Linhui Yao, Kechen Chen, Lin Ning, Bingyi Wu, Xiaoyang Zhao, and others. Cellinker: a platform of ligand–receptor interactions for intercellular communication analysis. <em>Bioinformatics</em>, 37(14):2025–2032, 2021.</p>
+</div>
+<div class="citation" id="id393" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id32">ZLW+21b</a><span class="fn-bracket">]</span></span>
+<p>Yang Zhang, Tianyuan Liu, Jing Wang, Bohao Zou, Le Li, Linhui Yao, Kechen Chen, Lin Ning, Bingyi Wu, Xiaoyang Zhao, and Dong Wang. Cellinker: a platform of ligand-receptor interactions for intercellular communication analysis. <em>Bioinformatics</em>, jan 2021. URL: <a class="reference external" href="http://dx.doi.org/10.1093/bioinformatics/btab036">http://dx.doi.org/10.1093/bioinformatics/btab036</a> (visited on 2021-09-12), <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btab036">doi:10.1093/bioinformatics/btab036</a>.</p>
+</div>
+<div class="citation" id="id397" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id32">ZZT+22</a><span class="fn-bracket">]</span></span>
+<p>Rongbin Zheng, Yang Zhang, Tadataka Tsuji, Lili Zhang, Yu-Hua Tseng, and Kaifu Chen. MEBOCOST: metabolic cell-cell communication modeling by single cell transcriptome. <em>BioRxiv</em>, may 2022. URL: <a class="reference external" href="http://biorxiv.org/lookup/doi/10.1101/2022.05.30.494067">http://biorxiv.org/lookup/doi/10.1101/2022.05.30.494067</a> (visited on 2022-06-02), <a class="reference external" href="https://doi.org/10.1101/2022.05.30.494067">doi:10.1101/2022.05.30.494067</a>.</p>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -2647,57 +2253,142 @@ Session information updated at 2023-02-19 13:46
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="grns.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><span class="section-number">20. </span>Gene regulatory networks</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="grns.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">20. </span>Gene regulatory networks</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="../deconvolution/bulk_deconvolution.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="../deconvolution/bulk_deconvolution.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">22. </span>Bulk deconvolution</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">21.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approaches">21.2. Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">21.3. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study">21.4. Case Study</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ligand-receptor-inference">21.4.1. Ligand-receptor inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-exploration">21.4.1.1. Visual exploration</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-a-ligand-receptor-consensus-with-liana">21.4.1.2. Generating a Ligand-Receptor consensus with LIANA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelling-differential-intercellular-signalling-with-nichenet">21.4.2. Modelling differential intercellular signalling with NicheNet</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-nichenet-prior-knowledge">21.4.2.1. Load NicheNet Prior-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-define-cell-types-of-interest-to-be-considered-as-senders-sources-and-receiver-targets-of-ccc-interactions">21.4.2.1.1. Step 1. Define cell types of interest to be considered as senders/sources and receiver/targets of CCC interactions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-define-a-set-of-ligands-that-can-potentially-affect-receiver-cell-types">21.4.2.1.2. Step 2. Define a set of ligands that can <strong>potentially</strong> affect receiver cell types</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-define-a-gene-set-of-interest-in-receiver-cell-type-s">21.4.2.1.3. Step 3. Define a gene set of interest in receiver cell type(s)</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-nichenet-ligand-activity-estimation">21.4.2.1.4. Step 4. NicheNet ligand activity estimation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-infer-visualize-top-predicted-target-genes-for-top-ligands">21.4.2.1.5. Step 5. Infer &amp; Visualize top-predicted target genes for top ligands</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-top-ligands-regulatory-targets">21.4.2.1.6. Visualize top ligands &amp; regulatory targets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-nichenet-output-with-ligand-receptor-inference">21.4.3. Combining NicheNet output with ligand-receptor inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">21.5. Key takeaways</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-limitations">21.5.1. Assumptions &amp; Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-outlook">21.5.2. Summary &amp; Outlook:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">21.6. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributions">21.7. Contributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">21.7.1. Authors:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">21.7.2. Reviewers:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-info">21.8. Session Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">21.9. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner">
+<div class="bd-footer-content__inner container">
   
-    By Lukas Heumos, Anna Schaar<br/>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar
+</p>
+
+  </div>
   
-      &copy; Copyright 2022.<br/>
-    <div class="extra_footer">
-      <div>
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-    </div>
-</p>
-        </footer>
-    </div>
-    
 </div>
+  </div>
+  
+</div></div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
