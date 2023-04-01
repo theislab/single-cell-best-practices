@@ -6,7 +6,7 @@ The most recent version of the book is rendered [here](https://sc-best-practices
 
 ## Accompanying expert recommendation and citation
 
-This book builds upon our expert recommendation "Best practices for single-cell analysis across modalities": https://www.nature.com/articles/s41576-023-00586-.
+This book builds upon our expert recommendation "Best practices for single-cell analysis across modalities": https://www.nature.com/articles/s41576-023-00586-w.
 If you found the expert recommendation or this book helpful for your research article please cite it as:
 
 > Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). https://doi.org/10.1038/s41576-023-00586-w
