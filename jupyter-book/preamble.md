@@ -51,7 +51,9 @@ Although most of our chapters have been reviewed by multiple authors and the edi
 
 ## Citation
 
-TBD
+If you found our content helpful for your research article please cite it as:
+
+> Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). https://doi.org/10.1038/s41576-023-00586-w
 
 ## Contributing
 
