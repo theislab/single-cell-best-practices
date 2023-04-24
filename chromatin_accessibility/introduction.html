@@ -1,0 +1,973 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>23. Single-cell ATAC sequencing &#8212; Single-cell best practices</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="24. Quality Control" href="quality_control.html" />
+    <link rel="prev" title="22. Bulk deconvolution" href="../deconvolution/bulk_deconvolution.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/prior_art.html">
+   1. Prior art
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/scrna_seq.html">
+   2. Single-cell RNA sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/raw_data_processing.html">
+   3. Raw data processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/analysis_tools.html">
+   4. Analysis frameworks and tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/interoperability.html">
+   5. Interoperability
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preprocessing and visualization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
+   6. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
+   7. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
+   8. Feature selection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
+   9. Dimensionality Reduction
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Identifying cellular structure
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/clustering.html">
+   10. Clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/annotation.html">
+   11. Annotation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cellular_structure/integration.html">
+   12. Data integration
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Inferring trajectories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/pseudotemporal.html">
+   13. Pseudotemporal ordering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/rna_velocity.html">
+   14. RNA velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../trajectories/lineage_tracing.html">
+   15. Lineage tracing
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dealing with conditions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/differential_gene_expression.html">
+   16. Differential gene expression analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/compositional.html">
+   17. Compositional analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/gsea_pathway.html">
+   18. Gene set enrichment and pathway analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conditions/perturbation_modeling.html">
+   19. Perturbation modeling
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Modeling mechanisms
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">
+   20. Gene regulatory networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
+   21. Cell-cell communication
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Deconvolution
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
+   22. Bulk deconvolution
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Chromatin Accessibility
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   23. Single-cell ATAC sequencing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quality_control.html">
+   24. Quality Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gene_regulatory_networks_atac.html">
+   25. Gene regulatory networks using chromatin accessibility
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Spatial omics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/introduction.html">
+   26. Single-cell data resolved in space
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/neighborhood.html">
+   27. Neighborhood analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/domains.html">
+   28. Spatial domains
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/spatially_variable_genes.html">
+   29. Spatially variable genes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/deconvolution.html">
+   30. Spatial deconvolution
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial/imputation.html">
+   31. Imputation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Surface protein
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/quality_control.html">
+   35. Quality control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/normalization.html">
+   36. Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/doublet_detection.html">
+   37. Doublet detection
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
+   38. Dimensionality Reduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/batch_correction.html">
+   39. Batch correction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../surface_protein/annotation.html">
+   40. Annotation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Adaptive immune receptor repertoire
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
+   41. Immune Receptor Profiling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/clonotype.html">
+   42. Clonotype analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/specificity.html">
+   46. Specificity analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
+   47. Integrating AIR and transcriptomics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Multimodal integration
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
+   48. Paired integration
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
+   49. Advanced integration
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Reproducibility
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../reproducibility/introduction.html">
+   50. Reproducibility
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Outlook
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../outlook.html">
+   51. Outlook
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Acknowledgements
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../acknowledgements.html">
+   52. Acknowledgements
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Glossary
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   53. Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/chromatin_accessibility/introduction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fchromatin_accessibility/introduction.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/chromatin_accessibility/introduction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/chromatin_accessibility/introduction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   23.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#experimental-assay">
+   23.2. Experimental assay
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-characteristics-feature-definition-and-sparsity">
+   23.3. Data characteristics - feature definition and sparsity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-of-the-data-analyis-workflow">
+   23.4. Overview of the data analyis workflow
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   23.5. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   23.6. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     23.6.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     23.6.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Single-cell ATAC sequencing</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   23.1. Motivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#experimental-assay">
+   23.2. Experimental assay
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-characteristics-feature-definition-and-sparsity">
+   23.3. Data characteristics - feature definition and sparsity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-of-the-data-analyis-workflow">
+   23.4. Overview of the data analyis workflow
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   23.5. References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributors">
+   23.6. Contributors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#authors">
+     23.6.1. Authors
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#reviewers">
+     23.6.2. Reviewers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="single-cell-atac-sequencing">
+<h1><span class="section-number">23. </span>Single-cell ATAC sequencing<a class="headerlink" href="#single-cell-atac-sequencing" title="Permalink to this headline">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">23.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<p>Every cell of an organism shares the same DNA with the same set of functional units referred to as genes. With this in mind, what determines the tremendous diversity of cells reaching from natural killer cells of the immune system to neurons transmitting electrochemical signals throughout the body? In the previous chapters, we saw that cell identity and function can be inferred from gene expression profiles in each cell. The control of gene expression is driven by a complex interplay of regulatory mechanisms such as DNA methylation, histone modifications, and transcription factor activity. <a class="reference internal" href="../glossary.html#term-Chromatin"><span class="xref std std-term">Chromatin</span></a> accessibility largely reflects the combined regulatory state of a cell, serving as an orthogonal layer of information to mRNA levels describing cell identity. Furthermore, exploring the chromain accessibility profile enables additional insights into gene regulatory mechanisms and cell differentiation processes that might not be captured by scRNA-seq data.</p>
+<figure class="align-default" id="mechanisms-influencing-chromatin-accessibility">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/mechanisms_overview.png"><img alt="Accessibility regulation" class="bg-primary mb-1" src="../_images/mechanisms_overview.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 23.1 </span><span class="caption-text">Overview of mechanisms influencing chromatin accessibility. Created with <a class="reference external" href="http://BioRender.com">BioRender.com</a>.</span><a class="headerlink" href="#mechanisms-influencing-chromatin-accessibility" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>As depicted above, chromatin accessibility is influenced by higher-order structure down to low-level DNA modifications. <strong>(1)</strong> Chromatin scaffolding driven by scaffold/matrix attachment regions (S/MARs) and proteins in the nuclear periphery such as nuclear pore complexes (NPCs) or lamins influences chromatin compactness and gene expression <span id="id1">[<a class="reference internal" href="#id443" title="Abigail Buchwalter, Jeanae M. Kaneshiro, and Martin W. Hetzer. Coaching from the sidelines: the nuclear periphery in genome regulation. Nature Reviews Genetics, 20(1):39–50, 2019. URL: http://www.nature.com/articles/s41576-018-0063-5 (visited on 2023-04-01), doi:10.1038/s41576-018-0063-5.">Buchwalter <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id444" title="Nitin Narwade, Sonal Patel, Aftab Alam, Samit Chattopadhyay, Smriti Mittal, and Abhijeet Kulkarni. Mapping of scaffold/matrix attachment regions in human genome: a data mining exercise. Nucleic Acids Research, 47(14):7247–7261, 2019. URL: https://academic.oup.com/nar/article/47/14/7247/5527279 (visited on 2023-04-01), doi:10.1093/nar/gkz562.">Narwade <em>et al.</em>, 2019</a>]</span>. <strong>(2, 3)</strong> More local accessibility often referred to as densly packed heterochromatin versus open euchromatin can be actively controlled by ATP-dependent and ATP-independent chromatin remodeling complexes and histone modifications such as acetylation, methylation and phosphorylation. <strong>(4)</strong> Also the binding of transcription factors can influence nucleosome positioning and lead to the recruitment of histome-modifying enzymes and chromatin remodelers. <strong>(5)</strong> On a DNA level, methylation of CpG sites influences the binding affinity of various proteins including transcription factors and histone-modifying enzymes which combined leads to the silencing of the corresponding genomic regions. For an animated visualization we also recommend <a class="reference external" href="https://www.youtube.com/watch?v=XelGO582s4U">this 2 minute video</a> on epigenetics and the regulation of gene activity (credits to Nicole Ethen from the SQE, University of Illinois). For a comprehensive and up-to-date review on genome regulation and TF activity, we refer to <span id="id2">[<a class="reference internal" href="#id440" title="Luke Isbel, Ralph S. Grand, and Dirk Schübeler. Generating specificity in genome regulation through transcription factor sensitivity to chromatin. Nature Reviews. Genetics, 23(12):728–740, December 2022. doi:10.1038/s41576-022-00512-6.">Isbel <em>et al.</em>, 2022</a>]</span>.</p>
+<p>Taken together, an essential component defining cell identity is the regulatory state of each cell. In this chapter, we focus on chomatin accessibility data measured by the <strong>Single-Cell Assay for Transposase-Accessible Chromatin with High-Throughput Sequencing (scATAC-seq)</strong> or as part of the <strong>10x Multiome assay (scATAC combined with scRNA-seq)</strong>.</p>
+<p>After walking you through the preprocessing steps this analysis will allow us to:</p>
+<ol class="simple">
+<li><p>characterize cell identity with an orthogonal approach to scRNA-seq analysis</p></li>
+<li><p>identify cell state specific transcriptional regulators</p></li>
+<li><p>link gene expression to sequence features</p></li>
+<li><p>disentagle epigenetic mechanisms driving cell differentiation and disease states</p></li>
+</ol>
+</section>
+<section id="experimental-assay">
+<h2><span class="section-number">23.2. </span>Experimental assay<a class="headerlink" href="#experimental-assay" title="Permalink to this headline">#</a></h2>
+<p>Currently, commercially available kits are the most widely used experimental protocols and therefore we showcase our analysis on data generated with the 10x Multiome assay (with minor changes this also applies on data generated with the unimodal 10x single cell ATAC-seq assay).</p>
+<p>The key principle used to measure chromatin accessibility is the Assay for Transposase-Accessible Chromatin with High-Throughput Sequencing.
+Starting point is a single cell suspension of the tissue of interest. Nuclei are extracted, and the transposition is performed in bulk using a Tn5-transposase which binds to open regions in the chromatin and generates tagmented DNA fragments. Nuclei are then loaded onto a 10x Chromium Controller and droplets containing gel beads and single cells, also referred to as Gel Bead-in-Emulsion (GEMs), are formed. Within each droplet, RNA molecules and DNA fragments are barcoded, and after dissolving the GEMs, nucleotide sequences are pre-amplified to receive the final scATAC-seq and scRNA-seq libraries.</p>
+<p>In the figure below, we illustrate the fragmentation process of the scATAC-seq part <span id="id3">[<a class="reference internal" href="#id439" title="Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell ATAC-seq analysis. May 2022. Pages: 2022.05.04.490536 Section: New Results. URL: https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1 (visited on 2023-03-29), doi:10.1101/2022.05.04.490536.">Martens <em>et al.</em>, 2022</a>]</span>. scATAC-seq uses the Tn5 transposase enzyme to insert sequencing adapters into open chromatin regions of single cells, which results in the cleavage of DNA and the attachment of sequencing adapters to create Tn5 fragments. Two Tn5 insertions create one fragment with sequencing adapters, and the orientation of insertion is crucial as only fragments flanked with two distinct adapters can be captured and amplified. The amplified fragments are then sequenced paired-end and aligned to the reference genome.</p>
+</section>
+<section id="data-characteristics-feature-definition-and-sparsity">
+<h2><span class="section-number">23.3. </span>Data characteristics - feature definition and sparsity<a class="headerlink" href="#data-characteristics-feature-definition-and-sparsity" title="Permalink to this headline">#</a></h2>
+<p>Single-cell ATAC-seq data measures chromatin accessibility across the entire genome. Since this includes coding and non-coding regions, genes can not be used as pre-defined features, as is the case for scRNA-seq data. Instead, the most common approach to define biologically meaningful features is detecting regions of high accessibility compared to a background - i.e. peaks in the distribution of fragment counts along the genome. Peaks in coding regions indicate that a gene might be transcribed, while in non-coding regions, accessibility is seen as a prerequisite or result for the binding of regulatory proteins such as transcription factors. However, calling peaks on all cells of a dataset can hide cell-type specific accessibility or accessibility profiles of rare cell types. Therefore, a proposed solution is to call cluster-specific peaks which requires prior peak-independent clustering of the cells. SnapATAC<span id="id4">[<a class="reference internal" href="#id437" title="Rongxin Fang, Sebastian Preissl, Yang Li, Xiaomeng Hou, Jacinta Lucero, Xinxin Wang, Amir Motamedi, Andrew K. Shiau, Xinzhu Zhou, Fangming Xie, Eran A. Mukamel, Kai Zhang, Yanxiao Zhang, M. Margarita Behrens, Joseph R. Ecker, and Bing Ren. Comprehensive analysis of single cell ATAC-seq data with SnapATAC. Nature Communications, 12(1):1337, February 2021. Number: 1 Publisher: Nature Publishing Group. URL: https://www.nature.com/articles/s41467-021-21583-9 (visited on 2022-03-31), doi:10.1038/s41467-021-21583-9.">Fang <em>et al.</em>, 2021</a>]</span> and ArchR<span id="id5">[<a class="reference internal" href="#id434" title="Jeffrey M. Granja, M. Ryan Corces, Sarah E. Pierce, S. Tansu Bagdatli, Hani Choudhry, Howard Y. Chang, and William J. Greenleaf. ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics, 53(3):403–411, March 2021. Number: 3 Publisher: Nature Publishing Group. URL: https://www.nature.com/articles/s41588-021-00790-6 (visited on 2022-03-27), doi:10.1038/s41588-021-00790-6.">Granja <em>et al.</em>, 2021</a>]</span> suggest a binning strategy, that creates features by dividing the entire genome into uniformly sized windows and using this feature set for clustering of the cells.</p>
+<p>Once the feature set is defined in one or the other way, a measure of Tn5 activity in those features is defined for each cell. Three main approaches are used: counting reads overlapping a feature, counting fragments overlapping a feature, and binarization. While the 10x Genomics Cell Ranger ATAC pipeline counts reads overlapping peak regions, the widely used Signac framework <span id="id6">[<a class="reference internal" href="#id435" title="Tim Stuart, Avi Srivastava, Caleb Lareau, and Rahul Satija. Multimodal single-cell chromatin analysis with Signac. Technical Report, bioRxiv, November 2020. Section: New Results Type: article. URL: https://www.biorxiv.org/content/10.1101/2020.11.09.373613v1 (visited on 2022-03-31), doi:10.1101/2020.11.09.373613.">Stuart <em>et al.</em>, 2020</a>]</span> counts the number of fragments overlapping a feature. On the other hand, ArchR <span id="id7">[<a class="reference internal" href="#id434" title="Jeffrey M. Granja, M. Ryan Corces, Sarah E. Pierce, S. Tansu Bagdatli, Hani Choudhry, Howard Y. Chang, and William J. Greenleaf. ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics, 53(3):403–411, March 2021. Number: 3 Publisher: Nature Publishing Group. URL: https://www.nature.com/articles/s41588-021-00790-6 (visited on 2022-03-27), doi:10.1038/s41588-021-00790-6.">Granja <em>et al.</em>, 2021</a>]</span> counts read ends and binarizes them by default.</p>
+<p>It is important to note that there are some differences between counting reads and counting fragments. In scATAC-seq, paired-end sequencing generates two reads that are usually in close proximity to each other. As a result, uneven counts are only generated if one read pair lies outside the feature <span id="id8">[<a class="reference internal" href="#id439" title="Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell ATAC-seq analysis. May 2022. Pages: 2022.05.04.490536 Section: New Results. URL: https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1 (visited on 2023-03-29), doi:10.1101/2022.05.04.490536.">Martens <em>et al.</em>, 2022</a>]</span>. This means that the used counting strategy can impact the resulting count distribution. It has been shown that the read counting strategy leads to a count distribution with many more even than uneven counts while counting fragments does not have this effect <span id="id9">[<a class="reference internal" href="#id439" title="Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell ATAC-seq analysis. May 2022. Pages: 2022.05.04.490536 Section: New Results. URL: https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1 (visited on 2023-03-29), doi:10.1101/2022.05.04.490536.">Martens <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id436" title="Zhen Miao and Junhyong Kim. Is single nucleus ATAC-seq accessibility a qualitative or quantitative measurement? Technical Report, bioRxiv, April 2022. Section: New Results Type: article. URL: https://www.biorxiv.org/content/10.1101/2022.04.20.488960v1 (visited on 2022-04-28), doi:10.1101/2022.04.20.488960.">Miao and Kim, 2022</a>]</span>.</p>
+<p>Another important characteristic of scATAC-seq data is its high sparsity. Since there are only two copies of DNA in each cell in a diploid organism, the maximum number of counts for a given base-pair position is 2 (note that there can be more than two counts in a peak or bin since it is a long range). This can lead to many features having zero counts, resulting in a highly sparse count matrix. To account for this, some methods take the approach of binarizing the counts, which means that a feature is called accessible as soon as one read or fragment overlaps <span id="id10">[<a class="reference internal" href="#id441" title="Tal Ashuach, Daniel A. Reidenbach, Adam Gayoso, and Nir Yosef. PeakVI: A deep generative model for single-cell chromatin accessibility analysis. Cell Reports Methods, pages 100182, March 2022. URL: https://www.sciencedirect.com/science/article/pii/S2667237522000376 (visited on 2022-03-22).">Ashuach <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id438" title="Carmen Bravo González-Blas, Liesbeth Minnoye, Dafni Papasokrati, Sara Aibar, Gert Hulselmans, Valerie Christiaens, Kristofer Davie, Jasper Wouters, and Stein Aerts. cisTopic: cis-regulatory topic modeling on single-cell ATAC-seq data. Nature Methods, 16(5):397–400, May 2019. Number: 5 Publisher: Nature Publishing Group. URL: https://www.nature.com/articles/s41592-019-0367-1 (visited on 2022-03-10), doi:10.1038/s41592-019-0367-1.">Bravo González-Blas <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id434" title="Jeffrey M. Granja, M. Ryan Corces, Sarah E. Pierce, S. Tansu Bagdatli, Hani Choudhry, Howard Y. Chang, and William J. Greenleaf. ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics, 53(3):403–411, March 2021. Number: 3 Publisher: Nature Publishing Group. URL: https://www.nature.com/articles/s41588-021-00790-6 (visited on 2022-03-27), doi:10.1038/s41588-021-00790-6.">Granja <em>et al.</em>, 2021</a>]</span>. However, binarization can result in a loss of information and can be less sensitive in detecting small differences in accessibility <span id="id11">[<a class="reference internal" href="#id439" title="Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell ATAC-seq analysis. May 2022. Pages: 2022.05.04.490536 Section: New Results. URL: https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1 (visited on 2023-03-29), doi:10.1101/2022.05.04.490536.">Martens <em>et al.</em>, 2022</a>]</span>.</p>
+<p>It is important to note that the best counting strategy for scATAC-seq data is still under debate, and further independent benchmarking is needed. Ultimately, the choice of counting strategy will depend on the specific research question and the characteristics of the dataset.</p>
+<p><strong>ToDo</strong></p>
+<ul class="simple">
+<li><p>mention harmonizing features across multiple samples</p></li>
+</ul>
+</section>
+<section id="overview-of-the-data-analyis-workflow">
+<h2><span class="section-number">23.4. </span>Overview of the data analyis workflow<a class="headerlink" href="#overview-of-the-data-analyis-workflow" title="Permalink to this headline">#</a></h2>
+<p>In the following sections, we will guide you through a standard workflow for analyzing scATAC-seq data. The accompanying overview figure presents the various stages of the analysis and highlights differences between popular frameworks used for this purpose. To begin with, we will explain the concepts of quality control and dimensionality reduction using Python and muon. Towards the end, we will demonstrate how to transfer your muon object to R and perform data visualization and interpretation using Signac.</p>
+<figure class="align-default" id="atac-seq-overview">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/overview_atac.jpeg"><img alt="ATAC-seq overview" class="bg-primary mb-1" src="../_images/overview_atac.jpeg" style="width: 900px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 23.2 </span><span class="caption-text">Overview of the scATAC-seq analysis steps.</span><a class="headerlink" href="#atac-seq-overview" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="references">
+<h2><span class="section-number">23.5. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<div class="docutils container" id="id12">
+<dl class="citation">
+<dt class="label" id="id441"><span class="brackets"><a class="fn-backref" href="#id10">atacARGY22</a></span></dt>
+<dd><p>Tal Ashuach, Daniel A. Reidenbach, Adam Gayoso, and Nir Yosef. PeakVI: A deep generative model for single-cell chromatin accessibility analysis. <em>Cell Reports Methods</em>, pages 100182, March 2022. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S2667237522000376">https://www.sciencedirect.com/science/article/pii/S2667237522000376</a> (visited on 2022-03-22).</p>
+</dd>
+<dt class="label" id="id438"><span class="brackets"><a class="fn-backref" href="#id10">atacBGBMP+19</a></span></dt>
+<dd><p>Carmen Bravo González-Blas, Liesbeth Minnoye, Dafni Papasokrati, Sara Aibar, Gert Hulselmans, Valerie Christiaens, Kristofer Davie, Jasper Wouters, and Stein Aerts. cisTopic: cis-regulatory topic modeling on single-cell ATAC-seq data. <em>Nature Methods</em>, 16(5):397–400, May 2019. Number: 5 Publisher: Nature Publishing Group. URL: <a class="reference external" href="https://www.nature.com/articles/s41592-019-0367-1">https://www.nature.com/articles/s41592-019-0367-1</a> (visited on 2022-03-10), <a class="reference external" href="https://doi.org/10.1038/s41592-019-0367-1">doi:10.1038/s41592-019-0367-1</a>.</p>
+</dd>
+<dt class="label" id="id443"><span class="brackets"><a class="fn-backref" href="#id1">atacBKH19</a></span></dt>
+<dd><p>Abigail Buchwalter, Jeanae M. Kaneshiro, and Martin W. Hetzer. Coaching from the sidelines: the nuclear periphery in genome regulation. <em>Nature Reviews Genetics</em>, 20(1):39–50, 2019. URL: <a class="reference external" href="http://www.nature.com/articles/s41576-018-0063-5">http://www.nature.com/articles/s41576-018-0063-5</a> (visited on 2023-04-01), <a class="reference external" href="https://doi.org/10.1038/s41576-018-0063-5">doi:10.1038/s41576-018-0063-5</a>.</p>
+</dd>
+<dt class="label" id="id437"><span class="brackets"><a class="fn-backref" href="#id4">atacFPL+21</a></span></dt>
+<dd><p>Rongxin Fang, Sebastian Preissl, Yang Li, Xiaomeng Hou, Jacinta Lucero, Xinxin Wang, Amir Motamedi, Andrew K. Shiau, Xinzhu Zhou, Fangming Xie, Eran A. Mukamel, Kai Zhang, Yanxiao Zhang, M. Margarita Behrens, Joseph R. Ecker, and Bing Ren. Comprehensive analysis of single cell ATAC-seq data with SnapATAC. <em>Nature Communications</em>, 12(1):1337, February 2021. Number: 1 Publisher: Nature Publishing Group. URL: <a class="reference external" href="https://www.nature.com/articles/s41467-021-21583-9">https://www.nature.com/articles/s41467-021-21583-9</a> (visited on 2022-03-31), <a class="reference external" href="https://doi.org/10.1038/s41467-021-21583-9">doi:10.1038/s41467-021-21583-9</a>.</p>
+</dd>
+<dt class="label" id="id434"><span class="brackets">atacGCP+21</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id7">2</a>,<a href="#id10">3</a>)</span></dt>
+<dd><p>Jeffrey M. Granja, M. Ryan Corces, Sarah E. Pierce, S. Tansu Bagdatli, Hani Choudhry, Howard Y. Chang, and William J. Greenleaf. ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. <em>Nature Genetics</em>, 53(3):403–411, March 2021. Number: 3 Publisher: Nature Publishing Group. URL: <a class="reference external" href="https://www.nature.com/articles/s41588-021-00790-6">https://www.nature.com/articles/s41588-021-00790-6</a> (visited on 2022-03-27), <a class="reference external" href="https://doi.org/10.1038/s41588-021-00790-6">doi:10.1038/s41588-021-00790-6</a>.</p>
+</dd>
+<dt class="label" id="id440"><span class="brackets"><a class="fn-backref" href="#id2">atacIGS22</a></span></dt>
+<dd><p>Luke Isbel, Ralph S. Grand, and Dirk Schübeler. Generating specificity in genome regulation through transcription factor sensitivity to chromatin. <em>Nature Reviews. Genetics</em>, 23(12):728–740, December 2022. <a class="reference external" href="https://doi.org/10.1038/s41576-022-00512-6">doi:10.1038/s41576-022-00512-6</a>.</p>
+</dd>
+<dt class="label" id="id439"><span class="brackets">atacMFTG22</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id8">2</a>,<a href="#id9">3</a>,<a href="#id11">4</a>)</span></dt>
+<dd><p>Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell ATAC-seq analysis. May 2022. Pages: 2022.05.04.490536 Section: New Results. URL: <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1">https://www.biorxiv.org/content/10.1101/2022.05.04.490536v1</a> (visited on 2023-03-29), <a class="reference external" href="https://doi.org/10.1101/2022.05.04.490536">doi:10.1101/2022.05.04.490536</a>.</p>
+</dd>
+<dt class="label" id="id436"><span class="brackets"><a class="fn-backref" href="#id9">atacMK22</a></span></dt>
+<dd><p>Zhen Miao and Junhyong Kim. Is single nucleus ATAC-seq accessibility a qualitative or quantitative measurement? Technical Report, bioRxiv, April 2022. Section: New Results Type: article. URL: <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2022.04.20.488960v1">https://www.biorxiv.org/content/10.1101/2022.04.20.488960v1</a> (visited on 2022-04-28), <a class="reference external" href="https://doi.org/10.1101/2022.04.20.488960">doi:10.1101/2022.04.20.488960</a>.</p>
+</dd>
+<dt class="label" id="id444"><span class="brackets"><a class="fn-backref" href="#id1">atacNPA+19</a></span></dt>
+<dd><p>Nitin Narwade, Sonal Patel, Aftab Alam, Samit Chattopadhyay, Smriti Mittal, and Abhijeet Kulkarni. Mapping of scaffold/matrix attachment regions in human genome: a data mining exercise. <em>Nucleic Acids Research</em>, 47(14):7247–7261, 2019. URL: <a class="reference external" href="https://academic.oup.com/nar/article/47/14/7247/5527279">https://academic.oup.com/nar/article/47/14/7247/5527279</a> (visited on 2023-04-01), <a class="reference external" href="https://doi.org/10.1093/nar/gkz562">doi:10.1093/nar/gkz562</a>.</p>
+</dd>
+<dt class="label" id="id435"><span class="brackets"><a class="fn-backref" href="#id6">atacSSLS20</a></span></dt>
+<dd><p>Tim Stuart, Avi Srivastava, Caleb Lareau, and Rahul Satija. Multimodal single-cell chromatin analysis with Signac. Technical Report, bioRxiv, November 2020. Section: New Results Type: article. URL: <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2020.11.09.373613v1">https://www.biorxiv.org/content/10.1101/2020.11.09.373613v1</a> (visited on 2022-03-31), <a class="reference external" href="https://doi.org/10.1101/2020.11.09.373613">doi:10.1101/2020.11.09.373613</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">23.6. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">23.6.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Christopher Lance</p></li>
+<li><p>Laura Martens</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">23.6.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chromatin_accessibility"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../deconvolution/bulk_deconvolution.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">22. </span>Bulk deconvolution</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="quality_control.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">24. </span>Quality Control</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Lukas Heumos, Anna Schaar<br/>
+  
+      &copy; Copyright 2022.<br/>
+    <div class="extra_footer">
+      <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+    </div>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
