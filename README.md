@@ -18,13 +18,13 @@ We are writing a book on the current single-cell analysis best-practices with ex
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/master/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Adapting the notebooks to other datasets:
 
-All notebooks for the various steps can be found in the [jupyter book folder](single-cell-best-practices/blob/development/jupyter-book) together with minimal Conda environments. Alternatively, the notebooks can be downloaded directly from the rendered version.
+All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/master/jupyter-book) together with minimal Conda environments. Alternatively, the notebooks can be downloaded directly from the rendered version.
 
 ## Acknowledgements
 
