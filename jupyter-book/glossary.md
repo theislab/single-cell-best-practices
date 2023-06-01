@@ -43,6 +43,9 @@ Cell type
 Cell state
     Cells can be annotated according to {term}`cell type` or other cell states as defined by the cell-cycle, perturbational state or other features.
 
+Chromatin
+    The complex of DNA and proteins efficiently packaging the DNA inside the nucleus and involved in regulating gene expression.
+
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes`.
 

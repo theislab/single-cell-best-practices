@@ -20,8 +20,6 @@ Since the early definition of cell theory, researchers discovered that there exi
 Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region, but no nucleus.
 The nucleus hosts the cells' genomic deoxyribonucleic acid {term}`DNA` and is the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e. membrane-bound organelles are carrying out highly specialized functions and providing crucial support for cells.
 
-TODO: NEED SOME CELL IMAGE HERE
-
 Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
 The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going. The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
@@ -33,8 +31,6 @@ This leads to serious health issues including pain, anemia, swelling in the hand
 The gene defect is caused by a single nucleotide mutation where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above-mentioned disease.
 It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases, due to most diseases being caused by, for example, complex regulatory processes.
 
-TODO: AN IMAGE OF DNA HERE??
-
 ## A brief history of sequencing
 
 ### First generation sequencing
@@ -44,8 +40,6 @@ In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965
 Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
 In parallel, Friedrich Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and time-consuming.
 In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data{cite}`Hood1987`.
-
-TODO: AN IMAGE OF SANGER SEQUENCING
 
 Strengths:
 
@@ -70,8 +64,6 @@ Two years later, Shankar Balasubramanian and David Klenerman, developed and adap
 The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
 Many other platforms were introduced such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new DNA is synthesized.
 
-TODO: SHOW AN ILLUMINA SEQUENCER OR HOW IT WORKS OR STH
-
 Strengths:
 
 - Second generation generation sequencing is often the cheapest option with respect to required chemicals.
@@ -94,7 +86,7 @@ First, long-read sequencing, which describes the ability to obtain nucleotide fr
 
 Pacific Biosciences' (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases (kb), with possibilities for up to 70kb.
 
-Oxford Nanopore Technologies' introduced the GridION in 2012. The GridION and its successors MinIO and Flongle are portable sequencers for DNA and RNA sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in the electrical current that occur when nucleic acids pass through protein nanopores, to identify the nucleotide sequence{cite}`Jain2016`.
+Oxford Nanopore Technologies' introduced the GridION in 2012. The GridION and its successors MinION and Flongle are portable sequencers for DNA and RNA sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in the electrical current that occur when nucleic acids pass through protein nanopores, to identify the nucleotide sequence{cite}`Jain2016`.
 
 Strengths:
 
@@ -117,8 +109,6 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 2. **Amplification and sequencing**: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are being created. All of the clusters perform individual reactions during a single sequencing run.
 
 3. **Data output and analysis**: The output of a sequencing experiment depends on the sequencing technology and chemistry. Some sequencers generate fluorescence signals which are stored in specific output files, and others may generate electric signals which are stored in corresponding file formats. Generally, the amount of generated data, the raw data, is very large. Such data requires complex and computationally heavy processing. This is further discussed in the raw data processing chapter.
-
-TODO This needs a cartoon image
 
 (exp-data:rna-sequencing)=
 
@@ -174,8 +164,6 @@ ADD A FIGURE HERE.
 Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols: Microfluidic device-based strategies where cells are encapsulated into hydrogel droplets; well plate based protocols where cells are physically separated into wells and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects.
 In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
-TODO: MAYBE ADD OVERVIEW FIGURE (LIKE MESHAL'S DISS)
-
 #### Microfluidic device based protocols
 
 Microfluidic device based single-cell strategies trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`exp:Macosko2015` and the commercially available 10x Genomics Chromium{cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
@@ -206,8 +194,6 @@ Limitations:
 - Low detection rates of transcripts compared to other methods.
 - Captures 3' only and not full transcripts, because the cell barcodes and PCR handles are only added to the end of the transcript.
 
-TODO: ADD FIGURE FOR MICROFLUIDIC BASED ASSAY. CAN USE SOME TEXT FROM ABOVE AS FIGURE LEGEND
-
 #### Plate based
 
 Plate based protocols typically separate the cells physically into microwell plates. The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
@@ -225,8 +211,6 @@ Limitations:
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
 - Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
 - Depending on the protocol, plate based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and batch effects.
-
-TODO: ADD FIGURE FOR PLATE BASED ASSAY
 
 #### Fluidigm C1
 
@@ -264,8 +248,6 @@ Weaknesses:
 In summary, we strongly recommend that wet lab and dry lab scientists select the sequencing protocol based on the aim of the study. Is a deep characterization of a specific cell type population desired? In this case one of the plate-based methods may be more suitable. On the contrary, droplet based assays will capture heterogeneous mixtures better, allowing for a more broad characterization of the sequenced cells.
 Moreover, if the budget is a limiting factor, the protocol of choice should be more cost-effective and robust. When analyzing the data, be aware of the sequencing assay specific biases.
 For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al{cite}`Mereu2020`.
-
-TODO: ADD A FIGURE FOR SUCH AN ASSAY.
 
 ### single-cell vs single-nuclei
 
