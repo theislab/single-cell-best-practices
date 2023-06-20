@@ -29,7 +29,7 @@ For readers who are interested in knowing what the `FastQC` report for a FASTQ f
 
 **0. Summary**
 
-The summary panel on the left-hand side of the HTML report shows the module names included in the report, together with a sign used for quick evaluation of the module results. However, because `FastQC` uses uniform thresholds for files generated from all kinds of sequencing platforms and underlying biological material, we sometimes see warnings (orange triangles) and failures(red crosses) for good data and passes (green ticks) for questionable data. So, all modules should be carefully evaluated before concluding about the data quality.
+The summary panel on the left-hand side of the HTML report shows the module names included in the report, together with a sign used for quick evaluation of the module results. However, because `FastQC` uses uniform thresholds for files generated from all kinds of sequencing platforms and underlying biological material, we sometimes see warnings (orange exclamation) and failures(red crosses) for good data and passes (green ticks) for questionable data. So, all modules should be carefully evaluated before concluding about the data quality.
 
 :::{figure-md} raw-proc-fig-fastqc-summary
 <img src="../_static/images/raw_data_processing/fastqc_example/summary.jpg" alt="Summary" class="bg-primary mb-1" width="300px">
