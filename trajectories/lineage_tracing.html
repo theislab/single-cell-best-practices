@@ -2059,7 +2059,11 @@ KPTracer-Data.tar.g 100%[===================&gt;]   1.21G  1.49MB/s    in 7m 3s
 <p>Separately, we can overlay the cellular state assignments onto the hierarchical structure of the tree and evaluate the heritability of cellular states. In visualizing, we can see that certain parts of the lineage are more mixed than others.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="s2">&quot;Cluster-Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">cas</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">plot_matplotlib</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -2074,11 +2078,7 @@ KPTracer-Data.tar.g 100%[===================&gt;]   1.21G  1.49MB/s    in 7m 3s
 <p>The <strong>instability</strong> of these cellular states has been referred to as <strong>“effective plasticity”</strong> and several algorithms can be used to quantify it. One approach is to use the Fitch-Hartigan maximum-parsimony algorithm to infer the minimum number of times that cellular states had to have changed to give rise to the observed pattern. This function is implemented in Cassiopeia and can be utilized as below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span><span class="o">.</span><span class="n">cell_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="n">kptracer_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">,</span> <span class="s2">&quot;Cluster-Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="n">parsimony</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">score_small_parsimony</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_item</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parsimony</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">score_small_parsimony</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">meta_item</span><span class="o">=</span><span class="s2">&quot;Cluster-Name&quot;</span><span class="p">)</span>
 
 <span class="n">plasticity</span> <span class="o">=</span> <span class="n">parsimony</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
