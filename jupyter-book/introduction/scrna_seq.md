@@ -35,7 +35,7 @@ It is unfortunately not always possible to find such "simple" associations betwe
 
 ### First generation sequencing
 
-Although DNA was already first isolated in 1869 by Friedrich Mietscher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
+Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
 In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965 Robert Holley sequenced the first tRNA.
 Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
 In parallel, Friedrich Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and time-consuming.
