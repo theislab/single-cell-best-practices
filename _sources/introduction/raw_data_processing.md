@@ -499,7 +499,7 @@ When running `simpleaf index`, if a genome FASTA file (`-f`) and a gene annotati
 ```bash
 # simpleaf needs the environment variable ALEVIN_FRY_HOME to store configuration and data.
 # For example, the paths to the underlying programs it uses and the CB permit list
-mkdir alevin_fry_home & export ALEVIN_FRY_HOME='alevin_fry_home'
+mkdir alevin_fry_home && export ALEVIN_FRY_HOME='alevin_fry_home'
 
 # the simpleaf set-paths command finds the path to the required tools and write a configuration JSON file in the ALEVIN_FRY_HOME folder.
 simpleaf set-paths
