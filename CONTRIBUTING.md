@@ -1,7 +1,6 @@
 # Contributing
 
 We highly welcome community contributions and encourage contributions.
-There are several
 
 ## Book architecture
 
