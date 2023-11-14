@@ -704,28 +704,23 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   33.6. Key takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
-   33.7. References
+   33.6. References
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#contributors">
-   33.8. Contributors
+   33.7. Contributors
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#authors">
-     33.8.1. Authors
+     33.7.1. Authors
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#reviewers">
-     33.8.2. Reviewers
+     33.7.2. Reviewers
     </a>
    </li>
   </ul>
@@ -775,28 +770,23 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   33.6. Key takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
-   33.7. References
+   33.6. References
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#contributors">
-   33.8. Contributors
+   33.7. Contributors
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#authors">
-     33.8.1. Authors
+     33.7.1. Authors
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#reviewers">
-     33.8.2. Reviewers
+     33.7.2. Reviewers
     </a>
    </li>
   </ul>
@@ -815,7 +805,7 @@ title="Print to PDF"
 <h1><span class="section-number">33. </span>Normalization<a class="headerlink" href="#normalization" title="Permalink to this headline">#</a></h1>
 <section id="motivation">
 <h2><span class="section-number">33.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
-<p>Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id1">[<a class="reference internal" href="quality_control.html#id465" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>.
+<p>Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id1">[<a class="reference internal" href="quality_control.html#id466" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>.
 The capture efficiency varies from cell to cell due to difference in biophysical properties. Since CITE-seq experiments enrich for a priori selected features, compositional biases are more severe.
 Analogously to scRNA-seq data, many approaches to normalization exist.
 We cover the two most widely used ideas methods that require different input data and starting points.</p>
@@ -827,16 +817,19 @@ We cover the two most widely used ideas methods that require different input dat
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pooch</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/ciro.suastegui/miniconda3/envs/citeseq_pp/lib/python3.7/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -846,11 +839,13 @@ We cover the two most widely used ideas methods that require different input dat
 <h2><span class="section-number">33.3. </span>Loading the data<a class="headerlink" href="#loading-the-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_mu_path</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_raw.h5mu&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cite_quality_control</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/41452449&quot;</span><span class="p">,</span>
+    <span class="n">fname</span><span class="o">=</span><span class="s2">&quot;cite_quality_control.h5mu&quot;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="n">known_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">filtered_qc_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc.h5mu&quot;</span>
-<span class="n">filtered_norm_mu_path</span> <span class="o">=</span> <span class="s2">&quot;/lustre/groups/ml01/workspace/ciro.suastegui/bp2.0/data/neurips_cite_pp_filtered-qc-norm.h5mu&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -858,48 +853,39 @@ We cover the two most widely used ideas methods that require different input dat
 <p>We are simply loading the saved MuData object from the quality control chapter back in.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">raw</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">raw_mu_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;cite_quality_control.h5mu&quot;</span><span class="p">)</span>
+<span class="n">mdata</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 14min 3s, sys: 1min 54s, total: 15min 58s
-Wall time: 16min 4s
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">filtered</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filtered_qc_mu_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.76 s, sys: 1.3 s, total: 5.05 s
-Wall time: 6.07 s
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><pre>MuData object with n_obs × n_vars = 120502 × 36741
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 118563 × 36741
   var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
   2 modalities
-    rna:	120502 x 36601
+    rna:	118563 x 36601
       obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
       var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
-    prot:	120502 x 140
+    prot:	118563 x 140
       obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
       var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_raw</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;cite_raw.h5mu&quot;</span><span class="p">)</span>
+<span class="n">mdata_raw</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 24807643 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	24807643 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	24807643 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;</pre></div></div>
 </div>
 </section>
 <section id="dsb-normalization">
@@ -917,28 +903,21 @@ values of the isotype controls to normalize technical differences.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">mu</span><span class="o">.</span><span class="n">prot</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">dsb</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">isotype_controls</span><span class="o">=</span><span class="n">isotype_controls</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 8min 3s, sys: 28.6 s, total: 8min 31s
-Wall time: 8min 32s
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">prot</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">dsb</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">mdata_raw</span><span class="p">,</span> <span class="n">isotype_controls</span><span class="o">=</span><span class="n">isotype_controls</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -946,7 +925,7 @@ Wall time: 8min 32s
 <p>Let’s have a look at counts before denoising and normalization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">][:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">][:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -962,7 +941,7 @@ Wall time: 8min 32s
 296.0       1
 970.0       1
 763.0       1
-Length: 524, dtype: int64
+Name: count, Length: 524, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -970,23 +949,23 @@ Length: 524, dtype: int64
 <p>See after denoise and normalization the range changed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">filtered</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1.174030    2
--0.996048    1
- 1.722345    1
--0.262355    1
- 6.112263    1
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 0.311677    2
+-1.002554    1
+ 2.573147    1
+ 1.804169    1
+-0.403206    1
             ..
- 0.153576    1
- 0.285257    1
--0.149485    1
- 0.287904    1
--0.263154    1
-Length: 9999, dtype: int64
+ 0.142890    1
+ 0.268634    1
+-0.078150    1
+ 0.258447    1
+-0.271008    1
+Name: count, Length: 9999, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -997,47 +976,32 @@ Length: 9999, dtype: int64
 <p>If you don’t have the unfiltered data available, you can also normalize the ADT data with <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.clr</span></code>, implementing <strong>C</strong>entered <strong>L</strong>og-<strong>R</strong>atio normalization. There is no denoising in this type of normalization. We instead assume that the geometric mean is a good reference to make all else relative to (divide by)<span id="id4">[<a class="reference internal" href="#id461" title="Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. Bioinformatics, 34(16):2870–2878, Aug 2018. doi:10.1093/bioinformatics/bty175.">Quinn <em>et al.</em>, 2018</a>]</span>. We are in fact taking the natural log ratio of each protein in each cell relative to either other proteins or other cells, depending on the implementation. At first, it was done across proteins, but then it was changed to across cells. This change made the normalization less dependent on the antibody panel<span id="id5">[<a class="reference internal" href="#id451" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><pre>MuData object with n_obs × n_vars = 120502 × 36741
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 118563 × 36741
   var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
   2 modalities
-    rna:	120502 x 36601
+    rna:	118563 x 36601
       obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
       var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
-    prot:	120502 x 140
+    prot:	118563 x 140
       obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
       var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;
       layers:	&#x27;counts&#x27;</pre></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filtered_norm_mu_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/ciro.suastegui/miniconda3/envs/citeseq_pp/lib/python3.7/site-packages/anndata/_core/anndata.py:1241: SettingWithCopyWarning: 
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  df[key] = c
-... storing &#39;feature_types&#39; as categorical
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;cite_normalization.h5mu&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-<section id="key-takeaways">
-<h2><span class="section-number">33.6. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
-<p>TODO</p>
 </section>
 <section id="references">
-<h2><span class="section-number">33.7. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">33.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
 <div class="docutils container" id="id6">
 <dl class="citation">
 <dt class="label" id="id451"><span class="brackets">MMT22</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id5">2</a>)</span></dt>
@@ -1056,19 +1020,20 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">33.8. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">33.7. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
 <p>We gratefully acknowledge the contributions of:</p>
 <section id="authors">
-<h3><span class="section-number">33.8.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">33.7.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Daniel Strobl</p></li>
 <li><p>Ciro Ramírez-Suástegui</p></li>
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">33.8.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">33.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
+<li><p>Anna Schaar</p></li>
 </ul>
 </section>
 </section>
@@ -1083,16 +1048,16 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "cite"
         },
         kernelOptions: {
-            name: "python3",
+            name: "cite",
             path: "./surface_protein"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'cite'</script>
 
               </div>
               
