@@ -453,7 +453,7 @@ To do this, you can replace the above commands with the following (instructions 
 from [here](https://github.com/Haydnspass/miniforge#rosetta-on-mac-with-apple-silicon-hardware)):
 
 ```bash
-CONDA_SUBDIR=osx-64 conda create -n af -y -c bioconda simpleaf   # create a new environment
+CONDA_SUBDIR=osx-64 conda create -n af -y -c bioconda -c conda-forge simpleaf   # create a new environment
 conda activate af
 conda env config vars set CONDA_SUBDIR=osx-64  # subsequent commands use intel packages
 ````
@@ -477,7 +477,7 @@ ref_dir="toy_human_ref"
 
 # Fetch CB permit list
 ## the right chevron (>) redirects the STDOUT to a file.
-wget -qO- https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/python/cellranger/barcodes/3M-february-2018.txt.gz | gunzip - > 3M-february-2018.txt
+wget -qO- https://github.com/f0t1h/3M-february-2018/raw/master/3M-february-2018.txt.gz | gunzip - > 3M-february-2018.txt
 
 ```
 
