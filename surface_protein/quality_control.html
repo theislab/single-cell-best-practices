@@ -1,828 +1,517 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>32. Quality control &#8212; Single-cell best practices</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'surface_protein/quality_control';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="33. Normalization" href="normalization.html" />
     <link rel="prev" title="31. Imputation" href="../spatial/imputation.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
-    
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Introduction
- </span>
-</p>
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/prior_art.html">
-   1. Prior art
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/scrna_seq.html">
-   2. Single-cell RNA sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/raw_data_processing.html">
-   3. Raw data processing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/analysis_tools.html">
-   4. Analysis frameworks and tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/interoperability.html">
-   5. Interoperability
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Preprocessing and visualization
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
-   6. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
-   7. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
-   8. Feature selection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
-   9. Dimensionality Reduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Identifying cellular structure
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/clustering.html">
-   10. Clustering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/annotation.html">
-   11. Annotation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/integration.html">
-   12. Data integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Inferring trajectories
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/pseudotemporal.html">
-   13. Pseudotemporal ordering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/rna_velocity.html">
-   14. RNA velocity
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/lineage_tracing.html">
-   15. Lineage tracing
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Dealing with conditions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/differential_gene_expression.html">
-   16. Differential gene expression analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/compositional.html">
-   17. Compositional analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/gsea_pathway.html">
-   18. Gene set enrichment and pathway analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/perturbation_modeling.html">
-   19. Perturbation modeling
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Modeling mechanisms
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">
-   20. Gene regulatory networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
-   21. Cell-cell communication
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Deconvolution
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
-   22. Bulk deconvolution
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Chromatin Accessibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/introduction.html">
-   23. Single-cell ATAC sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/quality_control.html">
-   24. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">
-   25. Gene regulatory networks using chromatin accessibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Spatial omics
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/introduction.html">
-   26. Single-cell data resolved in space
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/neighborhood.html">
-   27. Neighborhood analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/domains.html">
-   28. Spatial domains
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/spatially_variable_genes.html">
-   29. Spatially variable genes
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/deconvolution.html">
-   30. Spatial deconvolution
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/imputation.html">
-   31. Imputation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Surface protein
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   32. Quality control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="normalization.html">
-   33. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="doublet_detection.html">
-   34. Doublet detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dimensionality_reduction.html">
-   35. Dimensionality Reduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="batch_correction.html">
-   36. Batch correction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="annotation.html">
-   37. Annotation
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annotation.html">37. Annotation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Adaptive immune receptor repertoire
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
-   38. Immune Receptor Profiling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/clonotype.html">
-   39. Clonotype analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/specificity.html">
-   43. Specificity analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
-   44. Integrating AIR and transcriptomics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Multimodal integration
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
-   45. Paired integration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
-   46. Advanced integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reproducibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../reproducibility/introduction.html">
-   47. Reproducibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Outlook
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../outlook.html">
-   48. Outlook
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Acknowledgements
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../acknowledgements.html">
-   49. Acknowledgements
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Glossary
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../glossary.html">
-   50. Glossary
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/jupyter-book/surface_protein/quality_control.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/surface_protein/quality_control.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fsurface_protein/quality_control.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/surface_protein/quality_control.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
 
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fsurface_protein/quality_control.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/surface_protein/quality_control.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/surface_protein/quality_control.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   32.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup-and-data">
-   32.2. Environment setup and data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#collecting-cellranger-outputs-into-mudata-object">
-     32.2.1. Collecting cellranger outputs into MuData object
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#loading-the-complete-mudata-object">
-     32.2.2. Loading the complete MuData object
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
-   32.3. Quality Control
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#sample-wise-qc">
-     32.3.1. Sample-wise QC
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   32.4. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   32.5. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     32.5.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     32.5.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Quality control</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   32.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup-and-data">
-   32.2. Environment setup and data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#collecting-cellranger-outputs-into-mudata-object">
-     32.2.1. Collecting cellranger outputs into MuData object
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#loading-the-complete-mudata-object">
-     32.2.2. Loading the complete MuData object
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id13">
-   32.3. Quality Control
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#sample-wise-qc">
-     32.3.1. Sample-wise QC
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   32.4. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   32.5. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     32.5.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     32.5.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Quality control</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">32.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup-and-data">32.2. Environment setup and data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-cellranger-outputs-into-mudata-object">32.2.1. Collecting cellranger outputs into MuData object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-complete-mudata-object">32.2.2. Loading the complete MuData object</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">32.3. Quality Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-wise-qc">32.3.1. Sample-wise QC</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">32.4. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">32.5. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">32.5.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">32.5.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="quality-control">
-<h1><span class="section-number">32. </span>Quality control<a class="headerlink" href="#quality-control" title="Permalink to this headline">#</a></h1>
+<h1><span class="section-number">32. </span>Quality control<a class="headerlink" href="#quality-control" title="Link to this heading">#</a></h1>
 <section id="motivation">
-<span id="surface-protein-motivation"></span><h2><span class="section-number">32.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<span id="surface-protein-motivation"></span><h2><span class="section-number">32.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>In addition to capturing only transcriptomic data with single cell analyses, we are now able to also capture the abundance of surface protein expression. The protocol used for this is usually referred to as CITE-seq<span id="id1">[<a class="reference internal" href="#id461" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865-868, Sep 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>. This modality requires different preprocessing compared to what we described earlier for gene expression data since the data distributions are different. In the following, we will guide you through the process of dealing with CITE-seq data. As CITE-seq data provides you with two different modalities, you can either analyze them separately or jointly. Here, we will focus on the ADT part of the data and analyze it unimodally.</p>
 <p>Single-cell RNA-seq data acts as a proxy for protein level with a partial correlation at various transcription estates of a cell<span id="id2">[<a class="reference internal" href="#id457" title="Yansheng Liu, Andreas Beyer, and Ruedi Aebersold. On the dependency of cellular protein levels on mrna abundance. Cell, 165(3):535–550, Apr 2016. doi:10.1016/j.cell.2016.03.014.">Liu <em>et al.</em>, 2016</a>]</span>. Therefore, it is in our interest to measure the protein levels in single-cells if we are to capture a better picture of cellular processes. Quantifying these aspects of a cell is essential to understand cell differentiation and fate, cell signal transduction pathway, disease progression, perturbations, and clinical diagnostics<span id="id3">[<a class="reference internal" href="#id463" title="Haiyang Xie and Xianting Ding. The intriguing landscape of single-cell protein analysis. Advanced Science, n/a(n/a):2105932, 2022. doi:10.1002/advs.202105932.">Xie and Ding, 2022</a>]</span>.</p>
 <p>We can already detect relevant populations with single-cell transcriptomics. This is a valuable piece of information, but incomplete if we want to better understand the cellular identities and dynamics happening in the biological processes we study. Having surface protein measurements allows us to close the gap between identity by transcription and identity by protein where there might be a delay in synthesis that could be important in our experiment. For example, it has been noted that ICOS, an immune checkpoint protein, was increased on the surface of treated cells, regardless of the fact that this protein’s mRNA does not differ in abundance between the treatment groups<span id="id4">[<a class="reference internal" href="#id460" title="Vanessa M. Peterson, Kelvin Xi Zhang, Namit Kumar, Jerelyn Wong, Lixia Li, Douglas C. Wilson, Renee Moore, Terrill K. McClanahan, Svetlana Sadekova, and Joel A. Klappenbach. Multiplexed quantification of proteins and transcripts in single cells. Nature Biotechnology, 35(1010):936–939, Oct 2017. doi:10.1038/nbt.3973.">Peterson <em>et al.</em>, 2017</a>]</span>. Another advantage is that surface protein levels help us detect doublets that might not be reflected at the transcript level in our data. This is possible by looking at the co-occurrence of cell-type-specific markers<span id="id5">[<a class="reference internal" href="#id462" title="Bo Sun, Emmanuel Bugarin-Estrada, Lauren Elizabeth Overend, Catherine Elizabeth Walker, Felicia Anna Tucci, and Rachael Jennifer Mary Bashford-Rogers. Double-jeopardy: scrna-seq doublet/multiplet detection using multi-omic profiling. Cell Reports Methods, 1(1):100008, May 2021. doi:10.1016/j.crmeth.2021.100008.">Sun <em>et al.</em>, 2021</a>]</span>.</p>
@@ -831,7 +520,7 @@ title="Print to PDF"
 <p>With ADT data, we can identify cell types based on conventional markers usually utilized in flow cytometry experiments. These markers are especially useful for specific immune cell populations. The advantage of ADT is that other modalities are measured simultaneously. However, the way we process ADT data differs from others. Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id9">[<a class="reference internal" href="#id466" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>. Many experiments only include a small number in the tens or hundreds of antibodies of interest. Moreover, sequencing resources can be concentrated enabling deeper coverage of ADTs since they are separated from transcripts. ADT data is also noisier, as unbound antibodies lead to counts in cells or empty droplets where the protein is not present.</p>
 </section>
 <section id="environment-setup-and-data">
-<h2><span class="section-number">32.2. </span>Environment setup and data<a class="headerlink" href="#environment-setup-and-data" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">32.2. </span>Environment setup and data<a class="headerlink" href="#environment-setup-and-data" title="Link to this heading">#</a></h2>
 <p>We use a Cite-seq data set generated for a single cell data integration challenge at the NeurIPS conference 2021 <span id="id10">[<a class="reference internal" href="#id464" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>. This dataset captures single-cell RNA and Antibody-Derived Tag (ADT) data from bone marrow mononuclear cells of 12 healthy human donors measured at four different sites to obtain nested batch effects. In this tutorial, we will use the whole dataset which contains 136 surface protein and 4 isotypes, and additionally show for one sample how to collect the data into a MuData object.</p>
 <p>Subsequently, we will use scanpy and muon<span id="id11">[<a class="reference internal" href="#id465" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. MUON: multimodal omics analysis framework. Genome Biology, feb 2022. URL: https://doi.org/10.1186%2Fs13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span> to analyse the data.</p>
 <p>We first start by importing all packages that are required for running this notebook.</p>
@@ -859,7 +548,7 @@ title="Print to PDF"
 </div>
 </div>
 <section id="collecting-cellranger-outputs-into-mudata-object">
-<h3><span class="section-number">32.2.1. </span>Collecting cellranger outputs into MuData object<a class="headerlink" href="#collecting-cellranger-outputs-into-mudata-object" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">32.2.1. </span>Collecting cellranger outputs into MuData object<a class="headerlink" href="#collecting-cellranger-outputs-into-mudata-object" title="Link to this heading">#</a></h3>
 <p>Cell Ranger gives us two outputs: a filtered and a raw output. The raw output contains all sequenced droplets
 while the filtered output only consists of the droplets considered as cells by Cell Ranger. We are collecting two subobjects into one MuData object that consists captures the RNA as well as the ADT data</p>
 <div class="cell docutils container">
@@ -919,7 +608,7 @@ while the filtered output only consists of the droplets considered as cells by C
 </div>
 </section>
 <section id="loading-the-complete-mudata-object">
-<h3><span class="section-number">32.2.2. </span>Loading the complete MuData object<a class="headerlink" href="#loading-the-complete-mudata-object" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">32.2.2. </span>Loading the complete MuData object<a class="headerlink" href="#loading-the-complete-mudata-object" title="Link to this heading">#</a></h3>
 <p>Next, we are now actually loading the complete Cite-seq dataset from the single cell data integration challenge at the NeurIPS conference 2021 <span id="id12">[<a class="reference internal" href="#id464" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>. We collected for all samples the RNA and ADT cellranger outputs, concatenated the individual objects and then created a joint MuData object in a similar way as described above.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -987,7 +676,7 @@ while the filtered output only consists of the droplets considered as cells by C
 </section>
 </section>
 <section id="id13">
-<h2><span class="section-number">32.3. </span>Quality Control<a class="headerlink" href="#id13" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">32.3. </span>Quality Control<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
 <p>Similar to transcriptomics data quality control and filtering, we need to remove cells that failed to capture ADTs. Solely reusing the earlier introduced transcriptomics quality control measures is inappropriate due to the above-mentioned different distributions.
 Since features for CITE-seq experiments are chosen based on expected biological relevance, separating technical and biological artifacts is more challenging.</p>
 <p>Successful capture of targeted proteins leads to a massive increase of total ADT count, due to the binary nature of surface markers. Caution is required when removing cells with low total ADT counts, since many cell types do not express the selected protein targets.
@@ -1016,7 +705,7 @@ express between 70 and 140 proteins.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x16af6f460&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_22_1.png" src="../_images/quality_control_22_1.png" />
+<img alt="../_images/5b4ac41ec1063db5bebb1d70619f29247342c828194307a5cf6de3cd1037eb57.png" src="../_images/5b4ac41ec1063db5bebb1d70619f29247342c828194307a5cf6de3cd1037eb57.png" />
 </div>
 </div>
 <p>As the cells falling below a certain threshold of present ADT markers and not following the distribution are probably not viable cells, we want to filter out those cells.
@@ -1033,7 +722,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x16070be50&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_24_1.png" src="../_images/quality_control_24_1.png" />
+<img alt="../_images/70d254829e2fbb584e9f33f148dd66a8e1c68ac8b1a91f8ae45b6948bdb8e8ef.png" src="../_images/70d254829e2fbb584e9f33f148dd66a8e1c68ac8b1a91f8ae45b6948bdb8e8ef.png" />
 </div>
 </div>
 <p>We can see a ‘valley’ in the distribution at around 55 ADTs. This looks like an appropriate cutoff.</p>
@@ -1048,7 +737,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x160630220&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_27_1.png" src="../_images/quality_control_27_1.png" />
+<img alt="../_images/1c29f72125bf77adc9a67249ad50914861c7e0c503fc0b5e6f13b2b6f3325c02.png" src="../_images/1c29f72125bf77adc9a67249ad50914861c7e0c503fc0b5e6f13b2b6f3325c02.png" />
 </div>
 </div>
 <p>We zoom in to see the upper end of the distribution for the total counts to decide on a cutoff for the maximum number of counts as droplets exceeding a certain threshold probably contain multiple cells, so called doublets.</p>
@@ -1064,7 +753,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1607a2550&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_29_1.png" src="../_images/quality_control_29_1.png" />
+<img alt="../_images/f73ee0cf2d1ecaf9e28dd6859f3852be83248836a85e1baa2b0f503f4e0e6943.png" src="../_images/f73ee0cf2d1ecaf9e28dd6859f3852be83248836a85e1baa2b0f503f4e0e6943.png" />
 </div>
 </div>
 <p>For the <code class="docutils literal notranslate"><span class="pre">dsb</span></code> normalization performed later, we need to take a look at the raw rna count distribution. The first large peak between 10**1 and 10**2.1 are droplets that don’t contain cells, thus we can use this range for the dsb algorithm at a later stage.</p>
@@ -1086,7 +775,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x17bed0340&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_31_1.png" src="../_images/quality_control_31_1.png" />
+<img alt="../_images/41ca0e32ce058da393f9f3ee306d6f22f49b4634c7927b356249a3e11ccc9b20.png" src="../_images/41ca0e32ce058da393f9f3ee306d6f22f49b4634c7927b356249a3e11ccc9b20.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1105,7 +794,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x160aa2f70&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_32_1.png" src="../_images/quality_control_32_1.png" />
+<img alt="../_images/7f2862262900ec2876d27f84fe3b69ea410d31a8ed1c6d9b160c086bbb83b9d4.png" src="../_images/7f2862262900ec2876d27f84fe3b69ea410d31a8ed1c6d9b160c086bbb83b9d4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1126,7 +815,7 @@ Thus, we look at the lower end of the distribution.</p>
       var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;</pre></div></div>
 </div>
 <section id="sample-wise-qc">
-<h3><span class="section-number">32.3.1. </span>Sample-wise QC<a class="headerlink" href="#sample-wise-qc" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">32.3.1. </span>Sample-wise QC<a class="headerlink" href="#sample-wise-qc" title="Link to this heading">#</a></h3>
 <p>Now we look at the distribution of counts per cell across the samples to see if there are differences. As the total amount of reads and droplets can differ between the samples, a stringent, hard cutoff applied to all samples would not be appropriate.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1145,7 +834,7 @@ Thus, we look at the lower end of the distribution.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;donor&#39;, ylabel=&#39;total_counts&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_37_1.png" src="../_images/quality_control_37_1.png" />
+<img alt="../_images/fb2a74d2e6adcb8ffe2b15664bf62fe05f1196b8faddf149ced9776cfc639dfe.png" src="../_images/fb2a74d2e6adcb8ffe2b15664bf62fe05f1196b8faddf149ced9776cfc639dfe.png" />
 </div>
 </div>
 <p>The distributions of counts are different between samples. Thus, sample-wise QC is deemed pertinent.
@@ -1345,7 +1034,7 @@ s4d9: outliers 499
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;donor&#39;, ylabel=&#39;total_counts&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/quality_control_49_1.png" src="../_images/quality_control_49_1.png" />
+<img alt="../_images/e2ed31559104b6a50274a76c38d925d7d4d2748a2ef5e3629988b6475716d50d.png" src="../_images/e2ed31559104b6a50274a76c38d925d7d4d2748a2ef5e3629988b6475716d50d.png" />
 </div>
 </div>
 <p>As we can see in the above plot, outliers are now filtered out for each sample separately. To now bring the values for each sample into a similar range, we need to normalize the data.</p>
@@ -1359,44 +1048,56 @@ s4d9: outliers 499
 </section>
 </section>
 <section id="references">
-<h2><span class="section-number">32.4. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">32.4. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id14">
-<dl class="citation">
-<dt class="label" id="id465"><span class="brackets"><a class="fn-backref" href="#id11">spBKS22</a></span></dt>
-<dd><p>Danila Bredikhin, Ilia Kats, and Oliver Stegle. MUON: multimodal omics analysis framework. <em>Genome Biology</em>, feb 2022. URL: <a class="reference external" href="https://doi.org/10.1186%2Fs13059-021-02577-8">https://doi.org/10.1186%2Fs13059-021-02577-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02577-8">doi:10.1186/s13059-021-02577-8</a>.</p>
-</dd>
-<dt class="label" id="id457"><span class="brackets"><a class="fn-backref" href="#id2">spLBA16</a></span></dt>
-<dd><p>Yansheng Liu, Andreas Beyer, and Ruedi Aebersold. On the dependency of cellular protein levels on mrna abundance. <em>Cell</em>, 165(3):535–550, Apr 2016. <a class="reference external" href="https://doi.org/10.1016/j.cell.2016.03.014">doi:10.1016/j.cell.2016.03.014</a>.</p>
-</dd>
-<dt class="label" id="id464"><span class="brackets">spLBC+21</span><span class="fn-backref">(<a href="#id10">1</a>,<a href="#id12">2</a>)</span></dt>
-<dd><p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. 2021. URL: <a class="reference external" href="https://openreview.net/forum?id=gN35BGa1Rt">https://openreview.net/forum?id=gN35BGa1Rt</a>.</p>
-</dd>
-<dt class="label" id="id458"><span class="brackets">spMLC+21</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id8">2</a>)</span></dt>
-<dd><p>Eleni P. Mimitou, Caleb A. Lareau, Kelvin Y. Chen, Andre L. Zorzetto-Fernandes, Yuhan Hao, Yusuke Takeshima, Wendy Luo, Tse-Shun Huang, Bertrand Z. Yeung, Efthymia Papalexi, Pratiksha I. Thakore, Tatsuya Kibayashi, James Badger Wing, Mayu Hata, Rahul Satija, Kristopher L. Nazor, Shimon Sakaguchi, Leif S. Ludwig, Vijay G. Sankaran, Aviv Regev, and Peter Smibert. Scalable, multimodal profiling of chromatin accessibility, gene expression and protein levels in single cells. <em>Nature Biotechnology</em>, 39(1010):1246–1258, Oct 2021. <a class="reference external" href="https://doi.org/10.1038/s41587-021-00927-2">doi:10.1038/s41587-021-00927-2</a>.</p>
-</dd>
-<dt class="label" id="id460"><span class="brackets">spPZK+17</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id6">2</a>)</span></dt>
-<dd><p>Vanessa M. Peterson, Kelvin Xi Zhang, Namit Kumar, Jerelyn Wong, Lixia Li, Douglas C. Wilson, Renee Moore, Terrill K. McClanahan, Svetlana Sadekova, and Joel A. Klappenbach. Multiplexed quantification of proteins and transcripts in single cells. <em>Nature Biotechnology</em>, 35(1010):936–939, Oct 2017. <a class="reference external" href="https://doi.org/10.1038/nbt.3973">doi:10.1038/nbt.3973</a>.</p>
-</dd>
-<dt class="label" id="id461"><span class="brackets"><a class="fn-backref" href="#id1">spSHS+17</a></span></dt>
-<dd><p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, Sep 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
-</dd>
-<dt class="label" id="id462"><span class="brackets"><a class="fn-backref" href="#id5">spSBEO+21</a></span></dt>
-<dd><p>Bo Sun, Emmanuel Bugarin-Estrada, Lauren Elizabeth Overend, Catherine Elizabeth Walker, Felicia Anna Tucci, and Rachael Jennifer Mary Bashford-Rogers. Double-jeopardy: scrna-seq doublet/multiplet detection using multi-omic profiling. <em>Cell Reports Methods</em>, 1(1):100008, May 2021. <a class="reference external" href="https://doi.org/10.1016/j.crmeth.2021.100008">doi:10.1016/j.crmeth.2021.100008</a>.</p>
-</dd>
-<dt class="label" id="id463"><span class="brackets"><a class="fn-backref" href="#id3">spXD22</a></span></dt>
-<dd><p>Haiyang Xie and Xianting Ding. The intriguing landscape of single-cell protein analysis. <em>Advanced Science</em>, n/a(n/a):2105932, 2022. <a class="reference external" href="https://doi.org/10.1002/advs.202105932">doi:10.1002/advs.202105932</a>.</p>
-</dd>
-<dt class="label" id="id466"><span class="brackets"><a class="fn-backref" href="#id9">spZJT+22</a></span></dt>
-<dd><p>Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989">https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.04.29.489989">doi:10.1101/2022.04.29.489989</a>.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id465" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">spBKS22</a><span class="fn-bracket">]</span></span>
+<p>Danila Bredikhin, Ilia Kats, and Oliver Stegle. MUON: multimodal omics analysis framework. <em>Genome Biology</em>, feb 2022. URL: <a class="reference external" href="https://doi.org/10.1186%2Fs13059-021-02577-8">https://doi.org/10.1186%2Fs13059-021-02577-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02577-8">doi:10.1186/s13059-021-02577-8</a>.</p>
+</div>
+<div class="citation" id="id457" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">spLBA16</a><span class="fn-bracket">]</span></span>
+<p>Yansheng Liu, Andreas Beyer, and Ruedi Aebersold. On the dependency of cellular protein levels on mrna abundance. <em>Cell</em>, 165(3):535–550, Apr 2016. <a class="reference external" href="https://doi.org/10.1016/j.cell.2016.03.014">doi:10.1016/j.cell.2016.03.014</a>.</p>
+</div>
+<div class="citation" id="id464" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spLBC+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id10">1</a>,<a role="doc-backlink" href="#id12">2</a>)</span>
+<p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. 2021. URL: <a class="reference external" href="https://openreview.net/forum?id=gN35BGa1Rt">https://openreview.net/forum?id=gN35BGa1Rt</a>.</p>
+</div>
+<div class="citation" id="id458" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spMLC+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
+<p>Eleni P. Mimitou, Caleb A. Lareau, Kelvin Y. Chen, Andre L. Zorzetto-Fernandes, Yuhan Hao, Yusuke Takeshima, Wendy Luo, Tse-Shun Huang, Bertrand Z. Yeung, Efthymia Papalexi, Pratiksha I. Thakore, Tatsuya Kibayashi, James Badger Wing, Mayu Hata, Rahul Satija, Kristopher L. Nazor, Shimon Sakaguchi, Leif S. Ludwig, Vijay G. Sankaran, Aviv Regev, and Peter Smibert. Scalable, multimodal profiling of chromatin accessibility, gene expression and protein levels in single cells. <em>Nature Biotechnology</em>, 39(1010):1246–1258, Oct 2021. <a class="reference external" href="https://doi.org/10.1038/s41587-021-00927-2">doi:10.1038/s41587-021-00927-2</a>.</p>
+</div>
+<div class="citation" id="id460" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spPZK+17<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Vanessa M. Peterson, Kelvin Xi Zhang, Namit Kumar, Jerelyn Wong, Lixia Li, Douglas C. Wilson, Renee Moore, Terrill K. McClanahan, Svetlana Sadekova, and Joel A. Klappenbach. Multiplexed quantification of proteins and transcripts in single cells. <em>Nature Biotechnology</em>, 35(1010):936–939, Oct 2017. <a class="reference external" href="https://doi.org/10.1038/nbt.3973">doi:10.1038/nbt.3973</a>.</p>
+</div>
+<div class="citation" id="id461" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">spSHS+17</a><span class="fn-bracket">]</span></span>
+<p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, Sep 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
+</div>
+<div class="citation" id="id462" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">spSBEO+21</a><span class="fn-bracket">]</span></span>
+<p>Bo Sun, Emmanuel Bugarin-Estrada, Lauren Elizabeth Overend, Catherine Elizabeth Walker, Felicia Anna Tucci, and Rachael Jennifer Mary Bashford-Rogers. Double-jeopardy: scrna-seq doublet/multiplet detection using multi-omic profiling. <em>Cell Reports Methods</em>, 1(1):100008, May 2021. <a class="reference external" href="https://doi.org/10.1016/j.crmeth.2021.100008">doi:10.1016/j.crmeth.2021.100008</a>.</p>
+</div>
+<div class="citation" id="id463" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">spXD22</a><span class="fn-bracket">]</span></span>
+<p>Haiyang Xie and Xianting Ding. The intriguing landscape of single-cell protein analysis. <em>Advanced Science</em>, n/a(n/a):2105932, 2022. <a class="reference external" href="https://doi.org/10.1002/advs.202105932">doi:10.1002/advs.202105932</a>.</p>
+</div>
+<div class="citation" id="id466" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">spZJT+22</a><span class="fn-bracket">]</span></span>
+<p>Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989">https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.04.29.489989">doi:10.1101/2022.04.29.489989</a>.</p>
+</div>
+</div>
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">32.5. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">32.5. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
 <p>We gratefully acknowledge the contributions of:</p>
 <section id="authors">
-<h3><span class="section-number">32.5.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">32.5.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Daniel Strobl</p></li>
 <li><p>Ciro Ramírez-Suástegui</p></li>
@@ -1404,7 +1105,7 @@ s4d9: outliers 499
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">32.5.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">32.5.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
 </ul>
@@ -1432,57 +1133,125 @@ s4d9: outliers 499
     </script>
     <script>kernelName = 'cite'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../spatial/imputation.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><span class="section-number">31. </span>Imputation</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../spatial/imputation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">31. </span>Imputation</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="normalization.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="normalization.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">33. </span>Normalization</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">32.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup-and-data">32.2. Environment setup and data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-cellranger-outputs-into-mudata-object">32.2.1. Collecting cellranger outputs into MuData object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-complete-mudata-object">32.2.2. Loading the complete MuData object</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">32.3. Quality Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-wise-qc">32.3.1. Sample-wise QC</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">32.4. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">32.5. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">32.5.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">32.5.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Lukas Heumos, Anna Schaar, single-cell best practices consortium<br/>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
   
-      &copy; Copyright 2022.<br/>
-    <div class="extra_footer">
-      <div>
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-    </div>
-</p>
-        </footer>
-    </div>
-    
 </div>
+  </div>
+  
+</div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

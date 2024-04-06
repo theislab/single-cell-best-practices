@@ -1,1008 +1,542 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>12. Data integration &#8212; Single-cell best practices</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cellular_structure/integration';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="13. Pseudotemporal ordering" href="../trajectories/pseudotemporal.html" />
     <link rel="prev" title="11. Annotation" href="annotation.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
-    
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Introduction
- </span>
-</p>
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/prior_art.html">
-   1. Prior art
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/scrna_seq.html">
-   2. Single-cell RNA sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/raw_data_processing.html">
-   3. Raw data processing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/analysis_tools.html">
-   4. Analysis frameworks and tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/interoperability.html">
-   5. Interoperability
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Preprocessing and visualization
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
-   6. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
-   7. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
-   8. Feature selection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
-   9. Dimensionality Reduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Identifying cellular structure
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="clustering.html">
-   10. Clustering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="annotation.html">
-   11. Annotation
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   12. Data integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annotation.html">11. Annotation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Data integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Inferring trajectories
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/pseudotemporal.html">
-   13. Pseudotemporal ordering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/rna_velocity.html">
-   14. RNA velocity
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/lineage_tracing.html">
-   15. Lineage tracing
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Dealing with conditions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/differential_gene_expression.html">
-   16. Differential gene expression analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/compositional.html">
-   17. Compositional analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/gsea_pathway.html">
-   18. Gene set enrichment and pathway analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/perturbation_modeling.html">
-   19. Perturbation modeling
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Modeling mechanisms
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">
-   20. Gene regulatory networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
-   21. Cell-cell communication
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Deconvolution
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
-   22. Bulk deconvolution
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Chromatin Accessibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/introduction.html">
-   23. Single-cell ATAC sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/quality_control.html">
-   24. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">
-   25. Gene regulatory networks using chromatin accessibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Spatial omics
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/introduction.html">
-   26. Single-cell data resolved in space
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/neighborhood.html">
-   27. Neighborhood analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/domains.html">
-   28. Spatial domains
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/spatially_variable_genes.html">
-   29. Spatially variable genes
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/deconvolution.html">
-   30. Spatial deconvolution
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/imputation.html">
-   31. Imputation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Surface protein
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/quality_control.html">
-   32. Quality control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/normalization.html">
-   33. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/doublet_detection.html">
-   34. Doublet detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
-   35. Dimensionality Reduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/batch_correction.html">
-   36. Batch correction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/annotation.html">
-   37. Annotation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Adaptive immune receptor repertoire
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
-   38. Immune Receptor Profiling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/clonotype.html">
-   39. Clonotype analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/specificity.html">
-   43. Specificity analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
-   44. Integrating AIR and transcriptomics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Multimodal integration
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
-   45. Paired integration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
-   46. Advanced integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reproducibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../reproducibility/introduction.html">
-   47. Reproducibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Outlook
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../outlook.html">
-   48. Outlook
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Acknowledgements
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../acknowledgements.html">
-   49. Acknowledgements
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Glossary
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../glossary.html">
-   50. Glossary
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/jupyter-book/cellular_structure/integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/cellular_structure/integration.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fcellular_structure/integration.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/cellular_structure/integration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
 
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fcellular_structure/integration.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/cellular_structure/integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/cellular_structure/integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   12.1. Motivation
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#types-of-integration-models">
-     12.1.1. Types of integration models
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#batch-removal-complexity">
-     12.1.2. Batch removal complexity
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#comparisons-of-data-integration-methods">
-     12.1.3. Comparisons of data integration methods
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#choosing-an-integration-method">
-     12.1.4. Choosing an integration method
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dataset">
-   12.2. Dataset
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#unintegrated-data">
-   12.3. Unintegrated data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#batch-aware-feature-selection">
-   12.4. Batch-aware feature selection
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-autoencoder-vae-based-integration">
-   12.5. Variational autoencoder (VAE) based integration
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#data-preparation">
-     12.5.1. Data preparation
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#building-the-model">
-     12.5.2. Building the model
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#training-the-model">
-     12.5.3. Training the model
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#extracting-the-embedding">
-     12.5.4. Extracting the embedding
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#calculate-a-batch-corrected-umap">
-     12.5.5. Calculate a batch-corrected UMAP
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#vae-integration-using-cell-labels">
-   12.6. VAE integration using cell labels
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#graph-based-integration">
-   12.7. Graph-based integration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn">
-   12.8. Linear embedding integration using Mutual Nearest Neighbors (MNN)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#benchmarking-your-own-integration">
-   12.9. Benchmarking your own integration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   12.10. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   12.11. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#session-information">
-   12.12. Session information
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#python">
-     12.12.1. Python
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#r">
-     12.12.2. R
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   12.13. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   12.14. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     12.14.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     12.14.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Data integration</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   12.1. Motivation
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#types-of-integration-models">
-     12.1.1. Types of integration models
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#batch-removal-complexity">
-     12.1.2. Batch removal complexity
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#comparisons-of-data-integration-methods">
-     12.1.3. Comparisons of data integration methods
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#choosing-an-integration-method">
-     12.1.4. Choosing an integration method
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dataset">
-   12.2. Dataset
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#unintegrated-data">
-   12.3. Unintegrated data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#batch-aware-feature-selection">
-   12.4. Batch-aware feature selection
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-autoencoder-vae-based-integration">
-   12.5. Variational autoencoder (VAE) based integration
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#data-preparation">
-     12.5.1. Data preparation
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#building-the-model">
-     12.5.2. Building the model
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#training-the-model">
-     12.5.3. Training the model
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#extracting-the-embedding">
-     12.5.4. Extracting the embedding
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#calculate-a-batch-corrected-umap">
-     12.5.5. Calculate a batch-corrected UMAP
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#vae-integration-using-cell-labels">
-   12.6. VAE integration using cell labels
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#graph-based-integration">
-   12.7. Graph-based integration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn">
-   12.8. Linear embedding integration using Mutual Nearest Neighbors (MNN)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#benchmarking-your-own-integration">
-   12.9. Benchmarking your own integration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   12.10. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   12.11. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#session-information">
-   12.12. Session information
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#python">
-     12.12.1. Python
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#r">
-     12.12.2. R
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   12.13. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   12.14. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     12.14.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     12.14.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data integration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">12.1. Motivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-integration-models">12.1.1. Types of integration models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-removal-complexity">12.1.2. Batch removal complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparisons-of-data-integration-methods">12.1.3. Comparisons of data integration methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-an-integration-method">12.1.4. Choosing an integration method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">12.2. Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unintegrated-data">12.3. Unintegrated data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-aware-feature-selection">12.4. Batch-aware feature selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-autoencoder-vae-based-integration">12.5. Variational autoencoder (VAE) based integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">12.5.1. Data preparation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-model">12.5.2. Building the model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-the-model">12.5.3. Training the model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extracting-the-embedding">12.5.4. Extracting the embedding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-a-batch-corrected-umap">12.5.5. Calculate a batch-corrected UMAP</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vae-integration-using-cell-labels">12.6. VAE integration using cell labels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-based-integration">12.7. Graph-based integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn">12.8. Linear embedding integration using Mutual Nearest Neighbors (MNN)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmarking-your-own-integration">12.9. Benchmarking your own integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">12.10. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">12.11. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-information">12.12. Session information</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">12.12.1. Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r">12.12.2. R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">12.13. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">12.14. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">12.14.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">12.14.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="data-integration">
-<h1><span class="section-number">12. </span>Data integration<a class="headerlink" href="#data-integration" title="Permalink to this headline">#</a></h1>
+<h1><span class="section-number">12. </span>Data integration<a class="headerlink" href="#data-integration" title="Link to this heading">#</a></h1>
 <section id="motivation">
-<h2><span class="section-number">12.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>A central challenge in most scRNA-seq data analyses is presented by batch effects. Batch effects are changes in measured expression levels that are the result of handling cells in distinct groups or “batches”. For example, a batch effect can arise if two labs have taken samples from the same cohort, but these samples are dissociated differently. If Lab A optimizes its dissociation protocol to dissociate cells in the sample while minimizing the stress on them, and Lab B does not, then it is likely that the cells in the data from the group B will express more stress-linked genes (JUN, JUNB, FOS, etc. see <span id="id1">[<a class="reference internal" href="#id228" title="Susanne C van den Brink, Fanny Sage, Ábel Vértesy, Bastiaan Spanjaard, Josi Peterson-Maduro, Chloé S Baron, Catherine Robin, and Alexander van Oudenaarden. Single-cell sequencing reveals dissociation-induced gene expression in tissue subpopulations. Nature methods, 14(10):935–936, September 2017. doi:10.1038/nmeth.4437.">van den Brink <em>et al.</em>, 2017</a>]</span>) even if the cells had the same profile in the original tissue. In general, the origins of batch effects are diverse and difficult to pin down. Some batch effect sources might be technical such as differences in sample handling, experimental protocols, or sequencing depths, but biological effects such as donor variation, tissue, or sampling location are also often interpreted as a batch effect <span id="id2">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>. Whether or not biological factors should be considered batch effects can depend on the experimental design and the question being asked. Removing batch effects is crucial to enable joint analysis that can focus on finding common structure in the data across batches and enable us to perform queries across datasets. Often it is only after removing these effects that rare cell populations can be identified that were previously obscured by differences between batches. Enabling queries across datasets allows us to ask questions that could not be answered by analysing individual datasets, such as <em>Which cell types express SARS-CoV-2 entry factors and how does this expression differ between individuals?</em> <span id="id3">[<a class="reference internal" href="#id229" title="Christoph Muus, Malte D Luecken, Gökcen Eraslan, Lisa Sikkema, Avinash Waghray, Graham Heimberg, Yoshihiko Kobayashi, Eeshit Dhaval Vaishnav, Ayshwarya Subramanian, Christopher Smillie, Karthik A Jagadeesh, Elizabeth Thu Duong, Evgenij Fiskin, Elena Torlai Triglia, Meshal Ansari, Peiwen Cai, Brian Lin, Justin Buchanan, Sijia Chen, Jian Shu, Adam L Haber, Hattie Chung, Daniel T Montoro, Taylor Adams, Hananeh Aliee, Samuel J Allon, Zaneta Andrusivova, Ilias Angelidis, Orr Ashenberg, Kevin Bassler, Christophe Bécavin, Inbal Benhar, Joseph Bergenstråhle, Ludvig Bergenstråhle, Liam Bolt, Emelie Braun, Linh T Bui, Steven Callori, Mark Chaffin, Evgeny Chichelnitskiy, Joshua Chiou, Thomas M Conlon, Michael S Cuoco, Anna S E Cuomo, Marie Deprez, Grant Duclos, Denise Fine, David S Fischer, Shila Ghazanfar, Astrid Gillich, Bruno Giotti, Joshua Gould, Minzhe Guo, Austin J Gutierrez, Arun C Habermann, Tyler Harvey, Peng He, Xiaomeng Hou, Lijuan Hu, Yan Hu, Alok Jaiswal, Lu Ji, Peiyong Jiang, Theodoros S Kapellos, Christin S Kuo, Ludvig Larsson, Michael A Leney-Greene, Kyungtae Lim, Monika Litviňuková, Leif S Ludwig, Soeren Lukassen, Wendy Luo, Henrike Maatz, Elo Madissoon, Lira Mamanova, Kasidet Manakongtreecheep, Sylvie Leroy, Christoph H Mayr, Ian M Mbano, Alexi M McAdams, Ahmad N Nabhan, Sarah K Nyquist, Lolita Penland, Olivier B Poirion, Sergio Poli, Cancan Qi, Rachel Queen, Daniel Reichart, Ivan Rosas, Jonas C Schupp, Conor V Shea, Xingyi Shi, Rahul Sinha, Rene V Sit, Kamil Slowikowski, Michal Slyper, Neal P Smith, Alex Sountoulidis, Maximilian Strunz, Travis B Sullivan, Dawei Sun, Carlos Talavera-López, Peng Tan, Jessica Tantivit, Kyle J Travaglini, Nathan R Tucker, Katherine A Vernon, Marc H Wadsworth, Julia Waldman, Xiuting Wang, Ke Xu, Wenjun Yan, William Zhao, Carly G K Ziegler, NHLBI LungMap Consortium, and Human Cell Atlas Lung Biological Network. Single-cell meta-analysis of SARS-CoV-2 entry genes across tissues and demographics. Nature medicine, 27(3):546–559, March 2021. doi:10.1038/s41591-020-01227-z.">Muus <em>et al.</em>, 2021</a>]</span>.</p>
 <p>When removing batch effects from omics data, one must make two central choices: (1) the method and parameterization, and (2) the batch covariate. As batch effects can arise between groupings of cells at different levels (i.e., samples, donors, datasets etc.), the choice of batch covariate indicates which level of variation should be retained and which level removed. The finer the batch resolution, the more effects will be removed. However, fine batch variation is also more likely to be confounded with biologically meaningful signals. For example, samples typically come from different individuals or different locations in the tissue. These effects may be meaningful to inspect. Thus, the choice of batch covariate will depend on the goal of your integration task. Do you want to see differences between individuals, or are you focused on common cell type variation? An approach to batch covariate selection based on quantitative analyses was pioneered in a recent effort to build an integrated atlas of the human lung, where the variance attributable to different technical covariates was used to make this choice <span id="id4">[<a class="reference internal" href="#id222" title="Lisa Sikkema, Daniel C Strobl, Luke Zappia, Elo Madissoon, Nikolay S Markov, Laure-Emmanuelle Zaragosi, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Christophe Becavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-I Chung, Antoine Collin, Aurore C A Gay, Baharak Hooshiar Kashani, Manu Jain, Theodore Kapellos, Tessa M Kole, Christoph H Mayr, Von Michael Papen, Lance Peter, Ciro Ramirez-Suastegui, Janine Schniering, Chase J Taylor, Thomas Walzthoeni, Chuan Xu, Linh T Bui, Carlo de Donno, Leander Dony, Minzhe Guo, Austin J Gutierrez, Lukas Heumos, Ni Huang, Ignacio L Ibarra, Nathan D Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-Lopez, Kyle J Travaglini, Anna Wilbrey-Clark, Kaylee B Worlock, Masahiro Yoshida, Tushar J Desai, Oliver Eickelberg, Christine Falk, Naftali Kaminski, Mark A Krasnow, Robert Lafyatis, Marko Z Nikoli, Joseph E Powell, Jayaraj Rajagopal, Orit Rozenblatt-Rosen, Max A Seibold, Dean Sheppard, Douglas P Shepherd, Sarah A Teichmann, Alexander M Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E Banovich, Pascal Barbry, Thu E Duong, Kerstin B Meyer, Jonathan A Kropski, Dana Pe'er, Herbert B Schiller, Purushothama Rao Tata, Joachim L Schultze, Alexander V Misharin, Martijn C Nawijn, Malte D Luecken, and Fabian J Theis. An integrated cell atlas of the human lung in health and disease. bioRxiv, pages 2022.03.10.483747, March 2022. doi:10.1101/2022.03.10.483747.">Sikkema <em>et al.</em>, 2022</a>]</span>.</p>
 <section id="types-of-integration-models">
-<h3><span class="section-number">12.1.1. </span>Types of integration models<a class="headerlink" href="#types-of-integration-models" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.1.1. </span>Types of integration models<a class="headerlink" href="#types-of-integration-models" title="Link to this heading">#</a></h3>
 <p>Methods that remove batch effects in scRNA-seq are typically composed of (up to) three steps:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>Dimensionality reduction</p></li>
 <li><p>Modeling and removing the batch effect</p></li>
 <li><p>Projection back into a high-dimensional space</p></li>
@@ -1019,17 +553,17 @@ title="Print to PDF"
 Fig. I1: Overview of different types of integration methods with examples.</p>
 </section>
 <section id="batch-removal-complexity">
-<h3><span class="section-number">12.1.2. </span>Batch removal complexity<a class="headerlink" href="#batch-removal-complexity" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.1.2. </span>Batch removal complexity<a class="headerlink" href="#batch-removal-complexity" title="Link to this heading">#</a></h3>
 <p>The removal of batch effects in scRNA-seq data has previously been divided into two subtasks: batch correction and data integration <span id="id18">[<a class="reference internal" href="#id217" title="Malte D Luecken and Fabian J Theis. Current best practices in single‐cell RNA‐seq analysis: a tutorial. Molecular systems biology, June 2019. doi:10.15252/msb.20188746.">Luecken and Theis, 2019</a>]</span>. These subtasks differ in the complexity of the batch effect that must be removed. Batch correction methods deal with batch effects between samples in the same experiment where cell identity compositions are consistent, and the effect is often quasi-linear. In contrast, data integration methods deal with complex, often nested, batch effects between datasets that may be generated with different protocols and where cell identities may not be shared across batches. While we use this distinction here we should note that these terms are often used interchangeably in general use. Given the differences in complexity, it is not surprising that different methods have been benchmarked as being optimal for these two subtasks.</p>
 </section>
 <section id="comparisons-of-data-integration-methods">
-<h3><span class="section-number">12.1.3. </span>Comparisons of data integration methods<a class="headerlink" href="#comparisons-of-data-integration-methods" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.1.3. </span>Comparisons of data integration methods<a class="headerlink" href="#comparisons-of-data-integration-methods" title="Link to this heading">#</a></h3>
 <p>Several benchmarks have previously evaluated the performance of methods for batch correction and data integration. When removing batch effects, methods may overcorrect and remove meaningful biological variation in addition to the batch effect. For this reason, it is important that integration performance is evaluated by considering both batch effect removal and the conservation of biological variation.</p>
 <p>The <em>k</em>-nearest-neighbor Batch-Effect Test (kBET) was the first metric for quantifying batch correction of scRNA-seq data  <span id="id19">[<a class="reference internal" href="#id211" title="Maren Büttner, Zhichao Miao, F Alexander Wolf, Sarah A Teichmann, and Fabian J Theis. A test metric for assessing single-cell RNA-seq batch correction. Nature methods, 16(1):43–49, January 2019. doi:10.1038/s41592-018-0254-1.">Büttner <em>et al.</em>, 2019</a>]</span>. Using kBET, the authors found that <strong>ComBat</strong> outperformed other approaches for batch correction while comparing predominantly global models. Building on this, two recent benchmarks <span id="id20">[<a class="reference internal" href="#id208" title="Hoa Thi Nhu Tran, Kok Siong Ang, Marion Chevrier, Xiaomeng Zhang, Nicole Yee Shin Lee, Michelle Goh, and Jinmiao Chen. A benchmark of batch-effect correction methods for single-cell RNA sequencing data. Genome biology, 21(1):12, January 2020. doi:10.1186/s13059-019-1850-9.">Tran <em>et al.</em>, 2020</a>]</span> and <span id="id21">[<a class="reference internal" href="#id231" title="Ruben Chazarra-Gil, Stijn van Dongen, Vladimir Yu Kiselev, and Martin Hemberg. Flexible comparison of batch correction methods for single-cell RNA-seq using BatchBench. Nucleic acids research, 49(7):e42, April 2021. doi:10.1093/nar/gkab004.">Chazarra-Gil <em>et al.</em>, 2021</a>]</span> also benchmarked linear-embedding and deep-learning models on batch correction tasks with few batches or low biological complexity. These studies found that the linear-embedding models <strong>Seurat</strong> <span id="id22">[<a class="reference internal" href="#id210" title="Andrew Butler, Paul Hoffman, Peter Smibert, Efthymia Papalexi, and Rahul Satija. Integrating single-cell transcriptomic data across different conditions, technologies, and species. Nature biotechnology, April 2018. doi:10.1038/nbt.4096.">Butler <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id207" title="Tim Stuart, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M Mauck, 3rd, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. Comprehensive Integration of Single-Cell Data. Cell, 177(7):1888–1902.e21, June 2019. doi:10.1016/j.cell.2019.05.031.">Stuart <em>et al.</em>, 2019</a>]</span> and <strong>Harmony</strong> <span id="id23">[<a class="reference internal" href="#id209" title="Ilya Korsunsky, Nghia Millard, Jean Fan, Kamil Slowikowski, Fan Zhang, Kevin Wei, Yuriy Baglaenko, Michael Brenner, Po-Ru Loh, and Soumya Raychaudhuri. Fast, sensitive and accurate integration of single-cell data with Harmony. Nature methods, November 2019. doi:10.1038/s41592-019-0619-0.">Korsunsky <em>et al.</em>, 2019</a>]</span> performed well for simple batch correction tasks.</p>
 <p>Benchmarking complex integration tasks poses additional challenges due to both the size and number of datasets as well as the diversity of scenarios. Recently, a large study used 14 metrics to benchmark 16 methods across integration method classes on five RNA tasks and two simulations <span id="id24">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>. While top-performing methods per task differed, approaches that use cell type labels performed better across tasks. Furthermore, deep learning approaches <strong>scANVI</strong> (with labels), <strong>scVI</strong>, and <strong>scGen</strong> (with labels), as well as the linear embedding model <strong>Scanorama,</strong> performed best, particularly on complex tasks, while <strong>Harmony</strong> performed well on less complex tasks. A similar benchmark performed for the specific purpose of integrating retina datasets to build an <em>ocular mega-atlas</em> also found that <strong>scVI</strong> outperformed other methods <span id="id25">[<a class="reference internal" href="#id232" title="Vinay S Swamy, Temesgen D Fufa, Robert B Hufnagel, and David M McGaughey. Building the mega single-cell transcriptome ocular meta-atlas. GigaScience, October 2021. doi:10.1093/gigascience/giab061.">Swamy <em>et al.</em>, 2021</a>]</span>.</p>
 </section>
 <section id="choosing-an-integration-method">
-<h3><span class="section-number">12.1.4. </span>Choosing an integration method<a class="headerlink" href="#choosing-an-integration-method" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.1.4. </span>Choosing an integration method<a class="headerlink" href="#choosing-an-integration-method" title="Link to this heading">#</a></h3>
 <p>While integration methods have now been extensively benchmarked, an optimal method for all scenarios does not exist. Packages of integration performance metrics and evaluation pipelines like <a class="reference external" href="https://github.com/theislab/scib"><strong>scIB</strong></a> and <a class="reference external" href="https://github.com/cellgeni/batchbench"><strong>batchbench</strong></a> can be used to evaluate integration performance on your own data. However many metrics (particularly those that measure the conservation of biological variation) require ground-truth cell identity labels. Parameter optimization may tune many methods to work for particular tasks, yet in general, one can say that <strong>Harmony</strong> and <strong>Seurat</strong> consistently perform well for simple batch correction tasks, and <strong>scVI</strong>, <strong>scGen</strong>, <strong>scANVI</strong>, and <strong>Scanorama</strong> perform well for more complex data integration tasks. When choosing a method, we would recommend looking into these options first. Additionally, integration method choice may be guided by the required output data format  (i.e., do you need corrected gene expression data or does an integrated embedding suffice?). It would be prudent to test multiple methods and evaluate the outputs on the basis of quantitative definitions of success before selecting one. Extensive guidelines for data integration method choice can be found in <span id="id26">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>.</p>
 <p>In the rest of this chapter, we demonstrate some of the best-performing methods and quickly demonstrate how integration performance can be evaluated.</p>
 <div class="cell docutils container">
@@ -1099,14 +633,19 @@ library(Seurat)
 </section>
 </section>
 <section id="dataset">
-<h2><span class="section-number">12.2. </span>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.2. </span>Dataset<a class="headerlink" href="#dataset" title="Link to this heading">#</a></h2>
 <p>The dataset we will use to demonstrate data integration contains several samples of bone marrow mononuclear cells. These samples were originally created for the Open Problems in Single-Cell Analysis <a class="reference external" href="https://openproblems.bio/neurips_2021/">NeurIPS Competition 2021</a> <span id="id27">[<a class="reference internal" href="#id224" title="Christopher Lance, Malte D Luecken, Daniel B Burkhardt, Robrecht Cannoodt, Pia Rautenstrauch, Anna Laddach, Aidyn Ubingazhibov, Zhi-Jie Cao, Kaiwen Deng, Sumeer Khan, Qiao Liu, Nikolay Russkikh, Gleb Ryazantsev, Uwe Ohler, Neurips 2021 Multimodal Data integration competition participants, Angela Oliveira Pisco, Jonathan Bloom, Smita Krishnaswamy, and Fabian J Theis. Multimodal single cell data integration challenge: Results and lessons learned. In Douwe Kiela, Marco Ciccone, and Barbara Caputo, editors, Proceedings of the NeurIPS 2021 Competitions and Demonstrations Track, volume 176 of Proceedings of Machine Learning Research, 162–176. PMLR, 2022.">Lance <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id223" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, Bony de Kumar, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). January 2022.">Luecken <em>et al.</em>, 2022</a>]</span>. The <a class="reference external" href="https://www.10xgenomics.com/products/single-cell-multiome-atac-plus-gene-expression">10x Multiome</a> protocol was used which measures both RNA expression (scRNA-seq) and chromatin accessibility (scATAC-seq) in the same cells. The version of the data we use here was already pre-processed to remove low-quality cells.</p>
 <p>Let’s read in the dataset using <strong>scanpy</strong> to get an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_raw</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span>
-    <span class="s2">&quot;../../datasets/openproblems_bmmc_multiome_genes_filtered.h5ad&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget<span class="w"> </span>https://figshare.com/ndownloader/files/45452260<span class="w"> </span>-O<span class="w"> </span>openproblems_bmmc_multiome_genes_filtered.h5ad
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_raw</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;openproblems_bmmc_multiome_genes_filtered.h5ad&quot;</span><span class="p">)</span>
 <span class="n">adata_raw</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_raw</span><span class="o">.</span><span class="n">X</span>
 <span class="n">adata_raw</span>
 </pre></div>
@@ -1370,7 +909,7 @@ Name: feature_types, dtype: int64
 </div>
 </section>
 <section id="unintegrated-data">
-<h2><span class="section-number">12.3. </span>Unintegrated data<a class="headerlink" href="#unintegrated-data" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.3. </span>Unintegrated data<a class="headerlink" href="#unintegrated-data" title="Link to this heading">#</a></h2>
 <p>It is always recommended to look at the raw data before performing any integration. This can give some indication of how big any batch effects are and what might be causing them (and therefore which variables to consider as the batch label). For some experiments, it might even suggest that integration is not required if samples already overlap. This is not uncommon for mouse or cell line studies from a single lab for example, where most of the variables which contribute to batch effects can be controlled (i.e. the batch correction setting).</p>
 <p>We will perform highly variable gene (HVG) selection, PCA and UMAP dimensionality reduction as we have seen in previous chapters.</p>
 <div class="cell docutils container">
@@ -1418,14 +957,14 @@ Name: feature_types, dtype: int64
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/integration_29_1.png" src="../_images/integration_29_1.png" />
+<img alt="../_images/754e7fe740ab1d359b5bc5245d857a5c5ccc2675f7acc1e41e2679d9c72fc1f9.png" src="../_images/754e7fe740ab1d359b5bc5245d857a5c5ccc2675f7acc1e41e2679d9c72fc1f9.png" />
 </div>
 </div>
 <p>Often when looking at these plots you will see a clear separation between batches. In this case, what we see is more subtle and while cells from the same label are generally near each other there is a shift between batches. If we were to perform a clustering analysis using this raw data we would probably end up with some clusters containing a single batch which would be difficult to interpret at the annotation stage. We are also likely to overlook rare cell types which are not common enough in any single sample to produce their own cluster. While UMAPs can often display batch effects, as always when considering these 2D representations it is important not to overinterpret them. For a real analysis, you should confirm the integration in other ways such as by inspecting the distribution of marker genes. In the “Benchmarking your own integration” section below we discuss metrics for quantifying the quality of an integration.</p>
 <p>Now that we have confirmed there are batch effects to correct we can move on to the different integration methods. If the batches perfectly overlaid each other or we could discover meaningful cell clusters without correction then there would be no need to perform integration.</p>
 </section>
 <section id="batch-aware-feature-selection">
-<h2><span class="section-number">12.4. </span>Batch-aware feature selection<a class="headerlink" href="#batch-aware-feature-selection" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.4. </span>Batch-aware feature selection<a class="headerlink" href="#batch-aware-feature-selection" title="Link to this heading">#</a></h2>
 <p>As shown in <a class="reference internal" href="../preprocessing_visualization/feature_selection.html#pre-processing-feature-selection"><span class="std std-ref">previous chapters</span></a> we often select a subset of genes to use for our analysis in order to reduce noise and processing time. We do the same thing when we have multiple samples, however, it is important that gene selection is performed in a batch-aware way. This is because genes that are variable across the whole dataset could be capturing batch effects rather than the biological signals we are interested in. It also helps to select genes relevant to rare cell identities, for example, if an identity is only present in one sample then markers for it may not be variable across all the samples but should be in that one sample.</p>
 <p>We can perform batch-aware highly variable gene selection by setting the <code class="docutils literal notranslate"><span class="pre">batch_key</span></code> argument in the <strong>scanpy</strong> <code class="docutils literal notranslate"><span class="pre">highly_variable_genes()</span></code> function. <strong>scanpy</strong> will then calculate HVGs for each batch separately and combine the results by selecting those genes that are highly variable in the highest number of batches. We use the <strong>scanpy</strong> function here because it has this batch awareness built in. For other methods, we would have to run them on each batch individually and then manually combine the results.</p>
 <div class="cell docutils container">
@@ -1637,7 +1176,7 @@ Name: feature_types, dtype: int64
 Name: highly_variable_nbatches, dtype: int64
 </pre></div>
 </div>
-<img alt="../_images/integration_35_1.png" src="../_images/integration_35_1.png" />
+<img alt="../_images/41d44028f52454e07da80ad3afdf65b386f5951c3dba3f5e92afea0c8803af23.png" src="../_images/41d44028f52454e07da80ad3afdf65b386f5951c3dba3f5e92afea0c8803af23.png" />
 </div>
 </div>
 <p>The first thing we notice is that most genes are not highly variable. This is typically the case but it can depend on how different the samples we are trying to integrate are. The overlap then decreases as we add more samples, with relatively few genes being highly variable in all three batches. By selecting the top 2000 genes we have selected all HVGs that are present in two or three batches and most of those that are present in one batch.</p>
@@ -1668,7 +1207,7 @@ Name: highly_variable_nbatches, dtype: int64
 </div>
 </section>
 <section id="variational-autoencoder-vae-based-integration">
-<h2><span class="section-number">12.5. </span>Variational autoencoder (VAE) based integration<a class="headerlink" href="#variational-autoencoder-vae-based-integration" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.5. </span>Variational autoencoder (VAE) based integration<a class="headerlink" href="#variational-autoencoder-vae-based-integration" title="Link to this heading">#</a></h2>
 <p>The first integration method we will use is <strong>scVI</strong> (single-cell Variational Inference), a method based on a conditional variational autoencoder <span id="id32">[<a class="reference internal" href="#id225" title="Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. Nature methods, 15(12):1053–1058, November 2018. doi:10.1038/s41592-018-0229-2.">Lopez <em>et al.</em>, 2018</a>]</span> available in the <strong>scvi-tools</strong> package <span id="id33">[<a class="reference internal" href="#id221" title="Adam Gayoso, Romain Lopez, Galen Xing, Pierre Boyeau, Valeh Valiollah Pour Amiri, Justin Hong, Katherine Wu, Michael Jayasuriya, Edouard Mehlman, Maxime Langevin, Yining Liu, Jules Samaran, Gabriel Misrachi, Achille Nazaret, Oscar Clivio, Chenling Xu, Tal Ashuach, Mariano Gabitto, Mohammad Lotfollahi, Valentine Svensson, Eduardo da Veiga Beltrame, Vitalii Kleshchevnikov, Carlos Talavera-López, Lior Pachter, Fabian J Theis, Aaron Streets, Michael I Jordan, Jeffrey Regier, and Nir Yosef. A Python library for probabilistic analysis of single-cell omics data. Nature biotechnology, February 2022. doi:10.1038/s41587-021-01206-w.">Gayoso <em>et al.</em>, 2022</a>]</span>. A <a class="reference external" href="https://towardsdatascience.com/understanding-variational-autoencoders-vaes-f70510919f73">variational autoencoder</a> is a type of artificial neural network which attempts to reduce the dimensionality of a dataset. The conditional part refers to conditioning this dimensionality reduction process on a particular covariate (in this case batches) such that the covariate does not affect the low-dimensional representation. In benchmarking studies <strong>scVI</strong> has been shown to perform well across a range of datasets with a good balance of batch correction while conserving biological variability <span id="id34">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>. <strong>scVI</strong> models raw counts directly, so it is important that we provide it with a count matrix rather than a normalized expression matrix.</p>
 <p>First, let’s make a copy of our dataset to use for this integration. Normally it is not necessary to do this but as we will demonstrate multiple integration methods making a copy makes it easier to show what has been added by each method.</p>
 <div class="cell docutils container">
@@ -1679,7 +1218,7 @@ Name: highly_variable_nbatches, dtype: int64
 </div>
 </div>
 <section id="data-preparation">
-<h3><span class="section-number">12.5.1. </span>Data preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.5.1. </span>Data preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">#</a></h3>
 <p>The first step in using <strong>scVI</strong> is to prepare our AnnData object. This step stores some information required by <strong>scVI</strong> such as which expression matrix to use and what the batch key is.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1704,7 +1243,7 @@ Name: highly_variable_nbatches, dtype: int64
 <p>The fields created by <strong>scVI</strong> are prefixed with <code class="docutils literal notranslate"><span class="pre">_scvi</span></code>. These are designed for internal use and should not be manually modified. The general advice from the <strong>scvi-tools</strong> authors is to not make any changes to our object until after the model is trained. On other datasets, you may see a warning about the input expression matrix containing unnormalised count data. This usually means you should check that the layer provided to the setup function does actually contain count values but it can also happen if you have values from performing gene length correction on data from a full-length protocol or from another quantification method that does not produce integer counts.</p>
 </section>
 <section id="building-the-model">
-<h3><span class="section-number">12.5.2. </span>Building the model<a class="headerlink" href="#building-the-model" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.5.2. </span>Building the model<a class="headerlink" href="#building-the-model" title="Link to this heading">#</a></h3>
 <p>We can now construct an <strong>scVI</strong> model object. As well as the <strong>scVI</strong> model we use here, the <strong>scvi-tools</strong> package contains various other models (we will use the <strong>scANVI</strong> model below).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1792,7 +1331,7 @@ Training status: Not Trained
 <p>Here we can see exactly what information has been assigned by <strong>scVI</strong>, including details like how each different batch is encoded in the model.</p>
 </section>
 <section id="training-the-model">
-<h3><span class="section-number">12.5.3. </span>Training the model<a class="headerlink" href="#training-the-model" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.5.3. </span>Training the model<a class="headerlink" href="#training-the-model" title="Link to this heading">#</a></h3>
 <p>The model will be trained for a given number of <em>epochs</em>, a training iteration where every cell is passed through the network. By default <strong>scVI</strong> uses the following heuristic to set the number of epochs. For datasets with fewer than 20,000 cells, 400 epochs will be used and as the number of cells grows above 20,000 the number of epochs is continuously reduced. The reasoning behind this is that as the network sees more cells during each epoch it can learn the same amount of information as it would from more epochs with fewer cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1838,7 +1377,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="extracting-the-embedding">
-<h3><span class="section-number">12.5.4. </span>Extracting the embedding<a class="headerlink" href="#extracting-the-embedding" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.5.4. </span>Extracting the embedding<a class="headerlink" href="#extracting-the-embedding" title="Link to this heading">#</a></h3>
 <p>The main result we want to extract from the trained model is the latent representation for each cell. This is a multi-dimensional embedding where the batch effects have been removed that can be used in a similar way to how we use PCA dimensions when analysing a single dataset. We store this in <code class="docutils literal notranslate"><span class="pre">obsm</span></code> with the key <code class="docutils literal notranslate"><span class="pre">X_scvi</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1849,7 +1388,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="calculate-a-batch-corrected-umap">
-<h3><span class="section-number">12.5.5. </span>Calculate a batch-corrected UMAP<a class="headerlink" href="#calculate-a-batch-corrected-umap" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.5.5. </span>Calculate a batch-corrected UMAP<a class="headerlink" href="#calculate-a-batch-corrected-umap" title="Link to this heading">#</a></h3>
 <p>We will now visualise the data as we did before integration. We calculate a new UMAP embedding but instead of finding nearest neighbors in PCA space, we start with the corrected representation from <strong>scVI</strong>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1888,7 +1427,7 @@ HPU available: False, using: 0 HPUs
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/integration_64_1.png" src="../_images/integration_64_1.png" />
+<img alt="../_images/8e5313bb4f33a892aaef9b713a3343aa7328fce5af7be5ce85460c48a64cc163.png" src="../_images/8e5313bb4f33a892aaef9b713a3343aa7328fce5af7be5ce85460c48a64cc163.png" />
 </div>
 </div>
 <p>This looks better! Before, the various batches were shifted apart from each other. Now, the batches overlap more and we have a single blob for each cell identity label.</p>
@@ -1896,7 +1435,7 @@ HPU available: False, using: 0 HPUs
 </section>
 </section>
 <section id="vae-integration-using-cell-labels">
-<h2><span class="section-number">12.6. </span>VAE integration using cell labels<a class="headerlink" href="#vae-integration-using-cell-labels" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.6. </span>VAE integration using cell labels<a class="headerlink" href="#vae-integration-using-cell-labels" title="Link to this heading">#</a></h2>
 <p>When performing integration with <strong>scVI</strong> we pretended that we didn’t already have any cell labels (although we showed them in plots). While this scenario is common there are some cases where we do know something about cell identity in advance. Most often this is when we want to combine one or more publicly available datasets with data from a new study. When we have labels for at least some of the cells we can use <strong>scANVI</strong> (single-cell ANnotation using Variational Inference) <span id="id35">[<a class="reference internal" href="#id226" title="Chenling Xu, Romain Lopez, Edouard Mehlman, Jeffrey Regier, Michael I Jordan, and Nir Yosef. Probabilistic harmonization and annotation of single-cell transcriptomics data with deep generative models. Molecular systems biology, 17(1):e9620, January 2021. doi:10.15252/msb.20209620.">Xu <em>et al.</em>, 2021</a>]</span>. This is an extension of the <strong>scVI</strong> model that can incorporate cell identity label information as well as batch information. Because it has this extra information it can try to keep the differences between cell labels while removing batch effects. Benchmarking suggests that <strong>scANVI</strong> tends to better preserve biological signals compared to <strong>scVI</strong> but sometimes it is not as effective at removing batch effects <span id="id36">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>. While we have labels for all cells here it is also possible to use <strong>scANVI</strong> in a semi-supervised manner where labels are only provided for some cells.</p>
 <div class="admonition-label-harmonization admonition">
 <p class="admonition-title">Label harmonization</p>
@@ -2052,13 +1591,13 @@ HPU available: False, using: 0 HPUs
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/integration_72_1.png" src="../_images/integration_72_1.png" />
+<img alt="../_images/55f6b0b00ec8bef5e16f261b03f8a355d603bb935fa2f505cf1cc16b3e4e2f77.png" src="../_images/55f6b0b00ec8bef5e16f261b03f8a355d603bb935fa2f505cf1cc16b3e4e2f77.png" />
 </div>
 </div>
 <p>By looking at the UMAP representation it is difficult to tell the difference between <strong>scANVI</strong> and <strong>scVI</strong> but as we will see below there are differences in metric scores when the quality of the integrations is quantified. This is a reminder that we shouldn’t overinterpret these two-dimensional representations, especially when it comes to comparing methods.</p>
 </section>
 <section id="graph-based-integration">
-<h2><span class="section-number">12.7. </span>Graph-based integration<a class="headerlink" href="#graph-based-integration" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.7. </span>Graph-based integration<a class="headerlink" href="#graph-based-integration" title="Link to this heading">#</a></h2>
 <p>The next method we will look at is <strong>BBKNN</strong> or “Batch Balanced KNN” <span id="id37">[<a class="reference internal" href="#id227" title="Krzysztof Polański, Jong-Eun Park, Matthew D Young, Zhichao Miao, Kerstin B Meyer, and Sarah A Teichmann. BBKNN: Fast Batch Alignment of Single Cell Transcriptomes. Bioinformatics, August 2019. doi:10.1093/bioinformatics/btz625.">Polański <em>et al.</em>, 2019</a>]</span>. This is a very different approach to <strong>scVI</strong>, which rather than using a neural network to embed cells in a batch corrected space, instead modifies how the <em>k</em>-nearest neighbor (KNN) graph used for clustering and embedding is constructed. As we have seen in <a class="reference internal" href="clustering.html#cellular-structure-clustering"><span class="std std-ref">previous chapters</span></a> the normal KNN procedure connects cells to the most similar cells across the whole dataset. The change that <strong>BBKNN</strong> makes is to enforce that cells are connected to cells from other batches. While this is a simple modification it can be quite effective, particularly when there are very strong batch effects. However, as the output is an integrated graph it can have limited downstream uses as few packages will accept this as an input.</p>
 <p>An important parameter for <strong>BBKNN</strong> is the number of neighbors per batch. A suggested heuristic for this is to use 25 if there are more than 100,000 cells or the default of 3 if there are fewer than 100,000.</p>
 <div class="cell docutils container">
@@ -2125,13 +1664,13 @@ HPU available: False, using: 0 HPUs
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/integration_82_1.png" src="../_images/integration_82_1.png" />
+<img alt="../_images/cf3c4dddae9af800a23218887dbd9684fc4639658d2066de0fff02b5262f9e47.png" src="../_images/cf3c4dddae9af800a23218887dbd9684fc4639658d2066de0fff02b5262f9e47.png" />
 </div>
 </div>
 <p>This integration is also improved compared to the unintegrated data with cell identities grouped together but we sill see some shifts between batches.</p>
 </section>
 <section id="linear-embedding-integration-using-mutual-nearest-neighbors-mnn">
-<h2><span class="section-number">12.8. </span>Linear embedding integration using Mutual Nearest Neighbors (MNN)<a class="headerlink" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.8. </span>Linear embedding integration using Mutual Nearest Neighbors (MNN)<a class="headerlink" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn" title="Link to this heading">#</a></h2>
 <p>Some downstream applications cannot accept an integrated embedding or neighborhood graph and require a corrected expression matrix. One approach that can produce this output is the integration method in <strong>Seurat</strong> <span id="id38">[<a class="reference internal" href="#id210" title="Andrew Butler, Paul Hoffman, Peter Smibert, Efthymia Papalexi, and Rahul Satija. Integrating single-cell transcriptomic data across different conditions, technologies, and species. Nature biotechnology, April 2018. doi:10.1038/nbt.4096.">Butler <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id212" title="Rahul Satija, Jeffrey A Farrell, David Gennert, Alexander F Schier, and Aviv Regev. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology, 33(5):495–502, April 2015. doi:10.1038/nbt.3192.">Satija <em>et al.</em>, 2015</a>, <a class="reference internal" href="#id207" title="Tim Stuart, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M Mauck, 3rd, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. Comprehensive Integration of Single-Cell Data. Cell, 177(7):1888–1902.e21, June 2019. doi:10.1016/j.cell.2019.05.031.">Stuart <em>et al.</em>, 2019</a>]</span>. The <strong>Seurat</strong> integration method belongs to a class of <em>linear embedding models</em> that make use of the idea of <em>mutual nearest neighbors</em> (which <strong>Seurat</strong> calls <em>anchors</em>) to correct batch effects <span id="id39">[<a class="reference internal" href="#id214" title="Laleh Haghverdi, Aaron T L Lun, Michael D Morgan, and John C Marioni. Batch effects in single-cell RNA-sequencing data are corrected by matching mutual nearest neighbors. Nature biotechnology, April 2018. doi:10.1038/nbt.4091.">Haghverdi <em>et al.</em>, 2018</a>]</span>. Mutual nearest neighbors are pairs of cells from two different datasets which are in the neighborhood of each other when the datasets are placed in the same (latent) space. After finding these cells they can be used to align the two datasets and correct the differences between them. <strong>Seurat</strong> has also been found to be one of the top mixing methods in some evaluations <span id="id40">[<a class="reference internal" href="#id208" title="Hoa Thi Nhu Tran, Kok Siong Ang, Marion Chevrier, Xiaomeng Zhang, Nicole Yee Shin Lee, Michelle Goh, and Jinmiao Chen. A benchmark of batch-effect correction methods for single-cell RNA sequencing data. Genome biology, 21(1):12, January 2020. doi:10.1186/s13059-019-1850-9.">Tran <em>et al.</em>, 2020</a>]</span>.</p>
 <p>As <strong>Seurat</strong> is an R package we must transfer our data from Python to R. Here we prepare the AnnData to convert so that it can be handled by <strong>rpy2</strong> and <strong>anndata2ri</strong>.</p>
 <div class="cell docutils container">
@@ -2401,7 +1940,7 @@ CCGTTACTCAATGTGC-3-s1d3 -4.910886e-02  0.0317359576
   cax = scatter(
 </pre></div>
 </div>
-<img alt="../_images/integration_102_1.png" src="../_images/integration_102_1.png" />
+<img alt="../_images/31c555d9e6f54b51ed9e6522efb720e2253e0e4696088c4f59f2e4a8969604d4.png" src="../_images/31c555d9e6f54b51ed9e6522efb720e2253e0e4696088c4f59f2e4a8969604d4.png" />
 </div>
 </div>
 <p>As we have previously seen, the batches are mixed while the labels are separated. It is tempting to select an integration based on the UMAPs but this does not fully represent the quality of an integration. In the next section, we present some approaches to more rigorously evaluate integration methods.</p>
@@ -2411,7 +1950,7 @@ CCGTTACTCAATGTGC-3-s1d3 -4.910886e-02  0.0317359576
 </div>
 </section>
 <section id="benchmarking-your-own-integration">
-<h2><span class="section-number">12.9. </span>Benchmarking your own integration<a class="headerlink" href="#benchmarking-your-own-integration" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.9. </span>Benchmarking your own integration<a class="headerlink" href="#benchmarking-your-own-integration" title="Link to this heading">#</a></h2>
 <p>The methods demonstrated here are selected based on results from benchmarking experiments including the <a class="reference external" href="https://theislab.github.io/scib-reproducibility/">single-cell integration benchmarking project</a> <span id="id41">[<a class="reference internal" href="#id219" title="Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature methods, December 2021. doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2021</a>]</span>. This project also produced a software package called <a class="reference external" href="https://www.github.com/theislab/scib"><strong>scib</strong></a> that can be used to run a range of integration methods as well as the metrics that were used for evaluation. In this section, we show how to use this package to evaluate the quality of an integration.</p>
 <div class="admonition-what-is-the-ground-truth admonition">
 <p class="admonition-title">What is the ground truth?</p>
@@ -3120,7 +2659,7 @@ Graph connectivity...
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/integration_118_0.png" src="../_images/integration_118_0.png" />
+<img alt="../_images/83f33a364c9b09be9f8ac6299b638db499d0fb06de66d991190b4155c9e0757d.png" src="../_images/83f33a364c9b09be9f8ac6299b638db499d0fb06de66d991190b4155c9e0757d.png" />
 </div>
 </div>
 <p>In our small example scenario <strong>BBKNN</strong> is clearly the worst performer, getting the lowest scores for both batch removal and biological conservation. The other three methods have similar batch correction scores with <strong>scANVI</strong> scoring highest for biological conservation followed by <strong>scVI</strong> and <strong>Seurat</strong>.</p>
@@ -3324,32 +2863,32 @@ Graph connectivity...
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
 </pre></div>
 </div>
-<img alt="../_images/integration_122_1.png" src="../_images/integration_122_1.png" />
+<img alt="../_images/a301c0818aba8302479b965e75b1249516c0fd6979b2a7c1a3833bbf04b01613.png" src="../_images/a301c0818aba8302479b965e75b1249516c0fd6979b2a7c1a3833bbf04b01613.png" />
 </div>
 </div>
 <p>As we have already seen <strong>scVI</strong> and <strong>scANVI</strong> are the best performers with <strong>scANVI</strong> scoring slightly higher. It is important to note that this is just an example of how to run these metrics for this specific dataset, not a proper evaluation of these methods. For that, you should refer to existing benchmarking publications. In particular, we have only run a small selection of high-performing methods and a subset of metrics. Also, remember that scores are relative to the methods used so even if the methods perform almost equally well and small differences will be exaggerated.</p>
 <p>Existing benchmarks have suggested methods that generally perform well, but performance can also be quite variable across scenarios. For some analyses, it may be worthwhile performing your own evaluation of integration. The <strong>scib</strong> package makes this process easier, but it can still be a significant undertaking, relying on a good knowledge of the ground truth and interpretation of the metrics.</p>
 </section>
 <section id="key-takeaways">
-<h2><span class="section-number">12.10. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
-<ol class="simple">
+<h2><span class="section-number">12.10. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
 <li><p>Visualize your data before attempting to correct for batch effects to assess the extent of the issue. Batch effect correction is not always required and it might mask the biological variation of interest.</p></li>
 <li><p>If cell labels are available and biological variation is the most important, the usage of methods that can use these labels (such as scANVI) is advised.</p></li>
 <li><p>Consider running several integration methods on your dataset and evaluating them with the <strong>scIB</strong> metrics to use the integration that is most robust for your use case.</p></li>
 </ol>
 </section>
 <section id="quiz">
-<h2><span class="section-number">12.11. </span>Quiz<a class="headerlink" href="#quiz" title="Permalink to this headline">#</a></h2>
-<ol class="simple">
+<h2><span class="section-number">12.11. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
 <li><p>What are the sources of batch effects?</p></li>
 <li><p>What is the difference between technical and biological variation?</p></li>
 <li><p>How does one evaluate whether the integration worked well or not? What are useful metrics for this purpose?</p></li>
 </ol>
 </section>
 <section id="session-information">
-<h2><span class="section-number">12.12. </span>Session information<a class="headerlink" href="#session-information" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.12. </span>Session information<a class="headerlink" href="#session-information" title="Link to this heading">#</a></h2>
 <section id="python">
-<h3><span class="section-number">12.12.1. </span>Python<a class="headerlink" href="#python" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.12.1. </span>Python<a class="headerlink" href="#python" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">session_info</span>
@@ -3508,7 +3047,7 @@ Session information updated at 2022-11-10 12:53
 </div>
 </section>
 <section id="r">
-<h3><span class="section-number">12.12.2. </span>R<a class="headerlink" href="#r" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.12.2. </span>R<a class="headerlink" href="#r" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -3659,102 +3198,138 @@ sessioninfo::session_info()
 </section>
 </section>
 <section id="references">
-<h2><span class="section-number">12.13. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.13. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id42">
-<dl class="citation">
-<dt class="label" id="id218"><span class="brackets"><a class="fn-backref" href="#id16">intACSM21</a></span></dt>
-<dd><p>Ricard Argelaguet, Anna S E Cuomo, Oliver Stegle, and John C Marioni. Computational principles and challenges in single-cell data integration. <em>Nature biotechnology</em>, pages 1–14, May 2021. <a class="reference external" href="https://doi.org/10.1038/s41587-021-00895-7">doi:10.1038/s41587-021-00895-7</a>.</p>
-</dd>
-<dt class="label" id="id210"><span class="brackets">intBHS+18</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id22">2</a>,<a href="#id38">3</a>)</span></dt>
-<dd><p>Andrew Butler, Paul Hoffman, Peter Smibert, Efthymia Papalexi, and Rahul Satija. Integrating single-cell transcriptomic data across different conditions, technologies, and species. <em>Nature biotechnology</em>, April 2018. <a class="reference external" href="https://doi.org/10.1038/nbt.4096">doi:10.1038/nbt.4096</a>.</p>
-</dd>
-<dt class="label" id="id211"><span class="brackets"><a class="fn-backref" href="#id19">intButtnerMW+19</a></span></dt>
-<dd><p>Maren Büttner, Zhichao Miao, F Alexander Wolf, Sarah A Teichmann, and Fabian J Theis. A test metric for assessing single-cell RNA-seq batch correction. <em>Nature methods</em>, 16(1):43–49, January 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-018-0254-1">doi:10.1038/s41592-018-0254-1</a>.</p>
-</dd>
-<dt class="label" id="id231"><span class="brackets"><a class="fn-backref" href="#id21">intCGvDKH21</a></span></dt>
-<dd><p>Ruben Chazarra-Gil, Stijn van Dongen, Vladimir Yu Kiselev, and Martin Hemberg. Flexible comparison of batch correction methods for single-cell RNA-seq using BatchBench. <em>Nucleic acids research</em>, 49(7):e42, April 2021. <a class="reference external" href="https://doi.org/10.1093/nar/gkab004">doi:10.1093/nar/gkab004</a>.</p>
-</dd>
-<dt class="label" id="id221"><span class="brackets"><a class="fn-backref" href="#id33">intGLX+22</a></span></dt>
-<dd><p>Adam Gayoso, Romain Lopez, Galen Xing, Pierre Boyeau, Valeh Valiollah Pour Amiri, Justin Hong, Katherine Wu, Michael Jayasuriya, Edouard Mehlman, Maxime Langevin, Yining Liu, Jules Samaran, Gabriel Misrachi, Achille Nazaret, Oscar Clivio, Chenling Xu, Tal Ashuach, Mariano Gabitto, Mohammad Lotfollahi, Valentine Svensson, Eduardo da Veiga Beltrame, Vitalii Kleshchevnikov, Carlos Talavera-López, Lior Pachter, Fabian J Theis, Aaron Streets, Michael I Jordan, Jeffrey Regier, and Nir Yosef. A Python library for probabilistic analysis of single-cell omics data. <em>Nature biotechnology</em>, February 2022. <a class="reference external" href="https://doi.org/10.1038/s41587-021-01206-w">doi:10.1038/s41587-021-01206-w</a>.</p>
-</dd>
-<dt class="label" id="id214"><span class="brackets">intHLMM18</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id10">2</a>,<a href="#id39">3</a>)</span></dt>
-<dd><p>Laleh Haghverdi, Aaron T L Lun, Michael D Morgan, and John C Marioni. Batch effects in single-cell RNA-sequencing data are corrected by matching mutual nearest neighbors. <em>Nature biotechnology</em>, April 2018. <a class="reference external" href="https://doi.org/10.1038/nbt.4091">doi:10.1038/nbt.4091</a>.</p>
-</dd>
-<dt class="label" id="id213"><span class="brackets"><a class="fn-backref" href="#id9">intHBB19</a></span></dt>
-<dd><p>Brian Hie, Bryan Bryson, and Bonnie Berger. Efficient integration of heterogeneous single-cell transcriptomes using Scanorama. <em>Nature biotechnology</em>, May 2019. <a class="reference external" href="https://doi.org/10.1038/s41587-019-0113-3">doi:10.1038/s41587-019-0113-3</a>.</p>
-</dd>
-<dt class="label" id="id230"><span class="brackets"><a class="fn-backref" href="#id6">intJLR07</a></span></dt>
-<dd><p>W Evan Johnson, Cheng Li, and Ariel Rabinovic. Adjusting batch effects in microarray expression data using empirical Bayes methods. <em>Biostatistics</em>, 8(1):118–127, January 2007. <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxj037">doi:10.1093/biostatistics/kxj037</a>.</p>
-</dd>
-<dt class="label" id="id209"><span class="brackets">intKMF+19</span><span class="fn-backref">(<a href="#id11">1</a>,<a href="#id23">2</a>)</span></dt>
-<dd><p>Ilya Korsunsky, Nghia Millard, Jean Fan, Kamil Slowikowski, Fan Zhang, Kevin Wei, Yuriy Baglaenko, Michael Brenner, Po-Ru Loh, and Soumya Raychaudhuri. Fast, sensitive and accurate integration of single-cell data with Harmony. <em>Nature methods</em>, November 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-019-0619-0">doi:10.1038/s41592-019-0619-0</a>.</p>
-</dd>
-<dt class="label" id="id224"><span class="brackets"><a class="fn-backref" href="#id27">intLLB+22</a></span></dt>
-<dd><p>Christopher Lance, Malte D Luecken, Daniel B Burkhardt, Robrecht Cannoodt, Pia Rautenstrauch, Anna Laddach, Aidyn Ubingazhibov, Zhi-Jie Cao, Kaiwen Deng, Sumeer Khan, Qiao Liu, Nikolay Russkikh, Gleb Ryazantsev, Uwe Ohler, Neurips 2021 Multimodal Data integration competition participants, Angela Oliveira Pisco, Jonathan Bloom, Smita Krishnaswamy, and Fabian J Theis. Multimodal single cell data integration challenge: Results and lessons learned. In Douwe Kiela, Marco Ciccone, and Barbara Caputo, editors, <em>Proceedings of the NeurIPS 2021 Competitions and Demonstrations Track</em>, volume 176 of Proceedings of Machine Learning Research, 162–176. PMLR, 2022.</p>
-</dd>
-<dt class="label" id="id225"><span class="brackets">intLRC+18</span><span class="fn-backref">(<a href="#id13">1</a>,<a href="#id32">2</a>)</span></dt>
-<dd><p>Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. <em>Nature methods</em>, 15(12):1053–1058, November 2018. <a class="reference external" href="https://doi.org/10.1038/s41592-018-0229-2">doi:10.1038/s41592-018-0229-2</a>.</p>
-</dd>
-<dt class="label" id="id220"><span class="brackets"><a class="fn-backref" href="#id15">intLWT19</a></span></dt>
-<dd><p>Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. scGen predicts single-cell perturbation responses. <em>Nature methods</em>, 16(8):715–721, August 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-019-0494-8">doi:10.1038/s41592-019-0494-8</a>.</p>
-</dd>
-<dt class="label" id="id223"><span class="brackets"><a class="fn-backref" href="#id27">intLBC+22</a></span></dt>
-<dd><p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, Bony de Kumar, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. January 2022.</p>
-</dd>
-<dt class="label" id="id219"><span class="brackets">intLButtnerC+21</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id5">2</a>,<a href="#id17">3</a>,<a href="#id24">4</a>,<a href="#id26">5</a>,<a href="#id31">6</a>,<a href="#id34">7</a>,<a href="#id36">8</a>,<a href="#id41">9</a>)</span></dt>
-<dd><p>Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. <em>Nature methods</em>, December 2021. <a class="reference external" href="https://doi.org/10.1038/s41592-021-01336-8">doi:10.1038/s41592-021-01336-8</a>.</p>
-</dd>
-<dt class="label" id="id217"><span class="brackets">intLT19</span><span class="fn-backref">(<a href="#id18">1</a>,<a href="#id30">2</a>)</span></dt>
-<dd><p>Malte D Luecken and Fabian J Theis. Current best practices in single‐cell RNA‐seq analysis: a tutorial. <em>Molecular systems biology</em>, June 2019. <a class="reference external" href="https://doi.org/10.15252/msb.20188746">doi:10.15252/msb.20188746</a>.</p>
-</dd>
-<dt class="label" id="id229"><span class="brackets"><a class="fn-backref" href="#id3">intMLE+21</a></span></dt>
-<dd><p>Christoph Muus, Malte D Luecken, Gökcen Eraslan, Lisa Sikkema, Avinash Waghray, Graham Heimberg, Yoshihiko Kobayashi, Eeshit Dhaval Vaishnav, Ayshwarya Subramanian, Christopher Smillie, Karthik A Jagadeesh, Elizabeth Thu Duong, Evgenij Fiskin, Elena Torlai Triglia, Meshal Ansari, Peiwen Cai, Brian Lin, Justin Buchanan, Sijia Chen, Jian Shu, Adam L Haber, Hattie Chung, Daniel T Montoro, Taylor Adams, Hananeh Aliee, Samuel J Allon, Zaneta Andrusivova, Ilias Angelidis, Orr Ashenberg, Kevin Bassler, Christophe Bécavin, Inbal Benhar, Joseph Bergenstråhle, Ludvig Bergenstråhle, Liam Bolt, Emelie Braun, Linh T Bui, Steven Callori, Mark Chaffin, Evgeny Chichelnitskiy, Joshua Chiou, Thomas M Conlon, Michael S Cuoco, Anna S E Cuomo, Marie Deprez, Grant Duclos, Denise Fine, David S Fischer, Shila Ghazanfar, Astrid Gillich, Bruno Giotti, Joshua Gould, Minzhe Guo, Austin J Gutierrez, Arun C Habermann, Tyler Harvey, Peng He, Xiaomeng Hou, Lijuan Hu, Yan Hu, Alok Jaiswal, Lu Ji, Peiyong Jiang, Theodoros S Kapellos, Christin S Kuo, Ludvig Larsson, Michael A Leney-Greene, Kyungtae Lim, Monika Litviňuková, Leif S Ludwig, Soeren Lukassen, Wendy Luo, Henrike Maatz, Elo Madissoon, Lira Mamanova, Kasidet Manakongtreecheep, Sylvie Leroy, Christoph H Mayr, Ian M Mbano, Alexi M McAdams, Ahmad N Nabhan, Sarah K Nyquist, Lolita Penland, Olivier B Poirion, Sergio Poli, Cancan Qi, Rachel Queen, Daniel Reichart, Ivan Rosas, Jonas C Schupp, Conor V Shea, Xingyi Shi, Rahul Sinha, Rene V Sit, Kamil Slowikowski, Michal Slyper, Neal P Smith, Alex Sountoulidis, Maximilian Strunz, Travis B Sullivan, Dawei Sun, Carlos Talavera-López, Peng Tan, Jessica Tantivit, Kyle J Travaglini, Nathan R Tucker, Katherine A Vernon, Marc H Wadsworth, Julia Waldman, Xiuting Wang, Ke Xu, Wenjun Yan, William Zhao, Carly G K Ziegler, NHLBI LungMap Consortium, and Human Cell Atlas Lung Biological Network. Single-cell meta-analysis of SARS-CoV-2 entry genes across tissues and demographics. <em>Nature medicine</em>, 27(3):546–559, March 2021. <a class="reference external" href="https://doi.org/10.1038/s41591-020-01227-z">doi:10.1038/s41591-020-01227-z</a>.</p>
-</dd>
-<dt class="label" id="id215"><span class="brackets"><a class="fn-backref" href="#id28">intPZO17</a></span></dt>
-<dd><p>Belinda Phipson, Luke Zappia, and Alicia Oshlack. Gene length and detection bias in single cell RNA sequencing protocols. <em>F1000Research</em>, April 2017. <a class="reference external" href="https://doi.org/10.12688/f1000research.11290.1">doi:10.12688/f1000research.11290.1</a>.</p>
-</dd>
-<dt class="label" id="id227"><span class="brackets">intPolanskiPY+19</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id37">2</a>)</span></dt>
-<dd><p>Krzysztof Polański, Jong-Eun Park, Matthew D Young, Zhichao Miao, Kerstin B Meyer, and Sarah A Teichmann. BBKNN: Fast Batch Alignment of Single Cell Transcriptomes. <em>Bioinformatics</em>, August 2019. <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btz625">doi:10.1093/bioinformatics/btz625</a>.</p>
-</dd>
-<dt class="label" id="id212"><span class="brackets"><a class="fn-backref" href="#id38">intSFG+15</a></span></dt>
-<dd><p>Rahul Satija, Jeffrey A Farrell, David Gennert, Alexander F Schier, and Aviv Regev. Spatial reconstruction of single-cell gene expression data. <em>Nature Biotechnology</em>, 33(5):495–502, April 2015. <a class="reference external" href="https://doi.org/10.1038/nbt.3192">doi:10.1038/nbt.3192</a>.</p>
-</dd>
-<dt class="label" id="id222"><span class="brackets"><a class="fn-backref" href="#id4">intSSZ+22</a></span></dt>
-<dd><p>Lisa Sikkema, Daniel C Strobl, Luke Zappia, Elo Madissoon, Nikolay S Markov, Laure-Emmanuelle Zaragosi, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Christophe Becavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-I Chung, Antoine Collin, Aurore C A Gay, Baharak Hooshiar Kashani, Manu Jain, Theodore Kapellos, Tessa M Kole, Christoph H Mayr, Von Michael Papen, Lance Peter, Ciro Ramirez-Suastegui, Janine Schniering, Chase J Taylor, Thomas Walzthoeni, Chuan Xu, Linh T Bui, Carlo de Donno, Leander Dony, Minzhe Guo, Austin J Gutierrez, Lukas Heumos, Ni Huang, Ignacio L Ibarra, Nathan D Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-Lopez, Kyle J Travaglini, Anna Wilbrey-Clark, Kaylee B Worlock, Masahiro Yoshida, Tushar J Desai, Oliver Eickelberg, Christine Falk, Naftali Kaminski, Mark A Krasnow, Robert Lafyatis, Marko Z Nikoli, Joseph E Powell, Jayaraj Rajagopal, Orit Rozenblatt-Rosen, Max A Seibold, Dean Sheppard, Douglas P Shepherd, Sarah A Teichmann, Alexander M Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E Banovich, Pascal Barbry, Thu E Duong, Kerstin B Meyer, Jonathan A Kropski, Dana Pe'er, Herbert B Schiller, Purushothama Rao Tata, Joachim L Schultze, Alexander V Misharin, Martijn C Nawijn, Malte D Luecken, and Fabian J Theis. An integrated cell atlas of the human lung in health and disease. <em>bioRxiv</em>, pages 2022.03.10.483747, March 2022. <a class="reference external" href="https://doi.org/10.1101/2022.03.10.483747">doi:10.1101/2022.03.10.483747</a>.</p>
-</dd>
-<dt class="label" id="id207"><span class="brackets">intSBH+19</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id22">2</a>,<a href="#id38">3</a>)</span></dt>
-<dd><p>Tim Stuart, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M Mauck, 3rd, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. Comprehensive Integration of Single-Cell Data. <em>Cell</em>, 177(7):1888–1902.e21, June 2019. <a class="reference external" href="https://doi.org/10.1016/j.cell.2019.05.031">doi:10.1016/j.cell.2019.05.031</a>.</p>
-</dd>
-<dt class="label" id="id232"><span class="brackets"><a class="fn-backref" href="#id25">intSFHM21</a></span></dt>
-<dd><p>Vinay S Swamy, Temesgen D Fufa, Robert B Hufnagel, and David M McGaughey. Building the mega single-cell transcriptome ocular meta-atlas. <em>GigaScience</em>, October 2021. <a class="reference external" href="https://doi.org/10.1093/gigascience/giab061">doi:10.1093/gigascience/giab061</a>.</p>
-</dd>
-<dt class="label" id="id208"><span class="brackets">intTAC+20</span><span class="fn-backref">(<a href="#id20">1</a>,<a href="#id40">2</a>)</span></dt>
-<dd><p>Hoa Thi Nhu Tran, Kok Siong Ang, Marion Chevrier, Xiaomeng Zhang, Nicole Yee Shin Lee, Michelle Goh, and Jinmiao Chen. A benchmark of batch-effect correction methods for single-cell RNA sequencing data. <em>Genome biology</em>, 21(1):12, January 2020. <a class="reference external" href="https://doi.org/10.1186/s13059-019-1850-9">doi:10.1186/s13059-019-1850-9</a>.</p>
-</dd>
-<dt class="label" id="id228"><span class="brackets"><a class="fn-backref" href="#id1">intvdBSVertesy+17</a></span></dt>
-<dd><p>Susanne C van den Brink, Fanny Sage, Ábel Vértesy, Bastiaan Spanjaard, Josi Peterson-Maduro, Chloé S Baron, Catherine Robin, and Alexander van Oudenaarden. Single-cell sequencing reveals dissociation-induced gene expression in tissue subpopulations. <em>Nature methods</em>, 14(10):935–936, September 2017. <a class="reference external" href="https://doi.org/10.1038/nmeth.4437">doi:10.1038/nmeth.4437</a>.</p>
-</dd>
-<dt class="label" id="id216"><span class="brackets"><a class="fn-backref" href="#id29">intWKL12</a></span></dt>
-<dd><p>Günter P Wagner, Koryu Kin, and Vincent J Lynch. Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples. <em>Theory in Biosciences</em>, 131(4):281–285, December 2012. <a class="reference external" href="https://doi.org/10.1007/s12064-012-0162-3">doi:10.1007/s12064-012-0162-3</a>.</p>
-</dd>
-<dt class="label" id="id226"><span class="brackets">intXLM+21</span><span class="fn-backref">(<a href="#id14">1</a>,<a href="#id35">2</a>)</span></dt>
-<dd><p>Chenling Xu, Romain Lopez, Edouard Mehlman, Jeffrey Regier, Michael I Jordan, and Nir Yosef. Probabilistic harmonization and annotation of single-cell transcriptomics data with deep generative models. <em>Molecular systems biology</em>, 17(1):e9620, January 2021. <a class="reference external" href="https://doi.org/10.15252/msb.20209620">doi:10.15252/msb.20209620</a>.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id218" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">intACSM21</a><span class="fn-bracket">]</span></span>
+<p>Ricard Argelaguet, Anna S E Cuomo, Oliver Stegle, and John C Marioni. Computational principles and challenges in single-cell data integration. <em>Nature biotechnology</em>, pages 1–14, May 2021. <a class="reference external" href="https://doi.org/10.1038/s41587-021-00895-7">doi:10.1038/s41587-021-00895-7</a>.</p>
+</div>
+<div class="citation" id="id210" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intBHS+18<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id22">2</a>,<a role="doc-backlink" href="#id38">3</a>)</span>
+<p>Andrew Butler, Paul Hoffman, Peter Smibert, Efthymia Papalexi, and Rahul Satija. Integrating single-cell transcriptomic data across different conditions, technologies, and species. <em>Nature biotechnology</em>, April 2018. <a class="reference external" href="https://doi.org/10.1038/nbt.4096">doi:10.1038/nbt.4096</a>.</p>
+</div>
+<div class="citation" id="id211" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">intButtnerMW+19</a><span class="fn-bracket">]</span></span>
+<p>Maren Büttner, Zhichao Miao, F Alexander Wolf, Sarah A Teichmann, and Fabian J Theis. A test metric for assessing single-cell RNA-seq batch correction. <em>Nature methods</em>, 16(1):43–49, January 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-018-0254-1">doi:10.1038/s41592-018-0254-1</a>.</p>
+</div>
+<div class="citation" id="id231" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">intCGvDKH21</a><span class="fn-bracket">]</span></span>
+<p>Ruben Chazarra-Gil, Stijn van Dongen, Vladimir Yu Kiselev, and Martin Hemberg. Flexible comparison of batch correction methods for single-cell RNA-seq using BatchBench. <em>Nucleic acids research</em>, 49(7):e42, April 2021. <a class="reference external" href="https://doi.org/10.1093/nar/gkab004">doi:10.1093/nar/gkab004</a>.</p>
+</div>
+<div class="citation" id="id221" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id33">intGLX+22</a><span class="fn-bracket">]</span></span>
+<p>Adam Gayoso, Romain Lopez, Galen Xing, Pierre Boyeau, Valeh Valiollah Pour Amiri, Justin Hong, Katherine Wu, Michael Jayasuriya, Edouard Mehlman, Maxime Langevin, Yining Liu, Jules Samaran, Gabriel Misrachi, Achille Nazaret, Oscar Clivio, Chenling Xu, Tal Ashuach, Mariano Gabitto, Mohammad Lotfollahi, Valentine Svensson, Eduardo da Veiga Beltrame, Vitalii Kleshchevnikov, Carlos Talavera-López, Lior Pachter, Fabian J Theis, Aaron Streets, Michael I Jordan, Jeffrey Regier, and Nir Yosef. A Python library for probabilistic analysis of single-cell omics data. <em>Nature biotechnology</em>, February 2022. <a class="reference external" href="https://doi.org/10.1038/s41587-021-01206-w">doi:10.1038/s41587-021-01206-w</a>.</p>
+</div>
+<div class="citation" id="id214" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intHLMM18<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id10">2</a>,<a role="doc-backlink" href="#id39">3</a>)</span>
+<p>Laleh Haghverdi, Aaron T L Lun, Michael D Morgan, and John C Marioni. Batch effects in single-cell RNA-sequencing data are corrected by matching mutual nearest neighbors. <em>Nature biotechnology</em>, April 2018. <a class="reference external" href="https://doi.org/10.1038/nbt.4091">doi:10.1038/nbt.4091</a>.</p>
+</div>
+<div class="citation" id="id213" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">intHBB19</a><span class="fn-bracket">]</span></span>
+<p>Brian Hie, Bryan Bryson, and Bonnie Berger. Efficient integration of heterogeneous single-cell transcriptomes using Scanorama. <em>Nature biotechnology</em>, May 2019. <a class="reference external" href="https://doi.org/10.1038/s41587-019-0113-3">doi:10.1038/s41587-019-0113-3</a>.</p>
+</div>
+<div class="citation" id="id230" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">intJLR07</a><span class="fn-bracket">]</span></span>
+<p>W Evan Johnson, Cheng Li, and Ariel Rabinovic. Adjusting batch effects in microarray expression data using empirical Bayes methods. <em>Biostatistics</em>, 8(1):118–127, January 2007. <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxj037">doi:10.1093/biostatistics/kxj037</a>.</p>
+</div>
+<div class="citation" id="id209" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intKMF+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id23">2</a>)</span>
+<p>Ilya Korsunsky, Nghia Millard, Jean Fan, Kamil Slowikowski, Fan Zhang, Kevin Wei, Yuriy Baglaenko, Michael Brenner, Po-Ru Loh, and Soumya Raychaudhuri. Fast, sensitive and accurate integration of single-cell data with Harmony. <em>Nature methods</em>, November 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-019-0619-0">doi:10.1038/s41592-019-0619-0</a>.</p>
+</div>
+<div class="citation" id="id224" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id27">intLLB+22</a><span class="fn-bracket">]</span></span>
+<p>Christopher Lance, Malte D Luecken, Daniel B Burkhardt, Robrecht Cannoodt, Pia Rautenstrauch, Anna Laddach, Aidyn Ubingazhibov, Zhi-Jie Cao, Kaiwen Deng, Sumeer Khan, Qiao Liu, Nikolay Russkikh, Gleb Ryazantsev, Uwe Ohler, Neurips 2021 Multimodal Data integration competition participants, Angela Oliveira Pisco, Jonathan Bloom, Smita Krishnaswamy, and Fabian J Theis. Multimodal single cell data integration challenge: Results and lessons learned. In Douwe Kiela, Marco Ciccone, and Barbara Caputo, editors, <em>Proceedings of the NeurIPS 2021 Competitions and Demonstrations Track</em>, volume 176 of Proceedings of Machine Learning Research, 162–176. PMLR, 2022.</p>
+</div>
+<div class="citation" id="id225" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intLRC+18<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id13">1</a>,<a role="doc-backlink" href="#id32">2</a>)</span>
+<p>Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. <em>Nature methods</em>, 15(12):1053–1058, November 2018. <a class="reference external" href="https://doi.org/10.1038/s41592-018-0229-2">doi:10.1038/s41592-018-0229-2</a>.</p>
+</div>
+<div class="citation" id="id220" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">intLWT19</a><span class="fn-bracket">]</span></span>
+<p>Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. scGen predicts single-cell perturbation responses. <em>Nature methods</em>, 16(8):715–721, August 2019. <a class="reference external" href="https://doi.org/10.1038/s41592-019-0494-8">doi:10.1038/s41592-019-0494-8</a>.</p>
+</div>
+<div class="citation" id="id223" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id27">intLBC+22</a><span class="fn-bracket">]</span></span>
+<p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, Bony de Kumar, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M Bloom. A sandbox for prediction and integration of DNA, RNA, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. January 2022.</p>
+</div>
+<div class="citation" id="id219" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intLButtnerC+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id5">2</a>,<a role="doc-backlink" href="#id17">3</a>,<a role="doc-backlink" href="#id24">4</a>,<a role="doc-backlink" href="#id26">5</a>,<a role="doc-backlink" href="#id31">6</a>,<a role="doc-backlink" href="#id34">7</a>,<a role="doc-backlink" href="#id36">8</a>,<a role="doc-backlink" href="#id41">9</a>)</span>
+<p>Malte D Luecken, M Büttner, K Chaichoompu, A Danese, M Interlandi, M F Mueller, D C Strobl, L Zappia, M Dugas, M Colomé-Tatché, and Fabian J Theis. Benchmarking atlas-level data integration in single-cell genomics. <em>Nature methods</em>, December 2021. <a class="reference external" href="https://doi.org/10.1038/s41592-021-01336-8">doi:10.1038/s41592-021-01336-8</a>.</p>
+</div>
+<div class="citation" id="id217" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intLT19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id18">1</a>,<a role="doc-backlink" href="#id30">2</a>)</span>
+<p>Malte D Luecken and Fabian J Theis. Current best practices in single‐cell RNA‐seq analysis: a tutorial. <em>Molecular systems biology</em>, June 2019. <a class="reference external" href="https://doi.org/10.15252/msb.20188746">doi:10.15252/msb.20188746</a>.</p>
+</div>
+<div class="citation" id="id229" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">intMLE+21</a><span class="fn-bracket">]</span></span>
+<p>Christoph Muus, Malte D Luecken, Gökcen Eraslan, Lisa Sikkema, Avinash Waghray, Graham Heimberg, Yoshihiko Kobayashi, Eeshit Dhaval Vaishnav, Ayshwarya Subramanian, Christopher Smillie, Karthik A Jagadeesh, Elizabeth Thu Duong, Evgenij Fiskin, Elena Torlai Triglia, Meshal Ansari, Peiwen Cai, Brian Lin, Justin Buchanan, Sijia Chen, Jian Shu, Adam L Haber, Hattie Chung, Daniel T Montoro, Taylor Adams, Hananeh Aliee, Samuel J Allon, Zaneta Andrusivova, Ilias Angelidis, Orr Ashenberg, Kevin Bassler, Christophe Bécavin, Inbal Benhar, Joseph Bergenstråhle, Ludvig Bergenstråhle, Liam Bolt, Emelie Braun, Linh T Bui, Steven Callori, Mark Chaffin, Evgeny Chichelnitskiy, Joshua Chiou, Thomas M Conlon, Michael S Cuoco, Anna S E Cuomo, Marie Deprez, Grant Duclos, Denise Fine, David S Fischer, Shila Ghazanfar, Astrid Gillich, Bruno Giotti, Joshua Gould, Minzhe Guo, Austin J Gutierrez, Arun C Habermann, Tyler Harvey, Peng He, Xiaomeng Hou, Lijuan Hu, Yan Hu, Alok Jaiswal, Lu Ji, Peiyong Jiang, Theodoros S Kapellos, Christin S Kuo, Ludvig Larsson, Michael A Leney-Greene, Kyungtae Lim, Monika Litviňuková, Leif S Ludwig, Soeren Lukassen, Wendy Luo, Henrike Maatz, Elo Madissoon, Lira Mamanova, Kasidet Manakongtreecheep, Sylvie Leroy, Christoph H Mayr, Ian M Mbano, Alexi M McAdams, Ahmad N Nabhan, Sarah K Nyquist, Lolita Penland, Olivier B Poirion, Sergio Poli, Cancan Qi, Rachel Queen, Daniel Reichart, Ivan Rosas, Jonas C Schupp, Conor V Shea, Xingyi Shi, Rahul Sinha, Rene V Sit, Kamil Slowikowski, Michal Slyper, Neal P Smith, Alex Sountoulidis, Maximilian Strunz, Travis B Sullivan, Dawei Sun, Carlos Talavera-López, Peng Tan, Jessica Tantivit, Kyle J Travaglini, Nathan R Tucker, Katherine A Vernon, Marc H Wadsworth, Julia Waldman, Xiuting Wang, Ke Xu, Wenjun Yan, William Zhao, Carly G K Ziegler, NHLBI LungMap Consortium, and Human Cell Atlas Lung Biological Network. Single-cell meta-analysis of SARS-CoV-2 entry genes across tissues and demographics. <em>Nature medicine</em>, 27(3):546–559, March 2021. <a class="reference external" href="https://doi.org/10.1038/s41591-020-01227-z">doi:10.1038/s41591-020-01227-z</a>.</p>
+</div>
+<div class="citation" id="id215" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id28">intPZO17</a><span class="fn-bracket">]</span></span>
+<p>Belinda Phipson, Luke Zappia, and Alicia Oshlack. Gene length and detection bias in single cell RNA sequencing protocols. <em>F1000Research</em>, April 2017. <a class="reference external" href="https://doi.org/10.12688/f1000research.11290.1">doi:10.12688/f1000research.11290.1</a>.</p>
+</div>
+<div class="citation" id="id227" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intPolanskiPY+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id12">1</a>,<a role="doc-backlink" href="#id37">2</a>)</span>
+<p>Krzysztof Polański, Jong-Eun Park, Matthew D Young, Zhichao Miao, Kerstin B Meyer, and Sarah A Teichmann. BBKNN: Fast Batch Alignment of Single Cell Transcriptomes. <em>Bioinformatics</em>, August 2019. <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btz625">doi:10.1093/bioinformatics/btz625</a>.</p>
+</div>
+<div class="citation" id="id212" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id38">intSFG+15</a><span class="fn-bracket">]</span></span>
+<p>Rahul Satija, Jeffrey A Farrell, David Gennert, Alexander F Schier, and Aviv Regev. Spatial reconstruction of single-cell gene expression data. <em>Nature Biotechnology</em>, 33(5):495–502, April 2015. <a class="reference external" href="https://doi.org/10.1038/nbt.3192">doi:10.1038/nbt.3192</a>.</p>
+</div>
+<div class="citation" id="id222" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">intSSZ+22</a><span class="fn-bracket">]</span></span>
+<p>Lisa Sikkema, Daniel C Strobl, Luke Zappia, Elo Madissoon, Nikolay S Markov, Laure-Emmanuelle Zaragosi, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Christophe Becavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-I Chung, Antoine Collin, Aurore C A Gay, Baharak Hooshiar Kashani, Manu Jain, Theodore Kapellos, Tessa M Kole, Christoph H Mayr, Von Michael Papen, Lance Peter, Ciro Ramirez-Suastegui, Janine Schniering, Chase J Taylor, Thomas Walzthoeni, Chuan Xu, Linh T Bui, Carlo de Donno, Leander Dony, Minzhe Guo, Austin J Gutierrez, Lukas Heumos, Ni Huang, Ignacio L Ibarra, Nathan D Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-Lopez, Kyle J Travaglini, Anna Wilbrey-Clark, Kaylee B Worlock, Masahiro Yoshida, Tushar J Desai, Oliver Eickelberg, Christine Falk, Naftali Kaminski, Mark A Krasnow, Robert Lafyatis, Marko Z Nikoli, Joseph E Powell, Jayaraj Rajagopal, Orit Rozenblatt-Rosen, Max A Seibold, Dean Sheppard, Douglas P Shepherd, Sarah A Teichmann, Alexander M Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E Banovich, Pascal Barbry, Thu E Duong, Kerstin B Meyer, Jonathan A Kropski, Dana Pe'er, Herbert B Schiller, Purushothama Rao Tata, Joachim L Schultze, Alexander V Misharin, Martijn C Nawijn, Malte D Luecken, and Fabian J Theis. An integrated cell atlas of the human lung in health and disease. <em>bioRxiv</em>, pages 2022.03.10.483747, March 2022. <a class="reference external" href="https://doi.org/10.1101/2022.03.10.483747">doi:10.1101/2022.03.10.483747</a>.</p>
+</div>
+<div class="citation" id="id207" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intSBH+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id22">2</a>,<a role="doc-backlink" href="#id38">3</a>)</span>
+<p>Tim Stuart, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M Mauck, 3rd, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. Comprehensive Integration of Single-Cell Data. <em>Cell</em>, 177(7):1888–1902.e21, June 2019. <a class="reference external" href="https://doi.org/10.1016/j.cell.2019.05.031">doi:10.1016/j.cell.2019.05.031</a>.</p>
+</div>
+<div class="citation" id="id232" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id25">intSFHM21</a><span class="fn-bracket">]</span></span>
+<p>Vinay S Swamy, Temesgen D Fufa, Robert B Hufnagel, and David M McGaughey. Building the mega single-cell transcriptome ocular meta-atlas. <em>GigaScience</em>, October 2021. <a class="reference external" href="https://doi.org/10.1093/gigascience/giab061">doi:10.1093/gigascience/giab061</a>.</p>
+</div>
+<div class="citation" id="id208" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intTAC+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id20">1</a>,<a role="doc-backlink" href="#id40">2</a>)</span>
+<p>Hoa Thi Nhu Tran, Kok Siong Ang, Marion Chevrier, Xiaomeng Zhang, Nicole Yee Shin Lee, Michelle Goh, and Jinmiao Chen. A benchmark of batch-effect correction methods for single-cell RNA sequencing data. <em>Genome biology</em>, 21(1):12, January 2020. <a class="reference external" href="https://doi.org/10.1186/s13059-019-1850-9">doi:10.1186/s13059-019-1850-9</a>.</p>
+</div>
+<div class="citation" id="id228" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">intvdBSVertesy+17</a><span class="fn-bracket">]</span></span>
+<p>Susanne C van den Brink, Fanny Sage, Ábel Vértesy, Bastiaan Spanjaard, Josi Peterson-Maduro, Chloé S Baron, Catherine Robin, and Alexander van Oudenaarden. Single-cell sequencing reveals dissociation-induced gene expression in tissue subpopulations. <em>Nature methods</em>, 14(10):935–936, September 2017. <a class="reference external" href="https://doi.org/10.1038/nmeth.4437">doi:10.1038/nmeth.4437</a>.</p>
+</div>
+<div class="citation" id="id216" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id29">intWKL12</a><span class="fn-bracket">]</span></span>
+<p>Günter P Wagner, Koryu Kin, and Vincent J Lynch. Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples. <em>Theory in Biosciences</em>, 131(4):281–285, December 2012. <a class="reference external" href="https://doi.org/10.1007/s12064-012-0162-3">doi:10.1007/s12064-012-0162-3</a>.</p>
+</div>
+<div class="citation" id="id226" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>intXLM+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id14">1</a>,<a role="doc-backlink" href="#id35">2</a>)</span>
+<p>Chenling Xu, Romain Lopez, Edouard Mehlman, Jeffrey Regier, Michael I Jordan, and Nir Yosef. Probabilistic harmonization and annotation of single-cell transcriptomics data with deep generative models. <em>Molecular systems biology</em>, 17(1):e9620, January 2021. <a class="reference external" href="https://doi.org/10.15252/msb.20209620">doi:10.15252/msb.20209620</a>.</p>
+</div>
+</div>
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">12.14. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">12.14. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
 <p>We gratefully acknowledge the contributions of:</p>
 <section id="authors">
-<h3><span class="section-number">12.14.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.14.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Luke Zappia</p></li>
 <li><p>Malte Lücken</p></li>
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">12.14.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">12.14.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
 </ul>
@@ -3782,57 +3357,144 @@ sessioninfo::session_info()
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="annotation.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><span class="section-number">11. </span>Annotation</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="annotation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Annotation</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="../trajectories/pseudotemporal.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="../trajectories/pseudotemporal.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">13. </span>Pseudotemporal ordering</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">12.1. Motivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-integration-models">12.1.1. Types of integration models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-removal-complexity">12.1.2. Batch removal complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparisons-of-data-integration-methods">12.1.3. Comparisons of data integration methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-an-integration-method">12.1.4. Choosing an integration method</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">12.2. Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unintegrated-data">12.3. Unintegrated data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-aware-feature-selection">12.4. Batch-aware feature selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variational-autoencoder-vae-based-integration">12.5. Variational autoencoder (VAE) based integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">12.5.1. Data preparation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-the-model">12.5.2. Building the model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-the-model">12.5.3. Training the model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extracting-the-embedding">12.5.4. Extracting the embedding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-a-batch-corrected-umap">12.5.5. Calculate a batch-corrected UMAP</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vae-integration-using-cell-labels">12.6. VAE integration using cell labels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-based-integration">12.7. Graph-based integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-embedding-integration-using-mutual-nearest-neighbors-mnn">12.8. Linear embedding integration using Mutual Nearest Neighbors (MNN)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmarking-your-own-integration">12.9. Benchmarking your own integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">12.10. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">12.11. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-information">12.12. Session information</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">12.12.1. Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r">12.12.2. R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">12.13. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">12.14. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">12.14.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">12.14.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Lukas Heumos, Anna Schaar, single-cell best practices consortium<br/>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
   
-      &copy; Copyright 2022.<br/>
-    <div class="extra_footer">
-      <div>
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-    </div>
-</p>
-        </footer>
-    </div>
-    
 </div>
+  </div>
+  
+</div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

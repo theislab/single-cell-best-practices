@@ -1,978 +1,542 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>44. Integrating AIR and transcriptomics &#8212; Single-cell best practices</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'air_repertoire/multimodal_integration';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="45. Paired integration" href="../multimodal_integration/paired_integration.html" />
     <link rel="prev" title="43. Specificity analysis" href="specificity.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
-    
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Introduction
- </span>
-</p>
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/prior_art.html">
-   1. Prior art
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/scrna_seq.html">
-   2. Single-cell RNA sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/raw_data_processing.html">
-   3. Raw data processing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/analysis_tools.html">
-   4. Analysis frameworks and tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/interoperability.html">
-   5. Interoperability
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Preprocessing and visualization
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
-   6. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
-   7. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
-   8. Feature selection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
-   9. Dimensionality Reduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Identifying cellular structure
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/clustering.html">
-   10. Clustering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/annotation.html">
-   11. Annotation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/integration.html">
-   12. Data integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Inferring trajectories
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/pseudotemporal.html">
-   13. Pseudotemporal ordering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/rna_velocity.html">
-   14. RNA velocity
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/lineage_tracing.html">
-   15. Lineage tracing
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Dealing with conditions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/differential_gene_expression.html">
-   16. Differential gene expression analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/compositional.html">
-   17. Compositional analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/gsea_pathway.html">
-   18. Gene set enrichment and pathway analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../conditions/perturbation_modeling.html">
-   19. Perturbation modeling
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Modeling mechanisms
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">
-   20. Gene regulatory networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
-   21. Cell-cell communication
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Deconvolution
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
-   22. Bulk deconvolution
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Chromatin Accessibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/introduction.html">
-   23. Single-cell ATAC sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/quality_control.html">
-   24. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">
-   25. Gene regulatory networks using chromatin accessibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Spatial omics
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/introduction.html">
-   26. Single-cell data resolved in space
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/neighborhood.html">
-   27. Neighborhood analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/domains.html">
-   28. Spatial domains
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/spatially_variable_genes.html">
-   29. Spatially variable genes
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/deconvolution.html">
-   30. Spatial deconvolution
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/imputation.html">
-   31. Imputation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Surface protein
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/quality_control.html">
-   32. Quality control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/normalization.html">
-   33. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/doublet_detection.html">
-   34. Doublet detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
-   35. Dimensionality Reduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/batch_correction.html">
-   36. Batch correction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/annotation.html">
-   37. Annotation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Adaptive immune receptor repertoire
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="ir_profiling.html">
-   38. Immune Receptor Profiling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="clonotype.html">
-   39. Clonotype analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="specificity.html">
-   43. Specificity analysis
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   44. Integrating AIR and transcriptomics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">44. Integrating AIR and transcriptomics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Multimodal integration
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
-   45. Paired integration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
-   46. Advanced integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reproducibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../reproducibility/introduction.html">
-   47. Reproducibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Outlook
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../outlook.html">
-   48. Outlook
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Acknowledgements
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../acknowledgements.html">
-   49. Acknowledgements
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Glossary
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../glossary.html">
-   50. Glossary
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/jupyter-book/air_repertoire/multimodal_integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/air_repertoire/multimodal_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fair_repertoire/multimodal_integration.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/air_repertoire/multimodal_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
 
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fair_repertoire/multimodal_integration.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/air_repertoire/multimodal_integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/air_repertoire/multimodal_integration.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   44.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-preparation">
-   44.2. Data Preparation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">
-   44.3. Uni-modal Analysis with multimodal conditions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">
-     44.3.1. AIR analysis on RNA clusters
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">
-     44.3.2. GEX analysis on AIR clusters
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#multimodal-integration">
-   44.4. Multimodal Integration
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#integrating-tcr-and-gex">
-     44.4.1. Integrating TCR and GEX
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#tessa">
-       44.4.1.1. TESSA
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#data-preprocessing">
-         44.4.1.1.1. Data Preprocessing
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#running-the-model">
-         44.4.1.1.2. Running the model
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#output">
-         44.4.1.1.3. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#conga">
-       44.4.1.2. CoNGA
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#data-preperation">
-         44.4.1.2.1. Data Preperation
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#executing-conga">
-         44.4.1.2.2. Executing CoNGA
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id7">
-         44.4.1.2.3. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#mvtcr">
-       44.4.1.3. mvTCR
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#integrating-bcr-and-gex">
-     44.4.2. Integrating BCR and GEX
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#benisse">
-       44.4.2.1. Benisse
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id12">
-         44.4.2.1.1. Running the model
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id13">
-         44.4.2.1.2. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   44.5. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#questions">
-   44.6. Questions
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   44.7. References
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Integrating AIR and transcriptomics</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   44.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-preparation">
-   44.2. Data Preparation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">
-   44.3. Uni-modal Analysis with multimodal conditions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">
-     44.3.1. AIR analysis on RNA clusters
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">
-     44.3.2. GEX analysis on AIR clusters
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#multimodal-integration">
-   44.4. Multimodal Integration
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#integrating-tcr-and-gex">
-     44.4.1. Integrating TCR and GEX
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#tessa">
-       44.4.1.1. TESSA
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#data-preprocessing">
-         44.4.1.1.1. Data Preprocessing
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#running-the-model">
-         44.4.1.1.2. Running the model
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#output">
-         44.4.1.1.3. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#conga">
-       44.4.1.2. CoNGA
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#data-preperation">
-         44.4.1.2.1. Data Preperation
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#executing-conga">
-         44.4.1.2.2. Executing CoNGA
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id7">
-         44.4.1.2.3. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#mvtcr">
-       44.4.1.3. mvTCR
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#integrating-bcr-and-gex">
-     44.4.2. Integrating BCR and GEX
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#benisse">
-       44.4.2.1. Benisse
-      </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id12">
-         44.4.2.1.1. Running the model
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#id13">
-         44.4.2.1.2. Output
-        </a>
-       </li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   44.5. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#questions">
-   44.6. Questions
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   44.7. References
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Integrating AIR and transcriptomics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">44.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">44.2. Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">44.3. Uni-modal Analysis with multimodal conditions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">44.3.1. AIR analysis on RNA clusters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">44.3.2. GEX analysis on AIR clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multimodal-integration">44.4. Multimodal Integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-tcr-and-gex">44.4.1. Integrating TCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tessa">44.4.1.1. TESSA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">44.4.1.1.1. Data Preprocessing</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-model">44.4.1.1.2. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#output">44.4.1.1.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#conga">44.4.1.2. CoNGA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preperation">44.4.1.2.1. Data Preperation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-conga">44.4.1.2.2. Executing CoNGA</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">44.4.1.2.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mvtcr">44.4.1.3. mvTCR</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-bcr-and-gex">44.4.2. Integrating BCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#benisse">44.4.2.1. Benisse</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">44.4.2.1.1. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">44.4.2.1.2. Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">44.5. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions">44.6. Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">44.7. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="integrating-air-and-transcriptomics">
-<h1><span class="section-number">44. </span>Integrating AIR and transcriptomics<a class="headerlink" href="#integrating-air-and-transcriptomics" title="Permalink to this headline">#</a></h1>
+<h1><span class="section-number">44. </span>Integrating AIR and transcriptomics<a class="headerlink" href="#integrating-air-and-transcriptomics" title="Link to this heading">#</a></h1>
 <section id="motivation">
-<h2><span class="section-number">44.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>With the development of novel single cell technology, AIRR sequencing is combined often with other omics layers such as with transcriptomics. For B- and T-cells this enables the analysis of various characteristics on a single cell level: while the transcriptome provides insights into the current state of the cell, the AIR is indicative for the cell’s specificity and thereby explains the cell’s fate upon infection or vaccination.</p>
 </section>
 <section id="data-preparation">
-<h2><span class="section-number">44.2. </span>Data Preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.2. </span>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">#</a></h2>
 <p>First, we will combine the GEX with AIR data. Note, that we can do this also at earlier stages of single cell analysis: e.g. we can fuse both modalities already before preprocessing to filter GEX doublets. When fusing GEX and AIR data, a left join is often performed. I.e., only cells with GEX are kept for analysis. Therefore, the order of fusing and filtering is not of great importance. However, it can be convenient to visualize the AIR information in an GEX UMAP in early stages. E.g. missing AIR information in clusters can help during cell type assignment.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1049,7 +613,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multimodal_integration_13_0.png" src="../_images/multimodal_integration_13_0.png" />
+<img alt="../_images/b5990455a37baae69a548b32bf1da602b971b2ba65209bdc0349e6830c0bbab0.png" src="../_images/b5990455a37baae69a548b32bf1da602b971b2ba65209bdc0349e6830c0bbab0.png" />
 </div>
 </div>
 <p>Here, we can see, that the majority of cells belong to the CD8+ effector T cells. Also, most of the cells express an TCR. The presence of AIRs can guide cell type annotation to separate clusters of other immune cells from T- and B-cells. Additional, missing AIRs can also be used for quality control: e.g. if the data is sorted for T cells, but large clusters miss TCRs, it should be investigated on a transcriptomic level, whether these cells were wrongly sorted.</p>
@@ -1074,17 +638,17 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multimodal_integration_17_0.png" src="../_images/multimodal_integration_17_0.png" />
+<img alt="../_images/c677a00066909238335abc362c507ec9b0885a5bc6fcb52114b93ba44ac64e62.png" src="../_images/c677a00066909238335abc362c507ec9b0885a5bc6fcb52114b93ba44ac64e62.png" />
 </div>
 </div>
 <p>In this visualization, we see a clear separation between Plasmablasts and B cells.</p>
 </section>
 <section id="uni-modal-analysis-with-multimodal-conditions">
-<h2><span class="section-number">44.3. </span>Uni-modal Analysis with multimodal conditions<a class="headerlink" href="#uni-modal-analysis-with-multimodal-conditions" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.3. </span>Uni-modal Analysis with multimodal conditions<a class="headerlink" href="#uni-modal-analysis-with-multimodal-conditions" title="Link to this heading">#</a></h2>
 <p>While studies often provide paired measurements for both modalities, these are often analyzed individually utilizing only limited shared information. Often one modality (AIRR or transcriptome) is used to provide conditions, on which the other modality is then analyzed. E.g., we can observe how cells from the same clonal lineage adapt to perturbation by DEG analysis of these cells in different points in time.</p>
 <p>Previously, we covered these unimodal analysis in other sections of this book. Here, we will focus, on how we can apply these techniques across AIRR and other modalities, rather than explaining the underlying approaches. To find a more detailed explanation please refer to the corresponding chapters.</p>
 <section id="air-analysis-on-rna-clusters">
-<h3><span class="section-number">44.3.1. </span>AIR analysis on RNA clusters<a class="headerlink" href="#air-analysis-on-rna-clusters" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">44.3.1. </span>AIR analysis on RNA clusters<a class="headerlink" href="#air-analysis-on-rna-clusters" title="Link to this heading">#</a></h3>
 <p>We have shown sequence and diversity analysis of AIRs in chapter <a class="reference internal" href="clonotype.html#air-sequence"><span class="std std-ref">Clonotype analysis</span></a>. When paired AIRR- and transcriptome data is available, we can perform similar analysis on cell clusters defined in the scRNA-space. How these scRNA-clusters are defined, is depending on the study design. Selected ways to define scRNA clusters for AIR analysis may include:</p>
 <ul class="simple">
 <li><p><strong>Leiden Clusters</strong>: Arguably, the easiest way to define subsets of cells within count data, is via clustering algorithms. Usually, Leiden clustering is performed and highly expressed genes of the clusters are used to determine the cells’ state. We can now conduct the AIRR analysis on clusters of interest (e.g. an activated cluster that is likely disease-specific).</p></li>
@@ -1109,7 +673,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;Spectratype of IR_VJ_1_junction_aa by leiden&#39;}, xlabel=&#39;IR_VJ_1_junction_aa length&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_22_1.png" src="../_images/multimodal_integration_22_1.png" />
+<img alt="../_images/44a64ac98a20c8e9cd4e6c159549eb56eac5e98c4791be17a600568e398270f0.png" src="../_images/44a64ac98a20c8e9cd4e6c159549eb56eac5e98c4791be17a600568e398270f0.png" />
 </div>
 </div>
 <p>The BCR length of most Leiden clusters follows a similar distribution. However, it is clear to see, that cluster 5 and 9 mainly contain BCRs with longer sequence length. These cells stem from a subcluster of Plasmablasts and Plasma cells. A diverging length profile can be caused by an immune reaction. It might therefore be useful to further investigate these clusters. #update interpretation after subsample decision.</p>
@@ -1121,7 +685,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multimodal_integration_25_0.png" src="../_images/multimodal_integration_25_0.png" />
+<img alt="../_images/a1924f2826a8e60c1a918e797a065c4831b4a02600338ff3c84cf810300d20f1.png" src="../_images/a1924f2826a8e60c1a918e797a065c4831b4a02600338ff3c84cf810300d20f1.png" />
 </div>
 </div>
 <p>When visualizing it, we observe, that it is present in a subset of CD8 effector T cells. Next, we will select cells with high IFNG (arbitrary threshold: 2.5) and annotate this selection in the AnnData object. To use it as category, we will store it as string. We can visualize the selected cells in the UMAP.</p>
@@ -1137,7 +701,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;elevated_IFNG&#39; as categorical
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_27_1.png" src="../_images/multimodal_integration_27_1.png" />
+<img alt="../_images/0aa38ee1534f52ce270fcc12ca176754b43b0583339a6a29f1ffa0d3e9a12541.png" src="../_images/0aa38ee1534f52ce270fcc12ca176754b43b0583339a6a29f1ffa0d3e9a12541.png" />
 </div>
 </div>
 <p>Next, we will generate frequency plots to see, whether the TCRs from cells with elevated IFNg expression, follow specific sequence patterns compared to the remaining cells. First, we select all cells with annotated CDR3β, followed by separation into background cells and cells with elevated IFNG. Finally, we construct the motifs and plot them.</p>
@@ -1175,7 +739,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/multimodal_integration_29_0.svg" src="../_images/multimodal_integration_29_0.svg" /><img alt="../_images/multimodal_integration_29_1.svg" src="../_images/multimodal_integration_29_1.svg" /></div>
+<img alt="../_images/81b41f6458cd5e604860bd28d8714adfc1c2a6348f166e73917a175ba609126f.svg" src="../_images/81b41f6458cd5e604860bd28d8714adfc1c2a6348f166e73917a175ba609126f.svg" /><img alt="../_images/710168d24c4a3eff66a12fe8ea6ee2211ce925d0afee5e51ebe655aa07c75613.svg" src="../_images/710168d24c4a3eff66a12fe8ea6ee2211ce925d0afee5e51ebe655aa07c75613.svg" /></div>
 </div>
 <p>While the frequency of amino acids at specific positions changes slightly, no large clear differing motifs can be seen between the two cell sets. Therefore, there doesn’t exist any evidence, that the selected subset of T cells share specificity to the same target epitope.</p>
 <p><strong>Cell Type</strong>: Here, we apply the diversity between different cell types annotated on the transcriptomic level (stored in “full_clustering”). We see, that proliferating and effector CD8<sup>+</sup> T cells have the lowest diversity. Since these cell types contain larger clones, this was to be expected. Such an analysis could be used as a sanity check for the cell type assignment or to compare the diversity of cell types over multiple studies.</p>
@@ -1189,7 +753,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </section>
 <section id="gex-analysis-on-air-clusters">
-<h3><span class="section-number">44.3.2. </span>GEX analysis on AIR clusters<a class="headerlink" href="#gex-analysis-on-air-clusters" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">44.3.2. </span>GEX analysis on AIR clusters<a class="headerlink" href="#gex-analysis-on-air-clusters" title="Link to this heading">#</a></h3>
 <p>Similarly, we can perform the standard analysis of transcriptome <a class="reference internal" href="../conditions/differential_gene_expression.html#differential-analysis"><span class="std std-ref">Differential gene expression analysis</span></a>, but on groups derived in the AIR space. E.g.:</p>
 <ul class="simple">
 <li><p><strong>Clonotype</strong>: AIR clonotypes can be used as clusters, if sufficient clonal expansion is present. This is especially intriguing, since the clonotype serves as a proxy for the cells specificity. Cells recognizing the same antigen can therefore be tracked over conditions such as time, treatment, or stimulation to observe their change.</p></li>
@@ -1209,7 +773,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Default of the method has been changed to &#39;t-test&#39; from &#39;t-test_overestim_var&#39;
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_34_1.png" src="../_images/multimodal_integration_34_1.png" />
+<img alt="../_images/e9a7c8dd1f65252ce40c755e08b0e0d26bceb6529cf6ba48f2a518a8a817ce48.png" src="../_images/e9a7c8dd1f65252ce40c755e08b0e0d26bceb6529cf6ba48f2a518a8a817ce48.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1222,11 +786,11 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </section>
 </section>
 <section id="multimodal-integration">
-<h2><span class="section-number">44.4. </span>Multimodal Integration<a class="headerlink" href="#multimodal-integration" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.4. </span>Multimodal Integration<a class="headerlink" href="#multimodal-integration" title="Link to this heading">#</a></h2>
 <p>In the previous section we have shown, how modality specific analysis is performed on clusters derived from other modalities. However, this underutilizes the additional information provided by paired data, since AIRs and gene expression are interlinked: adaptive immune cells recognizing the same epitopes, will undergo a similar development upon activation. As for other Omics combinations, there has been an interest lately in integrating AIR and GEX for deriving clusters or a shared representation.</p>
 <p>These models are still novel and are not part of a standard “best-practice” analysis pipelines. We assume that these or similar approaches will be increasingly used in the future and therefore want to showcase these integration models as an outlook. However, you should be careful when applying these models, since they are still experimental and not independently evaluated for their strengths and weaknesses.</p>
 <section id="integrating-tcr-and-gex">
-<h3><span class="section-number">44.4.1. </span>Integrating TCR and GEX<a class="headerlink" href="#integrating-tcr-and-gex" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">44.4.1. </span>Integrating TCR and GEX<a class="headerlink" href="#integrating-tcr-and-gex" title="Link to this heading">#</a></h3>
 <p>Only recently, three methods were developed yet to jointly utilize TCR sequences and transcriptome each aiming at different aspects of analysis:</p>
 <ul class="simple">
 <li><p><strong>TESSA</strong>: applies a Bayesian model on a TCR and GEX embedding for clustering T cells of similar transcriptome and sequences.</p></li>
@@ -1242,12 +806,12 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </div>
 <section id="tessa">
-<h4><span class="section-number">44.4.1.1. </span>TESSA<a class="headerlink" href="#tessa" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">44.4.1.1. </span>TESSA<a class="headerlink" href="#tessa" title="Link to this heading">#</a></h4>
 <p>Zhang et al. developed TCR functional landscape estimation supervised with scRNA-seq analysis (TESSA) <span id="id1">[<a class="reference internal" href="#id508" title="Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. Nature methods, 18(1):92–99, 2021.">Zhang <em>et al.</em>, 2021</a>]</span>, which aims at embedding and clustering T cell clones based on their TCR sequence and transcriptome via Bayesian modelling. The CDR3β sequence is first compressed to a 30-dimensional numeric representation using a pretrained autoencoder. Following, the dimensions are upweighted to correlate the TCR representation with the gene expression of similar TCR-groups, thereby assigning importance of TCR position for explaining the cells’ gene expression. In an interactive process, weights and groups are updated until convergence to reach a maximal alignment between both modalities.</p>
 <p>TESSA produced clusters of high purity when embedding T-cells with known epitope specificity from <span id="id2">[<a class="reference internal" href="#id511" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span>, surpasing the uni-modal model GLIPH <span id="id3">[<a class="reference internal" href="specificity.html#id498" title="Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. Nature, 547(7661):94–98, 2017.">Glanville <em>et al.</em>, 2017</a>]</span>, which is commonly used for clustering TCR sequences. Further, cluster centrallity was indicative for higher avidity clones shown by clonal expansion and high ADT counts. Using TESSA on data from <span id="id4">[<a class="reference internal" href="#id509" title="Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. Nature medicine, 25(8):1251–1259, 2019.">Yost <em>et al.</em>, 2019</a>]</span>, the author detected novel clusters of responder T cell in patients undergoing PD-1 blockade.</p>
 <p>The code and instructions for installation can be found <a class="reference external" href="https://github.com/jcao89757/TESSA">here</a>.</p>
 <section id="data-preprocessing">
-<h5><span class="section-number">44.4.1.1.1. </span>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.1.1. </span>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h5>
 <p>TESSA requires several TCR and GEX files in specific format.</p>
 <p>First, we save a “.csv”-File with the following columns:</p>
 <ul class="simple">
@@ -1518,7 +1082,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 </section>
 <section id="running-the-model">
-<h5><span class="section-number">44.4.1.1.2. </span>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.1.2. </span>Running the model<a class="headerlink" href="#running-the-model" title="Link to this heading">#</a></h5>
 <p>We need to provide different setting options, most of which specify input or output directories. We will summarize them in a dictionary first.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1561,15 +1125,15 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <p>Finally, we run the model on the specified settings by calling the command. Depending on your compute ressources this might take several minutes. Since the command line output is very verbose, we will silence this cell via the capture line magic.You should remove the first line for debugging.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
-!$cmd_tessa
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_tessa</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="output">
-<h5><span class="section-number">44.4.1.1.3. </span>Output<a class="headerlink" href="#output" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.1.3. </span>Output<a class="headerlink" href="#output" title="Link to this heading">#</a></h5>
 <p>We now recieve three output files that we can further use for downstream tasks:</p>
 <ul class="simple">
 <li><p><strong>TESSA_tcr_embedding.csv</strong>: Embedding of TCRs (without GEX information)</p></li>
@@ -1628,7 +1192,7 @@ Unique clusters: 134
 ... storing &#39;TESSA_cluster_top10&#39; as categorical
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_58_1.png" src="../_images/multimodal_integration_58_1.png" />
+<img alt="../_images/a809bf3731309b7fc85567f294b7ced064ef68bcc20f7d1d5c4117e39ba40abe.png" src="../_images/a809bf3731309b7fc85567f294b7ced064ef68bcc20f7d1d5c4117e39ba40abe.png" />
 </div>
 </div>
 <p>For plotting the cluster assignemnt in the GEX space, we add the assignment to the original adata object. When plotting, we can see that TESSA clusters also share similar phenotypes at GEX level.</p>
@@ -1649,17 +1213,17 @@ Unique clusters: 134
 ... storing &#39;TESSA_cluster_top10&#39; as categorical
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_60_1.png" src="../_images/multimodal_integration_60_1.png" />
+<img alt="../_images/92d7b055af9c6b9efd1746d801b16d5938ec4174557cdd7582b1563da6b633af.png" src="../_images/92d7b055af9c6b9efd1746d801b16d5938ec4174557cdd7582b1563da6b633af.png" />
 </div>
 </div>
 <p>In both visualisations, we can see that the clusters are related on a TCR and GEX level. However, the full clustering can not directly observed in a single modality. Due to similar TCR and GEX profile, these cells might be specific to the same epitopes. Examplatory, we could use this annotation for DEG analysis between cell networks as described above.</p>
 </section>
 </section>
 <section id="conga">
-<h4><span class="section-number">44.4.1.2. </span>CoNGA<a class="headerlink" href="#conga" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">44.4.1.2. </span>CoNGA<a class="headerlink" href="#conga" title="Link to this heading">#</a></h4>
 <p>clonotype neighbor graph analysis (CoNGA) <span id="id5">[<a class="reference internal" href="#id510" title="Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). Nature Biotechnology, 40(1):54–63, 2022.">Schattgen <em>et al.</em>, 2022</a>]</span> uses similarity graphs at a clonotype level on GEX and TCR, for which the well known distance metric TCRDist <span id="id6">[<a class="reference internal" href="specificity.html#id495" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span> is used. Based on the graph neighborhood, clusters are formed by shared GEX and TCR assignments. These so called “CoNGA clusters” thereby share similar receptor sequences as well as similar gene expression. CoNGA clusters contained clonotypes with highly alike TCRs based on e.g. length and physio-chemical properties and were shown to capture specificity. The following explanation runs the main CoNGA pipeline. Since the different aspects of the pipeline are explained <a class="reference external" href="https://github.com/phbradley/conga/blob/master/colab_conga_pipeline.ipynb">here</a>, the following description is mainly focused on how to transform the data and run the pipeline.</p>
 <section id="data-preperation">
-<h5><span class="section-number">44.4.1.2.1. </span>Data Preperation<a class="headerlink" href="#data-preperation" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.2.1. </span>Data Preperation<a class="headerlink" href="#data-preperation" title="Link to this heading">#</a></h5>
 <p>CoNGA conveniently supports several input types for the gene expression matrix including h5ad-files. For the clonotype information, we need to create a clone_file first by running a preprocessing script on the Cell Ranger output.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1694,8 +1258,8 @@ Unique clusters: 134
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
-!$cmd_conga_pp
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_conga_pp</span>
 </pre></div>
 </div>
 </div>
@@ -1714,7 +1278,7 @@ Unique clusters: 134
 </div>
 </section>
 <section id="executing-conga">
-<h5><span class="section-number">44.4.1.2.2. </span>Executing CoNGA<a class="headerlink" href="#executing-conga" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.2.2. </span>Executing CoNGA<a class="headerlink" href="#executing-conga" title="Link to this heading">#</a></h5>
 <p>We can execute the main CoNGA pipeline via the following command line call, which specifies the input and output directories.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1733,20 +1297,20 @@ Unique clusters: 134
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
-!$cmd_conga
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_conga</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="id7">
-<h5><span class="section-number">44.4.1.2.3. </span>Output<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.1.2.3. </span>Output<a class="headerlink" href="#id7" title="Link to this heading">#</a></h5>
 <p>The results of the pipeline are stored in  <code class="docutils literal notranslate"><span class="pre">./data/res/conga_results_summary.html</span></code> with an explanation for each result. Additional annotation and plots are available under <code class="docutils literal notranslate"><span class="pre">./data/res_conga/</span></code>. Explaining all results, is out of scope of this tutorial. We, therefore, refer to the very detailed explanation in the web summary and the colab notebook.</p>
 </section>
 </section>
 <section id="mvtcr">
-<h4><span class="section-number">44.4.1.3. </span>mvTCR<a class="headerlink" href="#mvtcr" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">44.4.1.3. </span>mvTCR<a class="headerlink" href="#mvtcr" title="Link to this heading">#</a></h4>
 <p>mvTCR by An et al. is a multiview Variational autoencoder that compresses TCR sequence and gene expression into a lower-dimensional representation <span id="id8">[<a class="reference internal" href="#id512" title="Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. bioRxiv, 2021.">An <em>et al.</em>, 2021</a>]</span>. Two deep learning architectures - Transformer and Multi-layer perceptron - extract information from both TCR and GEX, respectively, before they are fused to derive the joint space. Following, the trained models can be used to embed similar data.</p>
 <p>The authors showed, that multi-modal models can better capture antigen specificity, than uni-modal embeddings on the data from <span id="id9">[<a class="reference internal" href="#id511" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span> for prediction and clustering. Additionally, they showed that cell type and cell functionality are preserved in the embedding space on a SARS-CoV-2 dataset from <span id="id10">[<a class="reference internal" href="#id513" title="David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. Nature communications, 12(1):1–14, 2021.">Fischer <em>et al.</em>, 2021</a>]</span>. Code and further explanations are available <a class="reference external" href="https://github.com/SchubertLab/mvTCR">here</a>.</p>
 <p>mvTCR relies on the AnnData format and we therefore need to prepare our AnnData object for training. For that, the several functions are provided.</p>
@@ -1909,18 +1473,18 @@ Best trial:
 ... storing &#39;clonotypes_top10&#39; as categorical
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_96_1.png" src="../_images/multimodal_integration_96_1.png" />
+<img alt="../_images/0f0ef6bd2f55863515e93b9abf9ad157ad653e6c60ea627c032283ba468cf742.png" src="../_images/0f0ef6bd2f55863515e93b9abf9ad157ad653e6c60ea627c032283ba468cf742.png" />
 </div>
 </div>
 <p>Here, we visualize the TCR-GEX embedding. It is clear to see, that the data separates by clonotype. However, the data forms additional subclusters and structures within the clones, which is influenced by the GEX. Depending on your analysis, you might need to adjust the weighting between GEX and TCR and run a longer parameter search. Otherwise, different downstream task such as clustering can now be performed on this embedding using Scanpy functions.</p>
 </section>
 </section>
 <section id="integrating-bcr-and-gex">
-<h3><span class="section-number">44.4.2. </span>Integrating BCR and GEX<a class="headerlink" href="#integrating-bcr-and-gex" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">44.4.2. </span>Integrating BCR and GEX<a class="headerlink" href="#integrating-bcr-and-gex" title="Link to this heading">#</a></h3>
 <p>The three models above were developed TCRs. However, Conga and mvTCR might be applicable for B cells due to similar structures of TCR and BCR. However, both models have not been evaluated for B cells in their publication. TESSA relies on a pre-trained TCR autoencoder and should therefore not be used for BCR-GEX integration. The authors recently published <a class="reference external" href="https://github.com/wooyongc/Benisse">Benisse</a>, which is similar to TESSA but applied on B cells <span id="id11">[<a class="reference internal" href="#id514" title="Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. Nature Machine Intelligence, pages 1–9, 2022.">Zhang <em>et al.</em>, 2022</a>]</span>.</p>
 <p>Similar as for TCR, multimodal BCR integration tools are still novel and have not been used in standard analysis pipelines. Therefore, we recommend caution, when applying these models.</p>
 <section id="benisse">
-<h4><span class="section-number">44.4.2.1. </span>Benisse<a class="headerlink" href="#benisse" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">44.4.2.1. </span>Benisse<a class="headerlink" href="#benisse" title="Link to this heading">#</a></h4>
 <p>Benisse embeds the heavy-chain of the BCR into a numeric embedding using a pre-trained model. The model works on a clonotype level: i.e., GEX of cells with the same BCR are averaged to form representative per clone. Following, Benisse detects clones that are similar on a BCR- and GEX-level by constructing a sparse graph structure.</p>
 <p>Since the model has a similar setup as TESSA, we will follow the same processing steps and only comment, when details differ from above.</p>
 <p>Due to long runtime, we first subsample the B-cell dataset to 1000 cells of one donor.</p>
@@ -2204,7 +1768,7 @@ Best trial:
 </div>
 </div>
 <section id="id12">
-<h5><span class="section-number">44.4.2.1.1. </span>Running the model<a class="headerlink" href="#id12" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.2.1.1. </span>Running the model<a class="headerlink" href="#id12" title="Link to this heading">#</a></h5>
 <p>First, we need to embed the BCR sequences via the pre-trained encoder:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2237,8 +1801,8 @@ Best trial:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
-!$cmd_bcr_embedding
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_bcr_embedding</span>
 </pre></div>
 </div>
 </div>
@@ -2272,15 +1836,15 @@ Best trial:
 <p>Even with reduced number of iteration, running the code might take several minutes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
-!$cmd_benisse
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_benisse</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="id13">
-<h5><span class="section-number">44.4.2.1.2. </span>Output<a class="headerlink" href="#id13" title="Permalink to this headline">#</a></h5>
+<h5><span class="section-number">44.4.2.1.2. </span>Output<a class="headerlink" href="#id13" title="Link to this heading">#</a></h5>
 <p>We now recieve several output files, which are described in more detail in the authors GitHub repository. In the following, we will examine:</p>
 <ul class="simple">
 <li><p><strong>connectionplot.pdf</strong>: Visualisation of the derived clustering</p></li>
@@ -2296,15 +1860,15 @@ Best trial:
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-<iframe
-    width="600"
-    height="600"
-    src="./data/res/connectionplot.pdf"
-    frameborder="0"
-    allowfullscreen
-
-></iframe>
-</div></div>
+        <iframe
+            width="600"
+            height="600"
+            src="./data/res/connectionplot.pdf"
+            frameborder="0"
+            allowfullscreen
+            
+        ></iframe>
+        </div></div>
 </div>
 <p>The connection plot prowides us with a visualisation of the graph build by Benisse. Each clonotype is represented by a node in the learned embedding space. These clustering is informed by BCR as well as gene expression similarity.</p>
 <div class="cell docutils container">
@@ -2335,7 +1899,7 @@ Best trial:
 ... storing &#39;clusters_top10&#39; as categorical
 </pre></div>
 </div>
-<img alt="../_images/multimodal_integration_117_1.png" src="../_images/multimodal_integration_117_1.png" />
+<img alt="../_images/61bcb31d35d1c46b5b455fdcb1446f5a2c8a981d96cdfac99deb171b667f4750.png" src="../_images/61bcb31d35d1c46b5b455fdcb1446f5a2c8a981d96cdfac99deb171b667f4750.png" />
 </div>
 </div>
 <p>Here, we projected the ten largest clusters upon the transcriptome space. While some clusters follow the same phenotype, other clusters separate in the RNA space. The cluster annotation could be used for downstream analysis (see above) on BCR or transcriptomic site or to infer ancestral relationships between cells (see paper).</p>
@@ -2344,7 +1908,7 @@ Best trial:
 </section>
 </section>
 <section id="key-takeaways">
-<h2><span class="section-number">44.5. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.5. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>For multimodal datasets of AIR and GEX, typically, one modality is used for grouping the cells to perform standard uni-modal analysis on the other modality (e.g. Sequence analysis on leiden clusters).</p></li>
 <li><p>Cell functionality (determined by AIR) and cell state (observed via GEX) are interlinked. It has been shown, that cells with alike AIR sequences can share similar phenotypes.</p></li>
@@ -2352,7 +1916,7 @@ Best trial:
 </ul>
 </section>
 <section id="questions">
-<h2><span class="section-number">44.6. </span>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.6. </span>Questions<a class="headerlink" href="#questions" title="Link to this heading">#</a></h2>
 <p>Why could it be useful to integrate AIR sequence information with gene expression?</p>
 <ul class="simple">
 <li><p>GEX can be used to improve AIR sequence reads.</p></li>
@@ -2376,37 +1940,47 @@ Best trial:
 </ul>
 </section>
 <section id="references">
-<h2><span class="section-number">44.7. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">44.7. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id14">
-<dl class="citation">
-<dt class="label" id="id511"><span class="brackets">10xG19</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id9">2</a>)</span></dt>
-<dd><p>10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. <em>Tech. rep</em>, 2019.</p>
-</dd>
-<dt class="label" id="id512"><span class="brackets"><a class="fn-backref" href="#id8">ADT+21</a></span></dt>
-<dd><p>Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. <em>bioRxiv</em>, 2021.</p>
-</dd>
-<dt class="label" id="id492"><span class="brackets"><a class="fn-backref" href="#id6">DFGH+17</a></span></dt>
-<dd><p>Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. <em>Nature</em>, 547(7661):89–93, 2017.</p>
-</dd>
-<dt class="label" id="id513"><span class="brackets"><a class="fn-backref" href="#id10">FAW+21</a></span></dt>
-<dd><p>David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. <em>Nature communications</em>, 12(1):1–14, 2021.</p>
-</dd>
-<dt class="label" id="id495"><span class="brackets"><a class="fn-backref" href="#id3">GHN+17</a></span></dt>
-<dd><p>Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. <em>Nature</em>, 547(7661):94–98, 2017.</p>
-</dd>
-<dt class="label" id="id510"><span class="brackets"><a class="fn-backref" href="#id5">SGC+22</a></span></dt>
-<dd><p>Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). <em>Nature Biotechnology</em>, 40(1):54–63, 2022.</p>
-</dd>
-<dt class="label" id="id509"><span class="brackets"><a class="fn-backref" href="#id4">YSW+19</a></span></dt>
-<dd><p>Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. <em>Nature medicine</em>, 25(8):1251–1259, 2019.</p>
-</dd>
-<dt class="label" id="id514"><span class="brackets"><a class="fn-backref" href="#id11">ZCW+22</a></span></dt>
-<dd><p>Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. <em>Nature Machine Intelligence</em>, pages 1–9, 2022.</p>
-</dd>
-<dt class="label" id="id508"><span class="brackets"><a class="fn-backref" href="#id1">ZXW+21</a></span></dt>
-<dd><p>Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. <em>Nature methods</em>, 18(1):92–99, 2021.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id511" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>10xG19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<p>10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. <em>Tech. rep</em>, 2019.</p>
+</div>
+<div class="citation" id="id512" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">ADT+21</a><span class="fn-bracket">]</span></span>
+<p>Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. <em>bioRxiv</em>, 2021.</p>
+</div>
+<div class="citation" id="id492" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">DFGH+17</a><span class="fn-bracket">]</span></span>
+<p>Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. <em>Nature</em>, 547(7661):89–93, 2017.</p>
+</div>
+<div class="citation" id="id513" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">FAW+21</a><span class="fn-bracket">]</span></span>
+<p>David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. <em>Nature communications</em>, 12(1):1–14, 2021.</p>
+</div>
+<div class="citation" id="id495" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">GHN+17</a><span class="fn-bracket">]</span></span>
+<p>Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. <em>Nature</em>, 547(7661):94–98, 2017.</p>
+</div>
+<div class="citation" id="id510" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">SGC+22</a><span class="fn-bracket">]</span></span>
+<p>Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). <em>Nature Biotechnology</em>, 40(1):54–63, 2022.</p>
+</div>
+<div class="citation" id="id509" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">YSW+19</a><span class="fn-bracket">]</span></span>
+<p>Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. <em>Nature medicine</em>, 25(8):1251–1259, 2019.</p>
+</div>
+<div class="citation" id="id514" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">ZCW+22</a><span class="fn-bracket">]</span></span>
+<p>Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. <em>Nature Machine Intelligence</em>, pages 1–9, 2022.</p>
+</div>
+<div class="citation" id="id508" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ZXW+21</a><span class="fn-bracket">]</span></span>
+<p>Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. <em>Nature methods</em>, 18(1):92–99, 2021.</p>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -2431,57 +2005,146 @@ Best trial:
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="specificity.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><span class="section-number">43. </span>Specificity analysis</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="specificity.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">43. </span>Specificity analysis</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="../multimodal_integration/paired_integration.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="../multimodal_integration/paired_integration.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">45. </span>Paired integration</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">44.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">44.2. Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">44.3. Uni-modal Analysis with multimodal conditions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">44.3.1. AIR analysis on RNA clusters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">44.3.2. GEX analysis on AIR clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multimodal-integration">44.4. Multimodal Integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-tcr-and-gex">44.4.1. Integrating TCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tessa">44.4.1.1. TESSA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">44.4.1.1.1. Data Preprocessing</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-model">44.4.1.1.2. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#output">44.4.1.1.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#conga">44.4.1.2. CoNGA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preperation">44.4.1.2.1. Data Preperation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-conga">44.4.1.2.2. Executing CoNGA</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">44.4.1.2.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mvtcr">44.4.1.3. mvTCR</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-bcr-and-gex">44.4.2. Integrating BCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#benisse">44.4.2.1. Benisse</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">44.4.2.1.1. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">44.4.2.1.2. Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">44.5. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions">44.6. Questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">44.7. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Lukas Heumos, Anna Schaar, single-cell best practices consortium<br/>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
   
-      &copy; Copyright 2022.<br/>
-    <div class="extra_footer">
-      <div>
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-    </div>
-</p>
-        </footer>
-    </div>
-    
 </div>
+  </div>
+  
+</div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

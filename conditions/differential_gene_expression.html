@@ -1,895 +1,530 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>16. Differential gene expression analysis &#8212; Single-cell best practices</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/book.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'conditions/differential_gene_expression';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../_static/book.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="17. Compositional analysis" href="compositional.html" />
     <link rel="prev" title="15. Lineage tracing" href="../trajectories/lineage_tracing.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
-    
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Single-cell best practices</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Introduction
- </span>
-</p>
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/prior_art.html">
-   1. Prior art
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/scrna_seq.html">
-   2. Single-cell RNA sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/raw_data_processing.html">
-   3. Raw data processing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/analysis_tools.html">
-   4. Analysis frameworks and tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../introduction/interoperability.html">
-   5. Interoperability
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Preprocessing and visualization
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/quality_control.html">
-   6. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/normalization.html">
-   7. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/feature_selection.html">
-   8. Feature selection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">
-   9. Dimensionality Reduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Identifying cellular structure
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/clustering.html">
-   10. Clustering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/annotation.html">
-   11. Annotation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../cellular_structure/integration.html">
-   12. Data integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Inferring trajectories
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/pseudotemporal.html">
-   13. Pseudotemporal ordering
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/rna_velocity.html">
-   14. RNA velocity
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trajectories/lineage_tracing.html">
-   15. Lineage tracing
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Dealing with conditions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   16. Differential gene expression analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="compositional.html">
-   17. Compositional analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gsea_pathway.html">
-   18. Gene set enrichment and pathway analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="perturbation_modeling.html">
-   19. Perturbation modeling
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="perturbation_modeling.html">19. Perturbation modeling</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Modeling mechanisms
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">
-   20. Gene regulatory networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mechanisms/cell_cell_communication.html">
-   21. Cell-cell communication
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Deconvolution
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../deconvolution/bulk_deconvolution.html">
-   22. Bulk deconvolution
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Chromatin Accessibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/introduction.html">
-   23. Single-cell ATAC sequencing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/quality_control.html">
-   24. Quality Control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">
-   25. Gene regulatory networks using chromatin accessibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Spatial omics
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/introduction.html">
-   26. Single-cell data resolved in space
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/neighborhood.html">
-   27. Neighborhood analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/domains.html">
-   28. Spatial domains
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/spatially_variable_genes.html">
-   29. Spatially variable genes
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/deconvolution.html">
-   30. Spatial deconvolution
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../spatial/imputation.html">
-   31. Imputation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Surface protein
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/quality_control.html">
-   32. Quality control
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/normalization.html">
-   33. Normalization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/doublet_detection.html">
-   34. Doublet detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/dimensionality_reduction.html">
-   35. Dimensionality Reduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/batch_correction.html">
-   36. Batch correction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../surface_protein/annotation.html">
-   37. Annotation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Adaptive immune receptor repertoire
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/ir_profiling.html">
-   38. Immune Receptor Profiling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/clonotype.html">
-   39. Clonotype analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/specificity.html">
-   43. Specificity analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../air_repertoire/multimodal_integration.html">
-   44. Integrating AIR and transcriptomics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Multimodal integration
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/paired_integration.html">
-   45. Paired integration
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../multimodal_integration/advanced_integration.html">
-   46. Advanced integration
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reproducibility
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../reproducibility/introduction.html">
-   47. Reproducibility
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Outlook
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../outlook.html">
-   48. Outlook
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Acknowledgements
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../acknowledgements.html">
-   49. Acknowledgements
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Glossary
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../glossary.html">
-   50. Glossary
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/theislab/single-cell-best-practices/master?urlpath=tree/jupyter-book/conditions/differential_gene_expression.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/conditions/differential_gene_expression.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fconditions/differential_gene_expression.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/conditions/differential_gene_expression.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
 
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fconditions/differential_gene_expression.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/conditions/differential_gene_expression.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/conditions/differential_gene_expression.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   16.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup">
-   16.2. Environment setup
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preparing-the-dataset">
-   16.3. Preparing the dataset
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pseudobulk">
-   16.4. Pseudobulk
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#one-group">
-     16.4.1. One group
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#multiple-groups">
-     16.4.2. Multiple groups
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#notes-on-edger">
-     16.4.3. Notes on edgeR
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#single-cell-specific">
-   16.5. Single-cell specific
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id21">
-     16.5.1. One group
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#visualization">
-   16.6. Visualization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   16.7. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   16.8. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   16.9. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   16.10. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     16.10.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     16.10.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Differential gene expression analysis</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivation">
-   16.1. Motivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-setup">
-   16.2. Environment setup
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preparing-the-dataset">
-   16.3. Preparing the dataset
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pseudobulk">
-   16.4. Pseudobulk
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#one-group">
-     16.4.1. One group
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#multiple-groups">
-     16.4.2. Multiple groups
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#notes-on-edger">
-     16.4.3. Notes on edgeR
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#single-cell-specific">
-   16.5. Single-cell specific
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id21">
-     16.5.1. One group
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#visualization">
-   16.6. Visualization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#key-takeaways">
-   16.7. Key Takeaways
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quiz">
-   16.8. Quiz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   16.9. References
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#contributors">
-   16.10. Contributors
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#authors">
-     16.10.1. Authors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#reviewers">
-     16.10.2. Reviewers
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Differential gene expression analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">16.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">16.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-the-dataset">16.3. Preparing the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudobulk">16.4. Pseudobulk</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-group">16.4.1. One group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-groups">16.4.2. Multiple groups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-on-edger">16.4.3. Notes on edgeR</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-cell-specific">16.5. Single-cell specific</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">16.5.1. One group</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">16.6. Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">16.7. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">16.8. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">16.9. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">16.10. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">16.10.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">16.10.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="differential-gene-expression-analysis">
-<span id="differential-analysis"></span><h1><span class="section-number">16. </span>Differential gene expression analysis<a class="headerlink" href="#differential-gene-expression-analysis" title="Permalink to this headline">#</a></h1>
+<span id="differential-analysis"></span><h1><span class="section-number">16. </span>Differential gene expression analysis<a class="headerlink" href="#differential-gene-expression-analysis" title="Link to this heading">#</a></h1>
 <section id="motivation">
-<h2><span class="section-number">16.1. </span>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">16.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>This chapter is a more detailed continuation of the Annotation subchapter which already introduced differential gene expression (DGE) as a tool to annotate clusters with cell types.
 Here, we focus on more advanced use-cases of differential gene expression testing on more complex experimental designs which involve one or more conditions such as diseases, genetic knockouts or drugs.
 In such cases we are commonly interested in the magnitude and significance of differences in gene expression patterns between the condition of interest and a reference. This reference can be everything but is commonly a healthy sample. This statistical test can be applied to arbitrary groups, but in the case of single-cell RNA-Seq is commonly applied on the cell type level.</p>
 <figure class="align-default" id="differential-gene-expression-overview">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/differential_gene_expression.jpg"><img alt="DGE analysis overview" class="bg-primary mb-1" src="../_images/differential_gene_expression.jpg" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 16.1 </span><span class="caption-text">Differential gene expression analysis attempts to infer genes that are statistically significantly over- or underexpressed between any compared groups (commonly between healthy and condition per cell type).</span><a class="headerlink" href="#differential-gene-expression-overview" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 16.1 </span><span class="caption-text">Differential gene expression analysis attempts to infer genes that are statistically significantly over- or underexpressed between any compared groups (commonly between healthy and condition per cell type).</span><a class="headerlink" href="#differential-gene-expression-overview" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The outcome of such an analysis could be genesets which effect and potentially explain any observed phenotypes. These genesets can then be examined more closely with respect to, for example, affected pathways or induced cell-cell communication changes.</p>
@@ -897,12 +532,12 @@ In such cases we are commonly interested in the magnitude and significance of di
 <p>The popular student’s t-test is one way of conducting such a test. However, it fails to take several single-cell RNA-seq peculiarities into account such as the excess number of zeros originating from dropouts or the need for complex experimental designs. More specifically, very rarely does one have sufficient sample numbers to accurately estimate the variance without pooling information across genes. Moreover, raw counts are never an absolute measurement of expression for a specific gene within a given sample. The actual read number per gene depends on the efficiency of the library preparation, the amount of contamination from non-coding transcripts and the sequencing depth. It does therefore lack in both, sensitivity and specificity for single-cell RNA-seq, let alone experimental design flexibility.</p>
 <p>As a result, differential gene expression testing is a classic bioinformatics problem which has been tackled by many tools already. Generally, the problem is currently being approached from two views, the sample-level view where expression is aggregated to create “pseudobulks” and then analysed with methods originally designed for bulk expression samples such as edgeR<span id="id1">[<a class="reference internal" href="#id316" title="Mark D. Robinson, Davis J. McCarthy, and Gordon K. Smyth. Edger: a bioconductor package for differential expression analysis of digital gene expression data. Bioinformatics (Oxford, England), 26(1):139-140, Jan 2010. btp616[PII]. URL: https://doi.org/10.1093/bioinformatics/btp616, doi:10.1093/bioinformatics/btp616.">Robinson <em>et al.</em>, 2010</a>]</span> or DEseq2<span id="id2">[<a class="reference internal" href="#id317" title="Michael I. Love, Wolfgang Huber, and Simon Anders. Moderated estimation of fold change and dispersion for term`rna`-seq data with deseq2. Genome Biology, 15(12):550, Dec 2014. URL: https://doi.org/10.1186/s13059-014-0550-8, doi:10.1186/s13059-014-0550-8.">Love <em>et al.</em>, 2014</a>]</span> and the cell-level view where cells are modeled individually using generalized mixed effect models such as MAST<span id="id3">[<a class="reference internal" href="#id321" title="Greg Finak, Andrew McDavid, Masanao Yajima, Jingyuan Deng, Vivian Gersuk, Alex K. Shalek, Chloe K. Slichter, Hannah W. Miller, M. Juliana McElrath, Martin Prlic, Peter S. Linsley, and Raphael Gottardo. Mast: a flexible statistical framework for assessing transcriptional changes and characterizing heterogeneity in single-cell term`rna` sequencing data. Genome Biology, 16(1):278, Dec 2015. URL: https://doi.org/10.1186/s13059-015-0844-5, doi:10.1186/s13059-015-0844-5.">Finak <em>et al.</em>, 2015</a>]</span> or glmmTMB<span id="id4">[<a class="reference internal" href="#id322" title="Mollie E. Brooks, Kasper Kristensen, Koen J. van Benthem, Arni Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin Mächler, and Benjamin M. Bolker. glmmTMB Balances Speed and Flexibility Among Packages for Zero-inflated Generalized Linear Mixed Modeling. The R Journal, 9(2):378–400, 2017. URL: https://doi.org/10.32614/RJ-2017-066, doi:10.32614/RJ-2017-066.">Brooks <em>et al.</em>, 2017</a>]</span>. The consensus and robustness across datasets for DGE tools is low <span id="id5">[<a class="reference internal" href="#id323" title="Samarendra Das, Anil Rai, Michael L Merchant, Matthew C Cave, and Shesh N Rai. A comprehensive survey of statistical approaches for differential expression analysis in single-cell term`RNA` sequencing studies. Genes (Basel), 12(12):1947, December 2021.">Das <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id318" title="Tianyu Wang, Boyang Li, Craig E. Nelson, and Sheida Nabavi. Comparative analysis of differential gene expression analysis tools for single-cell term`rna` sequencing data. BMC Bioinformatics, 20(1):40, Jan 2019. URL: https://doi.org/10.1186/s12859-019-2599-6, doi:10.1186/s12859-019-2599-6.">Wang <em>et al.</em>, 2019</a>]</span>. As previously described, although single-cell data contains technical noise artifacts such as dropout, zero-inflation and high cell-to-cell variability <span id="id6">[<a class="reference internal" href="#id319" title="Stephanie C Hicks, F William Townes, Mingxiang Teng, and Rafael A Irizarry. Missing data and technical variability in single-cell term`RNA`-sequencing experiments. Biostatistics, 19(4):562-578, 11 2017. URL: https://doi.org/10.1093/biostatistics/kxx053, arXiv:https://academic.oup.com/biostatistics/article-pdf/19/4/562/26346801/kxx053.pdf, doi:10.1093/biostatistics/kxx053.">Hicks <em>et al.</em>, 2017</a>, <a class="reference internal" href="#id337" title="Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. Molecular Systems Biology, 15(6):e8746, 2019. URL: https://www.embopress.org/doi/abs/10.15252/msb.20188746, arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746, doi:https://doi.org/10.15252/msb.20188746.">Luecken and Theis, 2019</a>, <a class="reference internal" href="#id320" title="Catalina A. Vallejos, Davide Risso, Antonio Scialdone, Sandrine Dudoit, and John C. Marioni. Normalizing single-cell term`rna` sequencing data: challenges and opportunities. Nature Methods, 14(6):565-571, Jun 2017. URL: https://doi.org/10.1038/nmeth.4292, doi:10.1038/nmeth.4292.">Vallejos <em>et al.</em>, 2017</a>]</span>, methods designed for bulk <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-seq data performed favorably compared to methods explicitly designed for scRNA-seq data<span id="id7">[<a class="reference internal" href="#id323" title="Samarendra Das, Anil Rai, Michael L Merchant, Matthew C Cave, and Shesh N Rai. A comprehensive survey of statistical approaches for differential expression analysis in single-cell term`RNA` sequencing studies. Genes (Basel), 12(12):1947, December 2021.">Das <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id325" title="Maria K Jaakkola, Fatemeh Seyeterm`DNA`srollah, Arfa Mehmood, and Laura L Elo. Comparison of methods to detect differentially expressed genes between single-cell populations. Briefings in Bioinformatics, 18(5):735-743, 07 2016. URL: https://doi.org/10.1093/bib/bbw057, arXiv:https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf, doi:10.1093/bib/bbw057.">Jaakkola <em>et al.</em>, 2016</a>, <a class="reference internal" href="#id324" title="Charlotte Soneson and Mark D. Robinson. Bias, robustness and scalability in single-cell differential expression analysis. Nature Methods, 15(4):255-261, Apr 2018. URL: https://doi.org/10.1038/nmeth.4612, doi:10.1038/nmeth.4612.">Soneson and Robinson, 2018</a>, <a class="reference internal" href="#id326" title="Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. Nature Communications, 12(1):5692, Sep 2021. URL: https://doi.org/10.1038/s41467-021-25960-2, doi:10.1038/s41467-021-25960-2.">Squair <em>et al.</em>, 2021</a>]</span>. Single-cell specific methods were found to be especially prone to wrongly labeling highly expressed genes as differentially expressed.</p>
 <p>A recent study highlighted the issue of pseudoreplication where inferential statistics is applied to biological replicates which are not statistically independent. Failing to account for the inherent correlation of replicates (cells from the same individual) inflates the false discovery rate (FDR)<span id="id8">[<a class="reference internal" href="#id330" title="Sini Junttila, Johannes Smolander, and Laura L Elo. Benchmarking methods for detecting differential states between conditions from multi-subject single-cell term`rna`-seq data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662, arXiv:https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf, doi:10.1101/2022.02.16.480662.">Junttila <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id326" title="Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. Nature Communications, 12(1):5692, Sep 2021. URL: https://doi.org/10.1038/s41467-021-25960-2, doi:10.1038/s41467-021-25960-2.">Squair <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id328" title="Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. Nature Communications, 12(1):738, Feb 2021. URL: https://doi.org/10.1038/s41467-021-21038-1, doi:10.1038/s41467-021-21038-1.">Zimmerman <em>et al.</em>, 2021</a>]</span>. Therefore, batch effect correction or the aggregation of cell-type-specific expression values within an individual through either a sum, mean or random effect per individual, that is pseudobulk generation, should be applied prior to DGE analysis to account for within-sample correlations <span id="id9">[<a class="reference internal" href="#id328" title="Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. Nature Communications, 12(1):738, Feb 2021. URL: https://doi.org/10.1038/s41467-021-21038-1, doi:10.1038/s41467-021-21038-1.">Zimmerman <em>et al.</em>, 2021</a>]</span>. Generally, both, pseudobulk methods with sum aggregation such as edgeR, DESeq2, or Limma<span id="id10">[<a class="reference internal" href="#id331" title="Matthew E. Ritchie, Belinda Phipson, Di Wu, Yifang Hu, Charity W. Law, Wei Shi, and Gordon K. Smyth. Limma powers differential expression analyses for term`rna`-sequencing and microarray studies. Nucleic acids research, 43(7):e47-e47, Apr 2015. gkv007[PII]. URL: https://doi.org/10.1093/nar/gkv007, doi:10.1093/nar/gkv007.">Ritchie <em>et al.</em>, 2015</a>]</span> and mixed models such as MAST with random effect setting were found to be superior compared to naive methods, such as the popular Wilcoxon rank-sum test or Seurat’s <span id="id11">[<a class="reference internal" href="#id338" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 2021. URL: https://doi.org/10.1016/j.cell.2021.04.048, doi:10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span> latent models, which do not account for them<span id="id12">[<a class="reference internal" href="#id330" title="Sini Junttila, Johannes Smolander, and Laura L Elo. Benchmarking methods for detecting differential states between conditions from multi-subject single-cell term`rna`-seq data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662, arXiv:https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf, doi:10.1101/2022.02.16.480662.">Junttila <em>et al.</em>, 2022</a>]</span>.</p>
-<p>In a matters arising to the Zimmerman paper, Murphy et al. critically examined the Zimmerman benchmarking strategy and improved it <span id="id13">[<a class="reference internal" href="#id329" title="Alan E. Murphy and Nathan G. Skene. A balanced measure shows superior performance of pseudobulk methods in single-cell RNA-sequencing analysis. Nat Commun, dec 2022. URL: https://doi.org/10.1038%2Fs41467-022-35519-4, doi:10.1038/s41467-022-35519-4.">Murphy and Skene, 2022</a>]</span>. They come to the conclusion that pseudobulk methods perform best but whether sum or mean aggregation works better requires further investigation.</p>
-<p>Hence, in this notebook, we demonstrate how to use two tools for DE analysis: edgeR with a quasi likelihood test and MAST with random effects. Since both edgeR and MAST are implemented in R, we use the anndata2ri package to be able to simultaneously work with AnnData objects in Python and SingeCellExperiment objects in R.</p>
+<p>In matters arising from the Zimmerman paper, Murphy et al. critically examined the Zimmerman benchmarking strategy and improved it <span id="id13">[<a class="reference internal" href="#id329" title="Alan E. Murphy and Nathan G. Skene. A balanced measure shows superior performance of pseudobulk methods in single-cell RNA-sequencing analysis. Nat Commun, dec 2022. URL: https://doi.org/10.1038%2Fs41467-022-35519-4, doi:10.1038/s41467-022-35519-4.">Murphy and Skene, 2022</a>]</span>. They came to the conclusion that pseudobulk methods perform best but whether sum or mean aggregation works better requires further investigation.</p>
+<p>Hence, in this notebook, we demonstrate how to use two tools for DE analysis: edgeR with a quasi-likelihood test and MAST with random effects. Since both edgeR and MAST are implemented in R, we use the anndata2ri package to be able to simultaneously work with AnnData objects in Python and SingeCellExperiment objects in R.</p>
 <p>For each of the two methods, we show two use cases: how to run the analysis on full data and perform testing on multiple cell types and on one specific cell type.</p>
 </section>
 <section id="environment-setup">
-<h2><span class="section-number">16.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">16.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -951,7 +586,7 @@ library(MAST)
 </div>
 </section>
 <section id="preparing-the-dataset">
-<h2><span class="section-number">16.3. </span>Preparing the dataset<a class="headerlink" href="#preparing-the-dataset" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">16.3. </span>Preparing the dataset<a class="headerlink" href="#preparing-the-dataset" title="Link to this heading">#</a></h2>
 <p>We will use the Kang dataset, which is a 10x droplet-based scRNA-seq peripheral blood mononuclear cell (PBMC) data from 8 Lupus patients before and after 6h-treatment with INF-β (16 samples in total)<span id="id14">[<a class="reference internal" href="#id336" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>. Interferon beta is used in the form of natural fibroblast or recombinant preparations (interferon beta-1a and interferon beta-1b) and exerts antiviral and antiproliferative properties similar to those of interferon alpha. Interferon beta has been approved for the treatment of relapsing–remitting multiple sclerosis and secondary progressive multiple sclerosis.</p>
 <p>First, we load the full dataset.</p>
 <div class="cell docutils container">
@@ -1161,10 +796,10 @@ library(MAST)
 </div>
 </section>
 <section id="pseudobulk">
-<h2><span class="section-number">16.4. </span>Pseudobulk<a class="headerlink" href="#pseudobulk" title="Permalink to this headline">#</a></h2>
-<p>edgeR is a differential gene expression testing tool implemented in R which was initially designed for bulk gene expression data. It implements a wide range of statistical methodology based on the negative binomial distribution, empirical Bayes estimation, exact tests, generalized linear models (GLMs) and quasi-likelihood tests.</p>
+<h2><span class="section-number">16.4. </span>Pseudobulk<a class="headerlink" href="#pseudobulk" title="Link to this heading">#</a></h2>
+<p>edgeR is a differential gene expression testing tool implemented in R which was initially designed for bulk gene expression data. It implements a wide range of statistical methodologies based on the negative binomial distribution, empirical Bayes estimation, exact tests, generalized linear models (GLMs) and quasi-likelihood tests.</p>
 <p>For more details please read the original publication<span id="id15">[<a class="reference internal" href="#id316" title="Mark D. Robinson, Davis J. McCarthy, and Gordon K. Smyth. Edger: a bioconductor package for differential expression analysis of digital gene expression data. Bioinformatics (Oxford, England), 26(1):139-140, Jan 2010. btp616[PII]. URL: https://doi.org/10.1093/bioinformatics/btp616, doi:10.1093/bioinformatics/btp616.">Robinson <em>et al.</em>, 2010</a>]</span>.</p>
-<p>Here, we will be using the quasi likelihood test because it accounts for the uncertainty of the dispersion estimates. In contrast, the exact test assumes that the estimated dispersion is the true value, which can result in some inaccuracy. Additionally, the quasi likelihood GLMs are more flexible when it comes to experimental design.</p>
+<p>Here, we will be using the quasi-likelihood test because it accounts for the uncertainty of the dispersion estimates. In contrast, the exact test assumes that the estimated dispersion is the true value, which can result in some inaccuracy. Additionally, the quasi-likelihood GLMs are more flexible when it comes to experimental design.</p>
 <p>Since edgeR was introduced as a method for DE analysis for bulk data, we first need to create pseudobulk samples from our single-cell dataset. For each patient we create 1 pseudobulk sample per cell type by aggregating the cell from each subpopulation and taking the mean gene expression within that subpopulation.</p>
 <p>If the data you are working with does not have replicates, it could be beneficial to create multiple (e.g. 2-3) pseudobulks per patient to account for patient variability. Here we chose to create 1 pseudobulk per patient because for each patient we have 2 replicates, one control and one stimulated.</p>
 <p>We strongly recommend to read this guide <a class="reference external" href="https://f1000research.com/articles/9-1444">https://f1000research.com/articles/9-1444</a> on design matrices.</p>
@@ -1201,7 +836,7 @@ library(MAST)
 </div>
 <p>Now, let’s define the function we need to aggregate single cells into pseudo-replicates:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">aggregate_and_filter</span></code> is a function that creates an AnnData object with one pseudo-replicate for each donor for a specified subpopulation from the original single-cell AnnData object. Here we also filter out donors that have fewer than 30 cells for the specified population.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregate_and_filter</span></code> is a function that creates an AnnData object with one pseudo-replicate for each donor for a specified subpopulation from the original single-cell AnnData object. Here, we also filter out donors that have fewer than 30 cells for the specified population.</p></li>
 <li><p>by changing the <code class="docutils literal notranslate"><span class="pre">replicates_per_patient</span></code> parameter, several (n) pseudo-replicates can be created for each sample; cells are then split into n subsets of roughly equal sizes.</p></li>
 </ul>
 <div class="cell docutils container">
@@ -1287,7 +922,7 @@ fit_model &lt;- function(adata_){
     print(&quot;&quot;)
     # normalize
     y &lt;- calcNormFactors(y)
-    # create a vector that is concatentation of condition and cell type that we will later use with contrasts
+    # create a vector that is a concatenation of condition and cell type that we will later use with contrasts
     group &lt;- paste0(colData(adata_)$label, &quot;.&quot;, colData(adata_)$cell_type)
     replicate &lt;- colData(adata_)$replicate
     # create a design matrix: here we have multiple donors so also consider that in the design matrix
@@ -1302,7 +937,7 @@ fit_model &lt;- function(adata_){
 </div>
 </div>
 </div>
-<p>Now we defined all the funtions we need, so we can proceed with creating pseudobulks. We might want to look at available metadata later and therefore keep it in the AnnData object.</p>
+<p>Now we have defined all the functions we need, so we can proceed with creating pseudobulks. We might want to look at available metadata later and therefore keep it in the AnnData object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;sample&quot;</span><span class="p">]</span>
@@ -1376,10 +1011,10 @@ Dropping the following samples:
 </div>
 </div>
 </div>
-<p>The validity of differential gene expression results highly depend on the capturement of the major axis of variations in the statistical model. Intermediate data exploration steps such as principal component analysis (PCA) or multidimensional scaling (MDS) on pseudobulk samples allow for the identification of the sources of variation and thus can guide the construction of corresponding design and contrast matrices that model the data<span id="id16">[<a class="reference internal" href="#id333" title="Charity W. Law, Kathleen Zeglinski, Xueyi Dong, Monther Alhamdoosh, Gordon K. Smyth, and Matthew E. Ritchie. A guide to creating design matrices for gene expression experiments. F1000Research, 9:1444-1444, Dec 2020. 33604029[pmid]. URL: https://pubmed.ncbi.nlm.nih.gov/33604029.">Law <em>et al.</em>, 2020</a>]</span>.</p>
+<p>The validity of differential gene expression results highly depends on the capture of the major axis of variations in the statistical model. Intermediate data exploration steps such as principal component analysis (PCA) or multidimensional scaling (MDS) on pseudobulk samples allow for the identification of the sources of variation and thus can guide the construction of corresponding design and contrast matrices that model the data<span id="id16">[<a class="reference internal" href="#id333" title="Charity W. Law, Kathleen Zeglinski, Xueyi Dong, Monther Alhamdoosh, Gordon K. Smyth, and Matthew E. Ritchie. A guide to creating design matrices for gene expression experiments. F1000Research, 9:1444-1444, Dec 2020. 33604029[pmid]. URL: https://pubmed.ncbi.nlm.nih.gov/33604029.">Law <em>et al.</em>, 2020</a>]</span>.</p>
 <p>Failing to account for multiple sources of biological variability for experiments which include biological replicates will inflate the FDR<span id="id17">[<a class="reference internal" href="#id332" title="Andrew L Thurman, Jason A Ratcliff, Michael S Chimenti, and Alejandro A Pezzulo. Differential gene expression analysis for multi-subject single cell term`RNA` sequencing studies with aggregateBioVar. Bioinformatics, 37(19):3243–3251, May 2021.">Thurman <em>et al.</em>, 2021</a>]</span>,<span id="id18">[<a class="reference internal" href="#id334" title="David Lähnemann, Johannes Köster, Ewa Szczurek, Davis J. McCarthy, Stephanie C. Hicks, Mark D. Robinson, Catalina A. Vallejos, Kieran R. Campbell, Niko Beerenwinkel, Ahmed Mahfouz, Luca Pinello, Pavel Skums, Alexandros Stamatakis, Camille Stephan-Otto Attolini, Samuel Aparicio, Jasmijn Baaijens, Marleen Balvert, Buys de Barbanson, Antonio Cappuccio, Giacomo Corleone, Bas E. Dutilh, Maria Florescu, Victor Guryev, Rens Holmer, Katharina Jahn, Thamar Jessurun Lobo, Emma M. Keizer, Indu Khatri, Szymon M. Kielbasa, Jan O. Korbel, Alexey M. Kozlov, Tzu-Hao Kuo, Boudewijn P.F. Lelieveldt, Ion I. Mandoiu, John C. Marioni, Tobias Marschall, Felix Mölder, Amir Niknejad, Lukasz Raczkowski, Marcel Reinders, Jeroen de Ridder, Antoine-Emmanuel Saliba, Antonios Somarakis, Oliver Stegle, Fabian J. Theis, Huan Yang, Alex Zelikovsky, Alice C. McHardy, Benjamin J. Raphael, Sohrab P. Shah, and Alexander Schönhuth. Eleven grand challenges in single-cell data science. Genome Biology, 21(1):31, Feb 2020. URL: https://doi.org/10.1186/s13059-020-1926-6, doi:10.1186/s13059-020-1926-6.">Lähnemann <em>et al.</em>, 2020</a>]</span>. While increasing the number of cells per individual increases the precision, it has a limited effect on the power for the detection of differences across individuals. Therefore, the best way to increase statistical power is to increase the number of independent experimental samples<span id="id19">[<a class="reference internal" href="#id328" title="Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. Nature Communications, 12(1):738, Feb 2021. URL: https://doi.org/10.1038/s41467-021-21038-1, doi:10.1038/s41467-021-21038-1.">Zimmerman <em>et al.</em>, 2021</a>]</span>.</p>
 <p>Since our data has already been generated, we cannot further increase the number of independent experimental samples. Nevertheless, we will now explore our data to determine the major axes of variation to properly generate our design matrices.</p>
-<p>We perform very basic EDA on the created pseudo-replicates to check if some patients/pseudobulks are outliers that we need to exclude not to bias the DE results. We save the raw counts in the <code class="docutils literal notranslate"><span class="pre">'counts'</span></code> layer, then normalize the counts and calculate the PCA coordinates for the normalized pseudobulk counts.</p>
+<p>We perform very basic EDA on the created pseudo-replicates to check if some patients/pseudobulks are outliers that we need to exclude so as not to bias the DE results. We save the raw counts in the <code class="docutils literal notranslate"><span class="pre">'counts'</span></code> layer, then normalize the counts and calculate the PCA coordinates for the normalized pseudobulk counts.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pb</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_pb</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1412,11 +1047,11 @@ Dropping the following samples:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/differential_gene_expression_49_0.png" src="../_images/differential_gene_expression_49_0.png" />
+<img alt="../_images/ed653d6a112e7b0bad511c363c79275dd271a560b95b3487a285f7907ad3a2a6.png" src="../_images/ed653d6a112e7b0bad511c363c79275dd271a560b95b3487a285f7907ad3a2a6.png" />
 </div>
 </div>
-<p>We observe separation of cell types on the PCA plots as well as the separation into stimulated and unstimulated cells. Other covariates (batch) do not seem to be clearly correlated with the PCA components so we do not include any of them into our design matrix.</p>
-<p>As mentioned above, edgeR takes raw couts as input, so we put counts back into the <code class="docutils literal notranslate"><span class="pre">.X</span></code> field before we proceed.</p>
+<p>We observe separation of cell types on the PCA plots as well as the separation into stimulated and unstimulated cells. Other covariates (batch) do not seem to be clearly correlated with the PCA components so we do not include any of them in our design matrix.</p>
+<p>As mentioned above, edgeR takes raw counts as input, so we put counts back into the <code class="docutils literal notranslate"><span class="pre">.X</span></code> field before we proceed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_pb</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_pb</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1425,9 +1060,9 @@ Dropping the following samples:
 </div>
 </div>
 <section id="one-group">
-<h3><span class="section-number">16.4.1. </span>One group<a class="headerlink" href="#one-group" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.4.1. </span>One group<a class="headerlink" href="#one-group" title="Link to this heading">#</a></h3>
 <p>First, we show how to prepare the data, construct the design matrix and perform the DE testing for one specific cell type.</p>
-<p>We run the pipeline on CD14+ Monocytes subset of the data, as it was shown in the paper that the highest number of DE genes was indetified in this subpopulation.</p>
+<p>We run the pipeline on CD14+ Monocytes subset of the data, as it was shown in the paper that the highest number of DE genes was identified in this subpopulation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_mono</span> <span class="o">=</span> <span class="n">adata_pb</span><span class="p">[</span><span class="n">adata_pb</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD14_Monocytes&quot;</span><span class="p">]</span>
@@ -1486,7 +1121,7 @@ y &lt;- outs$y
 </div>
 </div>
 </div>
-<p>Since we did not enter our analysis with a prior assumption that a specific gene will be up- or downregulated, we need visualizations to make sense of the DGE results. MDS plots allow for a high level overview. Commonly, we expect a separation between samples from different conditions as can be seen in the following plot for our results.</p>
+<p>Since we did not enter our analysis with a prior assumption that a specific gene will be up or downregulated, we need visualizations to make sense of the DGE results. MDS plots allow for a high level overview. Commonly, we expect a separation between samples from different conditions as can be seen in the following plot for our results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -1498,12 +1133,12 @@ plotMDS(y, col=ifelse(y$samples$group == &quot;stim&quot;, &quot;red&quot;, &quo
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fontconfig warning: ignoring UTF-8: not a valid region tag
 </pre></div>
 </div>
-<img alt="../_images/differential_gene_expression_61_1.png" src="../_images/differential_gene_expression_61_1.png" />
+<img alt="../_images/d776dd82b691a480b78991126ea38648ef0d15ff4a92efb332268df711c76d6e.png" src="../_images/d776dd82b691a480b78991126ea38648ef0d15ff4a92efb332268df711c76d6e.png" />
 </div>
 </div>
 <p>Biological Coefficient of Variation (BCV) plots show the variability of every gene on average across biological groups as a function of mean expression. For example, bcv of 0.3 indicates that there is on average 30% percent variability in the expression of genes across groups.</p>
 <p>Genes with low abundance generally exhibit larger BCV as read count measurements are more uncertain for low abundance genes. On the other hand, genes with high average expression are quantified more reliably, thus they generally have lower variability and hence lower BCV. Use this plot to detect outlier genes or pinpoint other experimental factors that may need to be reflected in the design matrix. For example, a group of genes with high average expression and high BCV appearing in the top right corner of the plot can flag experimental stress, contamination etc, particularly if they belong to similar gene families.</p>
-<p>BCV is the square root of dispersion. The distance between tagwise and common bcv trend indicate if tagwise (gene-wise) dispersion estimates are highly variable (i.e. heterogenous gene expression). If tag-wise dispersion values are very heterogenous, less moderation is applied to capture heterogenity. The distance between any two points on those curves reflects how much the dispersion for a gene was shrunken towards the common trend. That is, it captures the amount of dispersion moderation applied.</p>
+<p>BCV is the square root of dispersion. The distance between tagwise and common bcv trend indicates if tagwise (gene-wise) dispersion estimates are highly variable (i.e. heterogenous gene expression). If tag-wise dispersion values are very heterogeneous, less moderation is applied to capture heterogeneity. The distance between any two points on those curves reflects how much the dispersion for a gene was shrunken towards the common trend. That is, it captures the amount of dispersion moderation applied.</p>
 <p>In the BCV plot below, we see some low abundance genes with high bcv, but no high abundance genes with high bcv, which indicates that there should not be any further experimental considerations modelled into the design matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1513,7 +1148,7 @@ plotBCV(y)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/differential_gene_expression_63_0.png" src="../_images/differential_gene_expression_63_0.png" />
+<img alt="../_images/c7e11a09e30b1110e12103cf487e53d3baab2c61760493e750ff315a6008246a.png" src="../_images/c7e11a09e30b1110e12103cf487e53d3baab2c61760493e750ff315a6008246a.png" />
 </div>
 </div>
 <p>Next, we perform the quasi-likelihood test to find DE genes between control and stimulated conditions. Let’s check what columns our design matrix has to specify the correct columns to test on.</p>
@@ -1668,12 +1303,12 @@ plotSmear(qlf, de.tags = rownames(tt)[which(tt$FDR&lt;0.01)])
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/differential_gene_expression_73_0.png" src="../_images/differential_gene_expression_73_0.png" />
+<img alt="../_images/3827ecb1083670ac4d3084906b6f49eace169259f0a28316a7a58f81ea741209.png" src="../_images/3827ecb1083670ac4d3084906b6f49eace169259f0a28316a7a58f81ea741209.png" />
 </div>
 </div>
 </section>
 <section id="multiple-groups">
-<h3><span class="section-number">16.4.2. </span>Multiple groups<a class="headerlink" href="#multiple-groups" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.4.2. </span>Multiple groups<a class="headerlink" href="#multiple-groups" title="Link to this heading">#</a></h3>
 <p>Next, we show how to prepare the data, construct the design matrix and perform the DE testing using contrasts on the full dataset for all available cell types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1736,7 +1371,7 @@ for (cell_type in unique(colData(adata_pb)$cell_type)) {
 </div>
 </div>
 </div>
-<p>Now let’s and save it in <code class="docutils literal notranslate"><span class="pre">.uns</span></code> of our original <code class="docutils literal notranslate"><span class="pre">adata</span></code> object using <code class="docutils literal notranslate"><span class="pre">sc_toolbox.tools.de_res_to_anndata</span></code> from <code class="docutils literal notranslate"><span class="pre">sc_toolbox</span></code> package (<a class="reference external" href="https://github.com/schillerlab/sc-toolbox">https://github.com/schillerlab/sc-toolbox</a>), which saves the results as if they were created with the scanpy’s <code class="docutils literal notranslate"><span class="pre">rank_genes_groups()</span></code> function. The advantage of storing the DE tables like this is that we could now also use standard scanpy plotting functions. We save the DEG tables as <code class="docutils literal notranslate"><span class="pre">.csv</span></code> for each cell type as we will need them later in the cell-to-cell communication chapter.</p>
+<p>Now let’s and save it in <code class="docutils literal notranslate"><span class="pre">.uns</span></code> of our original <code class="docutils literal notranslate"><span class="pre">adata</span></code> object using <code class="docutils literal notranslate"><span class="pre">sc_toolbox.tools.de_res_to_anndata</span></code> from <code class="docutils literal notranslate"><span class="pre">sc_toolbox</span></code> package (<a class="github reference external" href="https://github.com/schillerlab/sc-toolbox">schillerlab/sc-toolbox</a>), which saves the results as if they were created with the scanpy’s <code class="docutils literal notranslate"><span class="pre">rank_genes_groups()</span></code> function. The advantage of storing the DE tables like this is that we could now also use standard scanpy plotting functions. We save the DEG tables as <code class="docutils literal notranslate"><span class="pre">.csv</span></code> for each cell type as we will need them later in the cell-to-cell communication chapter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get cell types that we ran the analysis for</span>
@@ -1843,17 +1478,16 @@ for (cell_type in unique(colData(adata_pb)$cell_type)) {
 </div>
 </section>
 <section id="notes-on-edger">
-<h3><span class="section-number">16.4.3. </span>Notes on edgeR<a class="headerlink" href="#notes-on-edger" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.4.3. </span>Notes on edgeR<a class="headerlink" href="#notes-on-edger" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Requires raw counts as input</p></li>
 <li><p>Requires pseudobulks from a single-cell experiment</p></li>
-<li><p>If there are several donors in the single-cell experiment and the user wants to account for the patient varianility, we recommend creating 2 or 3 pseudo-replicates for each patient and including patient information into the design matrix</p></li>
+<li><p>If there are several donors in the single-cell experiment and the user wants to account for the patient variability, we recommend creating 2 or 3 pseudo-replicates for each patient and including patient information into the design matrix</p></li>
 </ul>
 </section>
 </section>
 <section id="single-cell-specific">
-<h2><span class="section-number">16.5. </span>Single-cell specific<a class="headerlink" href="#single-cell-specific" title="Permalink to this headline">#</a></h2>
-<p>MAST models single-cell gene expression with a two-part generalized linear model. One part models the discrete expression rate of each gene across cells, whereas the other part models the conditional continuous expression level.</p>
+<h2><span class="section-number">16.5. </span>Single-cell specific<a class="headerlink" href="#single-cell-specific" title="Link to this heading">#</a></h2>
 <p>The MAST framework models single-cell gene expression using a two-part generalized linear model. One component of MAST models the discrete expression rate of each gene across cells, while the other component models the conditional continuous expression level (conditional on the gene being expressed).
 For more details please read the original publication<span id="id20">[<a class="reference internal" href="#id321" title="Greg Finak, Andrew McDavid, Masanao Yajima, Jingyuan Deng, Vivian Gersuk, Alex K. Shalek, Chloe K. Slichter, Hannah W. Miller, M. Juliana McElrath, Martin Prlic, Peter S. Linsley, and Raphael Gottardo. Mast: a flexible statistical framework for assessing transcriptional changes and characterizing heterogeneity in single-cell term`rna` sequencing data. Genome Biology, 16(1):278, Dec 2015. URL: https://doi.org/10.1186/s13059-015-0844-5, doi:10.1186/s13059-015-0844-5.">Finak <em>et al.</em>, 2015</a>]</span>.</p>
 <p>MAST takes normalized counts as input, so we first take the ‘counts’ layer and then perform the normalization step.</p>
@@ -1889,7 +1523,7 @@ For more details please read the original publication<span id="id20">[<a class="
 </div>
 </div>
 <section id="id21">
-<h3><span class="section-number">16.5.1. </span>One group<a class="headerlink" href="#id21" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.5.1. </span>One group<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
 <p>As with edgeR, it is possible to fit the model using the full dataset, and then use contrasts to perform the testing for each cell type of interest, but in this notebook we only show the MAST-RE pipeline for one cell type, namely CD14 Monocytes, to shorten the runtime.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1946,7 +1580,7 @@ For more details please read the original publication<span id="id20">[<a class="
 <p>As is the case whenever multiple statistical tests are performed, the obtained p-values for DGE tests over conditions must be corrected for multiple testing using, for example, a Benjamini-Hochberg correction<span id="id22">[<a class="reference internal" href="#id337" title="Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. Molecular Systems Biology, 15(6):e8746, 2019. URL: https://www.embopress.org/doi/abs/10.15252/msb.20188746, arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746, doi:https://doi.org/10.15252/msb.20188746.">Luecken and Theis, 2019</a>]</span>,<span id="id23">[<a class="reference internal" href="#id335" title="Yoav Benjamini and Yosef Hochberg. Controlling the false discovery rate: a practical and powerful approach to multiple testing. Journal of the Royal Statistical Society: Series B (Methodological), 57(1):289-300, 1995. URL: https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x, arXiv:https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x, doi:https://doi.org/10.1111/j.2517-6161.1995.tb02031.x.">Benjamini and Hochberg, 1995</a>]</span>.</p>
 <p>Similarly to edgeR analysis, we define a separate function that we use for the analysis:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">find_de_MAST_RE</span></code> takes a SingleCellExperiment object as input and runs MAST with RE pipeline. The output of the function is table (pandas DataFrame in Python) which contains results of the analysis, e.g. log-fold change, p-value and FDR-corrected value for each gene.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find_de_MAST_RE</span></code> takes a SingleCellExperiment object as input and runs MAST with RE pipeline. The output of the function is a table (pandas DataFrame in Python) which contains results of the analysis, e.g. log-fold change, p-value and FDR-corrected value for each gene.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2141,8 +1775,8 @@ Wall time: 9min 43s
 </section>
 </section>
 <section id="visualization">
-<h2><span class="section-number">16.6. </span>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">#</a></h2>
-<p>We can visualize the results with a heatmap and a volcano plot. Each row of a heatmap corresponds to a gene and each column to a single-cell. The brighter the color is the higher is the expression of that gene in a particular cell. Since we only plot DE genes, we would like to see clear differences in expression between the two conditions. Volcano plots are often used to visualize results of statistical testing, and they show the change in expression on the x-axis (log-fold change) and statistical significance on the y-axis (FDR-corrected p-values). We color code the genes that have FDR-corrected p-value under 0.01 and log-fold change of over 1.5</p>
+<h2><span class="section-number">16.6. </span>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h2>
+<p>We can visualize the results with a heatmap and a volcano plot. Each row of a heatmap corresponds to a gene and each column to a single-cell. The brighter the color the higher the expression of that gene in a particular cell. Since we only plot DE genes, we would like to see clear differences in expression between the two conditions. Volcano plots are often used to visualize the results of statistical testing, and they show the change in expression on the x-axis (log-fold change) and statistical significance on the y-axis (FDR-corrected p-values). We color code the genes that have FDR-corrected p-value under 0.01 and log-fold change of over 1.5</p>
 <p>We normalize the data before plotting the heatmaps to see the differences in expression between two conditions better.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2190,7 +1824,7 @@ Wall time: 9min 43s
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 303 genes...
 </pre></div>
 </div>
-<img alt="../_images/differential_gene_expression_115_1.png" src="../_images/differential_gene_expression_115_1.png" />
+<img alt="../_images/8187960e3422145ad21f53845ded1f806737c58ad5b02dd4b4ab22c943c4a6ba.png" src="../_images/8187960e3422145ad21f53845ded1f806737c58ad5b02dd4b4ab22c943c4a6ba.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2203,10 +1837,10 @@ Wall time: 9min 43s
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plotting 436 genes...
 </pre></div>
 </div>
-<img alt="../_images/differential_gene_expression_116_1.png" src="../_images/differential_gene_expression_116_1.png" />
+<img alt="../_images/c0529832b01a7536e63d7656c9b845b5d573a62eb462421166aa645f30ccabf2.png" src="../_images/c0529832b01a7536e63d7656c9b845b5d573a62eb462421166aa645f30ccabf2.png" />
 </div>
 </div>
-<p>We observe that MAST identified 436 DEG with our given cut-offs for adjusted p-values and logfold change, while edgeR indentified 303 genes.</p>
+<p>We observe that MAST identified 436 DEG with our given cut-offs for adjusted p-values and logfold change, while edgeR identified 303 genes.</p>
 <p>Next, we define the helper plotting function for the volcano plots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2252,7 +1886,7 @@ Wall time: 9min 43s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/differential_gene_expression_120_0.png" src="../_images/differential_gene_expression_120_0.png" />
+<img alt="../_images/f3012fc09bcab99baba50ea46b82811be540031578ef2ac76455c278716629f3.png" src="../_images/f3012fc09bcab99baba50ea46b82811be540031578ef2ac76455c278716629f3.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2262,105 +1896,134 @@ Wall time: 9min 43s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/differential_gene_expression_121_0.png" src="../_images/differential_gene_expression_121_0.png" />
+<img alt="../_images/f469e6905f58bee7375427c05e6ce7d6b69a48afe0af66c51e17928e072c93de.png" src="../_images/f469e6905f58bee7375427c05e6ce7d6b69a48afe0af66c51e17928e072c93de.png" />
 </div>
 </div>
 <p>From the heatmaps and especially from the volcano plots, one can see that edgeR identified more up-regulated than down-regulated genes (in stimulated vs control) in contrast to MAST which identified similar number of up- and down-regulated genes.</p>
 </section>
 <section id="key-takeaways">
-<h2><span class="section-number">16.7. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permalink to this headline">#</a></h2>
-<ol class="simple">
+<h2><span class="section-number">16.7. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
 <li><p>Repeated measurements (cells) from the same experimental subject in scRNA-seq introduce correlations between measurements, which need to be adjusted by modeling the experimental units as Random Effect to mitigate the pseudoreplication issue. Account for them through a sum or mean aggregation (pseudobulk methods - by fixed- or random effect terms) or by accounting for individual as a random effect (single-cell methods) to mitigate the pseudoreplication issue.</p></li>
 <li><p>Determine the major axis of variation with exploratory analysis to construct an appropriate design matrix to better model the variations in the data.</p></li>
 <li><p>Statistical power is best increased with more samples in the experimental design.</p></li>
 </ol>
 </section>
 <section id="quiz">
-<h2><span class="section-number">16.8. </span>Quiz<a class="headerlink" href="#quiz" title="Permalink to this headline">#</a></h2>
-<ol class="simple">
+<h2><span class="section-number">16.8. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
 <li><p>What is differential gene expression and in which cases are we interested in testing for it?</p></li>
 <li><p>What is the ‘pseudoreplication’ problem and how can it be circumvented?</p></li>
 <li><p>What is the ‘multiple testing’ problem and how can it be eluded?</p></li>
 </ol>
 </section>
 <section id="references">
-<h2><span class="section-number">16.9. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">16.9. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id24">
-<dl class="citation">
-<dt class="label" id="id335"><span class="brackets"><a class="fn-backref" href="#id23">deBH95</a></span></dt>
-<dd><p>Yoav Benjamini and Yosef Hochberg. Controlling the false discovery rate: a practical and powerful approach to multiple testing. <em>Journal of the Royal Statistical Society: Series B (Methodological)</em>, 57(1):289–300, 1995. URL: <a class="reference external" href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://arxiv.org/abs/https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x">arXiv:https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">doi:https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a>.</p>
-</dd>
-<dt class="label" id="id322"><span class="brackets"><a class="fn-backref" href="#id4">deBKvB+17</a></span></dt>
-<dd><p>Mollie E. Brooks, Kasper Kristensen, Koen J. van Benthem, Arni Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin Mächler, and Benjamin M. Bolker. glmmTMB Balances Speed and Flexibility Among Packages for Zero-inflated Generalized Linear Mixed Modeling. <em>The R Journal</em>, 9(2):378–400, 2017. URL: <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">https://doi.org/10.32614/RJ-2017-066</a>, <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">doi:10.32614/RJ-2017-066</a>.</p>
-</dd>
-<dt class="label" id="id323"><span class="brackets">deDRM+21</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id7">2</a>)</span></dt>
-<dd><p>Samarendra Das, Anil Rai, Michael L Merchant, Matthew C Cave, and Shesh N Rai. A comprehensive survey of statistical approaches for differential expression analysis in single-cell term`RNA` sequencing studies. <em>Genes (Basel)</em>, 12(12):1947, December 2021.</p>
-</dd>
-<dt class="label" id="id321"><span class="brackets">deFMY+15</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id20">2</a>)</span></dt>
-<dd><p>Greg Finak, Andrew McDavid, Masanao Yajima, Jingyuan Deng, Vivian Gersuk, Alex K. Shalek, Chloe K. Slichter, Hannah W. Miller, M. Juliana McElrath, Martin Prlic, Peter S. Linsley, and Raphael Gottardo. Mast: a flexible statistical framework for assessing transcriptional changes and characterizing heterogeneity in single-cell term`rna` sequencing data. <em>Genome Biology</em>, 16(1):278, Dec 2015. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">https://doi.org/10.1186/s13059-015-0844-5</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">doi:10.1186/s13059-015-0844-5</a>.</p>
-</dd>
-<dt class="label" id="id338"><span class="brackets"><a class="fn-backref" href="#id11">deHHAN+21</a></span></dt>
-<dd><p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 2021. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">https://doi.org/10.1016/j.cell.2021.04.048</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">doi:10.1016/j.cell.2021.04.048</a>.</p>
-</dd>
-<dt class="label" id="id319"><span class="brackets"><a class="fn-backref" href="#id6">deHTTI17</a></span></dt>
-<dd><p>Stephanie C Hicks, F William Townes, Mingxiang Teng, and Rafael A Irizarry. Missing data and technical variability in single-cell term`RNA`-sequencing experiments. <em>Biostatistics</em>, 19(4):562–578, 11 2017. URL: <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxx053">https://doi.org/10.1093/biostatistics/kxx053</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/biostatistics/article-pdf/19/4/562/26346801/kxx053.pdf">arXiv:https://academic.oup.com/biostatistics/article-pdf/19/4/562/26346801/kxx053.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxx053">doi:10.1093/biostatistics/kxx053</a>.</p>
-</dd>
-<dt class="label" id="id325"><span class="brackets"><a class="fn-backref" href="#id7">deJSeyetermDNAsrollahME16</a></span></dt>
-<dd><p>Maria K Jaakkola, Fatemeh Seyeterm`DNA`srollah, Arfa Mehmood, and Laura L Elo. Comparison of methods to detect differentially expressed genes between single-cell populations. <em>Briefings in Bioinformatics</em>, 18(5):735–743, 07 2016. URL: <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">https://doi.org/10.1093/bib/bbw057</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf">arXiv:https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">doi:10.1093/bib/bbw057</a>.</p>
-</dd>
-<dt class="label" id="id330"><span class="brackets">deJSE22</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id12">2</a>)</span></dt>
-<dd><p>Sini Junttila, Johannes Smolander, and Laura L Elo. Benchmarking methods for detecting differential states between conditions from multi-subject single-cell term`rna`-seq data. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662">https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.02.16.480662">doi:10.1101/2022.02.16.480662</a>.</p>
-</dd>
-<dt class="label" id="id336"><span class="brackets"><a class="fn-backref" href="#id14">deKST+18</a></span></dt>
-<dd><p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
-</dd>
-<dt class="label" id="id333"><span class="brackets"><a class="fn-backref" href="#id16">deLZD+20</a></span></dt>
-<dd><p>Charity W. Law, Kathleen Zeglinski, Xueyi Dong, Monther Alhamdoosh, Gordon K. Smyth, and Matthew E. Ritchie. A guide to creating design matrices for gene expression experiments. <em>F1000Research</em>, 9:1444–1444, Dec 2020. 33604029[pmid]. URL: <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33604029">https://pubmed.ncbi.nlm.nih.gov/33604029</a>.</p>
-</dd>
-<dt class="label" id="id317"><span class="brackets"><a class="fn-backref" href="#id2">deLHA14</a></span></dt>
-<dd><p>Michael I. Love, Wolfgang Huber, and Simon Anders. Moderated estimation of fold change and dispersion for term`rna`-seq data with deseq2. <em>Genome Biology</em>, 15(12):550, Dec 2014. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">doi:10.1186/s13059-014-0550-8</a>.</p>
-</dd>
-<dt class="label" id="id337"><span class="brackets">deLT19</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id22">2</a>)</span></dt>
-<dd><p>Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. <em>Molecular Systems Biology</em>, 15(6):e8746, 2019. URL: <a class="reference external" href="https://www.embopress.org/doi/abs/10.15252/msb.20188746">https://www.embopress.org/doi/abs/10.15252/msb.20188746</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.embopress.org/doi/pdf/10.15252/msb.20188746">arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.15252/msb.20188746">doi:https://doi.org/10.15252/msb.20188746</a>.</p>
-</dd>
-<dt class="label" id="id334"><span class="brackets"><a class="fn-backref" href="#id18">deLahnemannKosterS+20</a></span></dt>
-<dd><p>David Lähnemann, Johannes Köster, Ewa Szczurek, Davis J. McCarthy, Stephanie C. Hicks, Mark D. Robinson, Catalina A. Vallejos, Kieran R. Campbell, Niko Beerenwinkel, Ahmed Mahfouz, Luca Pinello, Pavel Skums, Alexandros Stamatakis, Camille Stephan-Otto Attolini, Samuel Aparicio, Jasmijn Baaijens, Marleen Balvert, Buys de Barbanson, Antonio Cappuccio, Giacomo Corleone, Bas E. Dutilh, Maria Florescu, Victor Guryev, Rens Holmer, Katharina Jahn, Thamar Jessurun Lobo, Emma M. Keizer, Indu Khatri, Szymon M. Kielbasa, Jan O. Korbel, Alexey M. Kozlov, Tzu-Hao Kuo, Boudewijn P.F. Lelieveldt, Ion I. Mandoiu, John C. Marioni, Tobias Marschall, Felix Mölder, Amir Niknejad, Lukasz Raczkowski, Marcel Reinders, Jeroen de Ridder, Antoine-Emmanuel Saliba, Antonios Somarakis, Oliver Stegle, Fabian J. Theis, Huan Yang, Alex Zelikovsky, Alice C. McHardy, Benjamin J. Raphael, Sohrab P. Shah, and Alexander Schönhuth. Eleven grand challenges in single-cell data science. <em>Genome Biology</em>, 21(1):31, Feb 2020. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">https://doi.org/10.1186/s13059-020-1926-6</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">doi:10.1186/s13059-020-1926-6</a>.</p>
-</dd>
-<dt class="label" id="id329"><span class="brackets"><a class="fn-backref" href="#id13">deMS22</a></span></dt>
-<dd><p>Alan E. Murphy and Nathan G. Skene. A balanced measure shows superior performance of pseudobulk methods in single-cell RNA-sequencing analysis. <em>Nat Commun</em>, dec 2022. URL: <a class="reference external" href="https://doi.org/10.1038%2Fs41467-022-35519-4">https://doi.org/10.1038%2Fs41467-022-35519-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-022-35519-4">doi:10.1038/s41467-022-35519-4</a>.</p>
-</dd>
-<dt class="label" id="id331"><span class="brackets"><a class="fn-backref" href="#id10">deRPW+15</a></span></dt>
-<dd><p>Matthew E. Ritchie, Belinda Phipson, Di Wu, Yifang Hu, Charity W. Law, Wei Shi, and Gordon K. Smyth. Limma powers differential expression analyses for term`rna`-sequencing and microarray studies. <em>Nucleic acids research</em>, 43(7):e47–e47, Apr 2015. gkv007[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">https://doi.org/10.1093/nar/gkv007</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">doi:10.1093/nar/gkv007</a>.</p>
-</dd>
-<dt class="label" id="id316"><span class="brackets">deRMS10</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id15">2</a>)</span></dt>
-<dd><p>Mark D. Robinson, Davis J. McCarthy, and Gordon K. Smyth. Edger: a bioconductor package for differential expression analysis of digital gene expression data. <em>Bioinformatics (Oxford, England)</em>, 26(1):139–140, Jan 2010. btp616[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">https://doi.org/10.1093/bioinformatics/btp616</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">doi:10.1093/bioinformatics/btp616</a>.</p>
-</dd>
-<dt class="label" id="id324"><span class="brackets"><a class="fn-backref" href="#id7">deSR18</a></span></dt>
-<dd><p>Charlotte Soneson and Mark D. Robinson. Bias, robustness and scalability in single-cell differential expression analysis. <em>Nature Methods</em>, 15(4):255–261, Apr 2018. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">https://doi.org/10.1038/nmeth.4612</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">doi:10.1038/nmeth.4612</a>.</p>
-</dd>
-<dt class="label" id="id326"><span class="brackets">deSGK+21</span><span class="fn-backref">(<a href="#id7">1</a>,<a href="#id8">2</a>)</span></dt>
-<dd><p>Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. <em>Nature Communications</em>, 12(1):5692, Sep 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">https://doi.org/10.1038/s41467-021-25960-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">doi:10.1038/s41467-021-25960-2</a>.</p>
-</dd>
-<dt class="label" id="id332"><span class="brackets"><a class="fn-backref" href="#id17">deTRCP21</a></span></dt>
-<dd><p>Andrew L Thurman, Jason A Ratcliff, Michael S Chimenti, and Alejandro A Pezzulo. Differential gene expression analysis for multi-subject single cell term`RNA` sequencing studies with aggregateBioVar. <em>Bioinformatics</em>, 37(19):3243–3251, May 2021.</p>
-</dd>
-<dt class="label" id="id320"><span class="brackets"><a class="fn-backref" href="#id6">deVRS+17</a></span></dt>
-<dd><p>Catalina A. Vallejos, Davide Risso, Antonio Scialdone, Sandrine Dudoit, and John C. Marioni. Normalizing single-cell term`rna` sequencing data: challenges and opportunities. <em>Nature Methods</em>, 14(6):565–571, Jun 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4292">https://doi.org/10.1038/nmeth.4292</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4292">doi:10.1038/nmeth.4292</a>.</p>
-</dd>
-<dt class="label" id="id318"><span class="brackets"><a class="fn-backref" href="#id5">deWLNN19</a></span></dt>
-<dd><p>Tianyu Wang, Boyang Li, Craig E. Nelson, and Sheida Nabavi. Comparative analysis of differential gene expression analysis tools for single-cell term`rna` sequencing data. <em>BMC Bioinformatics</em>, 20(1):40, Jan 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s12859-019-2599-6">https://doi.org/10.1186/s12859-019-2599-6</a>, <a class="reference external" href="https://doi.org/10.1186/s12859-019-2599-6">doi:10.1186/s12859-019-2599-6</a>.</p>
-</dd>
-<dt class="label" id="id328"><span class="brackets">deZEL21</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>,<a href="#id19">3</a>)</span></dt>
-<dd><p>Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. <em>Nature Communications</em>, 12(1):738, Feb 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">https://doi.org/10.1038/s41467-021-21038-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">doi:10.1038/s41467-021-21038-1</a>.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id335" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">deBH95</a><span class="fn-bracket">]</span></span>
+<p>Yoav Benjamini and Yosef Hochberg. Controlling the false discovery rate: a practical and powerful approach to multiple testing. <em>Journal of the Royal Statistical Society: Series B (Methodological)</em>, 57(1):289–300, 1995. URL: <a class="reference external" href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x">https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://arxiv.org/abs/https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x">arXiv:https://rss.onlinelibrary.wiley.com/doi/pdf/10.1111/j.2517-6161.1995.tb02031.x</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">doi:https://doi.org/10.1111/j.2517-6161.1995.tb02031.x</a>.</p>
+</div>
+<div class="citation" id="id322" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">deBKvB+17</a><span class="fn-bracket">]</span></span>
+<p>Mollie E. Brooks, Kasper Kristensen, Koen J. van Benthem, Arni Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin Mächler, and Benjamin M. Bolker. glmmTMB Balances Speed and Flexibility Among Packages for Zero-inflated Generalized Linear Mixed Modeling. <em>The R Journal</em>, 9(2):378–400, 2017. URL: <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">https://doi.org/10.32614/RJ-2017-066</a>, <a class="reference external" href="https://doi.org/10.32614/RJ-2017-066">doi:10.32614/RJ-2017-066</a>.</p>
+</div>
+<div class="citation" id="id323" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deDRM+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>Samarendra Das, Anil Rai, Michael L Merchant, Matthew C Cave, and Shesh N Rai. A comprehensive survey of statistical approaches for differential expression analysis in single-cell term`RNA` sequencing studies. <em>Genes (Basel)</em>, 12(12):1947, December 2021.</p>
+</div>
+<div class="citation" id="id321" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deFMY+15<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id20">2</a>)</span>
+<p>Greg Finak, Andrew McDavid, Masanao Yajima, Jingyuan Deng, Vivian Gersuk, Alex K. Shalek, Chloe K. Slichter, Hannah W. Miller, M. Juliana McElrath, Martin Prlic, Peter S. Linsley, and Raphael Gottardo. Mast: a flexible statistical framework for assessing transcriptional changes and characterizing heterogeneity in single-cell term`rna` sequencing data. <em>Genome Biology</em>, 16(1):278, Dec 2015. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">https://doi.org/10.1186/s13059-015-0844-5</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-015-0844-5">doi:10.1186/s13059-015-0844-5</a>.</p>
+</div>
+<div class="citation" id="id338" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">deHHAN+21</a><span class="fn-bracket">]</span></span>
+<p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 2021. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">https://doi.org/10.1016/j.cell.2021.04.048</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">doi:10.1016/j.cell.2021.04.048</a>.</p>
+</div>
+<div class="citation" id="id319" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">deHTTI17</a><span class="fn-bracket">]</span></span>
+<p>Stephanie C Hicks, F William Townes, Mingxiang Teng, and Rafael A Irizarry. Missing data and technical variability in single-cell term`RNA`-sequencing experiments. <em>Biostatistics</em>, 19(4):562–578, 11 2017. URL: <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxx053">https://doi.org/10.1093/biostatistics/kxx053</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/biostatistics/article-pdf/19/4/562/26346801/kxx053.pdf">arXiv:https://academic.oup.com/biostatistics/article-pdf/19/4/562/26346801/kxx053.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/biostatistics/kxx053">doi:10.1093/biostatistics/kxx053</a>.</p>
+</div>
+<div class="citation" id="id325" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">deJSeyetermDNAsrollahME16</a><span class="fn-bracket">]</span></span>
+<p>Maria K Jaakkola, Fatemeh Seyeterm`DNA`srollah, Arfa Mehmood, and Laura L Elo. Comparison of methods to detect differentially expressed genes between single-cell populations. <em>Briefings in Bioinformatics</em>, 18(5):735–743, 07 2016. URL: <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">https://doi.org/10.1093/bib/bbw057</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf">arXiv:https://academic.oup.com/bib/article-pdf/18/5/735/25581122/bbw057.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bib/bbw057">doi:10.1093/bib/bbw057</a>.</p>
+</div>
+<div class="citation" id="id330" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deJSE22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id12">2</a>)</span>
+<p>Sini Junttila, Johannes Smolander, and Laura L Elo. Benchmarking methods for detecting differential states between conditions from multi-subject single-cell term`rna`-seq data. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662">https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/02/19/2022.02.16.480662.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.02.16.480662">doi:10.1101/2022.02.16.480662</a>.</p>
+</div>
+<div class="citation" id="id336" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">deKST+18</a><span class="fn-bracket">]</span></span>
+<p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
+</div>
+<div class="citation" id="id333" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">deLZD+20</a><span class="fn-bracket">]</span></span>
+<p>Charity W. Law, Kathleen Zeglinski, Xueyi Dong, Monther Alhamdoosh, Gordon K. Smyth, and Matthew E. Ritchie. A guide to creating design matrices for gene expression experiments. <em>F1000Research</em>, 9:1444–1444, Dec 2020. 33604029[pmid]. URL: <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33604029">https://pubmed.ncbi.nlm.nih.gov/33604029</a>.</p>
+</div>
+<div class="citation" id="id317" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">deLHA14</a><span class="fn-bracket">]</span></span>
+<p>Michael I. Love, Wolfgang Huber, and Simon Anders. Moderated estimation of fold change and dispersion for term`rna`-seq data with deseq2. <em>Genome Biology</em>, 15(12):550, Dec 2014. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-014-0550-8">doi:10.1186/s13059-014-0550-8</a>.</p>
+</div>
+<div class="citation" id="id337" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deLT19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id22">2</a>)</span>
+<p>Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. <em>Molecular Systems Biology</em>, 15(6):e8746, 2019. URL: <a class="reference external" href="https://www.embopress.org/doi/abs/10.15252/msb.20188746">https://www.embopress.org/doi/abs/10.15252/msb.20188746</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.embopress.org/doi/pdf/10.15252/msb.20188746">arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.15252/msb.20188746">doi:https://doi.org/10.15252/msb.20188746</a>.</p>
+</div>
+<div class="citation" id="id334" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">deLahnemannKosterS+20</a><span class="fn-bracket">]</span></span>
+<p>David Lähnemann, Johannes Köster, Ewa Szczurek, Davis J. McCarthy, Stephanie C. Hicks, Mark D. Robinson, Catalina A. Vallejos, Kieran R. Campbell, Niko Beerenwinkel, Ahmed Mahfouz, Luca Pinello, Pavel Skums, Alexandros Stamatakis, Camille Stephan-Otto Attolini, Samuel Aparicio, Jasmijn Baaijens, Marleen Balvert, Buys de Barbanson, Antonio Cappuccio, Giacomo Corleone, Bas E. Dutilh, Maria Florescu, Victor Guryev, Rens Holmer, Katharina Jahn, Thamar Jessurun Lobo, Emma M. Keizer, Indu Khatri, Szymon M. Kielbasa, Jan O. Korbel, Alexey M. Kozlov, Tzu-Hao Kuo, Boudewijn P.F. Lelieveldt, Ion I. Mandoiu, John C. Marioni, Tobias Marschall, Felix Mölder, Amir Niknejad, Lukasz Raczkowski, Marcel Reinders, Jeroen de Ridder, Antoine-Emmanuel Saliba, Antonios Somarakis, Oliver Stegle, Fabian J. Theis, Huan Yang, Alex Zelikovsky, Alice C. McHardy, Benjamin J. Raphael, Sohrab P. Shah, and Alexander Schönhuth. Eleven grand challenges in single-cell data science. <em>Genome Biology</em>, 21(1):31, Feb 2020. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">https://doi.org/10.1186/s13059-020-1926-6</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-020-1926-6">doi:10.1186/s13059-020-1926-6</a>.</p>
+</div>
+<div class="citation" id="id329" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">deMS22</a><span class="fn-bracket">]</span></span>
+<p>Alan E. Murphy and Nathan G. Skene. A balanced measure shows superior performance of pseudobulk methods in single-cell RNA-sequencing analysis. <em>Nat Commun</em>, dec 2022. URL: <a class="reference external" href="https://doi.org/10.1038%2Fs41467-022-35519-4">https://doi.org/10.1038%2Fs41467-022-35519-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-022-35519-4">doi:10.1038/s41467-022-35519-4</a>.</p>
+</div>
+<div class="citation" id="id331" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">deRPW+15</a><span class="fn-bracket">]</span></span>
+<p>Matthew E. Ritchie, Belinda Phipson, Di Wu, Yifang Hu, Charity W. Law, Wei Shi, and Gordon K. Smyth. Limma powers differential expression analyses for term`rna`-sequencing and microarray studies. <em>Nucleic acids research</em>, 43(7):e47–e47, Apr 2015. gkv007[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">https://doi.org/10.1093/nar/gkv007</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkv007">doi:10.1093/nar/gkv007</a>.</p>
+</div>
+<div class="citation" id="id316" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deRMS10<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
+<p>Mark D. Robinson, Davis J. McCarthy, and Gordon K. Smyth. Edger: a bioconductor package for differential expression analysis of digital gene expression data. <em>Bioinformatics (Oxford, England)</em>, 26(1):139–140, Jan 2010. btp616[PII]. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">https://doi.org/10.1093/bioinformatics/btp616</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btp616">doi:10.1093/bioinformatics/btp616</a>.</p>
+</div>
+<div class="citation" id="id324" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">deSR18</a><span class="fn-bracket">]</span></span>
+<p>Charlotte Soneson and Mark D. Robinson. Bias, robustness and scalability in single-cell differential expression analysis. <em>Nature Methods</em>, 15(4):255–261, Apr 2018. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">https://doi.org/10.1038/nmeth.4612</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4612">doi:10.1038/nmeth.4612</a>.</p>
+</div>
+<div class="citation" id="id326" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deSGK+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
+<p>Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. <em>Nature Communications</em>, 12(1):5692, Sep 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">https://doi.org/10.1038/s41467-021-25960-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">doi:10.1038/s41467-021-25960-2</a>.</p>
+</div>
+<div class="citation" id="id332" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">deTRCP21</a><span class="fn-bracket">]</span></span>
+<p>Andrew L Thurman, Jason A Ratcliff, Michael S Chimenti, and Alejandro A Pezzulo. Differential gene expression analysis for multi-subject single cell term`RNA` sequencing studies with aggregateBioVar. <em>Bioinformatics</em>, 37(19):3243–3251, May 2021.</p>
+</div>
+<div class="citation" id="id320" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">deVRS+17</a><span class="fn-bracket">]</span></span>
+<p>Catalina A. Vallejos, Davide Risso, Antonio Scialdone, Sandrine Dudoit, and John C. Marioni. Normalizing single-cell term`rna` sequencing data: challenges and opportunities. <em>Nature Methods</em>, 14(6):565–571, Jun 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4292">https://doi.org/10.1038/nmeth.4292</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4292">doi:10.1038/nmeth.4292</a>.</p>
+</div>
+<div class="citation" id="id318" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">deWLNN19</a><span class="fn-bracket">]</span></span>
+<p>Tianyu Wang, Boyang Li, Craig E. Nelson, and Sheida Nabavi. Comparative analysis of differential gene expression analysis tools for single-cell term`rna` sequencing data. <em>BMC Bioinformatics</em>, 20(1):40, Jan 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s12859-019-2599-6">https://doi.org/10.1186/s12859-019-2599-6</a>, <a class="reference external" href="https://doi.org/10.1186/s12859-019-2599-6">doi:10.1186/s12859-019-2599-6</a>.</p>
+</div>
+<div class="citation" id="id328" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>deZEL21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id9">2</a>,<a role="doc-backlink" href="#id19">3</a>)</span>
+<p>Kip D. Zimmerman, Mark A. Espeland, and Carl D. Langefeld. A practical solution to pseudoreplication bias in single-cell studies. <em>Nature Communications</em>, 12(1):738, Feb 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">https://doi.org/10.1038/s41467-021-21038-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-21038-1">doi:10.1038/s41467-021-21038-1</a>.</p>
+</div>
+</div>
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">16.10. </span>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">16.10. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
 <p>We gratefully acknowledge the contributions of:</p>
 <section id="authors">
-<h3><span class="section-number">16.10.1. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.10.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
 <li><p>Anastasia Litinetskaya</p></li>
@@ -2368,7 +2031,7 @@ Wall time: 9min 43s
 </ul>
 </section>
 <section id="reviewers">
-<h3><span class="section-number">16.10.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">16.10.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
 </section>
 </section>
 </section>
@@ -2393,57 +2056,131 @@ Wall time: 9min 43s
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../trajectories/lineage_tracing.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title"><span class="section-number">15. </span>Lineage tracing</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../trajectories/lineage_tracing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>Lineage tracing</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="compositional.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="compositional.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title"><span class="section-number">17. </span>Compositional analysis</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">16.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">16.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-the-dataset">16.3. Preparing the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudobulk">16.4. Pseudobulk</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-group">16.4.1. One group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-groups">16.4.2. Multiple groups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-on-edger">16.4.3. Notes on edgeR</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-cell-specific">16.5. Single-cell specific</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">16.5.1. One group</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">16.6. Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">16.7. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">16.8. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">16.9. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">16.10. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">16.10.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">16.10.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Lukas Heumos, Anna Schaar, single-cell best practices consortium<br/>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
   
-      &copy; Copyright 2022.<br/>
-    <div class="extra_footer">
-      <div>
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
   Brought to you by
   <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
 </div>
 
-    </div>
-</p>
-        </footer>
-    </div>
-    
 </div>
+  </div>
+  
+</div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
