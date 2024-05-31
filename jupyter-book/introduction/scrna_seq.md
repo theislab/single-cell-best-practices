@@ -149,18 +149,22 @@ Hence, these are also the steps where most single-cell assays differ: single-cel
 ### Transcript quantification
 
 Transcript quantification is the process of converting the raw data into an table of estimated transcript counts per gene per sample (for bulk-sequencing) or per cell (for single-cell sequencing). More details on this computational process will be described in the next chapter.
+
 There are two major approaches to transcript quantification: full-length and tag-based.
 Full-length protocols try to cover the whole transcript uniformly with sequencing reads, whereas tag-based protocols only capture the 5' or 3' ends.
 The transcript quantification method has strong implications on the captured genes, and analysts must therefore be aware of the used quantification process.
 Full-length sequencing is restricted to plate-based protocols (see below) and the library preparation is comparable to bulk RNA-seq sequencing approaches.
-An even coverage of transcripts is not always achieved with full-length protocols and therefore specific regions across the gene body may still be biased.
-A major advantage of full-length protocols is that they allow for the detection of splice variants.
+An even coverage of transcripts is not always achieved with full-length protocols and therefore specific regions across the gene body may still be biased. A major advantage of full-length protocols is that they allow for the detection of splice variants.
+
 Tag-based protocols only sequence the 3' or 5' ends of the transcripts. This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms{cite}`Archer2016`. However, it allows for the usage of unique molecular identifiers (UMIs), which are useful to resolve biases in the transcript amplification process.
+
 The transcript amplification process is a critical step in any RNA-seq sequencing run, to ensure that the transcripts are abundant enough for quality control and sequencing. During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging. The usage of UMIs is a common solution to quantify the original, non-duplicated molecules.
-The UMIs serve as molecular barcodes and are also sometimes referred to as random barcodes. These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. UMIs must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases{cite}`Aird2011`.
+
+UMIs serve as molecular barcodes and are also sometimes referred to as random barcodes. These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. UMIs must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases{cite}`Aird2011`.
+
 Amplification bias is a term for the RNA/cDNA sequences which are preferentially amplified and will therefore be sequenced more often, resulting in higher counts. It can have a detrimental effect on any gene expression analysis, because the not-very-active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step, where the error rate may already be comparably higher than earlier PCR stages.
 Although it is computationally possible to detect and remove such sequences by removing reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
-The usage of UMIs further allows for normalization of gene counts to be performed without a loss of accuracy{cite}`Kivioja2012`.
+The usage of UMIs further allows for normalization of gene counts without a loss of accuracy{cite}`Kivioja2012`.
 
 ADD A FIGURE HERE.
 
