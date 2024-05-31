@@ -143,7 +143,7 @@ Hence, these are also the steps where most single-cell assays differ: single-cel
 
 ### Transcript quantification
 
-Transcript quantification is the process of counting the hits of the sequenced transcripts against the gene sequences. These counted hits eventually make it into the count table. More details on this computational process will be described in the next chapter.
+Transcript quantification is the process of converting the raw data into an table of estimated transcript counts per gene per sample (for bulk-sequencing) or per cell (for single-cell sequencing). More details on this computational process will be described in the next chapter.
 There are two major approaches to transcript quantification: full-length and tag-based.
 Full-length protocols try to cover the whole transcript uniformly with sequencing reads, whereas tag-based protocols only capture the 5' or 3' ends.
 The transcript quantification method has strong implications on the captured genes, and analysts must therefore be aware of the used quantification process.
