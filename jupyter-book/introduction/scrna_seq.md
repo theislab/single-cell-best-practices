@@ -214,6 +214,7 @@ Limitations:
 
 Plate based protocols typically separate the cells physically into microwell plates. The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
 The selected cells are then placed into individual wells containing cell lysis buffers, where subsequently reverse transcription is carried out. This allows for several hundreds of cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
+
 Plate based sequencing protocols include, but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability. For example, MARS-seq allows for three barcode levels, namely molecular, cellular and plate-level tags, for robust multiplexing capabilities. SMART-seq2 on the contrary, does not allow for early multiplexing limiting cell numbers. A systematic comparison of protocols by Mereu et al in 2020 revealed that QUARTZ-seq2 is able to capture more genes than SMART-seq2, MARS-seq or SRCB-seq per cell{cite}`Mereu2020`, which means QUARTZ-seq2 is able to capture cell-type specific marker genes well, allowing for confident cell type annotation.
 
 Strengths:
