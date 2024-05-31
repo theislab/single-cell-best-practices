@@ -116,10 +116,15 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
 For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where RNA sequencing (RNA-Seq) comes into play.
-RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template. Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
+
+RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
+
+Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
+
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
+
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
