@@ -170,8 +170,12 @@ ADD A FIGURE HERE.
 
 ### Single-cell sequencing protocols
 
-Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols: Microfluidic device-based strategies where cells are encapsulated into hydrogel droplets; well plate based protocols where cells are physically separated into wells; and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects.
-In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
+Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
+* microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
+* well plate based protocols where cells are physically separated into wells, and 
+* the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers.
+
+These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
 #### Microfluidic device based protocols
 
