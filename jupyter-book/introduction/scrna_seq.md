@@ -116,10 +116,15 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
 For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where RNA sequencing (RNA-Seq) comes into play.
-RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template. Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
+
+RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
+
+Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
+
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
+
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
@@ -134,7 +139,7 @@ To uncover such relationships, it is vital to examine gene expression on a singl
 Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct. Second, the downstream analysis becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
-A single-cell experiment generally speaking, follows the same steps as a bulk RNA-Seq experiment (see above), but requires several adaptations.
+A single-cell experiment generally follows similar steps as a bulk RNA-Seq experiment (see above), but requires several adaptations.
 Just like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and the eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and, depending on the sequencing machine, sequencing. Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
@@ -143,38 +148,50 @@ Hence, these are also the steps where most single-cell assays differ: single-cel
 
 ### Transcript quantification
 
-Transcript quantification is the process of counting the hits of the sequenced transcripts against the gene sequences. These counted hits eventually make it into the count table. More details on this computational process will be described in the next chapter.
+Transcript quantification is the process of converting the raw data into an table of estimated transcript counts per gene per sample (for bulk-sequencing) or per cell (for single-cell sequencing). More details on this computational process will be described in the next chapter.
+
 There are two major approaches to transcript quantification: full-length and tag-based.
 Full-length protocols try to cover the whole transcript uniformly with sequencing reads, whereas tag-based protocols only capture the 5' or 3' ends.
 The transcript quantification method has strong implications on the captured genes, and analysts must therefore be aware of the used quantification process.
 Full-length sequencing is restricted to plate-based protocols (see below) and the library preparation is comparable to bulk RNA-seq sequencing approaches.
-An even coverage of transcripts is not always achieved with full-length protocols and therefore specific regions across the gene body may still be biased.
-A major advantage of full-length protocols is that they allow for the detection of splice variants.
+An even coverage of transcripts is not always achieved with full-length protocols and therefore specific regions across the gene body may still be biased. A major advantage of full-length protocols is that they allow for the detection of splice variants.
+
 Tag-based protocols only sequence the 3' or 5' ends of the transcripts. This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms{cite}`Archer2016`. However, it allows for the usage of unique molecular identifiers (UMIs), which are useful to resolve biases in the transcript amplification process.
+
 The transcript amplification process is a critical step in any RNA-seq sequencing run, to ensure that the transcripts are abundant enough for quality control and sequencing. During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule. Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging. The usage of UMIs is a common solution to quantify the original, non-duplicated molecules.
-The UMIs serve as molecular barcodes and are also sometimes referred to as random barcodes. These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. UMIs must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases{cite}`Aird2011`.
+
+UMIs serve as molecular barcodes and are also sometimes referred to as random barcodes. These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag. UMIs must be added during library generation before the amplification step. The ability to accurately identify PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases{cite}`Aird2011`.
+
 Amplification bias is a term for the RNA/cDNA sequences which are preferentially amplified and will therefore be sequenced more often, resulting in higher counts. It can have a detrimental effect on any gene expression analysis, because the not-very-active genes may suddenly appear to be highly expressed. This is especially true for sequences which are amplified at a later stage of the PCR step, where the error rate may already be comparably higher than earlier PCR stages.
 Although it is computationally possible to detect and remove such sequences by removing reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
-The usage of UMIs further allows for normalization of gene counts to be performed without a loss of accuracy{cite}`Kivioja2012`.
+The usage of UMIs further allows for normalization of gene counts without a loss of accuracy{cite}`Kivioja2012`.
 
 ADD A FIGURE HERE.
 
 ### Single-cell sequencing protocols
 
-Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols: Microfluidic device-based strategies where cells are encapsulated into hydrogel droplets; well plate based protocols where cells are physically separated into wells; and finally, the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers. These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects.
-In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
+Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
+
+- microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
+- well plate based protocols where cells are physically separated into wells, and
+- the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers.
+
+These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
 #### Microfluidic device based protocols
 
 Microfluidic device based single-cell strategies trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`exp:Macosko2015` and the commercially available 10x Genomics Chromium{cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
-This massively parallel process generates very high numbers of droplets for a relatively low cost. Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
-The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b bp-long unique molecular identifier (UMI - see below) and a poly-T tail.
+This massively parallel process generates very high numbers of droplets for a relatively low cost.
+
+Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
+The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b bp-long unique molecular identifier (UMI - see below) and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer.).
 Upon lysis the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached on the beads.
 Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs).
 This is followed by PCR and reverse transcription to capture and amplify the transcripts.
 Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached. This process results in sequencing libraries that are ready for sequencing as described above. In microfluidic based protocols only about 10% of the transcripts of the cell are recovered{cite}`Islam2014`. Notably, this low sequencing is sufficient for robust identification of cell types.
 
 All three microfluidic device-based methods result in characteristic biases. The material of the used beads differs between the protocols. Drop-seq uses brittle resin for the beads and therefore the beads are encapsulated with a Poisson distribution, whereas the InDrop and 10X Genomics beads are deformable resulting in bead occupancies of over 80%{cite}`Zhang2019`.
+
 Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers which are released with photocleavage and 10X genomics dissolves the beads. This disparity also affects the location of the reverse transcription process. In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols{cite}`Zhang2019`.
 
 A comparison from Zhang et al. in 2019 uncovered that inDrop and Drop-seq are outperformed by 10X Genomics with respect to bead quality, as the cell barcodes in the former two systems contained obvious mismatches. Moreover, the proportion of reads originating from valid barcodes was 75% for 10X Genomics, compared to only 25% for InDrop and 30% for Drop-seq.
@@ -182,7 +199,7 @@ A comparison from Zhang et al. in 2019 uncovered that inDrop and Drop-seq are ou
 Similar advantages were demonstrated for 10X Genomics regarding sensitivity. During their comparison, 10X Genomics captured about 17000 transcripts from 3000 genes on average, compared to 8000 transcripts from 2500 genes for Drop-seq and 2700 transcripts from 1250 genes for InDrop. Technical noise was the lowest for 10X Genomics, followed by Drop-seq and InDrop{cite}`Zhang2019`.
 
 The actual generated data demonstrated large protocol biases. 10X Genomics favored the capture and amplification of shorter genes and genes with higher GC content, while Drop-seq in comparison preferred genes with lower GC content.
-Although 10X Genomics was shown to outperform the other protocols in various aspects, it is also about twice as expensive per cell. Moreover, except the beads, Drop-seq is open-source and the protocol can more easily be adapted if required. InDrop is completely open-sourced, where even the beads can be manufactured and modified in labs. Hence, InDrop is the most flexible of the three protocols.
+Although 10X Genomics was shown to outperform the other protocols in various aspects, it is also about twice as expensive per cell. Moreover, except the beads, Drop-seq is open-source and the protocol can more easily be adapted if required. InDrop is completely open-source, where even the beads can be manufactured and modified in labs. Hence, InDrop is the most flexible of the three protocols.
 
 Strengths:
 
@@ -192,12 +209,13 @@ Strengths:
 Limitations:
 
 - Low detection rates of transcripts compared to other methods.
-- Captures 3' only and not full transcripts, because the cell barcodes and PCR handles are only added to the end of the transcript.
+- Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
 
 #### Plate based
 
 Plate based protocols typically separate the cells physically into microwell plates. The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
 The selected cells are then placed into individual wells containing cell lysis buffers, where subsequently reverse transcription is carried out. This allows for several hundreds of cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
+
 Plate based sequencing protocols include, but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability. For example, MARS-seq allows for three barcode levels, namely molecular, cellular and plate-level tags, for robust multiplexing capabilities. SMART-seq2 on the contrary, does not allow for early multiplexing limiting cell numbers. A systematic comparison of protocols by Mereu et al in 2020 revealed that QUARTZ-seq2 is able to capture more genes than SMART-seq2, MARS-seq or SRCB-seq per cell{cite}`Mereu2020`, which means QUARTZ-seq2 is able to capture cell-type specific marker genes well, allowing for confident cell type annotation.
 
 Strengths:
@@ -231,7 +249,7 @@ Limitations:
 
 #### Nanopore single-cell transcriptome sequencing
 
-Long-read single-cell sequencing approaches rarely used UMI {cite}`Singh2019` or did not perform UMI correction {cite}`Gupta2018` and therefore assigned novel UMI reads to novel UMIs. Due to the higher sequencing error rate of long-read sequencers this causes serious issues {cite}`Lebrigand2020`. Lebrigand et al. introduced ScNaUmi-seq (Single-cell Nanopore sequencing with UMIs) which combines Nanopore sequencing with cell barcode and UMI assignment. The barcode assignment is guided with Illumina data by comparing the cell bar code sequences found in the Nanopore reads with those recovered from the Illumina reads for the same region or gene {cite}`Lebrigand2020`. However, this effectively requires two single-cell libraries. scCOLOR-seq computationally identifies barcodes without errors using nucleotide pair complementary across the full length of the barcode. These barcodes are then used as guides to correct the remaining erroneous barcodes {cite}`Philpott2021`. A modified UMI-tools directional network based method corrects for UMI sequence duplication.
+Long-read single-cell sequencing approaches rarely use UMI {cite}`Singh2019` or do not perform UMI correction {cite}`Gupta2018` and therefore misassign some reads to novel UMIs. Due to the higher sequencing error rate of long-read sequencers this causes serious issues {cite}`Lebrigand2020`. Lebrigand et al. introduced ScNaUmi-seq (Single-cell Nanopore sequencing with UMIs) which combines Nanopore sequencing with cell barcode and UMI assignment. The barcode assignment is guided with Illumina data by comparing the cell bar code sequences found in the Nanopore reads with those recovered from the Illumina reads for the same region or gene {cite}`Lebrigand2020`. However, this effectively requires two single-cell libraries. scCOLOR-seq computationally identifies barcodes without errors using nucleotide pair complementary across the full length of the barcode. These barcodes are then used as guides to correct the remaining erroneous barcodes {cite}`Philpott2021`. A modified UMI-tools directional network based method corrects for UMI sequence duplication.
 
 Strengths:
 
@@ -253,6 +271,7 @@ For an extensive comparison of all single-cell sequencing protocols, we recommen
 
 So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells.
 Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs, such as, for example, the brain. During the tissue dissociation process, some cell types are more vulnerable and therefore difficult to capture. For example, fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. Moreover, single-cell sequencing highly relies on fresh tissue, making it difficult to make use of tissue biobanks.
+
 On the other hand, the nuclei are more resistant to mechanical force, and can be safely isolated from frozen tissue without the use of tissue dissociation enzymes{cite}`Krishnaswami2016`. Both options have varying applicability across tissues and sample types, and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
 The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the type of tissue sample. Data analysis however should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types. Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
 
