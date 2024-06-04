@@ -171,16 +171,17 @@ ADD A FIGURE HERE.
 ### Single-cell sequencing protocols
 
 Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
-* microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
-* well plate based protocols where cells are physically separated into wells, and 
-* the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers.
+
+- microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
+- well plate based protocols where cells are physically separated into wells, and
+- the commercial Fluidigm C1 microfluidic chip based solution which loads and separates cells into small reaction chambers.
 
 These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
 #### Microfluidic device based protocols
 
 Microfluidic device based single-cell strategies trap cells inside hydrogel droplets allowing for compartmentalisation into single-cell reaction chambers. The most widely used protocols inDrop{cite}`Klein2015`, Drop-seq{cite}`exp:Macosko2015` and the commercially available 10x Genomics Chromium{cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
-This massively parallel process generates very high numbers of droplets for a relatively low cost. 
+This massively parallel process generates very high numbers of droplets for a relatively low cost.
 
 Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
 The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b bp-long unique molecular identifier (UMI - see below) and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer.).
@@ -270,7 +271,6 @@ For an extensive comparison of all single-cell sequencing protocols, we recommen
 
 So far we have only been discussing single-cell assays, but it is also possible to only sequence the nuclei of the cells.
 Single-cell profiling does not always provide an unbiased view on cell types for specific tissues or organs, such as, for example, the brain. During the tissue dissociation process, some cell types are more vulnerable and therefore difficult to capture. For example, fast-spiking parvalbumin-positive interneurons and subcortically projecting glutamatergic neurons were observed in lower proportions than expected in mouse neocortex{cite}`Tasic2018`. On the contrary, non-neuronal cells survive dissociation better than neurons and are overrepresented in single-cell suspensions in the adult human neocortex{cite}`darmanis2015`. Moreover, single-cell sequencing highly relies on fresh tissue, making it difficult to make use of tissue biobanks.
-
 
 On the other hand, the nuclei are more resistant to mechanical force, and can be safely isolated from frozen tissue without the use of tissue dissociation enzymes{cite}`Krishnaswami2016`. Both options have varying applicability across tissues and sample types, and the resulting biases and uncertainties are still not fully uncovered. It has been shown already that nuclei accurately reflect all transcriptional patterns of cells{cite}`Ding2020`.
 The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the type of tissue sample. Data analysis however should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types. Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
