@@ -166,8 +166,6 @@ Amplification bias is a term for the RNA/cDNA sequences which are preferentially
 Although it is computationally possible to detect and remove such sequences by removing reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 The usage of UMIs further allows for normalization of gene counts without a loss of accuracy{cite}`Kivioja2012`.
 
-ADD A FIGURE HERE.
-
 ### Single-cell sequencing protocols
 
 Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
