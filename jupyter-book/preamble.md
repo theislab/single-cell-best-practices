@@ -41,7 +41,7 @@ Bioinformatics is a challenging research field for newcomers as it requires know
 
 - If you are interested in multimodal data analysis, the basics of muon and MuData are recommended. This book covers MuData in greater detail, but only briefly introduces muon analogously to AnnData and scanpy. The excellent [muon tutorials](https://muon-tutorials.readthedocs.io/en/latest/) serve as a great introduction to multimodal data analysis with muon.
 
-- Basics R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
+- Basic R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free [R for data science](https://r4ds.had.co.nz/) book.
 
 - Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of {term}`DNA`, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through _Molecular Biology of the Cell_ by Bruce Alberts et al.
 
