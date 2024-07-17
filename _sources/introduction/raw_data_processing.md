@@ -150,6 +150,8 @@ A good (left) and a bad (right) per sequence quality score plot. The plot on the
 
 ```
 
+Multiple FastQC reports can be combined into a single report using the tool [`MultiQC`](https://multiqc.info).
+
 (raw-proc:aln-map)=
 
 ## Alignment and mapping
