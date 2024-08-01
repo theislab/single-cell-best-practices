@@ -708,7 +708,7 @@ set.seed(123)
 </div>
 </div>
 </div>
-<p>There are some differences in <code class="docutils literal notranslate"><span class="pre">.obs_names</span></code> of RNA and ADT of CITE-seq data, so we update them to make sure they allign between modalities.</p>
+<p>There are some differences in <code class="docutils literal notranslate"><span class="pre">.obs_names</span></code> of RNA and ADT of CITE-seq data, so we update them to make sure they align between modalities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_cite</span><span class="o">.</span><span class="n">obs_names</span>
@@ -861,7 +861,7 @@ set.seed(123)
 <section id="unpaired-integration-with-graph-linked-unified-embedding-glue">
 <h2><span class="section-number">46.4. </span>Unpaired integration with Graph Linked Unified Embedding (GLUE)<a class="headerlink" href="#unpaired-integration-with-graph-linked-unified-embedding-glue" title="Link to this heading">#</a></h2>
 <p>Opposed to paired integration that we demonstrated before, it is also possible to perform completely unpaired integration. In this case, there is no intersection of cell barcodes or features. Hence, we need some prior knowledge to connect different modalities.</p>
-<p>GLUE <span id="id2">[<a class="reference internal" href="#id528" title="Zhi-Jie Cao and Ge Gao. Multi-omics single-cell data integration and regulatory inference with graph-linked embedding. Nature Biotechnology, May 2022. URL: https://doi.org/10.1038/s41587-022-01284-4, doi:10.1038/s41587-022-01284-4.">Cao and Gao, 2022</a>]</span> is a deep learning model for unpaired integration which makes use of a regulatory graph helping connect features from different modalities. The model is based on conditional variational autoencoders, where the model learns to reconstruct while simultaneously allowing for batch correction. To guide the integration, GLUE learns an embedding for each modality for each feature by utilizing a prior knowledge graph. We demonstrate how to use GLUE to integrate unpaired RNA and ADT data using RNA part of Multiome data and ADT part of CITE-seq data from the NeurIPS competiiton (<a class="reference external" href="https://openproblems.bio/neurips_2021/">https://openproblems.bio/neurips_2021/</a>). To construct the graph, we connect nodes from RNA modality to nodes from ADT modality if and only if the RNA node is a protein encoding gene of a given protein from ADT modality. The output of the GLUE model is a representation of each cell in a shared latent space.</p>
+<p>GLUE <span id="id2">[<a class="reference internal" href="#id528" title="Zhi-Jie Cao and Ge Gao. Multi-omics single-cell data integration and regulatory inference with graph-linked embedding. Nature Biotechnology, May 2022. URL: https://doi.org/10.1038/s41587-022-01284-4, doi:10.1038/s41587-022-01284-4.">Cao and Gao, 2022</a>]</span> is a deep learning model for unpaired integration which makes use of a regulatory graph helping connect features from different modalities. The model is based on conditional variational autoencoders, where the model learns to reconstruct while simultaneously allowing for batch correction. To guide the integration, GLUE learns an embedding for each modality for each feature by utilizing a prior knowledge graph. We demonstrate how to use GLUE to integrate unpaired RNA and ADT data using RNA part of Multiome data and ADT part of CITE-seq data from the NeurIPS competition (<a class="reference external" href="https://openproblems.bio/neurips_2021/">https://openproblems.bio/neurips_2021/</a>). To construct the graph, we connect nodes from RNA modality to nodes from ADT modality if and only if the RNA node is a protein encoding gene of a given protein from ADT modality. The output of the GLUE model is a representation of each cell in a shared latent space.</p>
 <p>We refer the reader to GLUE tutorial to see how one can integrate unpaired RNA and ATAC with GLUE and for more details about the model <a class="reference external" href="https://scglue.readthedocs.io/en/latest/tutorials.html">https://scglue.readthedocs.io/en/latest/tutorials.html</a>.</p>
 <p>We follow the GLUE tutorial on how to preprocess RNA-seq. We log-normalize the raw counts, scale and calculate PCA.</p>
 <div class="cell docutils container">
@@ -1304,7 +1304,7 @@ Epoch 400/400: 100%|██████████| 400/400 [09:51&lt;00:00,  1.
 <p>We see that batches as well as paired/RNA-only data are well integrated.</p>
 <section id="query-to-reference-mapping">
 <h3><span class="section-number">46.5.1. </span>Query-to-reference mapping<a class="headerlink" href="#query-to-reference-mapping" title="Link to this heading">#</a></h3>
-<p>Now we demontrate how to map new unimodal (RNA-only) and multimodal query (CITE-seq) onto the above reference.</p>
+<p>Now we demonstrate how to map new unimodal (RNA-only) and multimodal query (CITE-seq) onto the above reference.</p>
 <p>We mimic RNA-only query by setting the protein counts of one of the two batches to zero.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1528,7 +1528,7 @@ Active assay: originalexp (4000 features, 0 variable features)
 </div>
 </div>
 </div>
-<p>Now we need to find anchors between the reference and the query. We specify that we want to use SPCA dimentionality reduction from the reference.</p>
+<p>Now we need to find anchors between the reference and the query. We specify that we want to use SPCA dimensionality reduction from the reference.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -1970,7 +1970,7 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 </div>
 </div>
 </div>
-<p>Finally, we obtain the latent representation, save in explicitely in <code class="docutils literal notranslate"><span class="pre">.obsm['latent_ref']</span></code> as we will overwrite <code class="docutils literal notranslate"><span class="pre">.obsm['latent']</span></code> later when we work with fine-tuned model after query mapping and visualize the result.</p>
+<p>Finally, we obtain the latent representation, save in explicitly in <code class="docutils literal notranslate"><span class="pre">.obsm['latent_ref']</span></code> as we will overwrite <code class="docutils literal notranslate"><span class="pre">.obsm['latent']</span></code> later when we work with fine-tuned model after query mapping and visualize the result.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>

@@ -538,7 +538,7 @@ Computational approaches for inferring specificity can provide this layer of inf
 <li><p><strong>Clustering and distances</strong>: <span id="id2">[<a class="reference internal" href="#id498" title="Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. Nature, 547(7661):94–98, 2017.">Glanville <em>et al.</em>, 2017</a>]</span> showed, that IRs with similar receptors have common specificity. This property has been used in multiple approaches for comparing AIRs with distance metrics and unsupervised clustering.</p></li>
 <li><p><strong>Epitope prediction</strong>: Recently, several machine-learning methods were developed that directly predict binding between AIRs and a target. In theory, these methods could be used to directly assign specificity to the AIRs involved in single-cell studies.</p></li>
 </ul>
-<p>However, all three approaches have major pitfalls. The amount of samples in the public databases is severly biased towards diseases and use cases that are commonly researched. Examplatory, this leads to known bindings for only several 100 epitopes sequences for TCRs in the major public databases. Further, a majority amount of samples in these databases does not provide the full AIR sequence (V-, (D-,) and J-genes and CDRs for both chains), but rather focuses on the CDR3, while often only reporting VJ or VDJ sequences.</p>
+<p>However, all three approaches have major pitfalls. The amount of samples in the public databases is severely biased towards diseases and use cases that are commonly researched. Examplatory, this leads to known bindings for only several 100 epitopes sequences for TCRs in the major public databases. Further, a majority amount of samples in these databases does not provide the full AIR sequence (V-, (D-,) and J-genes and CDRs for both chains), but rather focuses on the CDR3, while often only reporting VJ or VDJ sequences.</p>
 </section>
 <section id="tcr-specificity-analysis">
 <h2><span class="section-number">43.2. </span>TCR specificity analysis<a class="headerlink" href="#tcr-specificity-analysis" title="Link to this heading">#</a></h2>
@@ -548,7 +548,7 @@ Computational approaches for inferring specificity can provide this layer of inf
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Scirpy changed the format of <a class="reference external" href="https://scirpy.scverse.org/en/latest/data-structure.html#storing-airr-rearrangement-data-in-anndata">its datastructure</a>
-with v0.13. While the overall anlaysis workflow has not changed, some outputs shown in this chapter might not be accurate anymore.</p>
+with v0.13. While the overall analysis workflow has not changed, some outputs shown in this chapter might not be accurate anymore.</p>
 <p>See <a class="reference external" href="https://scirpy.scverse.org/en/latest/changelog.html#v0-13-0-new-data-structure-based-on-awkward-arrays">the scirpy release notes</a> for more details about this change.
 Until we update this chapter, please also refer to the <a class="reference external" href="https://scirpy.scverse.org">official scirpy documentation</a>.</p>
 </div>
@@ -590,7 +590,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 <section id="database-queries">
 <h3><span class="section-number">43.2.1. </span>Database Queries<a class="headerlink" href="#database-queries" title="Link to this heading">#</a></h3>
-<p>Here, we will search for TCRs with specificity annotatation from previous studies. Common large-scale databases with TCR-epitope pairs are:</p>
+<p>Here, we will search for TCRs with specificity annotation from previous studies. Common large-scale databases with TCR-epitope pairs are:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.iedb.org/">IEDB</a> <span id="id5">[<a class="reference internal" href="#id489" title="Ward Fleri, Sinu Paul, Sandeep Kumar Dhanda, Swapnil Mahajan, Xiaojun Xu, Bjoern Peters, and Alessandro Sette. The immune epitope database and analysis resource in epitope discovery and synthetic vaccine design. Frontiers in immunology, 8:278, 2017.">Fleri <em>et al.</em>, 2017</a>]</span></p></li>
 <li><p><a class="reference external" href="https://vdjdb.cdr3.net/">vdjDB</a> <span id="id6">[<a class="reference internal" href="#id488" title="Mikhail Shugay, Dmitriy V Bagaev, Ivan V Zvyagin, Renske M Vroomans, Jeremy Chase Crawford, Garry Dolton, Ekaterina A Komech, Anastasiya L Sycheva, Anna E Koneva, Evgeniy S Egorov, and others. Vdjdb: a curated database of t-cell receptor sequences with known antigen specificity. Nucleic acids research, 46(D1):D419–D427, 2018.">Shugay <em>et al.</em>, 2018</a>]</span></p></li>
@@ -1111,12 +1111,12 @@ Name: antigen.species_fullIR, dtype: int64
 <p>To detect cells with shared specificity, we can calculate pairwise sequence distances between their TCRs. This can be either used to group cells within a dataset or to increase the amount of hits, we receive from database queries. For sequence distances, there are generally three different approaches:</p>
 <ul class="simple">
 <li><p><strong>Edit distances</strong>: calculate the cost of transforming the first into the second sequence.</p></li>
-<li><p><strong>k-mer matching</strong>: compares the occurence of short motifs of length k between two sequences.</p></li>
+<li><p><strong>k-mer matching</strong>: compares the occurrence of short motifs of length k between two sequences.</p></li>
 <li><p><strong>Embeddings</strong>: the sequence is embedded into a numeric representation (e.g. via deep learning).</p></li>
 </ul>
 <p>Note, that these approaches have not been independently benchmarked. We will therefore focus here on two selected distance metrics:</p>
 <ul class="simple">
-<li><p><strong>TCRdist</strong>: this commonly used metric uses the sequences of all CDRs and compares them via transformation cost and gap panelties <span id="id10">[<a class="reference internal" href="#id495" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span>. The costs are based on the BLOSUM matrix, which indicates the probabilities of substituting one amino acid against another <span id="id11">[<a class="reference internal" href="#id502" title="Steven Henikoff and Jorja G Henikoff. Amino acid substitution matrices from protein blocks. Proceedings of the National Academy of Sciences, 89(22):10915–10919, 1992.">Henikoff and Henikoff, 1992</a>]</span>. By incorporating the full sequence, accuracy is most likely increased as compared to other approaches, but limits its use, when only a subset of information is provided.</p></li>
+<li><p><strong>TCRdist</strong>: this commonly used metric uses the sequences of all CDRs and compares them via transformation cost and gap penalties <span id="id10">[<a class="reference internal" href="#id495" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span>. The costs are based on the BLOSUM matrix, which indicates the probabilities of substituting one amino acid against another <span id="id11">[<a class="reference internal" href="#id502" title="Steven Henikoff and Jorja G Henikoff. Amino acid substitution matrices from protein blocks. Proceedings of the National Academy of Sciences, 89(22):10915–10919, 1992.">Henikoff and Henikoff, 1992</a>]</span>. By incorporating the full sequence, accuracy is most likely increased as compared to other approaches, but limits its use, when only a subset of information is provided.</p></li>
 <li><p><strong>TCRmatch</strong>: this novel metric uses all k-mers to compare the overlap in motifs between two TCRs based on their CDR3β sequences <span id="id12">[<a class="reference internal" href="#id496" title="William D Chronister, Austin Crinklaw, Swapnil Mahajan, Randi Vita, Zeynep Koşaloğlu-Yalçın, Zhen Yan, Jason A Greenbaum, Leon E Jessen, Morten Nielsen, Scott Christley, and others. Tcrmatch: predicting t-cell receptor specificity based on sequence similarity to previously characterized receptors. Frontiers in immunology, 12:673, 2021.">Chronister <em>et al.</em>, 2021</a>]</span>. It can therefore, also be utilized on most databases, that mainly contain this information. It is also conveniently integrated into IEDB.</p></li>
 </ul>
 <p>These metrics use the AIR sequence as input. Cells with the same receptors will therefore have identical output. To reduce computational cost, we therefore first extract the unique AIRs from the AnnData object into a DataFrame.</p>
@@ -1549,7 +1549,7 @@ Name: antigen.species_fullIR, dtype: int64
 <ul class="simple">
 <li><p><strong>-i</strong>: the query data, here: our input file</p></li>
 <li><p><strong>-t</strong>: amount of cores used for calculation</p></li>
-<li><p><strong>-d</strong>: the reference data, either a database or our input file (for pairwise matches)- <strong>-s</strong>: treshold for considering a match, where 0 is no similarity and 1 is perfect match. Here we use the threshold of medium confidence 0.9. Alternative, you can use the more stricter threshold of 0.97 for high confidence binding. Note, that less stringent cutoffs also result in higher computation times.</p></li>
+<li><p><strong>-d</strong>: the reference data, either a database or our input file (for pairwise matches)- <strong>-s</strong>: threshold for considering a match, where 0 is no similarity and 1 is perfect match. Here we use the threshold of medium confidence 0.9. Alternative, you can use the more stricter threshold of 0.97 for high confidence binding. Note, that less stringent cutoffs also result in higher computation times.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2415,7 +2415,7 @@ Saving to: ‘tmp/CoV-AbDab.csv’
 </div>
 </div>
 </div>
-<p>All AIRs in the database are tested against SARS-CoV-2 epitopes. To make the result more clearer to view, we will annotate the binding to include only SARS-CoV-2 and None. This is however heavily dependend on your specific research question.</p>
+<p>All AIRs in the database are tested against SARS-CoV-2 epitopes. To make the result more clearer to view, we will annotate the binding to include only SARS-CoV-2 and None. This is however heavily dependent on your specific research question.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cov_abdab</span><span class="p">[</span><span class="s2">&quot;Binding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cov_abdab</span><span class="p">[</span><span class="s2">&quot;Binding&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
@@ -2525,7 +2525,7 @@ Name: Binding_fullIR, dtype: int64
 </section>
 <section id="query-via-hamming-distance">
 <h4><span class="section-number">43.3.1.3. </span>Query via Hamming Distance<a class="headerlink" href="#query-via-hamming-distance" title="Link to this heading">#</a></h4>
-<p>Due to Somantic Hypermutation, BCRs of the same lineage often differ with mutations on one position, with deletion and addition of amino acids being more unlikely. We will therefore query the database using a Hamming distance, which will mark CDR3 with a single mutation. You can set the threshold for calculating matches during distance calculation. However, we advise using conservative thresholds to limit the amount of false positives.</p>
+<p>Due to Somatic Hypermutation, BCRs of the same lineage often differ with mutations on one position, with deletion and addition of amino acids being more unlikely. We will therefore query the database using a Hamming distance, which will mark CDR3 with a single mutation. You can set the threshold for calculating matches during distance calculation. However, we advise using conservative thresholds to limit the amount of false positives.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;hamming&quot;</span>
@@ -2571,20 +2571,20 @@ Name: Binding_Hamming, dtype: int64
 </section>
 <section id="distance-measurements">
 <h3><span class="section-number">43.3.2. </span>Distance Measurements<a class="headerlink" href="#distance-measurements" title="Link to this heading">#</a></h3>
-<p>Contrary to TCRs, a BCR clonotype may contain different sequences due mutations stemming from somantic hypermutation (see chapter 02_clonotypes). The BCRs within this clonotype often target the same epitope with varying strength due to affinity maturation. We therefore already explained distance based clustering in the chapter <LINK-CLONOTYPE-DEFINITION>.</p>
+<p>Contrary to TCRs, a BCR clonotype may contain different sequences due mutations stemming from somatic hypermutation (see chapter 02_clonotypes). The BCRs within this clonotype often target the same epitope with varying strength due to affinity maturation. We therefore already explained distance based clustering in the chapter <LINK-CLONOTYPE-DEFINITION>.</p>
 <p>However, several, different clonotype lineages can share their specificity. While these clonotypes are not ancestrally related, they might be related by similar BCR sequences. Recently, methods were developed to compare Antibody sequences based on shared specificity, which can also be applied to BCRs. Since they often rely on structural information (often from prediction) applying these methods is not feasible for large single-cell studies and are, therefore, not included in this tutorial.</p>
 </section>
 <section id="prediction">
 <h3><span class="section-number">43.3.3. </span>Prediction<a class="headerlink" href="#prediction" title="Link to this heading">#</a></h3>
-<p>While TCRs bind linear peptides constrained by their binding to the MHC, BCRs can bind to linear or non-continoues antigens formed from proteins and polysacherides. This unconstraint binding is highly dependent on the three-dimensional structure of BCRs and antigens. There are several prediction tools for antibodies/BCRs focusing on identifying paratopes (binding residues in the AB) or epitopes (binding residues in the antigen). Further, deep learning is used for AB structure prediction, design, optimization, and docking prediction, which often rely on (inferred) spatial structure implying high computational costs. However, these models rather focus on the application of AB development for therapeutics than the analysis of large-scale single cell studies and are therefore out of the scope for this tutorial.</p>
+<p>While TCRs bind linear peptides constrained by their binding to the MHC, BCRs can bind to linear or non-continoues antigens formed from proteins and polysaccharides. This unconstrained binding is highly dependent on the three-dimensional structure of BCRs and antigens. There are several prediction tools for antibodies/BCRs focusing on identifying paratopes (binding residues in the AB) or epitopes (binding residues in the antigen). Further, deep learning is used for AB structure prediction, design, optimization, and docking prediction, which often rely on (inferred) spatial structure implying high computational costs. However, these models rather focus on the application of AB development for therapeutics than the analysis of large-scale single cell studies and are therefore out of the scope for this tutorial.</p>
 </section>
 </section>
 <section id="key-takeaways">
 <h2><span class="section-number">43.4. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>The AIR sequence determines the epitope-specificity of the cell. Cells with similar AIR sequence, bind to the same antigen.</p></li>
-<li><p>Specificity can be inferred via Database queries, AIR comparisson, or prediction.</p></li>
-<li><p>Most approaches are not idependently benchmarked and should be used with some caution and additional validation.</p></li>
+<li><p>Specificity can be inferred via Database queries, AIR comparison, or prediction.</p></li>
+<li><p>Most approaches are not independently benchmarked and should be used with some caution and additional validation.</p></li>
 </ul>
 </section>
 <section id="quiz">
