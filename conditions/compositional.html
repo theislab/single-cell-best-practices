@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -916,7 +916,7 @@ Even more important, single-cell sequencing is naturally limited in the number o
 <p>To get an overview of the cell type distributions across conditions we can use scCODA’s <code class="docutils literal notranslate"><span class="pre">boxplots</span></code>. To get an even better understanding of how the data is distributed, the red dots show the actual data points.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">boxplots</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sccoda_model</span><span class="o">.</span><span class="n">plot_boxplots</span><span class="p">(</span>
     <span class="n">sccoda_data</span><span class="p">,</span>
     <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span>
     <span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span>
@@ -936,7 +936,7 @@ Even more important, single-cell sequencing is naturally limited in the number o
 <p>An alternative visualization is a stacked barplot as provided by scCODA. This visualization nicely displays the characteristics of compositional data: If we compare the Control and Salmonella groups, we can see that the proportion of Enterocytes greatly increases in the infected mice. Since the data is proportional, this leads to a decreased share of all other cell types to fulfill the sum-to-one constraint.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">stacked_barplot</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sccoda_model</span><span class="o">.</span><span class="n">plot_stacked_barplot</span><span class="p">(</span>
     <span class="n">sccoda_data</span><span class="p">,</span> <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -1167,7 +1167,7 @@ Name: Final Parameter, dtype: bool
 <p>To plot the fold changes together with the binary classification, we can easily use effects_bar_plot function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">effects_barplot</span><span class="p">(</span><span class="n">sccoda_data</span><span class="p">,</span> <span class="s2">&quot;coda&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sccoda_model</span><span class="o">.</span><span class="n">plot_effects_barplot</span><span class="p">(</span><span class="n">sccoda_data</span><span class="p">,</span> <span class="s2">&quot;coda&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1214,8 +1214,6 @@ First, we need to define a distance measure between the cells through a PCA embe
 <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;logcounts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1234</span><span class="p">)</span>
-
-<span class="c1"># Calculate UMAP for visualization purposes</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1228,13 +1226,18 @@ First, we need to define a distance measure between the cells through a PCA embe
 </div>
 </div>
 <p>Then, we can run schist on the AnnData object, which results in a clustering that is defined through a set of columns “nsbm_level_{i}” in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">schist</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">nested_model</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">5678</span><span class="p">)</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">obs</span>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>objc[13409]: Class GNotificationCenterDelegate is implemented in both /opt/anaconda3/lib/libgio-2.0.0.dylib (0x12f0f1c30) and /usr/local/Cellar/glib/2.74.4/lib/libgio-2.0.0.dylib (0x1448ce6b0). One of the two will be used. Which one is undefined.
 objc[13410]: Class GNotificationCenterDelegate is implemented in both /opt/anaconda3/lib/libgio-2.0.0.dylib (0x1265f3c30) and /usr/local/Cellar/glib/2.74.4/lib/libgio-2.0.0.dylib (0x13bdb76b0). One of the two will be used. Which one is undefined.
@@ -1466,6 +1469,7 @@ objc[14356]: Class GNotificationCenterDelegate is implemented in both /opt/anaco
 </table>
 <p>9842 rows × 11 columns</p>
 </div></div></div>
+</details>
 </div>
 <p>A UMAP plot nicely shows how the clustering from schist (here on levels 1 and 2) is connected to the cell type assignments. The representation on level 1 of the hierarchy is hereby a strict refinement of the level above, i.e. each cluster from level 2 is split into multiple smaller clusters:</p>
 <div class="cell docutils container">
@@ -1514,7 +1518,7 @@ objc[14356]: Class GNotificationCenterDelegate is implemented in both /opt/anaco
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">draw_tree</span><span class="p">(</span><span class="n">tasccoda_data</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_draw_tree</span><span class="p">(</span><span class="n">tasccoda_data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1567,12 +1571,17 @@ objc[14356]: Class GNotificationCenterDelegate is implemented in both /opt/anaco
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">tasccoda_data</span><span class="p">,</span> <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                                          Compositional Analysis summary                                           </span>
 ┌────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────┐
@@ -1955,13 +1964,14 @@ objc[14356]: Class GNotificationCenterDelegate is implemented in both /opt/anaco
 └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </pre>
 </div></div>
+</details>
 </div>
 <p>Again, the acceptance probability is right around the desired value of 0.85 for tascCODA, indicating no apparent problems with the optimization.</p>
 <p>The result from tascCODA should first and foremost be interpreted as effects on the nodes of the tree. A nonzero parameter on a node means that the aggregated count of all cell types under that node changes significantly.
 We can easily visualize this in a tree plot for each of the three disease states. Blue circles indicate an increase, red circles a decrease:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">draw_effects</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_draw_effects</span><span class="p">(</span>
     <span class="n">tasccoda_data</span><span class="p">,</span>
     <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span>
     <span class="n">tree</span><span class="o">=</span><span class="s2">&quot;tree&quot;</span><span class="p">,</span>
@@ -1978,7 +1988,7 @@ We can easily visualize this in a tree plot for each of the three disease states
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">draw_effects</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_draw_effects</span><span class="p">(</span>
     <span class="n">tasccoda_data</span><span class="p">,</span>
     <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span>
     <span class="n">tree</span><span class="o">=</span><span class="s2">&quot;tree&quot;</span><span class="p">,</span>
@@ -1995,7 +2005,7 @@ We can easily visualize this in a tree plot for each of the three disease states
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">draw_effects</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_draw_effects</span><span class="p">(</span>
     <span class="n">tasccoda_data</span><span class="p">,</span>
     <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span>
     <span class="n">tree</span><span class="o">=</span><span class="s2">&quot;tree&quot;</span><span class="p">,</span>
@@ -2014,7 +2024,9 @@ We can easily visualize this in a tree plot for each of the three disease states
 To visualize the log-fold changes of the cell types, we do the same plots as for scCODA, inspired by “High-resolution single-cell atlas reveals diversity and plasticity of tissue-resident neutrophils in non-small cell lung cancer”<span id="id18">[<a class="reference internal" href="#id347" title="Stefan Salcher, Gregor Sturm, Lena Horvath, Gerold Untergasser, Georgios Fotakis, Elisa Panizzolo, Agnieszka Martowicz, Georg Pall, Gabriele Gamerith, Martina Sykora, Florian Augustin, Katja Schmitz, Francesca Finotello, Dietmar Rieder, Sieghart Sopper, Dominik Wolf, Andreas Pircher, and Zlatko Trajanoski. High-resolution single-cell atlas reveals diversity and plasticity of tissue-resident neutrophils in non-small cell lung cancer. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.491204, arXiv:https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.491204.full.pdf, doi:10.1101/2022.05.09.491204.">Salcher <em>et al.</em>, 2022</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">effects_barplot</span><span class="p">(</span><span class="n">tasccoda_data</span><span class="p">,</span> <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_effects_barplot</span><span class="p">(</span>
+    <span class="n">tasccoda_data</span><span class="p">,</span> <span class="n">modality_key</span><span class="o">=</span><span class="s2">&quot;coda&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2029,7 +2041,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ncols&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;wspace&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s2">&quot;vcenter&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">&quot;vmin&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">}</span>
-<span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">coda</span><span class="o">.</span><span class="n">effects_umap</span><span class="p">(</span>
+<span class="n">tasccoda_model</span><span class="o">.</span><span class="n">plot_effects_umap</span><span class="p">(</span>
     <span class="n">tasccoda_data</span><span class="p">,</span>
     <span class="n">effect_name</span><span class="o">=</span><span class="p">[</span>
         <span class="s2">&quot;effect_df_condition[T.Salmonella]&quot;</span><span class="p">,</span>
@@ -2463,7 +2475,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">milo</span><span class="o">.</span><span class="n">build_nhood_graph</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]}):</span>
-    <span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">nhood_graph</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plot_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">milo</span><span class="o">.</span><span class="n">plot_nhood_graph</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plot_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cell_label&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -2488,7 +2500,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">da_beeswarm</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">milo</span><span class="o">.</span><span class="n">plot_da_beeswarm</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -2537,7 +2549,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]}):</span>
-    <span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">nhood_graph</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plot_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">milo</span><span class="o">.</span><span class="n">plot_nhood_graph</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">plot_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2547,7 +2559,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">da_beeswarm</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">milo</span><span class="o">.</span><span class="n">plot_da_beeswarm</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -2566,7 +2578,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
 <span class="p">]</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Enterocyte&quot;</span><span class="p">)</span>
-<span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">nhood_counts_by_cond</span><span class="p">(</span>
+<span class="n">milo</span><span class="o">.</span><span class="n">plot_nhood_counts_by_cond</span><span class="p">(</span>
     <span class="n">mdata</span><span class="p">,</span> <span class="n">test_var</span><span class="o">=</span><span class="s2">&quot;Hpoly_timecourse&quot;</span><span class="p">,</span> <span class="n">subset_nhoods</span><span class="o">=</span><span class="n">entero_ixs</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2578,7 +2590,7 @@ To visualize the log-fold changes of the cell types, we do the same plots as for
     <span class="o">&amp;</span> <span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;milo&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;nhood_annotation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Tuft&quot;</span><span class="p">)</span>
 <span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Tuft cells&quot;</span><span class="p">)</span>
-<span class="n">pt</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">milo</span><span class="o">.</span><span class="n">nhood_counts_by_cond</span><span class="p">(</span>
+<span class="n">milo</span><span class="o">.</span><span class="n">plot_nhood_counts_by_cond</span><span class="p">(</span>
     <span class="n">mdata</span><span class="p">,</span> <span class="n">test_var</span><span class="o">=</span><span class="s2">&quot;Hpoly_timecourse&quot;</span><span class="p">,</span> <span class="n">subset_nhoods</span><span class="o">=</span><span class="n">tuft_ixs</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
