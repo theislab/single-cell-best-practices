@@ -122,7 +122,7 @@ RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse tra
 Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
 
-Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
