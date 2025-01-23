@@ -12,7 +12,7 @@ Interested in contributing? Please have a look at https://github.com/theislab/si
 
 ## Introduction
 
-The human body is a complex machine that heavily relies on the basic units of life - cells. These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes. This cellular heterogeneity manifests in their structure, function, and gene expression profiles. Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer{cite}`Macaulay2017`. Therefore, understanding how cells behave under normal and perturbated states is critical for improving our knowledge of the entire cellular systems.
+The human body is a complex machine that heavily relies on the basic units of life - cells. These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes. This cellular heterogeneity manifests in their structure, function, and gene expression profiles. Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer {cite}`Macaulay2017`. Therefore, understanding how cells behave under normal and perturbated states is critical for improving our knowledge of the entire cellular systems.
 
 To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level. Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA sequencing. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information. These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.
 
@@ -28,9 +28,12 @@ The recommendations presented are grounded in external benchmarks and reviews wh
 
 This book does not cover fundamental concepts of biology or computer science, including basic programming skills. Nor does it serve as an exhaustive catalog of all available tools for specific tasks. Instead, it emphasizes well-validated methods that have been externally benchmarked or recognized as community standards. When such external validation is unavailable, our recommendations are only based on our extensive practical experience.
 
+## Who should read this book 
+This book is designed for a diverse audience with an interest in single-cell data analysis, including **biologists** looking to gain practical data analysis skills, **computer scientists** seeking to explore the biological underpinnings and computational challenges of single-cell data, and **bioinformaticians** aiming to refine their knowledge or stay updated with best practices. Whether you’re a beginner eager to learn the fundamentals or an experienced analyst striving to enhance your expertise and adopt effective workflows, this book provides the support you need to navigate the complexities of single-cell analysis.
+
 ## Structure of the book
 
-Each chapter corresponds to a distinct phase of a typical single-cell data analysis project. While an analysis workflow should generally follow the order of the chapters, flexibility is encouraged depending on specific downstream analysis objectives. Each chapter is supplemented with extensive references, and readers are encouraged to consult these primary sources for a deeper understanding. Although we strive to provide comprehensive background information, our summaries may not capture the full scope of reasoning behind every recommendation.
+Each chapter corresponds to a distinct phase of a typical single-cell data analysis project. While an analysis workflow should generally follow the order of the chapters, flexibility is encouraged depending on specific downstream analysis objectives. Each chapter is supplemented with extensive references, and readers are encouraged to consult these primary sources for a deeper understanding. Although we strive to provide comprehensive background information, our summaries and the [glossary](glossary.md) may not capture the full scope of reasoning behind every recommendation.
 
 ## Prerequisites
 
