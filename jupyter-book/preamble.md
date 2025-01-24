@@ -24,15 +24,12 @@ This book aims to guide both beginners and experienced professionals in **best p
 
 The recommendations presented are grounded in external benchmarks and reviews wherever possible, ensuring the approaches taught are both effective and reliable. Additionally, this book is designed to serve as a dynamic resource, evolving with the field to reflect new insights and updated best practices.
 
-
-
-
-
 ## What this book does not cover
 
 This book does not cover fundamental concepts of biology or computer science, including basic programming skills. Nor does it serve as an exhaustive catalog of all available tools for specific tasks. Instead, it emphasizes well-validated methods that have been externally benchmarked or recognized as community standards. When such external validation is unavailable, our recommendations are only based on our extensive practical experience.
 
-## Who should read this book 
+## Who should read this book
+
 This book is designed for a diverse audience with an interest in single-cell data analysis, including **biologists** looking to gain practical data analysis skills, **computer scientists** seeking to explore the biological underpinnings and computational challenges of single-cell data, and **bioinformaticians** aiming to refine their knowledge or stay updated with best practices. Whether you’re a beginner eager to learn the fundamentals or an experienced analyst striving to enhance your expertise and adopt effective workflows, this book provides the support you need to navigate the complexities of single-cell analysis.
 
 ## Structure of the book
