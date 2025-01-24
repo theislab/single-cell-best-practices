@@ -16,9 +16,9 @@ Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 
 In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory. It describes that all living organisms are made up of cells. Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
 
-Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`) and that all cells have almost the same chemical composition. Two general types of cells exist, eukaryotes and prokaryotes.
+Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of {term}`DNA` and that all cells have almost the same chemical composition. Two general types of cells exist, eukaryotes and prokaryotes.
 Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region, but no nucleus.
-The nucleus hosts the cells' genomic DNA and is the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e. membrane-bound organelles are carrying out highly specialized functions and providing crucial support for cells.
+The nucleus hosts the cells' genomic deoxyribonucleic acid {term}`DNA` and is the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e. membrane-bound organelles are carrying out highly specialized functions and providing crucial support for cells.
 
 Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 times the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
 The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going. The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
@@ -37,9 +37,9 @@ It is unfortunately not always possible to find such "simple" associations betwe
 
 Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
 In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965 Robert Holley sequenced the first tRNA.
-Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography {cite}`Jou1972`.
+Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
 In parallel, Frederick Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and being time-consuming.
-In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data {cite}`Hood1987`.
+In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data{cite}`Hood1987`.
 
 Strengths:
 
@@ -48,22 +48,21 @@ Strengths:
 
 Limitations:
 
-- Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
-- The quality of a Sanger sequence is often poor in the first 15 to 40 bases because this is where the primers bind.
+- Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs (bp).
+- The quality of a Sanger sequence is often not very good in the first 15 to 40 bases, because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
-- If the sequenced DNA fragment has been cloned, some of the cloning vector (DNA carrier for copying, storing, and amplifying genes) sequence may find its way into the final sequence.
+- If the sequenced DNA fragment has been cloned, some of the cloning vector sequence may find its way into the final sequence.
 - Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
 
 ### Second generation sequencing
 
-Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen revolutionized DNA sequencing by developing pyrosequencing, marking the beginning of second generation sequencing.
+Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen introduced a new DNA sequencing technique called pyrosequencing, introducing the age of second generation sequencing.
 Second generation sequencing, also known as next-generation sequencing (NGS), was primarily made possible by further automation in the lab, the usage of computers, and the miniaturization of reactions.
 Pyrosequencing measures luminescence that is generated by pyrophosphate synthesis during sequencing.
 This process is also commonly known as "sequencing-by-synthesis".
 Two years later, Shankar Balasubramanian and David Klenerman, developed and adapted the sequencing-by-synthesis process for a new method which utilizes fluorescent dyes at the company Solexa. Solexa’s technology also forms the basis of Illumina’s sequencers, which dominate the market today.
 The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
-Life Technologies introduced several other platforms, including SOLiD in 2007 (a "sequencing-by-ligation" system) and Ion Torrent in 2011 (detecting hydrogen ions during the synthesis of new DNA).
-In general, sequencing-by-synthesis involves adding single nucleotides to a growing DNA strand and detecting each addition, while sequencing-by-ligation relies on detecting the joining of short DNA probes to the fragment to determine the sequence.
+Many other platforms were introduced such as SOLiD systems' "sequencing-by-ligation" (2007) and Life Technologies' Ion Torrent (2011) that uses "sequencing-by-synthesis" to detect hydrogen ions when new DNA is synthesized.
 
 Strengths:
 
@@ -71,38 +70,30 @@ Strengths:
 - Sparse material can still be used as input.
 - High sensitivity to detect low-frequency variants and comprehensive genome coverage.
 - High capacity with sample multiplexing.
-- Ability to sequence thousands of genes simultaneously.
+- Ability to sequence thousands of genes simultaneously,
 
 Limitations:
 
 - The sequencing machines are expensive and often need to be shared with colleagues.
 - Second generation sequencers are big, stationary machines and not designed for field work.
 - Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.
-- The quality of the sequencing result depends on the reference genome.
+- The quality of sequencing result is dependent on the reference genome
 
 ### Third generation sequencing
 
 The third generation of sequencing, nowadays also known as next-generation sequencing, brought two innovations to the market.
-First, long-read sequencing, which enables the detection of nucleotide fragments that are much longer than those generated by second-generation sequencing. The typical Illumina short-read sequencers generate fragments ranging from 75 to 300 base pairs, depending on the model. With third generation sequencing, sequencers can read tens of thousands of base pairs. This is especially important for the assembly of novel genomes without an available reference genome.
-Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
+First, long-read sequencing, which describes the ability to obtain nucleotide fragments of longer lengths than the usual Illumina short-read sequencers generate (order of 75 to 300 base pairs depending on the sequencer). This is especially important for the assembly of novel genomes without an available reference genome. Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
-```{admonition} A note on sequencing length
-- 1 base pair (bp)
-- 1 kilo base pair (kb) = 1,000 bp
-- 1 mega base pair (Mb) = 1,000,000 bp
-- 1 giga base pair (Gb) = 1,000,000,000 bp
-```
+Pacific Biosciences (PacBio) introduced zero-mode waveguide (ZMW) sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kilobases (kb), with possibilities for up to 70kb.
 
-Pacific Biosciences (PacBio) introduced zero-mode waveguide sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kb, with possibilities for up to 70 kb.
-
-Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its successors MinION and Flongle are portable sequencers for DNA and RNA sequencing, which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. The idea of Oxford Nanopore sequencers is to detect changes in the electrical current as nucleic acids migrate through protein nanopores {cite}`Jain2016`.
+Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its successors MinION and Flongle are portable sequencers for DNA and RNA sequencing which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. Oxford Nanopore sequencers observe changes in the electrical current that occur when nucleic acids pass through protein nanopores, to identify the nucleotide sequence{cite}`Jain2016`.
 
 Strengths:
 
 - Long reads will allow for the assembly of large novel genomes.
-- Sequencers are portable, making them ideal for field work.
+- Sequencers are portable, allowing for field work.
 - Possibility to directly detect epigenetic modifications of DNA and RNA sequences.
-- Speed! Third generation sequencers are fast.
+- Speed. Third generation sequencers are fast.
 
 Limitations:
 
@@ -191,7 +182,7 @@ Microfluidic device based single-cell strategies trap cells inside hydrogel drop
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
 
 Although all three protocols differ in details, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
-The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b base pairs-long unique molecular identifier (UMI - see below) and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer.).
+The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode and a 4-8b bp-long unique molecular identifier (UMI - see below) and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer.).
 Upon lysis the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached on the beads.
 Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs).
 This is followed by PCR and reverse transcription to capture and amplify the transcripts.
