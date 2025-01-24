@@ -16,7 +16,7 @@ The human body is a complex machine that heavily relies on the basic units of li
 
 To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level. Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA sequencing. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information. These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.
 
-Currently, analysts are faced with an overwhelming array of computational tools—over 1,000 methods dedicated to single-cell analysis alone. Navigating this extensive landscape to produce reliable, cutting-edge results poses a significant challenge.
+Currently, analysts are faced with an overwhelming array of computational tools - over 1,000 methods dedicated to single-cell analysis alone. Navigating this extensive landscape to produce reliable, cutting-edge results poses a significant challenge.
 
 ## What this book covers
 
@@ -76,8 +76,8 @@ You can report issues and requests in our [issue tracker](https://github.com/the
 
 For inquiries, speaking engagements, or collaboration opportunities, please email:
 
-- Anna Schaar: anna DOT schaar AT helmholtz-munich DOT de
-- Lukas Heumos: lukas DOT heumos AT helmholtz-munich DOT de.
+- Anna Schaar: anna.schaar@helmholtz-munich.de
+- Lukas Heumos: lukas.heumos@helmholtz-munich.de
 
 ## License
 
