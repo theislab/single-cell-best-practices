@@ -55,6 +55,10 @@ DNA
 Doublets
     Reads obtained from droplet based assays might be mistakenly associated to a single cell while the RNA expression origins from two or more cells (a doublet).
 
+Downstream analysis
+downstream analyses
+    A phase of data analysis that follows the initial processing of raw data. In the context of scRNA-seq, this includes tasks such as normalization, integration, filtering, cell type identification, trajectory inference, and studying expression dynamics.
+
 Dropout
     A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type`. The reason for dropouts are commonly low amounts of mRNA expression in cells and the general stochasticity of mRNA expression. Dropouts are one of the reasons why scRNA-seq data is sparse.
 
@@ -119,5 +123,6 @@ Trajectory inference
     Also known as pseudotemporal ordering. The computational recovery of dynamic processes by ordering cells by similarity or other means.
 
 Unique Molecular Identifier (UMI)
+unique molecular identifiers (UMIs)
     Specific type of molecular barcodes aiding with error correction and increased accuracy during sequencing. UMIs unique tag molecules in sample libraries enabling estimation of PCR duplication rates.
 ```
