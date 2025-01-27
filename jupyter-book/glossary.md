@@ -1,6 +1,10 @@
 # Glossary
 
 ```{glossary}
+Adapter sequences
+adapter sequences
+    Short, synthetic DNA or RNA sequences that are ligated to the ends of DNA or RNA fragments during library preparation for sequencing. These adapters are essential for binding the fragments to the flowcell and enabling amplification and sequencing. However, if adapters are not properly removed or trimmed after sequencing, they can appear in the reads, potentially interfering with alignment and downstream analyses.
+
 Algorithm
 Algorithms
     A pre-defined set of instructions to solve a problem.
@@ -30,10 +34,6 @@ Cell
 Cell barcode
     See {term}`barcode`
 
-Cluster
-Clusters
-    A group of a population or data points that share similarities. In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation`).
-
 Cell type annotation
     The process of labeling groups of {term}`clusters` of cells by {term}`cell type`. Commonly done based on {term}`cell type` specific markers, automatically with classifiers or by mapping against a reference.
 
@@ -45,6 +45,14 @@ Cell state
 
 Chromatin
     The complex of DNA and proteins efficiently packaging the DNA inside the nucleus and involved in regulating gene expression.
+
+Cluster
+Clusters
+    A group of a population or data points that share similarities. In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation`).
+
+Complementary DNA (cDNA)
+cDNA
+    DNA synthesized from an RNA template by the enzyme reverse transcriptase. cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes`.
@@ -68,6 +76,10 @@ Drop-seq
 FASTQ reads
     Sequencing reads that are saved in the FASTQ format. FASTQ files are then used to map against the reference genome of interest to obtain gene counts for cells.
 
+Flowcell
+flowcell
+    A consumable device used in sequencing platforms, such as those from Illumina, where DNA or RNA fragments are sequenced. It consists of a glass or polymer surface with lanes or channels coated with oligonucleotides, which capture and anchor DNA or RNA fragments. During sequencing, these fragments are amplified into clusters, and their sequences are determined by detecting fluorescent signals emitted during nucleotide incorporation. The flowcell enables high-throughput sequencing by allowing millions of fragments to be sequenced simultaneously.
+
 Gene expression matrix
     A cell (barcode) by gene (scverse ecosystem) or gene by cell (barcode) matrix storing counts in the cell values.
 
@@ -80,17 +92,20 @@ Indrop
 Library
     Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
 
+Locus
+Loci
+loci
+    Specific position or region on a genome or transcriptome where a particular sequence or genetic feature is located. In sequencing, loci refer to the potential origins of a read or fragment, such as a gene, exon, or intergenic region. Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
+
 MuData
     A Python package for multimodal annotated data matrices. The primary data structure in the scverse ecosystem for multimodal data.
 
+Muon
 muon
     A Python package for multi-modal single-cell analysis in Python by scverse.
 
 Negative binomial distribution
     A discrete probability distribution that models the number of successes in a sequence of independent and identically distributed Bernoulli trials before a specified number of failures.
-
-Pipeline
-    Also often times denoted as workflow. A pre-specified selection of steps that are commonly executed in order.
 
 RNA
     Ribonucleic acid. Single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
@@ -100,6 +115,9 @@ RT-qPCR
 
 PCR
     Polymercase chain reaction (PCR) is a method to amplify sequences to create billions of copies. PCR requires primers, which are short synthetic {term}`DNA` fragments, to select the genome segments to be amplified and subsequently multiple rounds of {term}`DNA` synthesis to amplify the targeted segments.
+
+Pipeline
+    Also often times denoted as workflow. A pre-specified selection of steps that are commonly executed in order.
 
 Poisson distribution
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
@@ -115,6 +133,9 @@ scanpy
 
 scverse
     A consortium for fundamental single-cell tools in the life sciences that are maintaining computational analysis tools like scanpy, muon and scvi-tools. See: https://scverse.org/
+
+signal-to-noise ratio
+    A measure of the clarity of a signal relative to background noise. In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data. A high SNR indicates that the signal is strong and reliable compared to the noise, resulting in better data quality. Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
 
 Spike-in RNA
     RNA transcripts of known sequence and quantity to calibrate measurements in RNA hybridization steps for RNA-seq.

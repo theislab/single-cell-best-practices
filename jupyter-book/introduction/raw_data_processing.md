@@ -41,11 +41,11 @@ It is important to note that many QC metrics in FastQC reports are most meaningf
 
 By running an initial quality check using tools like `FastQC`, researchers can identify potential problems early and ensure the raw data is suitable for subsequent processing and analysis.
 
-```{toggle}
+```{dropdown} Example FastQC Reports and Tutorials
 
 **0. Summary**
 
-The summary panel on the left-hand side of the HTML report shows the module names included in the report, together with a sign used for quick evaluation of the module results. However, because `FastQC` uses uniform thresholds for files generated from all kinds of sequencing platforms and underlying biological material, we sometimes see warnings (orange exclamation) and failures(red crosses) for good data and passes (green ticks) for questionable data. So, all modules should be carefully evaluated before concluding about the data quality.
+The summary panel on the left side of the HTML report displays the module names along with symbols that provide a quick assessment of the module results. However, `FastQC` applies uniform thresholds across all sequencing platforms and biological materials. As a result, warnings (orange exclamation marks) or failures (red crosses) may appear for high-quality data, while questionable data might receive passes (green ticks). Therefore, each module should be carefully reviewed before drawing conclusions about data quality.
 
 :::{figure-md} raw-proc-fig-fastqc-summary
 <img src="../_static/images/raw_data_processing/fastqc_example/summary.jpg" alt="Summary" class="bg-primary mb-1" width="300px">
@@ -55,7 +55,7 @@ The summary panel of a bad example.
 
 **1. Basic Statistics**
 
-The basic statistics module contains the overview information and statistics of the reads in the input FASTQ file, such as the filename, total number of sequences, number of poor quality sequences, sequence length, and the overall %GC of all bases in all sequences. Good single-cell data usually have a very little number of poor quality sequences and most often have uniform sequence length. The GC content should match the overall GC content of the genome or transcriptome of the sequenced species.
+The basic statistics module provides an overview of key information and statistics for the input FASTQ file, including the filename, total number of sequences, number of poor-quality sequences, sequence length, and the overall GC content (%GC) across all bases in all sequences. High-quality single-cell data typically have very few poor-quality sequences and exhibit a uniform sequence length. Additionally, the GC content should align with the expected GC content of the genome or transcriptome of the sequenced species.
 
 :::{figure-md} raw-proc-fig-fastqc-basic-statistics
 <img src="../_static/images/raw_data_processing/fastqc_example/basic_statistics.jpg" alt="Basic Statistics" class="bg-primary mb-1" width="800px">
@@ -65,7 +65,11 @@ A good basic statistics report example.
 
 **2. Per Base Sequence Quality**
 
-The per base sequence quality view contains a BoxWhisker type plot for each position in the read, which shows the range of quality scores across all bases at each position along all reads in the file. The x-axis represents the positions in the read, and the y-axis shows the quality scores. For single-cell data of good quality, all yellow boxes in the view, which represent the inter-quantile range of the quality scores of positions, should fall into the green (calls of good quality) area. So do all the whiskers, which represent the 10\% and 90\% of the distribution. It is not unexpected to see that the quality scores drop along the body of the reads, and some base calls of the last positions fall into the orange (calls of reasonable quality) area because of the decrease in the signal-to-noise ratio that is common in most sequencing-by-synthesis methods. Still, boxes should fall outside of the red (calls of poor quality) area. If poor quality calls are observed, one may consider performing quality trimming of their reads. [A detailed explanation](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html) of the sequencing error profiles is provided by the [HBC training program](https://hbctraining.github.io/main/).
+The per-base sequence quality view displays a box-and-whisker plot for each position in the read, illustrating the range of quality scores across all bases at each position. The x-axis represents the positions within the read, while the y-axis shows the quality scores.
+
+For high-quality single-cell data, the yellow boxes—representing the interquartile range of quality scores—should fall within the green area (indicating good quality calls). Similarly, the whiskers, which represent the 10th and 90th percentiles of the distribution, should also remain within the green area. It is common to observe a gradual drop in quality scores along the length of the read, with some base calls at the last positions falling into the orange area (reasonable quality) due to a decreasing {term}`signal-to-noise ratio`, a characteristic of sequencing-by-synthesis methods. However, the boxes should not extend into the red area (poor quality calls).
+
+If poor-quality calls are observed, quality trimming may be necessary. [A more detailed explanation](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html) of sequencing error profiles can be found in the [HBC training program](https://hbctraining.github.io/main/).
 
 :::{figure-md} raw-proc-fig-fastqc-per-read-sequence-quality
 <img src="../_static/images/raw_data_processing/fastqc_example/per_read_sequence_quality.jpg" alt="per read sequence quality" class="bg-primary mb-1" width="800px">
@@ -75,7 +79,9 @@ A good (left) and a bad (right) per-read sequence quality graph.
 
 **3. Per Tile Sequence Quality**
 
-Using an Illumina library, the per tile sequence quality plot shows the deviation from the average quality for the reads in each flowcell tile that was sequenced. The "hotter" the color, the larger the deviation. For high-quality data, we should see blue over the entire plot, meaning that the flowcell has consistent quality in all tiles. If only part of a flowcell has poor quality, some hot colors will appear in the plot. In that case, the sequencing step might have encountered transient problems, such as bubbles going through the flowcell or smudges and debris inside the flowcell lane. For further diagnoses, please refer to [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) from `FastQC`.
+Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}`flowcell` tile. The plot uses a color gradient to represent deviations, where “hotter” colors indicate larger deviations. High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
+
+If hot colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality. This could result from transient issues during sequencing, such as bubbles passing through the flowcell or smudges and debris within the flowcell lane. For further investigation, consult resources like [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and the [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) provided in the `FastQC` manual.
 
 :::{figure-md} raw-proc-fig-fastqc-per-tile-sequence-quality
 <img src="../_static/images/raw_data_processing/fastqc_example/per_tile_sequence_quality.jpg" alt="per tile sequence quality" class="bg-primary mb-1" width="800px">
@@ -85,7 +91,7 @@ A good (left) and a bad (right) per tile sequence quality view.
 
 **4. Per Sequence Quality Scores**
 
-The per sequence quality score plot shows the distribution of the average quality score of each read in the file. The x-axis shows the average quality scores, and the y-axis represents the frequency of each quality score. For good data, this plot should have only one peak at the tail. If some other peaks show up, a subset of reads might have some quality issue.
+The per-sequence quality score plot displays the distribution of average quality scores for each read in the file. The x-axis represents the average quality scores, while the y-axis shows the frequency of each score. For high-quality data, the plot should have a single peak near the high-quality end of the scale. If additional peaks appear, it may indicate a subset of reads with quality issues.
 
 :::{figure-md} raw-proc-fig-fastqc-per-sequence-quality-scores
 <img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_quality_scores.jpg" alt="per sequence quality scores" class="bg-primary mb-1" width="800px">
@@ -95,7 +101,7 @@ A good (left) and a bad (right) per sequence quality score plot.
 
 **5. Per Base Sequence Content**
 
-The per base sequence content plot reports the percent of each base position of all reads in the file for which each of the four nucleotides has been called. For single-cell data, it is not uncommon to see fluctuations at the start of the lines because the first bases of reads represent the sequence of the priming sites, which may not be perfectly random, as explained on the [QC Fail website](https://sequencing.qcfail.com/articles/positional-sequence-bias-in-random-primed-libraries/). This happens frequently in RNA-seq libraries, even though `FastQC` will call a warning or failure.
+The per-base sequence content plot shows the percentage of each nucleotide (A, T, G, C) called at each base position across all reads in the file. For single-cell data, it is common to observe fluctuations at the start of the reads. This occurs because the initial bases represent the sequence of the priming sites, which are often not perfectly random. This is a frequent occurrence in RNA-seq libraries, even though `FastQC` may flag it with a warning or failure, as noted on the [QC Fail website](https://sequencing.qcfail.com/articles/positional-sequence-bias-in-random-primed-libraries/).
 
 :::{figure-md} raw-proc-fig-fastqc-per-base-sequence-content
 <img src="../_static/images/raw_data_processing/fastqc_example/per_base_sequence_content.jpg" alt="per base sequence content" class="bg-primary mb-1" width="800px">
@@ -105,7 +111,9 @@ A good (left) and bad (right) per base sequence content plot.
 
 **6. Per Sequence GC Content**
 
-The per sequence GC content plot shows the distribution of GC content over all of the reads in red and a theoretical (expected) distribution in blue. The central peak of the observed distribution should correspond to the overall GC content of the underlying transcriptome. Sometimes we see a wider or narrower distribution than the theoretical distribution because the GC content of the transcriptome might differ from the genome, which, in theory, should follow the distribution shown in blue. Such differences in the spread of the distributions are not uncommon, even though it may trigger a warning or failure. However, a complex distribution usually indicates a contaminated library. It is worth noting, however, that a GC content plot can be somewhat complicated to interpret in transcriptomics experiments, as the expected GC content distribution depends not only on the sequence content of the underlying transcriptome, but also on the expression of the genes in the sample, which are unknown.
+The per-sequence GC content plot displays the GC content distribution across all reads (in red) compared to a theoretical distribution (in blue). The central peak of the observed distribution should align with the overall GC content of the transcriptome. However, the observed distribution may appear wider or narrower than the theoretical one due to differences between the transcriptome's GC content and the genome's expected GC distribution. Such variations are common and may trigger a warning or failure in `FastQC`, even if the data is acceptable.
+
+A complex or irregular distribution in this plot, however, often indicates contamination in the library. It is also important to note that interpreting GC content in transcriptomics can be challenging. The expected GC distribution depends not only on the sequence composition of the transcriptome but also on gene expression levels in the sample, which are typically unknown beforehand. As a result, some deviation from the theoretical distribution is not unusual in RNA-seq data.
 
 :::{figure-md} raw-proc-fig-fastqc-per-sequence-gc-content
 <img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_gc_content.jpg" alt="Per Sequence GC Content" class="bg-primary mb-1" width="800px">
@@ -115,7 +123,7 @@ A good (left) and a bad (right) per sequence GC content plot. The plot on the le
 
 **7. Per Base N Content**
 
-The per base N content plot shows the percent of bases at each position for which an ``N`` was called, which will occur when the sequencer has insufficient confidence to make a base call. In a high-quality library, we should not expect any noticeable non-zero ``N`` content throughout the line.
+The per-base N content plot displays the percentage of bases at each position that were called as ``N``, indicating that the sequencer lacked sufficient confidence to assign a specific nucleotide. In a high-quality library, the ``N`` content should remain consistently at or near zero across the entire length of the reads. Any noticeable non-zero ``N`` content may indicate issues with sequencing quality or library preparation.
 
 
 :::{figure-md} raw-proc-fig-fastqc-per-base-n-content
@@ -126,7 +134,7 @@ A good (left) and a bad (right) per base N content plot.
 
 **8. Sequence Length Distribution**
 
-The Sequence length distribution graph shows the distribution of the read lengths. In most single-cell chemistries, all reads will be of the same length. If trimming was performed before quality assessment, there may be some small variation in read lengths.
+The sequence length distribution graph displays the distribution of read lengths across all sequences in the file. For most single-cell sequencing chemistries, all reads are expected to have the same length, resulting in a single peak in the graph. However, if quality trimming was applied before the quality assessment, some variation in read lengths may be observed. Small differences in read lengths due to trimming are normal and should not be a cause for concern if expected.
 
 :::{figure-md} raw-proc-fig-fastqc-sequence-length-distribution
 <img src="../_static/images/raw_data_processing/fastqc_example/sequence_length_distribution.jpg" alt="Sequence Length Distribution" class="bg-primary mb-1" width="800px">
@@ -136,7 +144,9 @@ A good (left) and a bad (right) sequence length distribution plot.
 
 **9. Sequence Duplication Levels**
 
-The sequence duplication level plot shows the distribution of the degree of duplication for read sequences (the blue line) and those after deduplication. As most single-cell platform requires multiple rounds of PCR, highly expressed genes usually express a large number of transcripts, and FastQC itself is not UMI aware, it is common that a small subset of sequences may have a large number of duplications. This may trigger a warning or failure for this module, but it does not necessarily represent a quality problem with the data. Still, the majority of sequences should have a low duplication level.
+The sequence duplication level plot illustrates the distribution of duplication levels for read sequences, represented by the blue line, both before and after deduplication. In single-cell platforms, multiple rounds of {term}`PCR` are typically required, and highly expressed genes naturally produce a large number of transcripts. Additionally, since `FastQC` is not UMI-aware (i.e., it does not account for unique molecular identifiers), it is common for a small subset of sequences to show high duplication levels.
+
+While this may trigger a warning or failure in this module, it does not necessarily indicate a quality issue with the data. However, the majority of sequences should still exhibit low duplication levels, reflecting a diverse and well-prepared library.
 
 :::{figure-md} raw-proc-fig-fastqc-sequence-duplication-levels
 <img src="../_static/images/raw_data_processing/fastqc_example/sequence_duplication_levels.jpg" alt="Sequence Duplication Levels" class="bg-primary mb-1" width="800px">
@@ -146,7 +156,9 @@ A good (left) and a bad (right) per sequence duplication levels plot.
 
 **10. Overrepresented Sequences**
 
-The overrepresented sequences module lists all read sequences that make up more than $0.1\%$ of the total number of sequences. We might see some overrepresented sequences from the highly expressed genes after PCR amplification, but most sequences should not be overrepresented. Note that if the possible source of the overrepresented sequences is not "No Hit", it might indicate that the library is contaminated by the corresponding type of source.
+The overrepresented sequences module identifies read sequences that constitute more than 0.1% of the total reads. In single-cell sequencing, some overrepresented sequences may arise from highly expressed genes amplified during PCR. However, the majority of sequences should not be overrepresented.
+
+If the source of an overrepresented sequence is identified (i.e., not listed as "No Hit"), it could indicate potential contamination in the library from the corresponding source. Such cases warrant further investigation to ensure data quality.
 
 :::{figure-md} raw-proc-fig-fastqc-overrepresented-sequences
 <img src="../_static/images/raw_data_processing/fastqc_example/overrepresented_sequences.jpg" alt="Overrepresented Sequences" class="bg-primary mb-1" width="800px">
@@ -156,7 +168,7 @@ An overrepresented sequence table.
 
 **11. Adapter Content**
 
-The adapter content module shows the cumulative percentage of the fraction of reads in which each of the adapter sequences has been observed at each base position. Ideally, we should not see any abundant adapter sequences in the data.
+The adapter content module displays the cumulative percentage of reads containing {term}`adapter sequences` at each base position. High levels of adapter sequences indicate incomplete removal of adapters during library preparation, which can interfere with downstream analyses. Ideally, no significant adapter content should be present in the data. If adapter sequences are abundant, additional trimming may be necessary to improve data quality.
 
 :::{figure-md} raw-proc-fig-fastqc-adapter-content
 <img src="../_static/images/raw_data_processing/fastqc_example/adapter_content.jpg" alt="Adapter Content" class="bg-primary mb-1" width="800px">
@@ -172,19 +184,36 @@ Multiple FastQC reports can be combined into a single report using the tool [`Mu
 
 ## Alignment and mapping
 
-Mapping or alignment is a fundamental step in single-cell raw data processing. It refers to the process of determining the potential loci of origin of each sequenced fragment (e.g., the set of genomic or transcriptomic loci that are similar to the read). Depending on the sequencing protocol, the resulting raw sequence file contains the cell-level information, commonly known as cell barcodes (CB), the unique molecule identifier (UMI), and the raw cDNA sequence (read sequence) generated from the molecule. As the first step in the raw data processing of a single-cell sample ({numref}`raw-proc-fig-overview`), executing mapping or alignment accurately is instrumental for all downstream analyses, since incorrect read-to-transcript/gene mapping can lead to wrong or inaccurate matrices.
+Mapping or Alignment is a critical step in single-cell raw data processing. It involves determining the potential {term}`loci` of origin for each sequenced fragment, such as the genomic or transcriptomic locations that closely match the read sequence. This step is essential for correctly assigning reads to their source regions.
 
-While mapping read sequences to reference sequences _far_ predates the advent of scRNA-seq, the current and quickly growing scale of scRNA-seq samples (typically hundreds of millions to billions of reads) makes this stage particularly computationally intensive. Additionally, using pre-existing RNA-seq aligners that are agnostic to any specific scRNA-seq protocol -- like the length and position of cell barcodes, UMI, etc. -- requires making use of separate tools for performing other steps such as demultiplexing and UMI resolutions {cite}`Smith2017`. This added overhead can be computationally cumbersome. Further, it typically carries a substantial disk space requirement for storing intermediate files, and the extra input and output operations required for processing such intermediate files further increase runtime requirements.
+In single-cell sequencing protocols, the raw sequence files typically include:
 
-To this end, several dedicated tools have been built specifically for aligning or mapping scRNA-seq data, which handle these additional processing requirements automatically and/or internally. Tools such as `Cell Ranger` (commercial software from 10x Genomics) {cite}`raw:Zheng2017`, `zUMIs` {cite}`zumis`, `alevin` {cite}`Srivastava2019`, `RainDrop` {cite}`niebler2020raindrop`, `kallisto|bustools` {cite}`Melsted2021`, `STARsolo` {cite}`Kaminow2021` and `alevin-fry` {cite}`raw:He2022` provide dedicated treatment for aligning scRNA-seq reads along with parsing of technical read content (CBs and UMIs), as well as methods for demultiplexing and UMI resolution.
-While all provide relatively simplified interfaces to the user, these tools use a variety of different approaches internally, with some generating traditional intermediate files (e.g., BAM files) and subsequently processing them, and others either working entirely in memory or by making use of reduced intermediate representations to reduce the input/output burden.
+- Cell {term}`Barcodes` (CB): Unique identifiers for individual cells.
+- Unique Molecular Identifiers (UMIs): Tags that distinguish individual molecules to account for amplification bias.
+- Raw {term}`cDNA` Sequences: The actual read sequences generated from the molecules.
 
-%A further benefit of all these tools is their reliance on pre-existing mapping/alignment engine that the tool relies on. As a result, the pre-existing user base and the tutorials make these tools more amenable to new users.
+As the first step in raw data processing ({numref}`raw-proc-fig-overview`), accurate mapping or alignment is crucial for reliable downstream analyses. Errors during this step, such as incorrect mapping of reads to transcripts or genes, can result in inaccurate or misleading count matrices, ultimately compromising the quality of subsequent analyses.
 
-While the specific algorithms, data structures, and time and space trade-offs made by different alignment and mapping approaches can vary greatly, we can roughly categorize existing approaches along two axes:
+While mapping read sequences to reference sequences _far_ predates the development of scRNA-seq, the sheer scale of modern scRNA-seq datasets—often involving hundreds of millions to billions of reads—makes this step particularly computationally intensive. Many existing RNA-seq aligners are protocol-agnostic and do not inherently account for features specific to scRNA-seq, such as cell barcodes, UMIs, or their positions and lengths. As a result, additional tools are often required for steps like demultiplexing and UMI resolution {cite}`Smith2017`.
 
-- The type of mapping they perform and
-- The type of reference sequence against which they map reads.
+This reliance on separate tools introduces additional computational overhead. It often necessitates storing large intermediate files, which significantly increases disk space usage. Moreover, the extra input and output operations required to process these files further contribute to longer runtime requirements, making the mapping stage both resource-intensive and time-consuming.
+
+To address the challenges of aligning and mapping scRNA-seq data, several specialized tools have been developed that handle the additional processing requirements automatically or internally. These tools include:
+
+- `Cell Ranger` (commercial software from 10x Genomics) {cite}`raw:Zheng2017`
+- `zUMIs` {cite}`zumis`
+- `alevin` {cite}`Srivastava2019`
+- `RainDrop` {cite}`niebler2020raindrop`
+- `kallisto|bustools` {cite}`Melsted2021`
+- `STARsolo` {cite}`Kaminow2021`
+- `alevin-fry` {cite}`raw:He2022`
+
+These tools provide specialized capabilities for aligning scRNA-seq reads, parsing technical read content (e.g., cell barcodes and UMIs), demultiplexing, and UMI resolution. Although they offer simplified user interfaces, their internal methodologies differ significantly. Some tools generate traditional intermediate files, such as BAM files, which are processed further, while others operate entirely in memory or use compact intermediate representations to minimize input/output operations and reduce computational overhead.
+
+While these tools vary in their specific algorithms, data structures, and trade-offs in time and space complexity, their approaches can generally be categorized along two axes:
+
+1. **The type of mapping they perform**, and
+2. **The type of reference sequence against which they map reads**.
 
 (raw-proc:types-of-mapping)=
 
