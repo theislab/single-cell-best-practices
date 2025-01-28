@@ -113,7 +113,7 @@ Limitations:
 
 Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same. The differences lie primarily in the chemistry of the respective sequencing technologies.
 
-1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules. They act in the hybridisation of the library fragments to the matrix and provide a priming site.
+1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules. These adapters participate in the hybridization of the library fragments to the matrix and form a priming site.
 
 2. **Amplification and sequencing**: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are being created. All of the clusters perform individual reactions during a single sequencing run.
 
@@ -123,18 +123,21 @@ Even though a variety of NGS technologies exist, the general steps to sequence D
 
 ## RNA sequencing
 
-So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time operations of a cell.
-For example, by combining different mRNA splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins. This alternative splicing event is naturally occurring and commonly seen in eukaryotes; however, a variant could potentially result in a non-functional enzyme and an induced disease state. This is where RNA sequencing (RNA-Seq) comes into play.
+So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time processes of a cell.
+For example, by combining different splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins.
+This alternative splicing event is a natural phenomenon that occurs frequently in eukaryotes.
+In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
+This is where RNA sequencing (RNA-Seq) comes into play.
 
 RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
 
 Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
-This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
+This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes and other experimental conditions.
 
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 
-Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.
+Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features. This resuls in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
 
