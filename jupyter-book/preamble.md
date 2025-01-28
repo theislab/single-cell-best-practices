@@ -12,7 +12,11 @@ Interested in contributing? Please have a look at https://github.com/theislab/si
 
 ## Introduction
 
-The human body is a complex machine that heavily relies on the basic units of life - cells. These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes. This cellular heterogeneity manifests in their structure, function, and gene expression profiles. Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer {cite}`Macaulay2017`. Therefore, understanding how cells behave under normal and perturbated states is critical for improving our knowledge of the entire cellular systems.
+The human body is a complex machine that heavily relies on the basic units of life - cells.
+These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes.
+This cellular heterogeneity manifests in their structure, function, and gene expression profiles.
+Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer {cite}`Macaulay2017`.
+Therefore, understanding how cells behave under normal and perturbed states is critical for deepening our understanding of entire cellular systems.
 
 To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level. Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA sequencing. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information. These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.
 
