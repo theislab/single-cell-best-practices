@@ -19,7 +19,11 @@ Overall, the Bioconductor books are particularly well-suited for individuals wit
 
 ## Current best practices in single-cell RNA-seq analysis: a tutorial
 
-Current Best Practices in Single-Cell {term}`RNA`-Seq Analysis: A Tutorial {cite}`pa:Lücken2019` by Malte Lücken and Fabian Theis is a paper that introduces best practices for scRNA-seq analysis. Its key contribution lies in not only reviewing potential analysis steps but also recommending best practices based on independent benchmarks. When specific best-practice guidelines are unavailable, the authors provide general recommendations for analysis approaches. The paper is complemented by an [example analysis of mouse intestinal epithelium regions](https://github.com/theislab/single-cell-tutorial/) from Haber et al. {cite}`pa:Haber2017`.
+Current Best Practices in Single-Cell {term}`RNA`-Seq Analysis: A Tutorial {cite}`pa:Lücken2019` by Malte Lücken and Fabian Theis introduces best practices for scRNA-seq analysis.
+Its key contribution lies in not only reviewing potential analysis steps but also recommending best practices based on independent benchmarks.
+When specific best-practice guidelines are unavailable, the authors provide general recommendations for analysis approaches.
+The fundamental idea of focusing on independent benchmarks inspired our work substantially.
+The paper is complemented by an [example analysis of mouse intestinal epithelium regions](https://github.com/theislab/single-cell-tutorial/) from Haber et al. {cite}`pa:Haber2017`.
 
 In comparison to Bioconductor OSCA, this paper and its associated analysis are not constrained by a specific tool ecosystem, offering a broader perspective on the range of topics covered. However, the accompanying example analysis lacks beginner-friendliness and has become somewhat outdated. Like Bioconductor OSCA, this paper does not address newer developments such as RNA velocity, spatial transcriptomics, or multi-omics.
 
