@@ -29,7 +29,9 @@ In comparison to Bioconductor OSCA, this paper and its associated analysis are n
 However, the accompanying example analysis lacks beginner-friendliness and has become outdated.
 Analogously to Bioconductor OSCA, Lücken & Theis do not address newer developments such as RNA velocity, spatial transcriptomics, or multi-omics.
 
-Despite these limitations, we highly recommend this paper as a valuable introduction to the field and as a guide to initial best practices in scRNA-seq analysis. The chapters in this book build on the latest best practices, offering an updated perspective on the field. Furthermore, the workflows in this book are explained in greater detail, providing readers with the background information necessary to effectively apply the methods. We advise against relying on the example case study provided with the paper and instead encourage readers to explore the detailed chapters in this book for a more comprehensive and modern understanding.
+Despite these limitations, we highly recommend this paper as a valuable introduction to the field and as a guide to initial best practices in scRNA-seq analysis.
+The chapters in this book build on the latest best practices, offering an updated perspective on the field. Furthermore, the workflows in this book are explained in greater detail, providing readers with the background information necessary to effectively apply the methods.
+We advise against relying on the example case study provided with the paper and instead encourage readers to explore the detailed chapters in this book for a more comprehensive and up to date understanding.
 
 ## References
 
