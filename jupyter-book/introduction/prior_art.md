@@ -13,7 +13,9 @@ The OSCA book is highly comprehensive in its treatment of basic scRNA-seq analys
 However, it does not extend to other single-cell omics, such as single-cell ATAC-seq (scATAC-seq).
 Spatial transcriptomics is addressed separately in the complementary book Orchestrating Spatially-Resolved Transcriptomics Analysis with Bioconductor (Bioconductor OSTA), available at https://lmweber.org/OSTA-book/.
 
-As both books are tailored to the Bioconductor ecosystem, they exclusively use tools available within Bioconductor. While these tools are highly effective, they may not always provide the most optimal solution for every analysis, as acknowledged by the books themselves. Overall, the Bioconductor books are particularly well-suited for individuals with a foundational knowledge of R and a strong background in biology who wish to learn how to analyze single-cell and spatial transcriptomics data within the Bioconductor framework.
+As both books are tailored to the Bioconductor ecosystem, they exclusively use tools available within Bioconductor.
+While these tools are highly effective, they may not always provide the most optimal solution for every analysis, as acknowledged by the books themselves.
+Overall, the Bioconductor books are particularly well-suited for individuals with a foundational knowledge of R and a strong background in biology who wish to learn how to analyze single-cell and spatial transcriptomics data within the Bioconductor framework.
 
 ## Current best practices in single-cell RNA-seq analysis: a tutorial
 
