@@ -6,7 +6,8 @@ In the sections that follow, we review two notable and ongoing initiatives aimed
 
 ## Bioconductor OSCA and OSTA books
 
-Orchestrating Single-Cell Analysis with Bioconductor (Bioconductor OSCA) {cite}`osca`, available online at https://bioconductor.org/books/release/OSCA/, is a digital book designed to teach common workflows for analyzing of single-cell {term}`RNA`-Sequencing (scRNA-seq) data using the R based Bioconductor ecosystem {cite}`pa:Huber2015`. An accompanying paper with the same title {cite}`Amezquita2020`provides an overview of single-cell analysis with Bioconductor, while the online book offers more in-depth coverage, featuring detailed explanations and extensive code examples.
+Orchestrating Single-Cell Analysis with Bioconductor (Bioconductor OSCA) {cite}`osca`, available online at https://bioconductor.org/books/release/OSCA/, is an online book designed to teach common workflows for analyzing of single-cell {term}`RNA`-Sequencing (scRNA-seq) data using the R based Bioconductor ecosystem {cite}`pa:Huber2015`.
+An accompanying paper with the same title {cite}`Amezquita2020`provides an overview of single-cell analysis with Bioconductor, while the online book offers more in-depth coverage, featuring detailed explanations and extensive code examples.
 
 The OSCA book is highly comprehensive in its treatment of basic scRNA-seq analysis, offering clear explanations and detailed workflow examples. However, it does not extend to other single-cell omics, such as single-cell ATAC-seq (scATAC-seq). Spatial transcriptomics is addressed separately in the complementary book Orchestrating Spatially-Resolved Transcriptomics Analysis with Bioconductor (Bioconductor OSTA), available at https://lmweber.org/OSTA-book/.
 
