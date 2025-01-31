@@ -1,12 +1,17 @@
 # Single-cell RNA sequencing
 
-This chapter provides a short introduction to the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts. Multimodal or spatial assays are not covered here, but are introduced in the respective advanced chapters. All sequencing assays have individual strengths and limitations which must be known by data analysts to be aware of possible biases in the data.
+This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
+Multimodal or spatial assays are not covered here but are introduced in the respective advanced chapters.
+All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
 ## The building block of life
 
-Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities. Most definitions of the term life share a common entity - cells.
+Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities.
+Most definitions of the term life share a common entity - cells.
 Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves.
-Therefore, cells are the fundamental building block of life which were first discovered in 1665 by the British scientist Robert Hooke. Hooke investigated a thin slice of cork with a very rudimentary microscope, and to his surprise noticed that the slice appeared to resemble a honeycomb. He named these tiny units 'cells'.
+Therefore, cells are the fundamental building blocks of life, and they were first discovered in 1665 by the British scientist Robert Hooke.
+Hooke investigated a thin slice of cork with a very rudimentary microscope and, to his surprise, noticed that the slice appeared to resemble a honeycomb.
+He named these tiny units 'cells'.
 
 :::{figure-md} markdown-fig
 <img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
@@ -16,30 +21,42 @@ Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 
 In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory. It describes that all living organisms are made up of cells. Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
 
-Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`) and that all cells have almost the same chemical composition. Two general types of cells exist, eukaryotes and prokaryotes.
-Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region, but no nucleus.
-The nucleus hosts the cells' genomic DNA and is the reason for the eukaryotes' name: _Nucleus_ is Latin for kernel or seed. Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms. Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e. membrane-bound organelles are carrying out highly specialized functions and providing crucial support for cells.
+Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`), and that all cells have almost the same chemical composition.
+Two general types of cells exist: eukaryotes and prokaryotes.
+Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region but no nucleus.
+The nucleus hosts the cells' genomic DNA, which is why they are called eukaryotes: _Nucleus_ is Latin for kernel or seed.
+Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms.
+Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e., membrane-bound organelles carry out highly specialized functions and provide crucial support for cells.
 
 Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 times the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
-The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going. The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
+The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going.
+The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
-_Sequencing_ is the process of deciphering the order of DNA nucleotides and is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome, and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions. Another very common application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared. DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most useful applications.
+_Sequencing_ is the process of deciphering the order of DNA nucleotides.
+It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
+DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions.
+Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
+DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
 
-A very popular example is sickle cell disease, a group of blood disorders, which results from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
-This leads to serious health issues including pain, anemia, swelling in the hands and feet, bacterial infections and strokes. The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
-The gene defect is caused by a single nucleotide mutation where a GAG codon changes to a GTG codon of the β-globin gene. This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and henceforth the above-mentioned disease.
-It is unfortunately not always possible to find such "simple" associations between single nucleotide mutations and diseases, due to most diseases being caused by, for example, complex regulatory processes.
+A very popular example is sickle cell disease, a group of blood disorders resulting from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
+This leads to serious health issues, including pain, anemia, swelling in the hands and feet, bacterial infections, and strokes.
+The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
+The gene defect is caused by a single nucleotide mutation where a GAG codon changes to a GTG codon of the β-globin gene.
+This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and, henceforth, the disease mentioned above.
+Unfortunately, it is not always possible to find such "simple" associations between single nucleotide mutations and diseases because most diseases are caused by, for example, complex regulatory processes.
 
 ## A brief history of sequencing
 
-### First generation sequencing
+### First-generation sequencing
 
-Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
-In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965 Robert Holley sequenced the first tRNA.
+Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high-throughput sequencing technologies.
+In 1953, Watson, Crick, and Franklin discovered the structure of DNA, and in 1965, Robert Holley sequenced the first tRNA.
 Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography {cite}`Jou1972`.
-In parallel, Frederick Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and being time-consuming.
-In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data {cite}`Hood1987`.
+In parallel, Frederick Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing".
+Although Sanger Sequencing is still used today, it has suffered from several shortcomings, including lack of automation and being time-consuming.
+In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process.
+Its most crucial innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules.
+This change not only made the method safer to perform but also allowed computers to analyze the acquired data {cite}`Hood1987`.
 
 Strengths:
 
@@ -51,23 +68,25 @@ Limitations:
 - Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
 - The quality of a Sanger sequence is often poor in the first 15 to 40 bases because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
-- If the sequenced DNA fragment has been cloned, some of the cloning vector (DNA carrier for copying, storing, and amplifying genes) sequence may find its way into the final sequence.
-- Sanger sequencing is more expensive than second or third generation sequencing per sequenced base.
+- If the sequenced DNA fragment has been cloned, some of the cloning vector sequence (a DNA carrier for copying, storing, and amplifying genes) may find its way into the final sequence.
+- Sanger sequencing is more expensive than second or third-generation sequencing per sequenced base.
 
-### Second generation sequencing
+### Second-generation sequencing
 
-Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen revolutionized DNA sequencing by developing pyrosequencing, marking the beginning of second generation sequencing.
-Second generation sequencing, also known as next-generation sequencing (NGS), was primarily made possible by further automation in the lab, the usage of computers, and the miniaturization of reactions.
+Nine years later, in 1996, Mostafa Ronaghi, Mathias Uhlen, and Pȧl Nyŕen revolutionized DNA sequencing by developing pyrosequencing, marking the beginning of second-generation sequencing.
+Second-generation sequencing, also known as next-generation sequencing (NGS), was primarily made possible by further automation in the lab, the usage of computers, and the miniaturization of reactions.
 Pyrosequencing measures luminescence that is generated by pyrophosphate synthesis during sequencing.
 This process is also commonly known as "sequencing-by-synthesis".
-Two years later, Shankar Balasubramanian and David Klenerman, developed and adapted the sequencing-by-synthesis process for a new method which utilizes fluorescent dyes at the company Solexa. Solexa’s technology also forms the basis of Illumina’s sequencers, which dominate the market today.
-The Roche 454 sequencer developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
+Two years later, Shankar Balasubramanian and David Klenerman developed and adapted the sequencing-by-synthesis process for a new method that utilizes fluorescent dyes at the company Solexa.
+Solexa’s technology also forms the basis of Illumina’s sequencers, which dominate today's market.
+The Roche 454 sequencer, developed in 2005, was the first sequencer to fully automate the pyrosequencing process in a single, automated machine.
 Life Technologies introduced several other platforms, including SOLiD in 2007 (a "sequencing-by-ligation" system) and Ion Torrent in 2011 (detecting hydrogen ions during the synthesis of new DNA).
-In general, sequencing-by-synthesis involves adding single nucleotides to a growing DNA strand and detecting each addition, while sequencing-by-ligation relies on detecting the joining of short DNA probes to the fragment to determine the sequence.
+In general, sequencing-by-synthesis involves adding single nucleotides to a growing DNA strand and detecting each addition.
+At the same time, sequencing-by-ligation relies on detecting the joining of short DNA probes to the fragment to determine the sequence.
 
 Strengths:
 
-- Second generation sequencing is often the cheapest option with respect to required chemicals.
+- Second-generation sequencing is often the cheapest option concerning required chemicals.
 - Sparse material can still be used as input.
 - High sensitivity to detect low-frequency variants and comprehensive genome coverage.
 - High capacity with sample multiplexing.
@@ -75,16 +94,20 @@ Strengths:
 
 Limitations:
 
-- The sequencing machines are expensive and often need to be shared with colleagues.
-- Second generation sequencers are big, stationary machines and not designed for field work.
-- Generally, second generation sequencing results in many short sequencing fragments (reads) which are hard to use for novel genomes.
+- The sequencing machines are expensive and often must be shared with colleagues.
+- Second-generation sequencers are big, stationary machines that are not designed for fieldwork.
+- Generally, second-generation sequencing results in many short sequencing fragments (reads) that are hard to use for novel genomes.
 - The quality of the sequencing result depends on the reference genome.
 
-### Third generation sequencing
+### Third-generation sequencing
 
-The third generation of sequencing, nowadays also known as next-generation sequencing, brought two innovations to the market.
-First, long-read sequencing, which enables the detection of nucleotide fragments that are much longer than those generated by second-generation sequencing. The typical Illumina short-read sequencers generate fragments ranging from 75 to 300 base pairs, depending on the model. With third generation sequencing, sequencers can read tens of thousands of base pairs. This is especially important for the assembly of novel genomes without an available reference genome.
-Second, the ability to sequence in real time is another major advancement in third generation sequencing. Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
+The third generation of sequencing, nowadays also known as next-generation sequencing, has brought two innovations to the market.
+First, long-read sequencing, which enables the detection of nucleotide fragments that are much longer than those generated by second-generation sequencing.
+The typical Illumina short-read sequencers generate fragments ranging from 75 to 300 base pairs, depending on the model.
+With third-generation sequencing, sequencers can read tens of thousands of base pairs.
+This is especially important for the assembly of novel genomes without an available reference genome.
+Second, the ability to sequence in real-time is another major advancement in third-generation sequencing.
+Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
 ```{admonition} A note on sequencing length
 - 1 base pair (bp)
@@ -93,51 +116,67 @@ Second, the ability to sequence in real time is another major advancement in thi
 - 1 giga base pair (Gb) = 1,000,000,000 bp
 ```
 
-Pacific Biosciences (PacBio) introduced zero-mode waveguide sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase. This allows incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes. Each type of nucleotides is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout. Reads obtained from PacBio sequencers are usually of 8 to 15 kb, with possibilities for up to 70 kb.
+Pacific Biosciences (PacBio) introduced zero-mode waveguide sequencing in 2010, which uses so-called nanoholes containing a single DNA polymerase.
+This allows the incorporation of any single nucleotide to be directly observed by detectors attached below the nanoholes.
+Each type of nucleotide is labeled with a specific fluorescent dye that emits fluorescent signals during the incorporation process, which are subsequently measured as sequence readout.
+Reads obtained from PacBio sequencers are usually 8 to 15 kb, with possibilities for up to 70 kb.
 
-Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its successors MinION and Flongle are portable sequencers for DNA and RNA sequencing, which produce reads of more than 2 Mb. Notably, such a sequencing device even fits into a single human hand. The idea of Oxford Nanopore sequencers is to detect changes in the electrical current as nucleic acids migrate through protein nanopores {cite}`Jain2016`.
+Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its successors, MinION and Flongle, are portable sequencers for DNA and RNA sequencing, which produce reads of more than 2 Mb.
+Notably, such a sequencing device even fits into a single human hand.
+The idea of Oxford Nanopore sequencers is to detect changes in the electrical current as nucleic acids migrate through protein nanopores {cite}`Jain2016`.
 
 Strengths:
 
 - Long reads will allow for the assembly of large novel genomes.
-- Sequencers are portable, making them ideal for field work.
+- Sequencers are portable, making them ideal for fieldwork.
 - Possibility to directly detect epigenetic modifications of DNA and RNA sequences.
-- Speed! Third generation sequencers are fast.
+- Speed! Third-generation sequencers are fast.
 
 Limitations:
 
-- Some third generation sequencers exhibit higher error rates than second generation sequencers.
-- The reagents are generally more expensive than second generation sequencing.
+- Some third-generation sequencers exhibit higher error rates than second-generation sequencers.
+- The reagents are generally more expensive than second-generation sequencing.
 
 ## Overview of the NGS process
 
-Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same. The differences lie primarily in the chemistry of the respective sequencing technologies.
+Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same.
+The differences lie primarily in the chemistry of the respective sequencing technologies.
 
-1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules. These adapters participate in the hybridization of the library fragments to the matrix and form a priming site.
+1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules.
+   These adapters participate in the hybridization of the library fragments to the matrix and form a priming site.
 
-2. **Amplification and sequencing**: In the second step, the library gets converted into single strand molecules. During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are being created. All of the clusters perform individual reactions during a single sequencing run.
+2. **Amplification and sequencing**: In the second step, the library gets converted into single-strand molecules.
+   During an amplification step (such as a polymerase chain reaction), clusters of DNA molecules are created.
+   All of the clusters perform individual reactions during a single sequencing run.
 
-3. **Data output and analysis**: The output of a sequencing experiment depends on the sequencing technology and chemistry. Some sequencers generate fluorescence signals which are stored in specific output files, and others may generate electric signals which are stored in corresponding file formats. Generally, the amount of generated data, the raw data, is very large. Such data requires complex and computationally heavy processing. This is further discussed in the raw data processing chapter.
+3. **Data output and analysis**: The output of a sequencing experiment depends on the sequencing technology and chemistry.
+   Some sequencers generate fluorescence signals, which are stored in specific output files.
+   Others may generate electric signals, which are stored in corresponding file formats.
+   Generally, the amount of generated data, the raw data, is huge.
+   Such data requires complex and computationally heavy processing.
+   This is further discussed in the raw data processing chapter.
 
 (exp-data:rna-sequencing)=
 
 ## RNA sequencing
 
-So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced. However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about the dynamic and real-time processes of a cell.
+So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced.
+However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about a cell's dynamic and real-time processes.
 For example, by combining different splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins.
 This alternative splicing event is a natural phenomenon that occurs frequently in eukaryotes.
 In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
 This is where RNA sequencing (RNA-Seq) comes into play.
 
-RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
+RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
 
-Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
-This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes and other experimental conditions.
+Sequencing RNA allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
+This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes, and other experimental conditions.
 
-Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 
-Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features. This results in rich data sets that can be used for exploratory data analysis.
+Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
+This results in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
 
