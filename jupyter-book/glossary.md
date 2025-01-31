@@ -74,6 +74,9 @@ cDNA
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes`.
 
+directed graph
+    A directed graph (or digraph) is a graph consisting of a set of nodes (vertices) connected by edges (arcs), where each edge has a direction indicating a one-way relationship between nodes.
+
 DNA
     DNA is the acronym of Deoxyribonucleic acid.
     It is the organic chemical storing hereditary information and instructions for protein synthesis.
@@ -95,6 +98,9 @@ Dropout
 Drop-seq
     A protocol for scRNA-seq that separates cells into nano-liter sized aqueous droplets enabling large-scale profiling.
 
+Edit distance
+    Edit distance (often referring to Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
+
 FASTQ reads
     Sequencing reads that are saved in the FASTQ format.
     FASTQ files are then used to map against the reference genome of interest to obtain gene counts for cells.
@@ -108,6 +114,10 @@ flowcell
 
 Gene expression matrix
     A cell (barcode) by gene (scverse ecosystem) or gene by cell (barcode) matrix storing counts in the cell values.
+
+Hamming distance
+    A measure of the number of positions at which two strings of equal length differ.
+    It is commonly used in error detection and correction, including barcode correction in sequencing data.
 
 Imputation
     The replacement of missing values with usually artificial values.
