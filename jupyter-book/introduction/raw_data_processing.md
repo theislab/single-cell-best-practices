@@ -294,12 +294,13 @@ For example, [global alignment](https://en.wikipedia.org/wiki/Needleman%E2%80%93
 Additionally, "soft-clipping" may be used to reduce penalties for mismatches, insertions, or deletions at the start or end of the read, achieved through ["extension" alignment](https://github.com/smarco/WFA2-lib#-33-alignment-span).
 While these variations modify the rules of the dynamic programming recurrence and traceback, they do not fundamentally alter its overall complexity.
 
-In addition to general alignment techniques, several sophisticated modifications and heuristics have been developed to enhance the practical efficiency of aligning genomic sequencing reads. For example,`banded alignment` {cite}`chao1992aligning` is a popular heuristic used by many tools to avoid computing large portions of the dynamic programming table when alignment scores below a threshold are not of interest.
+In addition to general alignment techniques, several sophisticated modifications and heuristics have been developed to enhance the practical efficiency of aligning genomic sequencing reads.
+For example,`banded alignment` {cite}`chao1992aligning` is a popular heuristic used by many tools to avoid computing large portions of the dynamic programming table when alignment scores below a threshold are not of interest.
 Other heuristics, like X-drop {cite}`zhang2000` and Z-drop {cite}`li2018minimap2`, efficiently prune unpromising alignments early in the process. Recent advances, such as wavefront alignment {cite}`marco2021fast`, marco2022optimal, enable the determination of optimal alignments in significantly reduced time and space, particularly when high-scoring alignments are present.
 Additionally, much work has focused on optimizing data layout and computation to leverage instruction-level parallelism {cite}`wozniak1997using, rognes2000six, farrar2007striped`, and expressing dynamic programming recurrences in ways that facilitate data parallelism and vectorization, such as through difference encoding {cite:t}`Suzuki2018`.
 Most widely-used alignment tools incorporate these highly optimized, vectorized implementations.
 
-In addition to the alignment score, the backtrace of the actual alignment that produces this score is often encoded as a `CIGAR` string (short for "Concise Idiosyncratic Gapped Alignment Report").
+In addition to the alignment score, the {term}`backtrace` of the actual alignment that produces this score is often encoded as a `CIGAR` string (short for "Concise Idiosyncratic Gapped Alignment Report").
 This alphanumeric representation is typically stored in the SAM or BAM file output.
 For example, the `CIGAR` string `3M2D4M` indicates that the alignment has three matches or mismatches, followed by a deletion of length two (representing bases present in the reference but not the read), and then four more matches or mismatches.
 Extended `CIGAR` strings can provide additional details, such as distinguishing between matches, mismatches, or insertions.
@@ -316,85 +317,185 @@ These approaches include traditional "full-alignment" methods, such as those imp
 An abstract overview of the alignment-based method and lightweight mapping-based method.
 :::
 
-Alignment-based approaches can be further categorized into spliced-alignment and contiguous-alignment approaches (currently, there are no lightweight-mapping approaches that perform spliced mapping). Spliced-alignment approaches are capable of aligning a sequence read over several distinct segments of a reference, allowing potentially large gaps between the regions of the reference that align well with the corresponding parts of the read. These alignment approaches are typically applied when aligning RNA-seq reads to the genome, since the alignment procedure must be able to align reads that span across one or more splice junctions of the transcript, where a sequence that is contiguous in the read may be separated by intron and exon subsequences (potentially spanning kilobases of sequence) in the reference. Spliced alignment is a challenging problem, particularly in cases where only a small region of the read spans a splicing junction, since very little informative sequence may be available to place the segment of the read that overhangs the splice junction by only a small amount. On the other hand, contiguous alignment seeks a contiguous substring of the reference that aligns well against the read. In such alignment problems, though small insertions and deletions may be allowed, large gaps such as those observed in spliced alignments are typically not tolerated.
+Alignment-based approaches can be categorized into spliced-alignment and contiguous-alignment methods.
+Currently, no lightweight-mapping approaches perform spliced mapping.
 
-Finally, we can draw a distinction between alignment-based methods such as those described above and lightweight-mapping methods, which include approaches such as pseudoalignment {cite}`Bray2016`, quasi-mapping {cite}`srivastava2016rapmap`, and pseudoalignment with structural constraints {cite}`raw:He2022`. Such approaches generally achieve superior speed by avoiding nucleotide-level alignment between the read and reference sequences. Instead, they base the determination of the reported mapping loci of a read on a separate set of rules and heuristics that may look only at the set of matching k-mers or other types of exact matches (e.g., via a consensus rule) and, potentially, their orientations and relative positions with respect to each other on both the read and reference (e.g., chaining). This can lead to substantially increased speed and mapping throughput, but also precludes easily-interpretable score-based assessments of whether or not the matches between the read and reference constitute a good match capable of supporting a high-quality alignment.
+**Spliced-alignment methods** allow a sequence read to align across multiple distinct segments of a reference, allowing potentially large gaps between aligned regions.
+These approaches are particularly useful for aligning RNA-seq reads to the genome, where reads may span {term}`splice junctions`.
+In such cases, a contiguous sequence in the read may be separated by intron and exon subsequence in the reference, potentially spanning kilobases of sequence.
+Spliced alignment is especially challenging when only a small portion of a read overlaps a splice junction, as limited sequence information is available to accurately place the overhanging segment.
+
+**Contiguous-alignment methods**, in contrast, require a continuous substring of the reference to align well with the read.
+While small insertions and deletions may be tolerated, large gaps—such as those in spliced alignments—are generally not allowed.
+
+Alignment-based methods, such as spliced and contiguous alignment, can be distinguished from **lightweight-mapping methods**, which include approaches like **pseudoalignment** {cite}`Bray2016`, **quasi-mapping** {cite}`srivastava2016rapmap`, and **pseudoalignment with structural constraints** {cite}`raw:He2022`.
+
+Lightweight-mapping methods achieve significantly higher speed by bypassing nucleotide-level alignment between the read and reference sequences.
+Instead, they determine mapping loci based on alternative rules and heuristics, such as identifying matching k-mers or other exact matches.
+These methods may also consider the orientation and relative positions of these matches on both the read and reference (e.g., through chaining).
+
+While this approach greatly improves speed and throughput, it does not provide easily-interpretable score-based assessments to determine the quality of a match, making it more difficult to assess alignment confidence.
 
 (raw-proc:mapping-references)=
 
 ### Mapping against different reference sequences
 
-While different choices can be made among the mapping algorithms themselves, different choices can _also_ be made about the reference against which the read is mapped. We consider three main categories of reference sequence against which a method might map:
+In addition to selecting a mapping algorithm, choices can _also_ be made regarding the reference sequence against which the reads are mapped.
+There are three main categories of reference sequences:
 
-- The full (likely annotated) reference genome
-- The annotated transcriptome
-- An augmented transcriptome
+- Full reference genome (typically annotated)
+- Annotated transcriptome
+- Augmented transcriptome
 
-It is also worth noting that, currently, not all combinations of mapping algorithms and reference sequences are possible. For example, lightweight mapping-based algorithms do not currently exist that can perform spliced mapping of reads against a reference genome.
+Currently, not all combinations of mapping algorithms and reference sequences are possible. For instance, lightweight-mapping algorithms do not yet support spliced mapping of reads against a reference genome.
 
 (raw-proc:genome-mapping)=
 
 #### Mapping to the full genome
 
-The first type of reference, against which a method may map, consists of the entire genome of the target organism, usually with the annotated transcripts considered during mapping. Tools like `zUMIs` {cite}`zumis`, `Cell Ranger` {cite}`raw:Zheng2017` and `STARsolo` {cite}`Kaminow2021` take this approach. Since many of the reads arise from spliced transcripts, such an approach also requires the use of a splice-aware alignment algorithm where the alignment for a read can be split across one or more splicing junctions. The main benefits of this approach are that reads arising from any location in the genome, not just from annotated transcripts, can be accounted for. Since these approaches require constructing a genome-wide index, there is little marginal cost for reporting not only the reads that map to known spliced transcripts but also reads that overlap or align within introns, making the alignment cost when using such approaches very similar for both single-cell and single-nucleus data. A final benefit is that even reads residing outside of the annotated transcripts, exons, and introns can be accounted for by such methods, which can enable _post hoc_ augmentation of the set of quantified loci (e.g., as is done by {cite:t}`Pool2022` by adding expressed UTR extensions to transcript annotations in a sample-specific and data-driven manner) and potentially increase gene detection and quantification sensitivity.
+The first type of reference used for mapping is the **entire genome** of the target organism, typically with annotated transcripts considered during mapping.
+Tools such as `zUMIs` {cite}`zumis`, `Cell Ranger` {cite}`raw:Zheng2017`, and `STARsolo` {cite}`Kaminow2021` follow this approach.
+Since many reads originate from **spliced transcripts**, this method requires a **splice-aware alignment algorithm** capable of splitting alignments across one or more splice junctions.
 
-On the other hand, the versatility of the strategy of performing spliced alignment against the full genome comes with certain trade-offs. First, the most commonly-used alignment tools that adopt this strategy in the single-cell space have substantial memory requirements. Due to its speed and versatility, most of these tools are based upon the STAR {cite}`dobin2013star` aligner. Yet, for a human-scale genome, constructing and storing the index can require upwards of $32$ GB of memory. The use of a sparse [suffix array](https://en.wikipedia.org/wiki/Suffix_array) can reduce the final index size by close to a factor of $2$, but this comes at a reduction in alignment speed, and it still requires larger memory for the initial construction. Second, the increased difficulty of spliced alignment compared to contiguous alignment and the fact that current spliced-alignment tools must explicitly compute a score for each read alignment, means that this approach comes at an increased computational cost compared to the alternatives. Finally, such an approach requires the genome of the organism under study is available. While this is not problematic for the most commonly-studied reference organisms and is rarely an issue, it can make using such tools difficult for non-model organisms where only a transcriptome assembly may be available.
+A key advantage of this approach is that it accounts for reads arising from any location in the genome, not just those from annotated transcripts.
+Additionally, because a **genome-wide index** is constructed, there is minimal additional cost in reporting not only reads that map to known spliced transcripts but also those that overlap introns or align within non-coding regions, making this method equally effective for **single-cell** and **single-nucleus** data.
+Another benefit is that even reads mapping outside annotated transcripts, exons, or introns can still be accounted for, enabling **_post hoc_ augmentation** of the quantified loci.
+For instance, methods such as those described by {cite:t}`Pool2022` incorporate expressed {term}`UTR` extensions in a sample-specific, data-driven manner, potentially increasing gene detection and improving quantification sensitivity.
+
+While spliced alignment against the full genome offers versatility, it also comes with certain trade-offs.
+One major limitation is the high memory requirements of commonly used alignment tools in the single-cell space.
+Many of these tools are based on the **STAR** aligner {cite}`dobin2013star`, due to its speed and versatillity, and require substantial computational resources.
+For a human-scale genome, constructing and storing the index can demand over $32$ GB of memory.
+Using a sparse [suffix array](https://en.wikipedia.org/wiki/Suffix_array) can nearly halve the final index size, but this comes at the cost of reduced alignment speed and still requires significant memory for initial construction.
+
+Additionally, spliced alignment is inherently more complex than contiguous alignment.
+Because current spliced-alignment tools must explicitly compute a score for each read, this approach has a higher computational cost compared to alternatives.
+
+Finally, spliced alignment requires an available reference genome for the organism under study.
+While this is rarely an issue for well-characterized model organisms, it can pose challenges when working with non-model organisms, where only a transcriptome assembly may be available.
 
 (raw-proc:txome-mapping)=
 
 #### Mapping to the spliced transcriptome
 
-To reduce the computational overhead of spliced alignment to a genome, the widely-adopted alternative is to use just the sequences of the annotated transcripts themselves as a reference. Since the majority of single-cell experiments are generated from model organisms (such as mouse or human), which have well-annotated transcriptomes, such transcriptome-based quantification methods may provide similar read coverage to their genome-based counterparts. Compared to the genome, transcriptome sequences are much smaller in size, minimizing the computational resources required for running the mapping pipeline. Additionally, since the relevant splicing patterns are already represented in the transcript sequences themselves, this approach dispenses with the need to solve the difficult spliced-alignment problem. Instead, one can simply search for contiguous alignments or mappings for the read. Since only contiguous mappings need to be discovered, both alignment and lightweight mapping techniques are amenable to transcriptome references, and both approaches have been used in popular tools that adopt the spliced transcriptome as the target of reference mapping.
+To reduce the computational overhead of spliced alignment to a genome, a widely adopted alternative is to use only the annotated transcript sequences as the reference.
+Since most single-cell experiments are conducted on model organisms like mouse or human, which have well-annotated transcriptomes, transcriptome-based quantification can achieve similar read coverage to genome-based methods.
 
-However, while such approaches can greatly reduce the memory and time required for alignment and mapping, they will fail to capture reads that arise from outside of the spliced transcriptome. Such an approach is therefore not adequate when processing single-nucleus data. Even in single-cell experiments, reads arising from outside of the spliced transcriptome can constitute a substantial fraction of all data, and there is growing evidence that such reads should be incorporated into subsequent analysis {cite}`technote_10x_intronic_reads,Pool2022`. Further, when paired with lightweight-mapping approaches, short matches shared between the spliced transcriptome and the reference sequences that truly give rise to a read may lead to spurious read mappings, which, in turn, can lead to spurious and even biologically implausible estimates of the expression of certain genes {cite}`Kaminow2021,Bruning2022Comparative,raw:He2022`.
+Compared to the genome, transcriptome sequences are much smaller, significantly reducing the computational resources needed for mapping.
+Additionally, because splicing patterns are already represented in transcript sequences, this approach eliminates the need for complex spliced alignment.
+Instead, one can simply search for contiguous alignments or mappings for the read.
+Instead, reads can be mapped using contiguous alignments, making both alignment-based and lightweight-mapping techniques suitable for transcriptome references.
+As a result, both approaches are commonly used in popular tools that perform reference mapping against the spliced transcriptome.
+
+While these approaches significantly reduce the memory and time required for alignment and mapping, they fail to capture reads that arise from outside the spliced transcriptome.
+As a result, they are not suitable for processing single-nucleus data.
+Even in single-cell experiments, reads arising from outside of the spliced transcriptome can constitute a substantial fraction of all data, and there is growing evidence that such reads should be incorporated into subsequent analysis {cite}`technote_10x_intronic_reads,Pool2022`.
+Even in single-cell experiments, a substantial fraction of reads may arise from regions outside the spliced transcriptome, and increasing evidence suggests that incorporating these reads into downstream analyses can be beneficial {cite}`technote_10x_intronic_reads,Pool2022`.
+Additionally, when paired with lightweight-mapping methods, short sequences shared between the spliced transcriptome and the actual genomic regions that generated a read can lead to spurious mappings. This, in turn, may result in misleading and even biologically implausible gene expression estimates {cite}`Kaminow2021,Bruning2022Comparative,raw:He2022`.
 
 (raw-proc:aug-txome-mapping)=
 
 #### Mapping to an augmented transcriptome
 
-To deal with the fact that sequenced reads may arise from outside of spliced transcripts, it is possible to augment the spliced transcript sequences with other reference sequences that may be expected to give rise to reads (e.g., full-length unspliced transcripts or excised intronic sequences). Transcriptome references, when augmented with further sequences such as introns, allow reference indices typically smaller than those required for the full genome while simultaneously retaining the ability to search only for contiguous read alignments. This means they can potentially enable both faster and less memory-hungry alignment than when mapping against the full genome while still accounting for many of the reads that arise from outside of the spliced transcriptome. Finally, by mapping to an expanded collection of reference sequences, not only are the mapping locations of more reads recovered compared to mapping against just the spliced transcriptome, but when using lightweight mapping-based approaches, spurious mappings can be greatly reduced {cite}`raw:He2022`. Such an expanded or augmented transcriptome is commonly used among approaches (those that do not map to the full genome) when they need to quantify single-nucleus data or prepare data for RNA-velocity analysis {cite}`Soneson2021Preprocessing`. Therefore, such augmented references can be constructed for all of the common methods that don't make use of spliced alignment to the full genome {cite}`Srivastava2019,Melsted2021,raw:He2022`.
+To account for reads originating outside spliced transcripts, the spliced transcript sequences can be augmented with additional reference sequences, such as full-length unspliced transcripts or excised intronic sequences.
+By incorporating these elements, augmented transcriptome references maintain a smaller index than the full genome while still allowing for contiguous read alignments.
+This enables faster and more memory-efficient mapping compared to full-genome alignment, while still capturing many reads that would otherwise be missed when mapping solely to the spliced transcriptome.
 
-{cite:t}`raw:He2022` argue that such an approach is valuable even when processing standard single-cell RNA-seq data and recommend constructing an augmented _splici_ (meaning spliced + intronic) reference for mapping and quantification. The _splici_ reference is constructed using the spliced transcriptome sequence along with the sequences containing the merged intervals corresponding to the introns of the annotated genes. Each reference is then labeled with its annotated splicing status, and the mapping to this reference is subsequently paired with splicing status-aware methods for {ref}`raw-proc:umi-resolution`. The main benefits of this approach are that it admits the use of lightweight-mapping methods while substantially reducing the prevalence of spurious mappings. It enables the detection of reads of both spliced and unspliced origin, which can increase the sensitivity of subsequent analysis {cite}`technote_10x_intronic_reads,Pool2022`, and, since splicing status is tracked during quantification and reported separately in the output, it unifies the processing pipeline for single-cell, single-nucleus, and RNA-velocity preprocessing.
+Additionally, expanding the reference set improves mapping accuracy.
+More reads can be confidently assigned compared to using only the spliced transcriptome, and when combined with lightweight mapping approaches, spurious mappings can be significantly reduced {cite}`raw:He2022`.
+Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and RNA velocity analysis {cite}`Soneson2021Preprocessing` (see {doc}`../trajectories/rna_velocity`).
+These augmented references can be constructed for all common methods that do not rely on spliced alignment to the full genome {cite}`Srivastava2019,Melsted2021,raw:He2022`.
+
+{cite:t}`raw:He2022` argue that this approach is valuable even for standard single-cell RNA-seq data and recommend constructing an augmented _splici_ reference (spliced + intronic) for mapping and quantification.
+The _splici_ reference is built using the spliced transcriptome sequence alongside sequences representing the merged intronic intervals of annotated genes.
+Each reference sequence is labeled with its splicing status, and mapping results are processed using splicing status-aware methods for {ref}`raw-proc:umi-resolution`.
+
+This approach offers several key benefits.
+It allows the use of lightweight mapping methods while significantly reducing spurious mappings.
+Additionally, it enables the detection of both spliced and unspliced reads, improving sensitivity in downstream analyses {cite}`technote_10x_intronic_reads,Pool2022`.
+Since splicing status is tracked and reported separately, this method also unifies the preprocessing pipeline across single-cell, single-nucleus, and RNA velocity analyses, making it a versatile solution for transcript quantification.
 
 (raw-proc:cb-correction)=
 
 ## Cell barcode correction
 
-Droplet-based single-cell segregation systems, such as those provided by 10x Genomics, have become an important tool for studying the cause and consequences of cellular heterogeneity. In this segregation system, the RNA material of each captured cell is extracted within a water-based droplet encapsulation along with a barcoded bead. These beads tag the RNA content of individual cells with unique oligonucleotides, called cell barcodes (CBs), that are later sequenced along with the fragments of the cDNAs that are reversely transcribed from the RNA content. The beads contain high-diversity DNA barcodes enabling parallel barcoding of the cell's molecular content and _in silico_ demultiplexing of the sequencing reads into individual cellular bins.
+Droplet-based single-cell segregation systems, such as those provided by 10x Genomics, have become an important tool for studying the cause and consequences of cellular heterogeneity.
+In this segregation system, the RNA material of each captured cell is extracted within a water-based droplet encapsulation along with a **barcoded bead**.
+These beads tag the RNA content of individual cells with unique oligonucleotides, called cell barcodes (CBs), that are later sequenced along with the fragments of the cDNAs that are reversely transcribed from the RNA content.
+The beads contain high-diversity DNA barcodes, allowing for parallel barcoding of a cell’s molecular content and _in silico_ demultiplexing of sequencing reads into individual cellular bins.
 
 ```{admonition} A note on alignment orientation
 
-Depending on the chemistry of the sample being analyzed and the processing options provided by the user, it is not necessarily the case that all sequenced fragments aligning to the reference will be considered for quantification and barcode correction.
-One commonly-applied criterion for filtering is alignment orientation. Specifically, certain chemistries specify protocols such that the aligned reads should only derive from (i.e. map back to) the underlying transcripts in a specific orientation.
-For example, in 10x Genomics 3' Chromium chemistries, we expect the biological read to align to the underlying transcript's forward strand, though anti-sense reads do exist {cite}`technote_10x_intronic_reads`. Thus, mappings of the reads in the reverse-complement orientation to the underlying sequences may be ignored or filtered out at the user's discretion. If a chemistry follows such a so-called "stranded" protocol, this should be documented.
+Depending on the sample chemistry and user-defined processing options, not all sequenced fragments that align to the reference are necessarily considered for quantification and barcode correction.
+One commonly-applied criterion for filtering is alignment orientation.
+Specifically, certain chemistries specify protocols such that the aligned reads should only derive from (i.e. map back to) the underlying transcripts in a specific orientation.
+For example, in 10x Genomics 3' Chromium chemistries, we expect the biological read to align to the underlying transcript's forward strand, though anti-sense reads do exist {cite}`technote_10x_intronic_reads`.
+As a result, reads mapped in the reverse-complement orientation to the reference sequences may be ignored or filtered out based on user-defined settings.
+If a chemistry follows such a so-called "stranded" protocol, this should be documented.
 ```
 
 ### Type of errors in barcoding
 
-The tag, sequence, and demultiplex method for single-cell profiling generally works well. However, the number of observed cell barcodes (CBs) in a droplet-based library can significantly differ from the number of originally encapsulated cells by several fold. A few main sources of error can lead to such observation:
+The tag, sequence, and demultiplexing method used for single-cell profiling is generally effective.
+However, in droplet-based libraries, the number of observed cell barcodes (CBs) can differ significantly—often by several fold—from the number of originally encapsulated cells.
+This discrepancy arises from several key sources of error:
 
-- Doublet / Multiplet: A single barcode can be associated with two or more cells and lead to undercounting of cells.
-- Empty Droplet: A droplet can be captured with no encapsulated cell, where the ambient RNA is tagged with the barcode and can be sequenced; this leads to overcounting of cells.
-- Sequence error: Errors can arise during the PCR amplification or sequencing process and can contribute to both under and over-counting of the cells.
+- Doublets/Multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
+- Empty Droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
+- Sequence Errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
 
-Computational tools for demultiplexing the {term}`RNA`-seq reads into cell-specific bins use a wide range of diagnostic indicators to filter out artefactual or low-quality data. For example, numerous methods exist for the removal of ambient {term}`RNA` contamination {cite}`raw:Young2020,Muskovic2021,Lun2019`, doublet detection {cite}`DePasquale2019,McGinnis2019,Wolock2019,Bais2019` and cell barcodes correction for sequence errors based on nucleotide sequence similarity.
+To address these issues, computational tools for demultiplexing RNA-seq reads into cell-specific bins use various diagnostic indicators to filter out artefactual or low-quality data.
+Numerous methods exist for removing ambient RNA contamination {cite}`raw:Young2020,Muskovic2021,Lun2019`, detecting doublets {cite}`DePasquale2019,McGinnis2019,Wolock2019,Bais2019`, and correcting cell barcode errors based on nucleotide sequence similarity.
 
 Several common strategies are used for cell barcode identification and correction.
 
-- Correction against a known list of _potential_ barcodes: Certain chemistries, such as 10x Chromium, draw CBs from a known pool of potential barcode sequences. Thus, the set of barcodes observed in any sample is expected to be a subset of this known list, often called a "whitelist", "permit list", or "pass list". In this case, a common strategy is to assume each barcode that exactly matches some element from the known list is correct and for all other barcodes to be correct against the known list of barcodes (i.e., to find barcodes from the permit list that are some small Hamming distance or edit distance away from the observed barcodes). This approach leverages the known permit list to allow efficient correction of many barcodes that have been potentially corrupted. However, one difficulty with this approach is that a given corrupted barcode may have multiple possible corrections in the permit list (i.e., its correction may be ambiguous). In fact, if one considers a barcode that is taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is a $\sim 81\%$ chance that it sits at Hamming distance $1$ from two or more barcodes in the permit list. The probability of such collisions can be reduced by only considering correcting against barcodes from the known permit list, which, themselves, occur exactly in the given sample (or even only those that occur exactly in the given sample above some nominal frequency threshold). Also, information such as the base quality at the "corrected" position can be used to potentially break ties in the case of ambiguous corrections. Yet, as the number of assayed cells increases, insufficient sequence diversity in the set of potential cell barcodes increases the frequency of ambiguous corrections, and reads tagged with barcodes having ambiguous corrections are most commonly discarded.
+1. **Correction against a known list of _potential_ barcodes**:
+   Certain chemistries, such as 10x Chromium, draw CBs from a known pool of potential barcode sequences.
+   Thus, the set of barcodes observed in any sample is expected to be a subset of this known list, often called a "whitelist", "permit list", or "pass list".
+   In this case, the standard approach assumes that:
 
-- Knee or elbow-based methods: If a set of potential barcodes is unknown — or even if it is known, but one wishes to correct directly from the observed data itself without consulting an external list — one can adopt a method based on the observation that the list of "true" or high-quality barcodes in a sample is likely those associated with the greatest number of reads.
-  To do this, one can construct the cumulative frequency plot of the barcodes, in which barcodes are sorted in descending order of the number of distinct reads or UMIs with which they are associated. Often, this ranked cumulative frequency plot will contain a "knee" or "elbow" – an inflection point that can be used to characterize frequently occurring barcodes from infrequent (and therefore likely erroneous) barcodes. Many methods exist for attempting to identify such an inflection point {cite}`Smith2017,Lun2019,raw:He2022` as a likely point of discrimination between properly captured cells and empty droplets. Subsequently, the set of barcodes that appear "above" the knee can be treated as a permit list against which the rest of the barcodes may be corrected, as in the first method list above. Such an approach is flexible as it can be applied in chemistries that have an external permit list and those that don't. Further parameters of the knee-finding algorithms can be altered to yield more or less restrictive selected barcode sets. Yet, such an approach can have certain drawbacks, like a tendency to be overly conservative and sometimes failing to work robustly in samples where no clear knee is present.
+- Any barcode matching an entry in the known list is correct.
+- Any barcode not in the list is corrected by finding the closest match from the permit list, typically using {term}`Hamming distance` or {term}`edit distance`.
+  This strategy allows for efficient barcode correction but has limitations.
+  If a corrupted barcode closely resembles multiple barcodes in the permit list, its correction becomes ambiguous.
+  For example, for a barcode taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is an $\sim 81\%$ probability that it sits at hamming distance $1$ from two or more barcodes in the permit list.
+  The probability of such collisions can be reduced by considering correcting _only_ against barcodes from the known permit list, which, themselves, occur exactly in the given sample (or even only those that occur exactly in the given sample above some nominal frequency threshold).
+  Also, information such as the base quality at the "corrected" position can be used to potentially break ties in the case of ambiguous corrections.
+  Yet, as the number of assayed cells increases, insufficient sequence diversity in the set of potential cell barcodes increases the frequency of ambiguous corrections, and reads tagged with barcodes having ambiguous corrections are most commonly discarded.
 
-- Filtering and correction based on an expected cell count provided by the user: These approaches seek to estimate a robust list of high-quality or present barcodes in the cases where the CB frequency distribution may not have a clear knee or exhibit bimodality due to technical artifacts. In such an approach, the user provides an estimate of the expected number of assayed cells. Then, the barcodes are ordered by descending frequency, the frequency $f$ at a robust quantile index near the expected cell count is obtained, and all cells having a frequency within a small constant fraction of $f$ (e.g., $\ge \frac{f}{10}$) are considered as valid barcodes. Again, the remaining barcodes are corrected against this valid list by attempting to correct uniquely to one of these valid barcodes based on sequence similarity.
+##TODO## 2. **Knee or elbow-based methods**:
+If a set of potential barcodes is unknown — or even if it is known, but one wishes to correct directly from the observed data itself without consulting an external list — one can use a method based on the observation that high-quality barcodes are those associated with the highest number of reads in the sample.
+To achieve this, one can construct a cumulative frequency plot where barcodes are sorted in descending order based on the number of distinct reads or UMIs they are associated with.
+Often, this ranked cumulative frequency plot will contain a "knee" or "elbow" – an inflection point that can be used to characterize frequently occurring barcodes from infrequent (and therefore likely erroneous) barcodes.
+Many methods exist for attempting to identify such an inflection point {cite}`Smith2017,Lun2019,raw:He2022` as a likely point of discrimination between properly captured cells and empty droplets.
+Subsequently, the set of barcodes that appear "above" the knee can be treated as a permit list against which the rest of the barcodes may be corrected, as in the first method list above.
+Such an approach is flexible as it can be applied in chemistries that have an external permit list and those that don't.
+Further parameters of the knee-finding algorithms can be altered to yield more or less restrictive selected barcode sets.
+Yet, such an approach can have certain drawbacks, like a tendency to be overly conservative and sometimes failing to work robustly in samples where no clear knee is present.
 
-- Filtering based on a forced number of valid cells: Perhaps the simplest approach, although potentially problematic, is for the user to directly provide the index in the sorted frequency plot above which barcodes will be considered valid. All barcodes with a frequency greater than or equal to the frequency at the selected index are considered valid and treated as constituting the permit list. The remaining set of barcodes is then corrected against this list using the same approach described in the other methods above. If there are at least as many distinct barcodes as the number of cells the user requests, then this many cells will always be selected. Of course, such an approach is only reasonable when the user has a good reason to believe that the threshold frequency should be set around the provided index.
+3. **Filtering and Correction Based on an Expected Cell Count**:
+   When barcode frequency distributions lack a clear knee or show bimodal patterns due to technical artifacts, barcode correction can be guided by a user-provided expected cell count.
+   In such an approach, the user provides an estimate of the expected number of assayed cells.
+   Then, the barcodes are ordered by descending frequency, the frequency $f$ at a robust quantile index near the expected cell count is obtained, and all cells having a frequency within a small constant fraction of $f$ (e.g., $\ge \frac{f}{10}$) are considered as valid barcodes.
+   Again, the remaining barcodes are corrected against this valid list by attempting to correct uniquely to one of these valid barcodes based on sequence similarity.
+
+4. **Filtering Based on a Forced Number of Valid Cells**:
+   The simplest approach, although potentially problematic, is for the user to manually specify the number of valid barcodes.
+
+- The user chooses an index in the sorted barcode frequency list.
+- All barcodes above this threshold are considered valid.
+- Remaining barcodes are corrected against this list using standard similarity-based correction methods.
+  While this guarantees selection of at least n cells, it assumes that the chosen threshold accurately reflects the number of real cells.
+  It is only reasonable if he user has a good reason to believe that the threshold frequency should be set around the provided index.
 
 %In the `alevin-fry` framework, the frequency of every observed cell barcode is generated, and there are four customizable options to select the high-quality cell barcodes for downstream analysis:
 
 ### Future challenges
 
-While cellular barcoding of high-throughput single-cell profiling has been a tremendously successful approach, some challenges still remain, especially as the scale of experiments continues to grow. For example, the design of a robust method for selecting high-quality cell barcodes from the set of all the observations is still an active area of research, with distinct challenges arising, e.g., between single-cell and single-nucleus experiments. Also, as single-cell technologies have advanced to profile increasing numbers of cells, insufficient sequence diversity in the CB sequence can result in sequence corrections leading to CB collision. Addressing this latter problem may require more intelligent barcode design methods and continuing increases in the lengths of oligonucleotides used for cell barcoding.
+While cellular barcoding of high-throughput single-cell profiling has been a tremendously successful approach, some challenges still remain, especially as the scale of experiments continues to grow.
+For example, the design of a robust method for selecting high-quality cell barcodes from the set of all the observations is still an active area of research, with distinct challenges arising, e.g., between single-cell and single-nucleus experiments.
+Also, as single-cell technologies have advanced to profile increasing numbers of cells, insufficient sequence diversity in the CB sequence can result in sequence corrections leading to CB collision.
+Addressing this latter problem may require more intelligent barcode design methods and continuing increases in the lengths of oligonucleotides used for cell barcoding.
 
 (raw-proc:umi-resolution)=
 
