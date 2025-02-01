@@ -44,7 +44,7 @@ A quick and effective way to perform this is by using quality control (QC) tools
 While many modern single-cell data processing tools include some built-in quality checks—such as evaluating the N content of sequences or the fraction of mapped reads—it is still good practice to run an independent QC check.
 This provides additional metrics that are often useful for identifying broader quality issues.
 
-For readers interested in what a typical `FastQC` report looks like, in the following toggle content, example reports for both [high-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html) and [low-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html) Illumina data provided by the `FastQC`[manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), along with the tutorials and descriptions from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/) are used to demonstrate the modules in the `FastQC` report.
+For readers interested in what a typical `FastQC` report looks like, in the following toggle content, example reports for both [high-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html) and [low-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html) Illumina data provided by the `FastQC` [manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), along with the tutorials and descriptions from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/) are used to demonstrate the modules in the `FastQC` report.
 Although these tutorials are not explicitly made for single-cell data, many of the results are still relevant for single-cell data, with a few caveats described below.
 
 In the toggle section, all graphs, except specifically mentioned, are taken from the example reports on the `FastQC` [manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
@@ -365,7 +365,7 @@ For instance, methods such as those described by {cite:t}`Pool2022` incorporate 
 While spliced alignment against the full genome offers versatility, it also comes with certain trade-offs.
 One major limitation is the high memory requirements of commonly used alignment tools in the single-cell space.
 Many of these tools are based on the **STAR** aligner {cite}`dobin2013star`, due to its speed and versatillity, and require substantial computational resources.
-For a human-scale genome, constructing and storing the index can demand over $32$ GB of memory.
+For a human-scale genome, constructing and storing the index can demand over 32 GB of memory.
 Using a sparse [suffix array](https://en.wikipedia.org/wiki/Suffix_array) can nearly halve the final index size, but this comes at the cost of reduced alignment speed and still requires significant memory for initial construction.
 
 Additionally, spliced alignment is inherently more complex than contiguous alignment.
@@ -458,7 +458,7 @@ Several common strategies are used for cell barcode identification and correctio
 - Any barcode not in the list is corrected by finding the closest match from the permit list, typically using {term}`Hamming distance` or {term}`edit distance`.
   This strategy allows for efficient barcode correction but has limitations.
   If a corrupted barcode closely resembles multiple barcodes in the permit list, its correction becomes ambiguous.
-  For example, for a barcode taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is an $\sim 81\%$ probability that it sits at hamming distance $1$ from two or more barcodes in the permit list.
+  For example, for a barcode taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is an 81\% probability that it sits at hamming distance 1 from two or more barcodes in the permit list.
   The probability of such collisions can be reduced by considering correcting _only_ against barcodes from the known permit list, which, themselves, occur exactly in the given sample (or even only those that occur exactly in the given sample above some nominal frequency threshold).
   Also, information such as the base quality at the "corrected" position can be used to potentially break ties in the case of ambiguous corrections.
   Yet, as the number of assayed cells increases, insufficient sequence diversity in the set of potential cell barcodes increases the frequency of ambiguous corrections, and reads tagged with barcodes having ambiguous corrections are most commonly discarded.
@@ -473,20 +473,20 @@ Several common strategies are used for cell barcode identification and correctio
    Further parameters of the knee-finding algorithms can be altered to yield more or less restrictive selected barcode sets.
    Yet, such an approach can have certain drawbacks, like a tendency to be overly conservative and sometimes failing to work robustly in samples where no clear knee is present.
 
-3. **Filtering and Correction Based on an Expected Cell Count**:
+3. **Filtering and correction based on an expected cell count**:
    When barcode frequency distributions lack a clear knee or show bimodal patterns due to technical artifacts, barcode correction can be guided by a user-provided expected cell count.
    In such an approach, the user provides an estimate of the expected number of assayed cells.
    Then, the barcodes are ordered by descending frequency, the frequency $f$ at a robust quantile index near the expected cell count is obtained, and all cells having a frequency within a small constant fraction of $f$ (e.g., $\ge \frac{f}{10}$) are considered as valid barcodes.
    Again, the remaining barcodes are corrected against this valid list by attempting to correct uniquely to one of these valid barcodes based on sequence similarity.
 
-4. **Filtering Based on a Forced Number of Valid Cells**:
+4. **Filtering based on a forced number of valid cells**:
    The simplest approach, although potentially problematic, is for the user to manually specify the number of valid barcodes.
 
 - The user chooses an index in the sorted barcode frequency list.
 - All barcodes above this threshold are considered valid.
 - Remaining barcodes are corrected against this list using standard similarity-based correction methods.
   While this guarantees selection of at least n cells, it assumes that the chosen threshold accurately reflects the number of real cells.
-  It is only reasonable if he user has a good reason to believe that the threshold frequency should be set around the provided index.
+  It is only reasonable if the user has a good reason to believe that the threshold frequency should be set around the provided index.
 
 %In the `alevin-fry` framework, the frequency of every observed cell barcode is generated, and there are four customizable options to select the high-quality cell barcodes for downstream analysis:
 
