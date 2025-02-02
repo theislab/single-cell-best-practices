@@ -44,7 +44,7 @@ A quick and effective way to perform this is by using quality control (QC) tools
 While many modern single-cell data processing tools include some built-in quality checks—such as evaluating the N content of sequences or the fraction of mapped reads—it is still good practice to run an independent QC check.
 This provides additional metrics that are often useful for identifying broader quality issues.
 
-For readers interested in what a typical `FastQC` report looks like, in the following toggle content, example reports for both [high-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html) and [low-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html) Illumina data provided by the `FastQC` [manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), along with the tutorials and descriptions from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/) are used to demonstrate the modules in the `FastQC` report.
+For readers interested in what a typical `FastQC` report looks like, in the following toggle content, example reports for both [high-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html) and [low-quality](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html) Illumina data provided by the `FastQC` [manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), along with the tutorials and descriptions from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/) are used to demonstrate the modules in the `FastQC` report.
 Although these tutorials are not explicitly made for single-cell data, many of the results are still relevant for single-cell data, with a few caveats described below.
 
 In the toggle section, all graphs, except specifically mentioned, are taken from the example reports on the `FastQC` [manual webpage](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
@@ -159,7 +159,7 @@ As a result, some deviation from the theoretical distribution is not unusual in 
 <img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_gc_content.jpg" alt="Per Sequence GC Content" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per sequence GC content plot.
-The plot on the left is from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/).
+The plot on the left is from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx).
 The plot on the right is taken from [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html).
 :::
 
@@ -365,7 +365,7 @@ For instance, methods such as those described by {cite:t}`Pool2022` incorporate 
 While spliced alignment against the full genome offers versatility, it also comes with certain trade-offs.
 One major limitation is the high memory requirements of commonly used alignment tools in the single-cell space.
 Many of these tools are based on the **STAR** aligner {cite}`dobin2013star`, due to its speed and versatillity, and require substantial computational resources.
-For a human-scale genome, constructing and storing the index can demand over 32 GB of memory.
+For a human-scale genome, constructing and storing the index can demand over $32$ GB of memory.
 Using a sparse [suffix array](https://en.wikipedia.org/wiki/Suffix_array) can nearly halve the final index size, but this comes at the cost of reduced alignment speed and still requires significant memory for initial construction.
 
 Additionally, spliced alignment is inherently more complex than contiguous alignment.
@@ -458,7 +458,7 @@ Several common strategies are used for cell barcode identification and correctio
 - Any barcode not in the list is corrected by finding the closest match from the permit list, typically using {term}`Hamming distance` or {term}`edit distance`.
   This strategy allows for efficient barcode correction but has limitations.
   If a corrupted barcode closely resembles multiple barcodes in the permit list, its correction becomes ambiguous.
-  For example, for a barcode taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is an 81\% probability that it sits at hamming distance 1 from two or more barcodes in the permit list.
+  For example, for a barcode taken from the [10x Chromium v3 permit list](https://teichlab.github.io/scg_lib_structs/data/10X-Genomics/3M-february-2018.txt.gz) and mutated at a single position to a barcode not in the list, there is an $\sim 81\%$ probability that it sits at hamming distance $1$ from two or more barcodes in the permit list.
   The probability of such collisions can be reduced by considering correcting _only_ against barcodes from the known permit list, which, themselves, occur exactly in the given sample (or even only those that occur exactly in the given sample above some nominal frequency threshold).
   Also, information such as the base quality at the "corrected" position can be used to potentially break ties in the case of ambiguous corrections.
   Yet, as the number of assayed cells increases, insufficient sequence diversity in the set of potential cell barcodes increases the frequency of ambiguous corrections, and reads tagged with barcodes having ambiguous corrections are most commonly discarded.
@@ -535,7 +535,7 @@ Here, we concern ourselves primarily with two challenges.
   Failing to address such UMI errors can inflate the estimated number of molecules {cite}`Smith2017,ziegenhain2022molecular`.
 
 - **Multimapping**:
-  This issue arises in cases where a read or UMI belongs to multiple references(e.g., multi-gene reads/UMIs). This happens when different reads of a UMI map to different genes, when a read maps to multiple genes, or both.
+  This issue arises in cases where a read or UMI belongs to multiple references (e.g., multi-gene reads/UMIs). This happens when different reads of a UMI map to different genes, when a read maps to multiple genes, or both.
   The consequence of this issue is that the gene origin of the multi-gene reads/UMIs is ambiguous, which results in uncertainty about the sampled pre-PCR molecule count of those genes.
   Simply discarding multi-gene reads/UMIs can lead to a loss of data or a biased estimate among genes that tend to produce multimapping reads, such as sequence-similar gene families {cite}`Srivastava2019`.
 
@@ -672,7 +672,7 @@ The figure shows the plots in the alevinQC report of an example single-cell data
 Each dot represents a corrected cell barcode with its corrected profile.
 :::
 
-The first(top left) view in {numref}`raw-proc-fig-alevinqc-plots` shows the distribution of cell barcode frequency in decreasing order.
+The first (top left) view in {numref}`raw-proc-fig-alevinqc-plots` shows the distribution of cell barcode frequency in decreasing order.
 In all plots shown above, each point represents a corrected cell barcode, with its x-coordinate corresponding to its cell barcode frequency rank.
 In the top left plot, the y-coordinate corresponds to the observed frequency of the corrected barcode.
 Generally, this plot shows a "knee"-like pattern, which can be used to identify the initial list of high-quality barcodes.
@@ -759,7 +759,7 @@ It is, of course, important to note that the development of methods and tools fo
 It is therefore often useful and reasonable, when performing your own analyses, to experiment with several different tools.
 
 At the coarsest level, the most common tools can process data robustly and accurately.
-It has been suggested that with many common downstream analyses like clustering, and the methods used to perform them, the choice of preprocessing tool typically makes less difference than other steps in the analysis process {cite}`You_2021`
+It has been suggested that with many common downstream analyses like clustering, and the methods used to perform them, the choice of preprocessing tool typically makes less difference than other steps in the analysis process {cite}`You_2021`.
 Nonetheless, it has also been observed that applying lightweight mapping restricted to the spliced transcriptome can increase the probability of spurious mapping and gene expression {cite}`Bruning_2022`.
 
 Ultimately, the choice of a specific tool largely depends on the task at hand, and the constraints on available computational resources.
@@ -1076,7 +1076,7 @@ The [`scrnaseq`](https://nf-co.re/scrnaseq) pipeline from [`nf-core`](https://nf
 
 Tutorials for processing scRNA-seq raw data from [the galaxy project](https://galaxyproject.org/) can be found at [here](https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing-tenx/tutorial.html) and [here](https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing/tutorial.html).
 
-Tutorials for explaining and evaluating FastQC report are available from [MSU](https://rtsf.natsci.msu.edu/genomics/tech-notes/fastqc-tutorial-and-faq/), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), [Galaxy Training](https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html) and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/).
+Tutorials for explaining and evaluating FastQC report are available from [MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), [Galaxy Training](https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html) and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/).
 
 (raw-proc:references)=
 
