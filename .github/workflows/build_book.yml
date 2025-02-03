@@ -1,5 +1,5 @@
 name: Build book
-
+concurrency: preview-${{ github.ref }}
 on: [push, pull_request]
 
 jobs:
@@ -37,6 +37,12 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.pull_request.state == 'open'
         uses: rossjrw/pr-preview-action@v1
         with:
+          message: |
+            [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
+            :---:
+            | <p></p> :dna: View preview of single-cell best practices at<br> ${{ steps.preview-step.outputs.preview-url }} <br><br>
+            | <h6>Built to branch [`${{ env.PREVIEW_BRANCH }}`](${{ github.server_url }}/${{ github.repository }}/tree/${{ env.PREVIEW_BRANCH }}) at ${{ steps.preview-step.outputs.action-start-time }}. <br> Preview will be ready when the [GitHub Pages deployment](${{ github.server_url }}/${{ github.repository }}/deployments) is complete. <br><br> </h6>
+
           source-dir: ./jupyter-book/_build/html
 
   pdfhtml:
