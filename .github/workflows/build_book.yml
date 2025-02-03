@@ -1,15 +1,6 @@
 name: Build book
 
-on:
-  push:
-    branches:
-      - main # Adjust this to your default branch
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - closed
+on: [push, pull_request]
 
 jobs:
   build-book:
@@ -42,6 +33,12 @@ jobs:
       - name: Build the JupyterBook
         run: make
 
+      - name: Deploy PR preview
+        if: github.event_name == 'pull_request' && github.event.pull_request.state == 'open'
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./jupyter-book/_build/html
+
   pdfhtml:
     runs-on: ubuntu-latest
 
@@ -73,19 +70,3 @@ jobs:
         with:
           name: PDF_HTML
           path: jupyter-book/_build/pdf/book.pdf
-
-  deploy-preview:
-    runs-on: ubuntu-latest
-    needs: build-book # Ensure this job runs after build-book
-    if: github.event_name == 'pull_request' && github.event.action != 'closed' # Only run for PRs (not closed)
-    steps:
-      - name: Download HTML artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: html-artifacts
-          path: jupyter-book/_build/html
-
-      - name: Deploy PR preview
-        uses: rossjrw/pr-preview-action@v1
-        with:
-          source-dir: ./jupyter-book/_build/html
