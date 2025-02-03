@@ -780,7 +780,7 @@ Usually, a reference includes the genome sequences and the corresponding gene an
 In this example, we will use _chromosome 5_ of the human genome and its related gene annotations as the reference, which is a subset of the Human reference, [GRCh38 (GENCODE v32/Ensembl 98) reference](https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A) from the 10x Genomics reference build.
 Correspondingly, we extract the subset of reads that map to the generated reference from a [human brain tumor dataset](https://www.10xgenomics.com/resources/datasets/200-sorted-cells-from-human-glioblastoma-multiforme-3-lt-v-3-1-3-1-low-6-0-0) from 10x Genomics.
 
-[`Alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/){cite}`raw:He2022` is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool.
+[`Alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/) {cite}`raw:He2022` is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool.
 [Simpleaf](https://github.com/COMBINE-lab/simpleaf) is a program, written in [rust](https://www.rust-lang.org/), that exposes a unified and simplified interface for processing some of the most common protocols and data types using the `alevin-fry` pipeline.
 A nextflow-based [workflow](https://github.com/COMBINE-lab/quantaf) tool also exists to process extensive collections of single-cell data.
 Here we will first show how to process single-cell raw data using two `simpleaf` commands. Then, we describe the complete set of `salmon alevin` and `alevin-fry` commands to which these `simpleaf` commands correspond, to outline where the steps described in this section occur and to convey the possible different processing options.
@@ -803,7 +803,7 @@ conda activate af
 
 Conda does not currently build most packages natively for Apple silicon.
 Therefore, if you
-are using a non-Intel-based Apple computer (e.g., with an M1(Pro/Max/Ultra) or M2 chip), you
+are using a non-Intel-based Apple computer (e.g., with a M1 (Pro/Max/Ultra) or M2 chip), you
 should make sure to specify that your environment uses the Rosetta2 translation layer.
 To do this, you can replace the above commands with the following (instructions adopted
 from [here](https://github.com/Haydnspass/miniforge#rosetta-on-mac-with-apple-silicon-hardware)):
