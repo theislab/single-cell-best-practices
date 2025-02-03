@@ -803,7 +803,7 @@ conda activate af
 
 Conda does not currently build most packages natively for Apple silicon.
 Therefore, if you
-are using a non-Intel-based Apple computer (e.g., with a M1 (Pro/Max/Ultra) or M2 chip), you
+are using a non-Intel-based Apple computer (e.g., with an M1 (Pro/Max/Ultra) or M2 chip), you
 should make sure to specify that your environment uses the Rosetta2 translation layer.
 To do this, you can replace the above commands with the following (instructions adopted
 from [here](https://github.com/Haydnspass/miniforge#rosetta-on-mac-with-apple-silicon-hardware)):
