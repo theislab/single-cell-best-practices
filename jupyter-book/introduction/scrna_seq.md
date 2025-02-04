@@ -1,13 +1,13 @@
 # Single-cell RNA sequencing
 
 This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
-Multimodal or spatial assays are not covered here but are introduced in the respective advanced chapters.
+{term}`Multimodal` or spatial assays are not covered here but are introduced in the respective advanced chapters.
 All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
 ## The building block of life
 
 Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities.
-Most definitions of the term life share a common entity - cells.
+Most definitions of the term life share a common entity - {term}`cells`.
 Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves.
 Therefore, cells are the fundamental building blocks of life, and they were first discovered in 1665 by the British scientist Robert Hooke.
 Hooke investigated a thin slice of cork with a very rudimentary microscope and, to his surprise, noticed that the slice appeared to resemble a honeycomb.
@@ -19,7 +19,9 @@ He named these tiny units 'cells'.
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
-In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory. It describes that all living organisms are made up of cells. Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
+In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory.
+It describes that all living organisms are made up of cells.
+Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
 
 Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`), and that all cells have almost the same chemical composition.
 Two general types of cells exist: eukaryotes and prokaryotes.
@@ -51,7 +53,7 @@ Unfortunately, it is not always possible to find such "simple" associations betw
 
 Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high-throughput sequencing technologies.
 In 1953, Watson, Crick, and Franklin discovered the structure of DNA, and in 1965, Robert Holley sequenced the first tRNA.
-Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography {cite}`Jou1972`.
+Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNases to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography {cite}`Jou1972`.
 In parallel, Frederick Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing".
 Although Sanger Sequencing is still used today, it has suffered from several shortcomings, including lack of automation and being time-consuming.
 In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process.
@@ -182,7 +184,7 @@ This results in rich data sets that can be used for exploratory data analysis.
 
 ### Overview
 
-RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells (bulk sequencing) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
+RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
 Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell sequencing.
 Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity, such as cell expression profile heterogeneity, which may help answer the question of interest.
 Some drugs or perturbations may affect only specific cell types or interactions between cell types.
@@ -377,6 +379,14 @@ The choice of single-cell versus single-nuclei in the experimental design is mos
 Data analysis, however, should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types.
 Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
 
+## Key takeaways
+
+- Sequencing evolved from **Sanger sequencing** (first generation: accurate but slow, costly, and limited to short DNA fragments) to **high-throughput NGS** (second generation: short reads, high sensitivity, lower costs, but expensive machines) to **long-read real-time sequencing** (third generation: long reads, real-time analysis, portable for fieldwork, but higher error rates and costly reagents).
+- scRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq. However, it is more complex and expensive, requiring careful experimental design and data analysis to avoid biases and false conclusions.
+- In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.**Full-length protocols** capture entire transcripts, enabling the detection of splice variants. **Tag-based protocols** sequence either the transcripts’ 3’ or 5’ ends, often using UMIs to correct for amplification biases and improve quantification accuracy.
+- Single-cell sequencing protocols vary in their approach to cell isolation and transcript recovery. **Droplet-based methods** (e.g., 10x Genomics, Drop-seq, inDrop) are cost-effective for large-scale studies but recover fewer transcripts per cell. **Plate-based methods** (e.g., SMART-seq2, MARS-seq, QUARTZ-seq) allow for deeper transcriptome profiling but are limited in throughput. Fluidigm C1 offers full-length transcript coverage but is more expensive and less scalable.
+- **Single-nuclei RNA sequencing (snRNA-Seq)** is an alternative to scRNA-Seq, particularly useful for tissues where cell dissociation is challenging (e.g., brain tissue). Nuclei are more resistant to mechanical stress and can be isolated from frozen samples, making snRNA-Seq suitable for biobank studies. However, the choice between single-cell and single-nuclei sequencing depends on the tissue type and research question.
+
 ## Recommended reading
 
 To get a more elaborate understanding of the experimental assays, we recommend the following papers:
@@ -402,6 +412,7 @@ We gratefully acknowledge the contributions of:
 ### Authors
 
 - Lukas Heumos
+- Luis Heinzlmeier
 
 ### Reviewers
 

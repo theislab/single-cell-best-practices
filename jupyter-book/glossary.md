@@ -22,9 +22,12 @@ Benchmark
     An (independent) comparison of performance of several tools with respect to pre-defined metrics.
 
 Bulk RNA sequencing
+bulk RNA-Seq
+bulk sequencing
     Contrary to single-cell sequencing, bulk sequencing measures the average expression values of several cells. Therefore, resolution is lost, but bulk sequencing is usually cheaper, less laborious and faster to analyze.
 
 Cell
+cells
     The fundamental unit of life. Consists of cytoplasm enclosed within a membrane that contains many biomolecules such as proteins and nucleic acids. Cells acquire specific functions, transition to cell types, divide, communicate and keep the organism going. Learning about the structure, activity and communication of cells helps deciphering biology.
 
 Cell barcode
@@ -75,6 +78,10 @@ Indrop
 
 Library
     Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
+
+Modalities
+Multimodal
+    Different types of biological information measured at the single-cell level. These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization. Combining these modalities provides a more complete understanding of cell identity, function, and interactions.
 
 MuData
     A Python package for multimodal annotated data matrices. The primary data structure in the scverse ecosystem for multimodal data.
