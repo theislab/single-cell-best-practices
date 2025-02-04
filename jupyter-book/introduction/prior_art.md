@@ -11,6 +11,7 @@ Some more changes. Do we have an own comment in the PR now?
 Another test.
 Again, a test.
 A final test?
+Simplify code
 
 ## Bioconductor OSCA and OSTA books
 
