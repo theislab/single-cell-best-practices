@@ -406,7 +406,7 @@ More reads can be confidently assigned compared to using only the spliced transc
 Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and RNA velocity analysis {cite}`Soneson2021Preprocessing` (see {doc}`../trajectories/rna_velocity`).
 These augmented references can be constructed for all common methods that do not rely on spliced alignment to the full genome {cite}`Srivastava2019,Melsted2021,raw:He2022`.
 
-{cite:t}`raw:He2022` argue that this approach is valuable even for standard single-cell RNA-seq data and recommend constructing an augmented _splici_ reference (spliced + intronic) for mapping and quantification.
+{cite}`raw:He2022` argue that this approach is valuable even for standard single-cell RNA-seq data and recommend constructing an augmented _splici_ reference (spliced + intronic) for mapping and quantification.
 The _splici_ reference is built using the spliced transcriptome sequence alongside sequences representing the merged intronic intervals of annotated genes.
 Each reference sequence is labeled with its splicing status, and mapping results are processed using splicing status-aware methods for {ref}`raw-proc:umi-resolution`.
 
