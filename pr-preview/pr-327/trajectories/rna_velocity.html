@@ -1,0 +1,998 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>14. RNA velocity &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'trajectories/rna_velocity';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="15. Lineage tracing" href="lineage_tracing.html" />
+    <link rel="prev" title="13. Pseudotemporal ordering" href="pseudotemporal.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/trajectories/rna_velocity.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Ftrajectories/rna_velocity.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/trajectories/rna_velocity.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>RNA velocity</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">14.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-rna-velocity">14.2. Modeling RNA velocity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-inference">14.3. Parameter inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-steady-state-model">14.3.1. The <em>steady-state model</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-em-model">14.3.2. The <em>EM model</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-in-pancreatic-endocrinogenesis">14.4. RNA velocity inference in pancreatic endocrinogenesis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">14.4.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">14.4.2. General settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">14.4.3. Data loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">14.5. Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-steady-state-model">14.5.1. RNA velocity inference - <em>Steady-state model</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-em-model">14.5.2. RNA velocity inference - <em>EM model</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">14.6. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">14.7. New directions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">14.8. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="rna-velocity">
+<span id="trajectories-rna-velocity"></span><h1><span class="section-number">14. </span>RNA velocity<a class="headerlink" href="#rna-velocity" title="Link to this heading">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">14.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Single-cell datasets allow studying biological processes such as early development at a high resolution. While single cells are analysed instead of a tissue as a whole, for example, changes in cells’ phenotypic trades cannot be tracked over time. This fact stems from the destructive nature of single-cell sequencing protocols. Upon sequencing a cell, it is destroyed and its defining characteristics can, thus, not be measured again at a later time point. Notably, experimental techniques not only fail measuring the general cellular profile at different times but also how quickly these changes take place. Recovering the position in time along the developmental landscape can be achieved with tools from the field of <em>trajectory inference</em> (TI). However, classical TI methods do not offer any directed, dynamic information. Additionally, these algorithms traditionally do not take into account information beyond transcriptomic reads and similarity.</p>
+</section>
+<section id="modeling-rna-velocity">
+<h2><span class="section-number">14.2. </span>Modeling RNA velocity<a class="headerlink" href="#modeling-rna-velocity" title="Link to this heading">#</a></h2>
+<p>The change in the transcriptomic profile of a cell is triggered by a cascade of events: Broadly speaking, DNA is transcribed to produce so-called unspliced precursor messenger RNA (pre-mRNA). Unspliced pre-mRNA contains regions relevant for translation (exons) as well as non-coding regions (introns). These non-coding regions are spliced out, <em>i.e.</em>, removed, to form spliced, mature mRNA. While single-cell RNA sequencing (scRNA-seq) protocols fail to capture the transcriptome at multiple timepoints, they do include the necessary information to disassociate unspliced and spliced mRNA reads <span id="id1">[<a class="reference internal" href="#id304" title="Dongze He, Mohsen Zakeri, Hirak Sarkar, Charlotte Soneson, Avi Srivastava, and Rob Patro. Alevin-fry unlocks rapid, accurate and memory-frugal quantification of single-cell RNA-seq data. Nature Methods, 19(3):316–322, March 2022. URL: https://doi.org/10.1038/s41592-022-01408-3, doi:10.1038/s41592-022-01408-3.">He <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id305" title="Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. Nature, 560(7719):494–498, August 2018. URL: https://doi.org/10.1038/s41586-018-0414-6, doi:10.1038/s41586-018-0414-6.">Manno <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id308" title="Páll Melsted, A. Sina Booeshaghi, Lauren Liu, Fan Gao, Lambda Lu, Kyung Hoi Min, Eduardo da Veiga Beltrame, Kristján Eldjárn Hjörleifsson, Jase Gehring, and Lior Pachter. Modular, efficient and constant-memory single-cell RNA-seq preprocessing. Nature Biotechnology, 39(7):813–818, April 2021. URL: https://doi.org/10.1038/s41587-021-00870-2, doi:10.1038/s41587-021-00870-2.">Melsted <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id310" title="Avi Srivastava, Laraib Malik, Tom Smith, Ian Sudbery, and Rob Patro. Alevin efficiently estimates accurate gene abundances from dscRNA-seq data. Genome Biology, March 2019. URL: https://doi.org/10.1186/s13059-019-1670-y, doi:10.1186/s13059-019-1670-y.">Srivastava <em>et al.</em>, 2019</a>]</span>.</p>
+<p>Identifying unspliced and spliced reads allows formulating a dynamical model describing splicing kinetics <span id="id2">[<a class="reference internal" href="#id312" title="Amit Zeisel, Wolfgang J Köstler, Natali Molotski, Jonathan M Tsai, Rita Krauthgamer, Jasmine Jacob-Hirsch, Gideon Rechavi, Yoav Soen, Steffen Jung, Yosef Yarden, and Eytan Domany. Coupled pre-mRNA and mRNA dynamics unveil operational strategies underlying transcriptional responses to stimuli. Molecular Systems Biology, 7(1):529, January 2011. URL: https://doi.org/10.1038/msb.2011.62, doi:10.1038/msb.2011.62.">Zeisel <em>et al.</em>, 2011</a>]</span> and inferring the corresponding model weights based on single cell data. The change in spliced RNA described by the model is called RNA velocity <span id="id3">[<a class="reference internal" href="#id305" title="Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. Nature, 560(7719):494–498, August 2018. URL: https://doi.org/10.1038/s41586-018-0414-6, doi:10.1038/s41586-018-0414-6.">Manno <em>et al.</em>, 2018</a>]</span>. Current models of RNA velocity assume the gene-specific model</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{aligned}
+        \frac{du_g}{dt} &amp;= \alpha_g - \beta_g u_g\\
+        \frac{ds_g}{dt} &amp;= \beta_g u_g - \gamma_g s_g,
+    \end{aligned}
+\end{split}\]</div>
+<p>with transcription rate <span class="math notranslate nohighlight">\(\alpha_g\)</span>, splicing rate <span class="math notranslate nohighlight">\(\beta_g\)</span>, and degradation rate <span class="math notranslate nohighlight">\(\gamma_g\)</span> of spliced RNA. While the kinetics of each gene are modelled independent of each other, we will drop the index <span class="math notranslate nohighlight">\(g\)</span> for notational simplicity. Even though the field of parameter estimation in dynamical systems is well studied, inference algorithms require the time associated with each observation to be known. Consequently, these traditional methods cannot be applied to infer RNA velocity and its model parameters in the context of scRNA-seq data.</p>
+</section>
+<section id="parameter-inference">
+<h2><span class="section-number">14.3. </span>Parameter inference<a class="headerlink" href="#parameter-inference" title="Link to this heading">#</a></h2>
+<p>Single-cell measurements are snapshot data and can, thus, not be plotted against time. Instead, classical RNA velocity methods rely on studying the cell-specific tuples <span class="math notranslate nohighlight">\((u, s)\)</span> of unspliced and spliced RNA for each gene. The collection of these tuples form the so-called phase portrait. Assuming constant rates of transcription, splicing, and degradation, the phase portraits exhibits an almond shape. The upper arc corresponds to the induction, the lower arc the repression phase. However, as real-world data is noisy, plotting the unspliced against spliced counts does not recover the expected almond shape. Instead, the data needs to be smoothed first. Classically, this preprocessing step consists in averaging the gene expression of each cell over its neighbors in a cell-cell similarity graph.</p>
+<section id="the-steady-state-model">
+<h3><span class="section-number">14.3.1. </span>The <em>steady-state model</em><a class="headerlink" href="#the-steady-state-model" title="Link to this heading">#</a></h3>
+<p>The first attempt at estimating RNA velocity assumed gene independence and the underlying kinetics to be governed by the above model. Additionally, it is assumed that (1) kinetics reached their equilibrium, (2) rates are constant, and (3) there is a single, common splicing rate across all genes. In the following, we will refer to this model as the <em>steady-state model</em> due to the first assumption. The steady-states itself are found in the upper right corner of the phase portrait (induction phase) and its origin (repression phase). Based on these extreme quantiles, the <em>steady-state model</em> estimates the steady-state ratio with a linear regression fit. RNA velocity is then defined as the residual to this fit.</p>
+<p>Even though the <em>steady-state model</em> can successfully recover the developmental direction in some systems, it is inherently limited by its model assumptions. The two assumptions readily violated are the common splicing rate across genes and that the equilibria are observed during the experiment. Consequently, inference in these cases will yield incorrect results. Additionally, the <em>steady-state model</em> only considers a subset of the data, and only the steady-state ratio but not each model parameter is inferred.</p>
+</section>
+<section id="the-em-model">
+<h3><span class="section-number">14.3.2. </span>The <em>EM model</em><a class="headerlink" href="#the-em-model" title="Link to this heading">#</a></h3>
+<p>To overcome the limitations of the <em>steady-state model</em>, several extensions have been proposed. The so-far most popular one is the <em>EM model</em> implemented in scVelo <span id="id4">[<a class="reference internal" href="#id298" title="Volker Bergen, Marius Lange, Stefan Peidli, F. Alexander Wolf, and Fabian J. Theis. Generalizing rna velocity to transient cell states through dynamical modeling. Nature Biotechnology, 38(12):1408–1414, August 2020. URL: https://doi.org/10.1038/s41587-020-0591-3, doi:10.1038/s41587-020-0591-3.">Bergen <em>et al.</em>, 2020</a>]</span>. The <em>EM model</em> no longer assumes that steady-states have been reached or that genes share a common splicing rate. Additionally, all datapoints are used to infer the full set of parameters as well as a gene and cell specific latent time of the splicing model. The algorithm uses an expectation-maximization (EM) framework to estimate parameters. The unobserved variables found in the E-step consist of each cell’s time and state (induction, repression, or steady-state). All other model parameters are inferred during the M-step.</p>
+<p>While the <em>EM model</em> no longer relies on key assumptions of the <em>steady-state model</em> and, thus, is more broadly applicable, the inferred RNA velocity may still violate prior biological knowledge <span id="id5">[<a class="reference internal" href="#id299" title="Volker Bergen, Ruslan A Soldatov, Peter V Kharchenko, and Fabian J Theis. RNA velocity—current challenges and future perspectives. Molecular Systems Biology, August 2021. URL: https://doi.org/10.15252/msb.202110282, doi:10.15252/msb.202110282.">Bergen <em>et al.</em>, 2021</a>]</span>, <span id="id6">[<a class="reference internal" href="#id297" title="Melania Barile, Ivan Imaz-Rosshandler, Isabella Inzani, Shila Ghazanfar, Jennifer Nichols, John C. Marioni, Carolina Guibentif, and Berthold Goettgens. Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation. Genome Biology, July 2021. URL: https://doi.org/10.1186/s13059-021-02414-y, doi:10.1186/s13059-021-02414-y.">Barile <em>et al.</em>, 2021</a>]</span>. The reason for such failure cases are mainly two-fold: On the one hand, the <em>EM model</em> continues to assume constant rates. Consequently, whenever these assumption does not hold, for example in erythroid maturation <span id="id7">[<a class="reference internal" href="#id297" title="Melania Barile, Ivan Imaz-Rosshandler, Isabella Inzani, Shila Ghazanfar, Jennifer Nichols, John C. Marioni, Carolina Guibentif, and Berthold Goettgens. Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation. Genome Biology, July 2021. URL: https://doi.org/10.1186/s13059-021-02414-y, doi:10.1186/s13059-021-02414-y.">Barile <em>et al.</em>, 2021</a>]</span>, the inference is incorrect. On the other hand, the proposed model relies on phase portraits as its predecessor. As such, the algorithm is inherently inapplicable and fails whenever the gene phase portraits do not follow the expected shape.</p>
+</section>
+</section>
+<section id="rna-velocity-inference-in-pancreatic-endocrinogenesis">
+<h2><span class="section-number">14.4. </span>RNA velocity inference in pancreatic endocrinogenesis<a class="headerlink" href="#rna-velocity-inference-in-pancreatic-endocrinogenesis" title="Link to this heading">#</a></h2>
+<p>For a practical example of how RNA velocity can be inferred, we analyze the endocrine development in pancreas <span id="id8">[<a class="reference internal" href="#id296" title="Aimee Bastidas-Ponce, Sophie Tritschler, Leander Dony, Katharina Scheibner, Marta Tarquis-Medina, Ciro Salinno, Silvia Schirge, Ingo Burtscher, Anika Boettcher, Fabian Theis, Heiko Lickert, and Mostafa Bakhti. Massive single-cell mrna profiling reveals a detailed roadmap for pancreatic endocrinogenesis. Development, January 2019. URL: https://doi.org/10.1242/dev.173849, doi:10.1242/dev.173849.">Bastidas-Ponce <em>et al.</em>, 2019</a>]</span>. In this system, pre-endocrine cells (<em>Ductal</em>, <em>Ngn3 low EP</em>, <em>Ngn3 high EP</em>, <em>Pre-endocrine</em>) develop into four endocrine cell types (<em>Alpha</em>, <em>Beta</em>, <em>Delta</em>, <em>Epsilon</em>). Here, we use <em>scVelo</em> <span id="id9">[<a class="reference internal" href="#id298" title="Volker Bergen, Marius Lange, Stefan Peidli, F. Alexander Wolf, and Fabian J. Theis. Generalizing rna velocity to transient cell states through dynamical modeling. Nature Biotechnology, 38(12):1408–1414, August 2020. URL: https://doi.org/10.1038/s41587-020-0591-3, doi:10.1038/s41587-020-0591-3.">Bergen <em>et al.</em>, 2020</a>]</span> to infer RNA velocity.</p>
+<section id="environment-setup">
+<h3><span class="section-number">14.4.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvelo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">scv</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="general-settings">
+<h3><span class="section-number">14.4.2. </span>General settings<a class="headerlink" href="#general-settings" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="s2">&quot;scvelo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data/&quot;</span><span class="p">)</span>
+<span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;pancreas.h5ad&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-loading">
+<h3><span class="section-number">14.4.3. </span>Data loading<a class="headerlink" href="#data-loading" title="Link to this heading">#</a></h3>
+<p>In order to estimate RNA velocity with <em>scVelo</em>, unspliced and spliced counts need to be stored in AnnData’s <code class="docutils literal notranslate"><span class="pre">layers</span></code> slot. We recommend passing whole counts, <em>i.e.</em>, unprocessed data, to the <em>scVelo</em> pipeline.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">scv</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">pancreas</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 3696 × 27998
+    obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;
+    var: &#39;highly_variable_genes&#39;
+    uns: &#39;clusters_coarse_colors&#39;, &#39;clusters_colors&#39;, &#39;day_colors&#39;, &#39;neighbors&#39;, &#39;pca&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;spliced&#39;, &#39;unspliced&#39;
+    obsp: &#39;distances&#39;, &#39;connectivities&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="data-preprocessing">
+<h2><span class="section-number">14.5. </span>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h2>
+<p>Since scRNA-seq data is noisy and sparse, the data must be preprocessed in order to infer RNA velocity with the <em>steady-state</em> or <em>EM model</em>. As a first step, we filter out genes that are not sufficiently expressed both unspliced and spliced RNA (here, at least 20). Following, the cell size is normalized for both unspliced and spliced RNA, and counts in <code class="docutils literal notranslate"><span class="pre">adata.X</span></code> log1p transformed to reduce the effect of outliers. Next, we also identify and filter for highly variable genes (here <span class="math notranslate nohighlight">\(2000\)</span>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_and_normalize</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_shared_counts</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filtered out 20801 genes that are detected 20 counts (shared).
+Normalized count data: X, spliced, unspliced.
+Extracted 2000 highly variable genes.
+Logarithmized X.
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data preprocessing so far similar to classical scRNA-seq workflows. In the case of RNA velocity, we additionally smooth observations by the mean expression in their neighborhood. This can be done using <em>scVelo</em>’s <code class="docutils literal notranslate"><span class="pre">moments</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing moments based on connectivities
+    finished (0:00:00) --&gt; added 
+    &#39;Ms&#39; and &#39;Mu&#39;, moments of un/spliced abundances (adata.layers)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a typical workflow, we would cluster the data, infer cell types, and visualize the data in a two-dimensional embedding. Luckily, for the pancreas data, this information has already been calculated a priori and directly be used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/23d4908125216744b4b6c6fe3a4abe84e1a24406de3e1e571a40aec6a773d992.png"><img alt="../_images/23d4908125216744b4b6c6fe3a4abe84e1a24406de3e1e571a40aec6a773d992.png" src="../_images/23d4908125216744b4b6c6fe3a4abe84e1a24406de3e1e571a40aec6a773d992.png" style="width: 487px; height: 345px;" /></a>
+</div>
+</div>
+<section id="rna-velocity-inference-steady-state-model">
+<h3><span class="section-number">14.5.1. </span>RNA velocity inference - <em>Steady-state model</em><a class="headerlink" href="#rna-velocity-inference-steady-state-model" title="Link to this heading">#</a></h3>
+<p>As a first step, we calculate RNA velocity under the steady state model. In this case, we call <em>scVelo</em>’s <code class="docutils literal notranslate"><span class="pre">velocity</span></code> function with <code class="docutils literal notranslate"><span class="pre">mode=&quot;deterministic&quot;</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;deterministic&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing velocities
+    finished (0:00:00) --&gt; added 
+    &#39;velocity&#39;, velocity vectors for each individual cell (adata.layers)
+</pre></div>
+</div>
+</div>
+</div>
+<p>While we do not encourage over interpreting projections of high-dimensional velocity vectors onto a low dimensional representation of the data, <em>scVelo</em> offers a simple way of doing so.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity_graph</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">velocity_embedding_stream</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing velocity graph (using 8/96 cores)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "442742d111fc4d44a55325dd188a207b", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    finished (0:00:05) --&gt; added 
+    &#39;velocity_graph&#39;, sparse matrix with cosine correlations (adata.uns)
+computing velocity embedding
+    finished (0:00:00) --&gt; added
+    &#39;velocity_umap&#39;, embedded velocity vectors (adata.obsm)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/0061998dde8f0e276aca44d159e6e205e6abb21f6c7daf1ac6b830a90bbb46ee.png"><img alt="../_images/0061998dde8f0e276aca44d159e6e205e6abb21f6c7daf1ac6b830a90bbb46ee.png" src="../_images/0061998dde8f0e276aca44d159e6e205e6abb21f6c7daf1ac6b830a90bbb46ee.png" style="width: 488px; height: 345px;" /></a>
+</div>
+</div>
+</section>
+<section id="rna-velocity-inference-em-model">
+<h3><span class="section-number">14.5.2. </span>RNA velocity inference - <em>EM model</em><a class="headerlink" href="#rna-velocity-inference-em-model" title="Link to this heading">#</a></h3>
+<p>In order to calculate RNA velocity with the <em>EM model</em>, the parameters of splicing kinetics need to be inferred first. The inference is taken care of by <em>scVelo</em>’s <code class="docutils literal notranslate"><span class="pre">recover_dynamics</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">recover_dynamics</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>recovering dynamics (using 8/96 cores)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1d7c1a320b324fa3af5677d8c5e42a9c", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    finished (0:01:00) --&gt; added 
+    &#39;fit_pars&#39;, fitted parameters for splicing dynamics (adata.var)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The parameters of the splicing model are inferred by maximizing a given likelihood. To study which genes were fit most confidently by <em>scVelo</em>, we can study the corresponding phase portraits as well as the inferred trajectory (plotted in purple) and steady-state ratio (dashed purple line). Here, three out of the five shown genes (<em>Pcsk2</em>, <em>Top2a</em>, <em>Ppp1r1a</em>) exhibit phase portraits in a (partial) almond shape. We observe a clear transition either within a single cell type (<em>Top2a</em>, <em>Ppp1r1a</em>) or across several cell types (<em>Pcsk2</em>, from Pre-endocrine to Alpha and Beta). In the case of <em>Nfib</em>, we observe two cellular populations in steady state. This most likely an artifact of undersampling the phenotypic manifold around Ngn3 low/high EP cells. Similarly, <em>Ghrl</em> is highly expressed in Epsilon cells although only a few due to the small cluster size. While current best practices are limited to analysing model fits and the confidence therein by hand, recently proposed methods can help automate the process (New directions). Here, <em>Nfib</em> abd <em>Ghrl</em> would be assigned with a lower confidence score.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_genes</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;fit_likelihood&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="n">top_genes</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/3714ba600f0dd957c1eaa2495c52294d050353118a96c8ab5f4ea3698944d2d6.png"><img alt="../_images/3714ba600f0dd957c1eaa2495c52294d050353118a96c8ab5f4ea3698944d2d6.png" src="../_images/3714ba600f0dd957c1eaa2495c52294d050353118a96c8ab5f4ea3698944d2d6.png" style="width: 2360px; height: 345px;" /></a>
+</div>
+</div>
+<p>Having estimated the kinetics rates (stored as columns <code class="docutils literal notranslate"><span class="pre">fit_alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">fit_beta</span></code>, <code class="docutils literal notranslate"><span class="pre">fit_gamma</span></code> of <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>), we can calculate both velocity and the projection onto our two-dimensional UMAP embedding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;dynamical&quot;</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity_graph</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">velocity_embedding_stream</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing velocities
+    finished (0:00:02) --&gt; added 
+    &#39;velocity&#39;, velocity vectors for each individual cell (adata.layers)
+computing velocity graph (using 8/96 cores)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1e361cc8fb974278ad8e0dd7e0be1564", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    finished (0:00:02) --&gt; added 
+    &#39;velocity_graph&#39;, sparse matrix with cosine correlations (adata.uns)
+computing velocity embedding
+    finished (0:00:00) --&gt; added
+    &#39;velocity_umap&#39;, embedded velocity vectors (adata.obsm)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/3831bf911d13d6c9a2e98464627a5de49f4654fcf767279b4a4c6f1899b2a575.png"><img alt="../_images/3831bf911d13d6c9a2e98464627a5de49f4654fcf767279b4a4c6f1899b2a575.png" src="../_images/3831bf911d13d6c9a2e98464627a5de49f4654fcf767279b4a4c6f1899b2a575.png" style="width: 488px; height: 345px;" /></a>
+</div>
+</div>
+<p>Based on the 2D projections, the <em>EM model</em> captures the cell cycle in the <em>Ductal</em> cells more faithfully. Additionally, the projection of the <em>steady-state model</em> exhibits a “backflow” from <em>Alpha</em>  to <em>Pre-endocrine</em> cells. However, for a rigorous and quantitative analysis, we recommend using downstream tools such as CellRank <span id="id10">[<a class="reference internal" href="#id306" title="Marius Lange, Volker Bergen, Michal Klein, Manu Setty, Bernhard Reuter, Mostafa Bakhti, Heiko Lickert, Meshal Ansari, Janine Schniering, Herbert B. Schiller, Dana Pe'er, and Fabian J. Theis. CellRank for directed single-cell fate mapping. Nature Methods, 19(2):159–170, January 2022. URL: https://doi.org/10.1038/s41592-021-01346-6, doi:10.1038/s41592-021-01346-6.">Lange <em>et al.</em>, 2022</a>]</span> to assess model differences and draw conclusions.</p>
+</section>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">14.6. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<p>To understand if RNA velocity analysis is applicable to a given dataset, we remark the following points:</p>
+<ol class="arabic simple">
+<li><p>To infer RNA velocity, the time scale of the developmental process under investigation must be comparable to the half-life of RNA molecules. This requirement is, for example, met in pancreatic endocrinogenesis <span id="id11">[<a class="reference internal" href="#id296" title="Aimee Bastidas-Ponce, Sophie Tritschler, Leander Dony, Katharina Scheibner, Marta Tarquis-Medina, Ciro Salinno, Silvia Schirge, Ingo Burtscher, Anika Boettcher, Fabian Theis, Heiko Lickert, and Mostafa Bakhti. Massive single-cell mrna profiling reveals a detailed roadmap for pancreatic endocrinogenesis. Development, January 2019. URL: https://doi.org/10.1242/dev.173849, doi:10.1242/dev.173849.">Bastidas-Ponce <em>et al.</em>, 2019</a>]</span> but not in long term diseases such as Alzheimer’s or Parkinson’s disease. Similarly, RNA velocity analysis is not applicable to steady-state systems such as peripheral blood mononuclear cells lacking any transitions between (mature) cell types.</p></li>
+<li><p>RNA velocity can only be inferred robustly and reliantly if the underlying model assumptions (approximately) hold true. To check the assumptions, the phase portraits can be studied to verify that they exhibit the expected almond shape. If a gene includes multiple, pronounced kinetics, RNA velocity analysis should be applied with caution and the data possibly subsetted to individual lineages.</p></li>
+<li><p>Classically, the high-dimensional RNA velocity vectors have been visualized by projecting them onto a low-dimensional representation of the data. This approach for verifying hypotheses can be erronous and misleading as the projected velocity stream is highly dependent on (1) the number of included genes and (2) chosen plotting parameters. Additionally, the projection quality decreases at the boundary of the low dimensional embedding <span id="id12">[<a class="reference internal" href="#id305" title="Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. Nature, 560(7719):494–498, August 2018. URL: https://doi.org/10.1038/s41586-018-0414-6, doi:10.1038/s41586-018-0414-6.">Manno <em>et al.</em>, 2018</a>]</span>.</p></li>
+</ol>
+</section>
+<section id="new-directions">
+<h2><span class="section-number">14.7. </span>New directions<a class="headerlink" href="#new-directions" title="Link to this heading">#</a></h2>
+<p>Although RNA velocity has been applied successfully to many systems, some model limitations persist. Violated model assumptions may cause erroneous result <span id="id13">[<a class="reference internal" href="#id297" title="Melania Barile, Ivan Imaz-Rosshandler, Isabella Inzani, Shila Ghazanfar, Jennifer Nichols, John C. Marioni, Carolina Guibentif, and Berthold Goettgens. Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation. Genome Biology, July 2021. URL: https://doi.org/10.1186/s13059-021-02414-y, doi:10.1186/s13059-021-02414-y.">Barile <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id299" title="Volker Bergen, Ruslan A Soldatov, Peter V Kharchenko, and Fabian J Theis. RNA velocity—current challenges and future perspectives. Molecular Systems Biology, August 2021. URL: https://doi.org/10.15252/msb.202110282, doi:10.15252/msb.202110282.">Bergen <em>et al.</em>, 2021</a>]</span>, and projecting the high dimensional velocity vectors onto a low dimensional representation of the data misleading. To overcome these pitfalls several tools have been developed. CellRank <span id="id14">[<a class="reference internal" href="#id306" title="Marius Lange, Volker Bergen, Michal Klein, Manu Setty, Bernhard Reuter, Mostafa Bakhti, Heiko Lickert, Meshal Ansari, Janine Schniering, Herbert B. Schiller, Dana Pe'er, and Fabian J. Theis. CellRank for directed single-cell fate mapping. Nature Methods, 19(2):159–170, January 2022. URL: https://doi.org/10.1038/s41592-021-01346-6, doi:10.1038/s41592-021-01346-6.">Lange <em>et al.</em>, 2022</a>]</span>, for example, uses the inferred velocity field to infer likely future states of a cell. As the algorithm operates on the higher dimensional representation of the data, misleading velocity streams on embeddings are circumvented. Contrastingly, a recent publication tries to improve the quality of the lower dimensional embedding <span id="id15">[<a class="reference internal" href="#id307" title="Valérie Marot-Lassauzaie, Brigitte Joanne Bouman, Fearghal Declan Donaghy, Yasmin Demerdash, Marieke Alida Gertruda Essers, and Laleh Haghverdi. Towards reliable quantification of cell state velocities. PLOS Computational Biology, 18(9):e1010031, September 2022. URL: https://doi.org/10.1371/journal.pcbi.1010031, doi:10.1371/journal.pcbi.1010031.">Marot-Lassauzaie <em>et al.</em>, 2022</a>]</span>.</p>
+<p>To soften current assumptions of RNA velocity inference, several new approaches have been suggested <span id="id16">[<a class="reference internal" href="#id300" title="Zhanlin Chen, William C. King, Aheyon Hwang, Mark Gerstein, and Jing Zhang. Single-cell transcriptomic deep velocity field learning with neural ordinary differential equations. Science Advances, December 2022. URL: https://doi.org/10.1126/sciadv.abq3745, doi:10.1126/sciadv.abq3745.">Chen <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id303" title="Yichen Gu, David Blaauw, and Joshua Welch. Variational mixtures of odes for inferring cellular gene expression dynamics. arXiv, 2022. URL: https://arxiv.org/abs/2207.04166, doi:10.48550/ARXIV.2207.04166.">Gu <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id302" title="Yichen Gu, David Blaauw, and Joshua D. Welch. Bayesian inference of RNA velocity from multi-lineage single-cell data. bioarXiv, July 2022. URL: https://doi.org/10.1101/2022.07.08.499381, doi:10.1101/2022.07.08.499381.">Gu <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id307" title="Valérie Marot-Lassauzaie, Brigitte Joanne Bouman, Fearghal Declan Donaghy, Yasmin Demerdash, Marieke Alida Gertruda Essers, and Laleh Haghverdi. Towards reliable quantification of cell state velocities. PLOS Computational Biology, 18(9):e1010031, September 2022. URL: https://doi.org/10.1371/journal.pcbi.1010031, doi:10.1371/journal.pcbi.1010031.">Marot-Lassauzaie <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id311" title="Chen Qiao and Yuanhua Huang. Representation learning of RNA velocity reveals robust cell transitions. Proceedings of the National Academy of Sciences, December 2021. URL: https://doi.org/10.1073/pnas.2105859118, doi:10.1073/pnas.2105859118.">Qiao and Huang, 2021</a>, <a class="reference internal" href="#id309" title="Andrea Riba, Attila Oravecz, Matej Durik, Sara Jiménez, Violaine Alunni, Marie Cerciat, Matthieu Jung, Céline Keime, William M. Keyes, and Nacho Molina. Cell cycle gene regulation dynamics revealed by RNA velocity and deep-learning. Nature Communications, May 2022. URL: https://doi.org/10.1038/s41467-022-30545-8, doi:10.1038/s41467-022-30545-8.">Riba <em>et al.</em>, 2022</a>]</span>, <span id="id17">[<a class="reference internal" href="#id301" title="Adam Gayoso, Philipp Weiler, Mohammad Lotfollahi, Dominik Klein, Justin Hong, Aaron Streets, Fabian J. Theis, and Nir Yosef. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. Nature Biotechnology, August 2022. URL: https://doi.org/10.1101/2022.08.12.503709, doi:10.1101/2022.08.12.503709.">Gayoso <em>et al.</em>, 2022</a>]</span>. For example, these methods try to no longer assume constant rates <span id="id18">[<a class="reference internal" href="#id300" title="Zhanlin Chen, William C. King, Aheyon Hwang, Mark Gerstein, and Jing Zhang. Single-cell transcriptomic deep velocity field learning with neural ordinary differential equations. Science Advances, December 2022. URL: https://doi.org/10.1126/sciadv.abq3745, doi:10.1126/sciadv.abq3745.">Chen <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id303" title="Yichen Gu, David Blaauw, and Joshua Welch. Variational mixtures of odes for inferring cellular gene expression dynamics. arXiv, 2022. URL: https://arxiv.org/abs/2207.04166, doi:10.48550/ARXIV.2207.04166.">Gu <em>et al.</em>, 2022</a>]</span>, work with raw counts <span id="id19">[<a class="reference internal" href="#id303" title="Yichen Gu, David Blaauw, and Joshua Welch. Variational mixtures of odes for inferring cellular gene expression dynamics. arXiv, 2022. URL: https://arxiv.org/abs/2207.04166, doi:10.48550/ARXIV.2207.04166.">Gu <em>et al.</em>, 2022</a>]</span>, or reformulate the inference methods in a variational inference framework to associate uncertainty with estimates <span id="id20">[<a class="reference internal" href="#id301" title="Adam Gayoso, Philipp Weiler, Mohammad Lotfollahi, Dominik Klein, Justin Hong, Aaron Streets, Fabian J. Theis, and Nir Yosef. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. Nature Biotechnology, August 2022. URL: https://doi.org/10.1101/2022.08.12.503709, doi:10.1101/2022.08.12.503709.">Gayoso <em>et al.</em>, 2022</a>]</span>. Additionally, to aid in understanding if RNA velocity analysis can be inferred for individual genes or entire datasets, different procedures have been proposed <span id="id21">[<a class="reference internal" href="#id301" title="Adam Gayoso, Philipp Weiler, Mohammad Lotfollahi, Dominik Klein, Justin Hong, Aaron Streets, Fabian J. Theis, and Nir Yosef. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. Nature Biotechnology, August 2022. URL: https://doi.org/10.1101/2022.08.12.503709, doi:10.1101/2022.08.12.503709.">Gayoso <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id313" title="Shijie C. Zheng, Genevieve Stein-O'Brien, Leandros Boukas, Loyal A. Goff, and Kasper D. Hansen. Pumping the brakes on RNA velocity – understanding and interpreting RNA velocity estimates. bioarXiv, June 2022. URL: https://doi.org/10.1101/2022.06.19.494717, doi:10.1101/2022.06.19.494717.">Zheng <em>et al.</em>, 2022</a>]</span>.</p>
+</section>
+<section id="references">
+<h2><span class="section-number">14.8. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id22">
+<div role="list" class="citation-list">
+<div class="citation" id="id297" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloBIRI+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id13">3</a>)</span>
+<p>Melania Barile, Ivan Imaz-Rosshandler, Isabella Inzani, Shila Ghazanfar, Jennifer Nichols, John C. Marioni, Carolina Guibentif, and Berthold Goettgens. Coordinated changes in gene expression kinetics underlie both mouse and human erythroid maturation. <em>Genome Biology</em>, July 2021. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-021-02414-y">https://doi.org/10.1186/s13059-021-02414-y</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02414-y">doi:10.1186/s13059-021-02414-y</a>.</p>
+</div>
+<div class="citation" id="id296" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloBPTD+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
+<p>Aimee Bastidas-Ponce, Sophie Tritschler, Leander Dony, Katharina Scheibner, Marta Tarquis-Medina, Ciro Salinno, Silvia Schirge, Ingo Burtscher, Anika Boettcher, Fabian Theis, Heiko Lickert, and Mostafa Bakhti. Massive single-cell mrna profiling reveals a detailed roadmap for pancreatic endocrinogenesis. <em>Development</em>, January 2019. URL: <a class="reference external" href="https://doi.org/10.1242/dev.173849">https://doi.org/10.1242/dev.173849</a>, <a class="reference external" href="https://doi.org/10.1242/dev.173849">doi:10.1242/dev.173849</a>.</p>
+</div>
+<div class="citation" id="id298" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloBLP+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<p>Volker Bergen, Marius Lange, Stefan Peidli, F. Alexander Wolf, and Fabian J. Theis. Generalizing rna velocity to transient cell states through dynamical modeling. <em>Nature Biotechnology</em>, 38(12):1408–1414, August 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-020-0591-3">https://doi.org/10.1038/s41587-020-0591-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-020-0591-3">doi:10.1038/s41587-020-0591-3</a>.</p>
+</div>
+<div class="citation" id="id299" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloBSKT21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id13">2</a>)</span>
+<p>Volker Bergen, Ruslan A Soldatov, Peter V Kharchenko, and Fabian J Theis. RNA velocity—current challenges and future perspectives. <em>Molecular Systems Biology</em>, August 2021. URL: <a class="reference external" href="https://doi.org/10.15252/msb.202110282">https://doi.org/10.15252/msb.202110282</a>, <a class="reference external" href="https://doi.org/10.15252/msb.202110282">doi:10.15252/msb.202110282</a>.</p>
+</div>
+<div class="citation" id="id300" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloCKH+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id16">1</a>,<a role="doc-backlink" href="#id18">2</a>)</span>
+<p>Zhanlin Chen, William C. King, Aheyon Hwang, Mark Gerstein, and Jing Zhang. Single-cell transcriptomic deep velocity field learning with neural ordinary differential equations. <em>Science Advances</em>, December 2022. URL: <a class="reference external" href="https://doi.org/10.1126/sciadv.abq3745">https://doi.org/10.1126/sciadv.abq3745</a>, <a class="reference external" href="https://doi.org/10.1126/sciadv.abq3745">doi:10.1126/sciadv.abq3745</a>.</p>
+</div>
+<div class="citation" id="id301" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloGWL+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id17">1</a>,<a role="doc-backlink" href="#id20">2</a>,<a role="doc-backlink" href="#id21">3</a>)</span>
+<p>Adam Gayoso, Philipp Weiler, Mohammad Lotfollahi, Dominik Klein, Justin Hong, Aaron Streets, Fabian J. Theis, and Nir Yosef. Deep generative modeling of transcriptional dynamics for RNA velocity analysis in single cells. <em>Nature Biotechnology</em>, August 2022. URL: <a class="reference external" href="https://doi.org/10.1101/2022.08.12.503709">https://doi.org/10.1101/2022.08.12.503709</a>, <a class="reference external" href="https://doi.org/10.1101/2022.08.12.503709">doi:10.1101/2022.08.12.503709</a>.</p>
+</div>
+<div class="citation" id="id303" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloGBW22a<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id16">1</a>,<a role="doc-backlink" href="#id18">2</a>,<a role="doc-backlink" href="#id19">3</a>)</span>
+<p>Yichen Gu, David Blaauw, and Joshua Welch. Variational mixtures of odes for inferring cellular gene expression dynamics. <em>arXiv</em>, 2022. URL: <a class="reference external" href="https://arxiv.org/abs/2207.04166">https://arxiv.org/abs/2207.04166</a>, <a class="reference external" href="https://doi.org/10.48550/ARXIV.2207.04166">doi:10.48550/ARXIV.2207.04166</a>.</p>
+</div>
+<div class="citation" id="id302" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">veloGBW22b</a><span class="fn-bracket">]</span></span>
+<p>Yichen Gu, David Blaauw, and Joshua D. Welch. Bayesian inference of RNA velocity from multi-lineage single-cell data. <em>bioarXiv</em>, July 2022. URL: <a class="reference external" href="https://doi.org/10.1101/2022.07.08.499381">https://doi.org/10.1101/2022.07.08.499381</a>, <a class="reference external" href="https://doi.org/10.1101/2022.07.08.499381">doi:10.1101/2022.07.08.499381</a>.</p>
+</div>
+<div class="citation" id="id304" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">veloHZS+22</a><span class="fn-bracket">]</span></span>
+<p>Dongze He, Mohsen Zakeri, Hirak Sarkar, Charlotte Soneson, Avi Srivastava, and Rob Patro. Alevin-fry unlocks rapid, accurate and memory-frugal quantification of single-cell RNA-seq data. <em>Nature Methods</em>, 19(3):316–322, March 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01408-3">https://doi.org/10.1038/s41592-022-01408-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01408-3">doi:10.1038/s41592-022-01408-3</a>.</p>
+</div>
+<div class="citation" id="id306" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloLBK+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id10">1</a>,<a role="doc-backlink" href="#id14">2</a>)</span>
+<p>Marius Lange, Volker Bergen, Michal Klein, Manu Setty, Bernhard Reuter, Mostafa Bakhti, Heiko Lickert, Meshal Ansari, Janine Schniering, Herbert B. Schiller, Dana Pe'er, and Fabian J. Theis. CellRank for directed single-cell fate mapping. <em>Nature Methods</em>, 19(2):159–170, January 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01346-6">https://doi.org/10.1038/s41592-021-01346-6</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01346-6">doi:10.1038/s41592-021-01346-6</a>.</p>
+</div>
+<div class="citation" id="id305" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloMSZ+18<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id12">3</a>)</span>
+<p>Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. <em>Nature</em>, 560(7719):494–498, August 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-018-0414-6">https://doi.org/10.1038/s41586-018-0414-6</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-018-0414-6">doi:10.1038/s41586-018-0414-6</a>.</p>
+</div>
+<div class="citation" id="id307" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>veloMLBD+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id15">1</a>,<a role="doc-backlink" href="#id16">2</a>)</span>
+<p>Valérie Marot-Lassauzaie, Brigitte Joanne Bouman, Fearghal Declan Donaghy, Yasmin Demerdash, Marieke Alida Gertruda Essers, and Laleh Haghverdi. Towards reliable quantification of cell state velocities. <em>PLOS Computational Biology</em>, 18(9):e1010031, September 2022. URL: <a class="reference external" href="https://doi.org/10.1371/journal.pcbi.1010031">https://doi.org/10.1371/journal.pcbi.1010031</a>, <a class="reference external" href="https://doi.org/10.1371/journal.pcbi.1010031">doi:10.1371/journal.pcbi.1010031</a>.</p>
+</div>
+<div class="citation" id="id308" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">veloMBL+21</a><span class="fn-bracket">]</span></span>
+<p>Páll Melsted, A. Sina Booeshaghi, Lauren Liu, Fan Gao, Lambda Lu, Kyung Hoi Min, Eduardo da Veiga Beltrame, Kristján Eldjárn Hjörleifsson, Jase Gehring, and Lior Pachter. Modular, efficient and constant-memory single-cell RNA-seq preprocessing. <em>Nature Biotechnology</em>, 39(7):813–818, April 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-00870-2">https://doi.org/10.1038/s41587-021-00870-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-00870-2">doi:10.1038/s41587-021-00870-2</a>.</p>
+</div>
+<div class="citation" id="id311" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">veloQH21</a><span class="fn-bracket">]</span></span>
+<p>Chen Qiao and Yuanhua Huang. Representation learning of RNA velocity reveals robust cell transitions. <em>Proceedings of the National Academy of Sciences</em>, December 2021. URL: <a class="reference external" href="https://doi.org/10.1073/pnas.2105859118">https://doi.org/10.1073/pnas.2105859118</a>, <a class="reference external" href="https://doi.org/10.1073/pnas.2105859118">doi:10.1073/pnas.2105859118</a>.</p>
+</div>
+<div class="citation" id="id309" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">veloROD+22</a><span class="fn-bracket">]</span></span>
+<p>Andrea Riba, Attila Oravecz, Matej Durik, Sara Jiménez, Violaine Alunni, Marie Cerciat, Matthieu Jung, Céline Keime, William M. Keyes, and Nacho Molina. Cell cycle gene regulation dynamics revealed by RNA velocity and deep-learning. <em>Nature Communications</em>, May 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-022-30545-8">https://doi.org/10.1038/s41467-022-30545-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-022-30545-8">doi:10.1038/s41467-022-30545-8</a>.</p>
+</div>
+<div class="citation" id="id310" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">veloSMS+19</a><span class="fn-bracket">]</span></span>
+<p>Avi Srivastava, Laraib Malik, Tom Smith, Ian Sudbery, and Rob Patro. Alevin efficiently estimates accurate gene abundances from dscRNA-seq data. <em>Genome Biology</em>, March 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-019-1670-y">https://doi.org/10.1186/s13059-019-1670-y</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-019-1670-y">doi:10.1186/s13059-019-1670-y</a>.</p>
+</div>
+<div class="citation" id="id312" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">veloZKostlerM+11</a><span class="fn-bracket">]</span></span>
+<p>Amit Zeisel, Wolfgang J Köstler, Natali Molotski, Jonathan M Tsai, Rita Krauthgamer, Jasmine Jacob-Hirsch, Gideon Rechavi, Yoav Soen, Steffen Jung, Yosef Yarden, and Eytan Domany. Coupled pre-mRNA and mRNA dynamics unveil operational strategies underlying transcriptional responses to stimuli. <em>Molecular Systems Biology</em>, 7(1):529, January 2011. URL: <a class="reference external" href="https://doi.org/10.1038/msb.2011.62">https://doi.org/10.1038/msb.2011.62</a>, <a class="reference external" href="https://doi.org/10.1038/msb.2011.62">doi:10.1038/msb.2011.62</a>.</p>
+</div>
+<div class="citation" id="id313" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">veloZSOBrienB+22</a><span class="fn-bracket">]</span></span>
+<p>Shijie C. Zheng, Genevieve Stein-O'Brien, Leandros Boukas, Loyal A. Goff, and Kasper D. Hansen. Pumping the brakes on RNA velocity – understanding and interpreting RNA velocity estimates. <em>bioarXiv</em>, June 2022. URL: <a class="reference external" href="https://doi.org/10.1101/2022.06.19.494717">https://doi.org/10.1101/2022.06.19.494717</a>, <a class="reference external" href="https://doi.org/10.1101/2022.06.19.494717">doi:10.1101/2022.06.19.494717</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "rna_velocity-py39"
+        },
+        kernelOptions: {
+            name: "rna_velocity-py39",
+            path: "./trajectories"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'rna_velocity-py39'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pseudotemporal.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">13. </span>Pseudotemporal ordering</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lineage_tracing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>Lineage tracing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">14.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-rna-velocity">14.2. Modeling RNA velocity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-inference">14.3. Parameter inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-steady-state-model">14.3.1. The <em>steady-state model</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-em-model">14.3.2. The <em>EM model</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-in-pancreatic-endocrinogenesis">14.4. RNA velocity inference in pancreatic endocrinogenesis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">14.4.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">14.4.2. General settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">14.4.3. Data loading</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">14.5. Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-steady-state-model">14.5.1. RNA velocity inference - <em>Steady-state model</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rna-velocity-inference-em-model">14.5.2. RNA velocity inference - <em>EM model</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">14.6. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">14.7. New directions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">14.8. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
