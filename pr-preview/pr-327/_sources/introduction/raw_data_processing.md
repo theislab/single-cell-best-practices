@@ -441,7 +441,7 @@ However, in droplet-based libraries, the number of observed cell barcodes (CBs) 
 This discrepancy arises from several key sources of error:
 
 - Doublets/multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
-- Empty Droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
+- Empty droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
 - Sequence Errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
 
 To address these issues, computational tools for demultiplexing RNA-seq reads into cell-specific bins use various diagnostic indicators to filter out artefactual or low-quality data.
