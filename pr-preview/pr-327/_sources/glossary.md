@@ -13,13 +13,9 @@ Algorithms
 
 AnnData
 AnnDatas
-    A Python package for annotated data matrices.
-    The primary data structure used in the scverse ecosystem.
-
-Backtrace
-backtrace
-    In the context of sequence alignment, a backtrace refers to the step-by-step reconstruction of the alignment path that produces the optimal alignment score.
-    This path shows how the sequences are aligned, including matches, mismatches, insertions, deletions, and gaps.
+    A Python package for handling annotated data matrices, commonly used in single-cell and other omics analyses.
+    It provides an efficient way to store data as a matrix where rows (observations) and columns (features) can have associated metadata.
+    [AnnData](https://anndata.readthedocs.io/en/latest/index.html) supports slicing, subsetting, and saving to disk in formats like H5AD and Zarr.
 
 Barcode
 Barcodes
@@ -40,11 +36,9 @@ Bulk RNA sequencing
     Therefore, resolution is lost, but bulk sequencing is usually cheaper, less laborious and faster to analyze.
 
 Cell
-    The fundamental unit of life.
-    Consists of cytoplasm enclosed within a membrane that contains many biomolecules such as proteins and nucleic acids.
-    Cells acquire specific functions, transition to cell types, divide, communicate and keep the organism going.
-    Learning about the structure, activity and communication of cells helps deciphering biology.
-
+    The fundamental unit of life, consisting of cytoplasm enclosed within a membrane, containing biomolecules such as proteins and nucleic acids.
+    Cells acquire specific functions, transition into different types, divide, and communicate to sustain an organism.
+    Studying cell structure, activity, and interactions enables insights into gene expression dynamics, cellular trajectories, developmental lineages, and disease mechanisms.
 Cell barcode
     See {term}`barcode`
 
@@ -165,10 +159,12 @@ Pseudotime
     Pseudotime is usually related to real time events, but not necessarily the same.
 
 RNA
-    Ribonucleic acid. Single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
+    Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
+    Unlike DNA, RNA can be highly dynamic, acting as a messenger (mRNA) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
+    RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
 RT-qPCR
-    Quantitative reverse transcription PCR (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
+    Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
 
 scanpy
     A Python package for single-cell analysis in Python by scverse.
