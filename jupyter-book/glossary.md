@@ -163,8 +163,6 @@ RNA
     Unlike DNA, RNA can be highly dynamic, acting as a messenger (mRNA) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
     RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
-
-
 RT-qPCR
     Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
 
