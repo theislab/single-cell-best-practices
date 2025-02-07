@@ -107,7 +107,7 @@ FASTQ reads
 
 Flowcell
 flowcell
-    A consumable device used in sequencing platforms, such as those from Illumina, where DNA or RNA fragments are sequenced.
+    A consumable device used in sequencing platforms where DNA or RNA fragments are sequenced.
     It consists of a glass or polymer surface with lanes or channels coated with oligonucleotides, which capture and anchor DNA or RNA fragments.
     During sequencing, these fragments are amplified into clusters, and their sequences are determined by detecting fluorescent signals emitted during nucleotide incorporation.
     The flowcell enables high-throughput sequencing by allowing millions of fragments to be sequenced simultaneously.
