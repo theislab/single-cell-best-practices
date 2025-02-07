@@ -104,7 +104,7 @@ A good (left) and a bad (right) per-read sequence quality graph.
 **3. Per tile sequence quality**
 
 Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}`flowcell` [tile](https://www.biostars.org/p/9461090/)(miniature imaging areas of the {term}`flowcell`).
-The plot uses a color gradient to represent deviations, where “hotter” colors indicate larger deviations.
+The plot uses a color gradient to represent deviations, where warmer colors indicate larger deviations.
 High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
 
 If hot colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality.
