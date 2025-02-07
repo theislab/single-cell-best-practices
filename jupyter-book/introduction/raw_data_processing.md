@@ -440,7 +440,7 @@ The tag, sequence, and demultiplexing method used for single-cell profiling is g
 However, in droplet-based libraries, the number of observed cell barcodes (CBs) can differ significantly—often by several fold—from the number of originally encapsulated cells.
 This discrepancy arises from several key sources of error:
 
-- Doublets/Multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
+- Doublets/multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
 - Empty Droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
 - Sequence Errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
 
