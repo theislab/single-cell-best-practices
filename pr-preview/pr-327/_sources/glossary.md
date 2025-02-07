@@ -99,7 +99,7 @@ Drop-seq
     A protocol for scRNA-seq that separates cells into nano-liter sized aqueous droplets enabling large-scale profiling.
 
 Edit distance
-    Edit distance (often referring to Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
+    Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
 
 FASTQ reads
     Sequencing reads that are saved in the FASTQ format.
