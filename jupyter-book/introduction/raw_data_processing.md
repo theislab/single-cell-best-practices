@@ -107,7 +107,7 @@ Using an Illumina library, the per-tile sequence quality plot highlights deviati
 The plot uses a color gradient to represent deviations, where warmer colors indicate larger deviations.
 High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
 
-If hot colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality.
+If warm colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality.
 This could result from transient issues during sequencing, such as bubbles passing through the flowcell or smudges and debris within the flowcell lane.
 For further investigation, consult resources like [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and the [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) provided in the `FastQC` manual.
 
