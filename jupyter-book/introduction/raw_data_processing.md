@@ -13,7 +13,7 @@ This matrix represents the estimated number of distinct molecules derived from e
 An overview of the topics discussed in this chapter. In the plot, "txome" stands for transcriptome.
 :::
 
-The count matrix is the foundation for a wide range of scRNA-seq analyses {cite}`raw:Zappia2021`, including normalization, integration, and filtering through methods for cell type identification, developmental trajectory inference, and expression dynamics studies.
+The count matrix is the foundation for a wide range of scRNA-seq analyses {cite}`raw:Zappia2021`, including cell type identification or developmental trajectory inference.
 A robust and accurate count matrix is essential for reliable {term}`downstream analyses`. Errors at this stage can lead to invalid conclusions and discoveries based on missed insights, or distorted signals in the data.
 Despite the straightforward nature of the input (FASTQ files) and the desired output (count matrix), raw data processing presents several technical challenges, which are active areas of computational development.
 
@@ -104,10 +104,10 @@ A good (left) and a bad (right) per-read sequence quality graph.
 **3. Per tile sequence quality**
 
 Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}`flowcell` [tile](https://www.biostars.org/p/9461090/)(miniature imaging areas of the {term}`flowcell`).
-The plot uses a color gradient to represent deviations, where “hotter” colors indicate larger deviations.
+The plot uses a color gradient to represent deviations, where warmer colors indicate larger deviations.
 High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
 
-If hot colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality.
+If warm colors appear in certain areas, it suggests that only part of the flowcell experienced poor quality.
 This could result from transient issues during sequencing, such as bubbles passing through the flowcell or smudges and debris within the flowcell lane.
 For further investigation, consult resources like [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and the [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) provided in the `FastQC` manual.
 
@@ -384,7 +384,7 @@ Since most single-cell experiments are conducted on model organisms like mouse o
 Compared to the genome, transcriptome sequences are much smaller, significantly reducing the computational resources needed for mapping.
 Additionally, because splicing patterns are already represented in transcript sequences, this approach eliminates the need for complex spliced alignment.
 Instead, one can simply search for contiguous alignments or mappings for the read.
-Instead, reads can be mapped using contiguous alignments, making both alignment-based and lightweight-mapping techniques suitable for transcriptome references.
+Alternatively, reads can be mapped using contiguous alignments, making both alignment-based and lightweight-mapping techniques suitable for transcriptome references.
 As a result, both approaches are commonly used in popular tools that perform reference mapping against the spliced transcriptome.
 
 While these approaches significantly reduce the memory and time required for alignment and mapping, they fail to capture reads that arise from outside the spliced transcriptome.
@@ -440,9 +440,9 @@ The tag, sequence, and demultiplexing method used for single-cell profiling is g
 However, in droplet-based libraries, the number of observed cell barcodes (CBs) can differ significantly—often by several fold—from the number of originally encapsulated cells.
 This discrepancy arises from several key sources of error:
 
-- Doublets/Multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
-- Empty Droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
-- Sequence Errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
+- Doublets/multiplets: A single barcode may be associated with multiple cells, leading to an undercounting of cells.
+- Empty droplets: Some droplets contain no encapsulated cells, and ambient RNA can become tagged with a barcode and sequenced, resulting in overcounting of cells.
+- Sequence errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
 
 To address these issues, computational tools for demultiplexing RNA-seq reads into cell-specific bins use various diagnostic indicators to filter out artefactual or low-quality data.
 Numerous methods exist for removing ambient RNA contamination {cite}`raw:Young2020,Muskovic2021,Lun2019`, detecting doublets {cite}`DePasquale2019,McGinnis2019,Wolock2019,Bais2019`, and correcting cell barcode errors based on nucleotide sequence similarity.
