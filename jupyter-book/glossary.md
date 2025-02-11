@@ -17,6 +17,11 @@ AnnDatas
     It provides an efficient way to store data as a matrix where rows (observations) and columns (features) can have associated metadata.
     [AnnData](https://anndata.readthedocs.io/en/latest/index.html) supports slicing, subsetting, and saving to disk in formats like H5AD and Zarr.
 
+BAM
+BAM files
+    BAM files are binary, compressed versions of SAM (Sequence Alignment/Map) files that store sequencing read alignments to a reference genome.
+    They contain the same information as {term}`SAM` files - including read sequences, quality scores, and alignment positions - but in a more space-efficient format that enables faster processing and reduced storage requirements.
+
 Barcode
 Barcodes
 Bar code
@@ -95,8 +100,10 @@ Drop-seq
 Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
 
+FASTQ
 FASTQ reads
     Sequencing reads that are saved in the FASTQ format.
+    A FASTQ file stores DNA/RNA sequences and their corresponding quality scores in a 4-line format: identifier, sequence, optional description, and quality scores encoded in ASCII characters.
     FASTQ files are then used to map against the reference genome of interest to obtain gene counts for cells.
 
 Flowcell
@@ -163,8 +170,18 @@ RNA
     Unlike DNA, RNA can be highly dynamic, acting as a messenger (mRNA) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
     RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
+RNA velocity
+    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-mRNA) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
+    This ratio provides insight into whether genes are being actively transcribed (increasing expression) or degraded (decreasing expression), allowing researchers to predict the future state of cells.
+    The concept leverages the fact that pre-mRNA signals indicate new transcription while mature mRNA levels reflect steady-state expression, enabling inference of cellular trajectory and developmental dynamics.
+
 RT-qPCR
     Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
+
+SAM
+SAM files
+    SAM (Sequence Alignment/Map) files are tab-delimited text files that store sequencing alignment data, showing how sequencing reads map to a reference genome.
+    Each line in a SAM file contains information about a single read alignment, including the read sequence, base quality scores, mapping position, and mapping quality.
 
 scanpy
     A Python package for single-cell analysis in Python by scverse.
