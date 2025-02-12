@@ -1,0 +1,1694 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>30. Spatial deconvolution &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'spatial/deconvolution';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="31. Imputation" href="imputation.html" />
+    <link rel="prev" title="29. Spatially variable genes" href="spatially_variable_genes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/spatial/deconvolution.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fspatial/deconvolution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/spatial/deconvolution.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Spatial deconvolution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">30.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">30.2. A more mathematical description of deconvolution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stereoscope">30.2.1. Stereoscope</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location">30.2.2. Cell2location</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-in-practice">30.3. Cell2Location in practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">30.3.1. Pre-processing of the spatal and single-cell data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-reference-model">30.3.2. Fitting the reference model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-cell-type-mapping">30.3.3. Cell2Location cell type mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downstream-analysis">30.3.4. Downstream analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">30.3.4.1. Cell-type specific expression of every gene in the spatial data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-tissue-regions">30.3.4.2. Discrete tissue regions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">30.4. Further Models in Reference Based Deconvolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">30.5. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">30.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">30.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">30.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">30.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="spatial-deconvolution">
+<h1><span class="section-number">30. </span>Spatial deconvolution<a class="headerlink" href="#spatial-deconvolution" title="Link to this heading">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">30.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Spot-based spatial transcriptomics data extends the classical readout from dissociated single-cell RNA sequencing with spatial locations. While still being sequencing based, and therefore unbiased in gene space, available methods do not have single-cell resolution. Visium, the commercial version of the original Spatial Transcriptomics protocol, for example, has circular capture areas with a diameter of 55mu. Dependent on the tissue and spatial location multiple cells map onto a single capture area. In addition, a single cell might only be partly contained within the capture area, leading to further differences from the expression profiles we are used to when dealing with classical scRNA-seq data.</p>
+<p>Since the biological entity of interest are single cells, we would like to demix the observed spatial expression profiles back to signals from individual cells. This process is referred to as deconvolution. Deconvolution comes in multiple flavours. The simplest form of deconvolution is to assign proportions of cell types to each spatial location. A more complex approach is to also identify within cell-type variation. Since spatial data by itself does not provide a clear notion of cell type, deconvolution methods usually rely on a single-cell reference.</p>
+<p>While the alignment of reference data with the spatial data can be done in different ways, a very popular approach is to perform a probabilistic mapping where mixture parameters are inferred such that compositions of single-cell expression profiles match the spatial expression.</p>
+<p>In this tutorial, we will describe two approaches, Stereoscope <span id="id1">[<a class="reference internal" href="#id550" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span> and Cell2Location <span id="id2">[<a class="reference internal" href="#id548" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span>, in more detail and provide a practical tutorial for one of them. We further name a few other methods which are worth testing when encountering the problem of deconvolution.</p>
+</section>
+<section id="a-more-mathematical-description-of-deconvolution">
+<h2><span class="section-number">30.2. </span>A more mathematical description of deconvolution<a class="headerlink" href="#a-more-mathematical-description-of-deconvolution" title="Link to this heading">#</a></h2>
+<p>Spatial deconvolution is a rather complex approach that requires some understanding of the underlying methods. This section aims to explain the mathematical concepts of the task at hand. Readers only interested in how to apply deconvolution in practice can directly jump to the section <strong>Cell2location in practice</strong>.</p>
+<p>In spatial transcriptomics, the observed transcriptome can be described as a latent variable model. The observed counts <span class="math notranslate nohighlight">\(x_{sg}\)</span> for gene <span class="math notranslate nohighlight">\(g\)</span> and spot <span class="math notranslate nohighlight">\(s\)</span> is the sum of the cells’ contributions <span class="math notranslate nohighlight">\(x_{sig}\)</span> that belong to this spot:</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} = \sum_{i=1}^{C(s)} x_{sig} \quad .\]</div>
+<p>If one ignores the variability within cell types, the problem of deconvolution simplifies to the identification of counts of cell types, that is to infer how often a cell type occurs <span class="math notranslate nohighlight">\(\tilde \beta_{st}\)</span> in each spot:</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} = \sum_{i=1}^{C(s)} c_{t(i)g} = \sum_{t=1}^{T} \beta_{st} c_{tg} \quad ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(t(i)\)</span> is cell’s <span class="math notranslate nohighlight">\(i\)</span> cell type and <span class="math notranslate nohighlight">\(c_{tg}\)</span> the prototype expression profiles. Note that the sum changes from summing over individual cells <span class="math notranslate nohighlight">\(i\)</span> to summing over the distinct set of cell types <span class="math notranslate nohighlight">\(t \in \{1, \dots, C\}\)</span>. Here, the parameter <span class="math notranslate nohighlight">\(\tilde \beta_{st}\)</span> counts how often a cell type occurs in a spot. Through normalisation of the spot’s library size <span class="math notranslate nohighlight">\(l_s\)</span>, this count vector can be changed to indicate cell type proportions:</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} = l_s \sum_{t=1}^{T} \beta_{st} c_{tg} \quad .\]</div>
+<p>This problem of identifying cell type proportions <span class="math notranslate nohighlight">\(\beta_{st}\)</span> is not easy to solve. One reason for this is limited number of spots within a dataset, usually 3-5k, while measuring almost all protein encoding genes of the human genome, <span class="math notranslate nohighlight">\(&gt; 20\text{k}\)</span>.</p>
+<p>Using reference scRNA-seq measurements, is a good way to alleviate this issue. Their single-cell resolution enables to compute the prototype expression profiles <span class="math notranslate nohighlight">\(\boldsymbol{c}_{t}\)</span>. Knowing such prototypes reduces the above problem to finding the cell type proportions <span class="math notranslate nohighlight">\(\beta_{st}\)</span> within spots. Of course, such a transfer across technologies is only sensible if one can assume that the scRNA-seq profiles are representable for the measured counts in the spatial assay. Ideally, both experiments were conducted on the same tissue slice.</p>
+<p>Over the past two years, multiple methods were introduced that tackle the problem of deconvolution in spatial transcriptomics data. Among others, there are Stereoscope <span id="id3">[<a class="reference internal" href="#id550" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span>, DestVI <span id="id4">[<a class="reference internal" href="#id551" title="Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. Nature Biotechnology, 40(9):1360–1369, September 2022. URL: https://doi.org/10.1038/s41587-022-01272-8, doi:10.1038/s41587-022-01272-8.">Lopez <em>et al.</em>, 2022</a>]</span>, RCTD <span id="id5">[<a class="reference internal" href="#id552" title="Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. Nature Biotechnology, 40(4):517–526, April 2022. URL: https://doi.org/10.1038/s41587-021-00830-w, doi:10.1038/s41587-021-00830-w.">Cable <em>et al.</em>, 2022</a>]</span>, SPOTlight <span id="id6">[<a class="reference internal" href="#id553" title="Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. Nucleic Acids Research, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: https://doi.org/10.1093/nar/gkab043, doi:10.1093/nar/gkab043.">Elosua-Bayes <em>et al.</em>, 2021</a>]</span>, and Cell2Location <span id="id7">[<a class="reference internal" href="#id548" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span> which we will describe in more detail for exemplary purposes.</p>
+<section id="stereoscope">
+<h3><span class="section-number">30.2.1. </span>Stereoscope<a class="headerlink" href="#stereoscope" title="Link to this heading">#</a></h3>
+<p>Stereoscope <span id="id8">[<a class="reference internal" href="#id550" title="Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. Communications Biology, 3(1):565, October 2020. URL: https://doi.org/10.1038/s42003-020-01247-y, doi:10.1038/s42003-020-01247-y.">Andersson <em>et al.</em>, 2020</a>]</span> is a reference deconvolution model, which uses the negative binomial distribution to model both single cell and spatial transcriptomics expression data. It makes the simplifying assumption, that gene expression of cells of one cell type is constant, not just within one spot but globally in the entire dataset:</p>
+<div class="math notranslate nohighlight">
+\[c_{tsg} = c_{ts'g} \ \ , \quad  \forall s,s' \in \{1, ..., N_s\} \quad .\]</div>
+<p>Stereoscope uses the above formulation as the rate parameter of a negative binomial distribution and extends it by two additional parameters. First, in order to model the technology dependent capture efficiencies of different genes, they introduce the capture efficiency parameter <span class="math notranslate nohighlight">\(e_g\)</span>. In addition, they introduce the second parameter of the negative binomial distribution, the success probability <span class="math notranslate nohighlight">\(p_g\)</span>. This parameter is considered to be shared between genes (this ensures that the <span class="math notranslate nohighlight">\(NB\)</span> distribution is closed under summation):</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} \sim NB(l_s e_g \sum_{t=1}^{T} \beta_{st} c_{tg}, p_g) \quad .\]</div>
+<p>The expression profiles <span class="math notranslate nohighlight">\(c_{tg}\)</span> as well as the success probabilities <span class="math notranslate nohighlight">\(p_g\)</span> are obtained from the cell expressions <span class="math notranslate nohighlight">\(y_{ig}\)</span> of a reference dataset:</p>
+<div class="math notranslate nohighlight">
+\[y_{ig} \sim NB(d_i c_{tg},p_g) \quad ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(d_c = \sum_{g = 1}^G y_{ig}\)</span> is the count depth, i.e. the total number of a cell’s transcripts.</p>
+<p>As a technical adjustment, a dummy cell type is considered for each spot to model additive shifts between technologies due to differences in the underlying cell types. The final Stereoscope model becomes:</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} \sim NB(l_s e_g \sum_{t=1}^{T} \beta_{st} c_{tg} + \kappa_s \epsilon_g, p_g) \quad \]</div>
+</section>
+<section id="cell2location">
+<h3><span class="section-number">30.2.2. </span>Cell2location<a class="headerlink" href="#cell2location" title="Link to this heading">#</a></h3>
+<p>Another deconvolution model which uses the negative binomial distribution is Cell2Location <span id="id9">[<a class="reference internal" href="#id548" title="Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. Nature Biotechnology, 40(5):661–671, May 2022. URL: https://doi.org/10.1038/s41587-021-01139-4, doi:10.1038/s41587-021-01139-4.">Kleshchevnikov <em>et al.</em>, 2022</a>]</span>. In contrast to Stereoscope, it uses the mean parameterisation of the negative binomial. The cell counts for each cell type are modeled directly via the mean <span class="math notranslate nohighlight">\(\mu_{sg}\)</span> and the dispersion <span class="math notranslate nohighlight">\(a_g\)</span>, which is also shared between genes. Additionally, technical parameters <span class="math notranslate nohighlight">\(l_s\)</span>, <span class="math notranslate nohighlight">\(e_g\)</span> and <span class="math notranslate nohighlight">\(\epsilon_g\)</span> are used as in Stereoscope to account for multiplicative and additive shift:</p>
+<div class="math notranslate nohighlight">
+\[x_{sg} \sim {NB}(\mu_{sg}, a_g) =  {NB}(l_s (e_g \sum_{t=1}^{T} \beta_{st} c_{stg} + \epsilon_g), a_g)\]</div>
+<p>Note that Cell2Location also considers batch and technology effects from using data collected over multiple batches. In order to make the comparison between the models shown easier, this will not be considered here.</p>
+<p>In order to regularize parameters, Cell2location makes extensive use of priors which are supposed to match their biological meaning closely. All parameters of the spatial and reference model have priors of some form which are constructed in a hierarchical fashion. This means that the parameters of the prior distributions have themselves priors. Details can be found in the supplementary information of the original publication.</p>
+<p>A particularly interesting modeling assumption is that the abundance of cell types <span class="math notranslate nohighlight">\(\beta_{st}\)</span> itself is modelled as a linear combination of cell type prototypes <span class="math notranslate nohighlight">\(\rho_{r}\)</span> (or tissue prototypes). These are modeled to be distributed on the slide with proportion <span class="math notranslate nohighlight">\(\pi_s\)</span>. This is expressed in a gamma prior with (fixed) prior strength parameter <span class="math notranslate nohighlight">\(v\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\beta_{st} \sim \text{Gamma}\big((\mu_{sf} v , v)\big) = \text{Gamma}\Big(\Big(\sum_{r=1}^R \pi_{sf} \rho_{fr} v , v\Big)\Big)\]</div>
+<p>As a reference-based model, Cell2location also relies on scRNA-seq measurements for the cell type profiles <span class="math notranslate nohighlight">\(\boldsymbol{c}_t\)</span>. The single-cell model is quite similar to the one of Stereoscope but is mean-parametrised and further includes the technical parameter <span class="math notranslate nohighlight">\(\hat{\epsilon}_g\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ y_{cg} \sim {NB}(\mu_{cg}, \hat{a}_g)=  {NB}(\beta_{tg} + \hat{\epsilon}_g , \hat{a}_g)\]</div>
+<p>The posteriors of the hierarchical models shown here are all intractable. Thus variational inference is used in Cell2Location to infer the full posteriors.</p>
+</section>
+</section>
+<section id="cell2location-in-practice">
+<h2><span class="section-number">30.3. </span>Cell2Location in practice<a class="headerlink" href="#cell2location-in-practice" title="Link to this heading">#</a></h2>
+<p>An independent benchmark<span id="id10">[<a class="reference internal" href="imputation.html#id536" title="Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. Nature Methods, 19(6):662–670, June 2022. URL: https://doi.org/10.1038/s41592-022-01480-9, doi:10.1038/s41592-022-01480-9.">Li <em>et al.</em>, 2022</a>]</span> showed that for simulated datasets cell2location outperformed other approaches for cell type deconvolution, but requires more computational resources. For real datasets, SpatialDWLS and RCTD performed best in terms of the overall accuracy score based on four different accuracy metrics.</p>
+<p>The tutorial presented here follows parts of the tutorials available on the <a class="reference external" href="https://cell2location.readthedocs.io/en/latest/notebooks/cell2location_tutorial.html#Visualising-cell-abundance-in-spatial-coordinates">cell2location documentation</a>. Compared to other deconvolution methods cell2location requires more computational resources, especially on large datasets with many cells and cell types. The tutorial presented here was run with GPU access.</p>
+<p>The dataset we are using here measures different physiological zones and timepoints of human myocardial infarction and human control myocardium with 10x Visium <span id="id11">[<a class="reference internal" href="#id549" title="Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. Nature, 608(7924):766–777, August 2022. URL: https://doi.org/10.1038/s41586-022-05060-x, doi:10.1038/s41586-022-05060-x.">Kuppe <em>et al.</em>, 2022</a>]</span>. Kuppe et al. also profiled single-cell gene expression with snRNA-seq which we will use as reference dataset in this tutorial.</p>
+<figure class="align-default" id="deconvolution">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/deconvolution.jpeg"><img alt="Deconvolution Overview" class="bg-primary mb-1" src="../_images/deconvolution.jpeg" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 30.1 </span><span class="caption-text">Cell2location requires a single-nucleus or single-cell RNA-seq reference dataset on which one first applies gene selection with permissive thresholds. In a second step, one estimates the cell type signatures in the references dataset. The default model is a negative binomial regression which robustly combines data across technologies and batches. Along with the reference dataset, one requires a spatial dataset of one or multiple batches. The third step is then performing the actual cell type mapping with cell2location which estimates the cell type abundance per spot. The learnt abundance and cell-type specific expression per spot can then be used for downstream analysis tasks.</span><a class="headerlink" href="#deconvolution" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>We are starting with importing respective packages</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cell2location</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">c2l</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">squidpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sq</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[rank: 0] Global seed set to 0
+</pre></div>
+</div>
+</div>
+</div>
+<section id="pre-processing-of-the-spatal-and-single-cell-data">
+<h3><span class="section-number">30.3.1. </span>Pre-processing of the spatal and single-cell data<a class="headerlink" href="#pre-processing-of-the-spatal-and-single-cell-data" title="Link to this heading">#</a></h3>
+<p>Let us first inspect the two datasets we will leverage in this tutorial. We start with the spatial dataset for which we selected the four control samples from Kuppe et al.<span id="id12">[<a class="reference internal" href="#id549" title="Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. Nature, 608(7924):766–777, August 2022. URL: https://doi.org/10.1038/s41586-022-05060-x, doi:10.1038/s41586-022-05060-x.">Kuppe <em>et al.</em>, 2022</a>]</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;kuppe_visium_human_heart_2022_control.h5ad&quot;</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/39347357&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata_st</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>try downloading from url
+https://figshare.com/ndownloader/files/39347357
+... this may take a while but only happens once
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "871455e50fb148b8b5dee00fe332bfc3", "version_major": 2, "version_minor": 0}</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 11725 × 36601
+    obs: &#39;in_tissue&#39;, &#39;array_row&#39;, &#39;array_col&#39;, &#39;patient&#39;, &#39;patient_region_id&#39;, &#39;patient_group&#39;, &#39;major_label&#39;, &#39;batch&#39;
+    var: &#39;gene_ids&#39;, &#39;feature_types&#39;, &#39;genome&#39;
+    uns: &#39;spatial&#39;
+    obsm: &#39;spatial&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can inspect the dataset and the associated four images with squidpy and it’s <code class="docutils literal notranslate"><span class="pre">pl.spatial_scatter</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sq</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial_scatter</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="n">library_key</span><span class="o">=</span><span class="s2">&quot;patient_region_id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/31f1855dd3c8413aa539857d4bb862fe66ac2faa85c23c04218adb717c5ce77d.png"><img alt="../_images/31f1855dd3c8413aa539857d4bb862fe66ac2faa85c23c04218adb717c5ce77d.png" src="../_images/31f1855dd3c8413aa539857d4bb862fe66ac2faa85c23c04218adb717c5ce77d.png" style="width: 1243px; height: 285px;" /></a>
+</div>
+</div>
+<p>The function returns one plot for each histological image present in the dataset. Each sample comes from one patient in the control group and looks substantially different when just observing the image representation.</p>
+<p>Next, we load the reference dataset. In this case, we leverage the single-nucleus RNA sequencing also published by Kuppe et al. <span id="id13">[<a class="reference internal" href="#id549" title="Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. Nature, 608(7924):766–777, August 2022. URL: https://doi.org/10.1038/s41586-022-05060-x, doi:10.1038/s41586-022-05060-x.">Kuppe <em>et al.</em>, 2022</a>]</span> with 41,663 nuclei measured across four control patients.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_sc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;kuppe_snRNA_human_heart_2022_control.h5ad&quot;</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/39347573&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata_sc</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>try downloading from url
+https://figshare.com/ndownloader/files/39347573
+... this may take a while but only happens once
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4b8705774b3d453d840571af51d7a482", "version_major": 2, "version_minor": 0}</script><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 41663 × 29046
+    obs: &#39;sample&#39;, &#39;n_counts&#39;, &#39;n_genes&#39;, &#39;percent_mito&#39;, &#39;doublet_score&#39;, &#39;dissociation_score&#39;, &#39;patient_region_id&#39;, &#39;donor_id&#39;, &#39;patient_group&#39;, &#39;major_labl&#39;, &#39;assay&#39;, &#39;disease&#39;, &#39;organism&#39;, &#39;sex&#39;, &#39;tissue&#39;, &#39;self_reported_ethnicity&#39;, &#39;development_stage&#39;, &#39;cell_type&#39;, &#39;cell_type_original&#39;
+    var: &#39;feature_is_filtered&#39;, &#39;feature_name&#39;, &#39;feature_reference&#39;, &#39;feature_biotype&#39;
+    uns: &#39;X_approximate_distribution&#39;, &#39;batch_condition&#39;, &#39;cell_type_colors&#39;, &#39;cell_type_original_colors&#39;, &#39;default_embedding&#39;, &#39;schema_version&#39;, &#39;title&#39;
+    obsm: &#39;X_harmony&#39;, &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;, &#39;normalized_counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The control reference dataset is already processed and annotated with the identified cell types. We will use the original cell type label throughout the notebook and reset <code class="docutils literal notranslate"><span class="pre">adata_sc.X</span></code> to the raw counts stored in layers.</p>
+<p>Additionally, we can inspect the data in the stored UMAP embedding to better visualize what cell types are present in the reference.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_sc</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cell_type_original&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/c3e3950e74a568ec03fd5c94703ab37f3497ff0d7021c63329019f9847bd9d9a.png"><img alt="../_images/c3e3950e74a568ec03fd5c94703ab37f3497ff0d7021c63329019f9847bd9d9a.png" src="../_images/c3e3950e74a568ec03fd5c94703ab37f3497ff0d7021c63329019f9847bd9d9a.png" style="width: 428px; height: 300px;" /></a>
+</div>
+</div>
+<p>We observe the cell types adipocytes, cardiomyocyte, cycling cells, endothelial, fibroblast, lymphoid, mast, myeloid, neuronal, pericyte and vSMCs. Cell2location aims to deconvolve the spots in the spatial data in accordance to the above displayed cell types.</p>
+<p>For performing the deconvolution, Cell2location requires ENSEMBL gene identifiers to be stored in <code class="docutils literal notranslate"><span class="pre">adata_st.var_names</span></code> to accurately map between single cell and spatial data. Let us inspect whether this is already given:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gene_ids</th>
+      <th>feature_types</th>
+      <th>genome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>MIR1302-2HG</th>
+      <td>ENSG00000243485</td>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+    </tr>
+    <tr>
+      <th>FAM138A</th>
+      <td>ENSG00000237613</td>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+    </tr>
+    <tr>
+      <th>OR4F5</th>
+      <td>ENSG00000186092</td>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+    </tr>
+    <tr>
+      <th>AL627309.1</th>
+      <td>ENSG00000238009</td>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+    </tr>
+    <tr>
+      <th>AL627309.3</th>
+      <td>ENSG00000239945</td>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We can see that <code class="docutils literal notranslate"><span class="pre">adata_st.var_names</span></code> are feature names instead of ENSEMBL gene identifiers. So, we are saving feature names into a new column in <code class="docutils literal notranslate"><span class="pre">adata_st.var</span></code> and replace the index of var by the gene identifiers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;feature_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">var_names</span>
+<span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;gene_ids&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As we can see, ENSEMBL gene identifiers are now correctly stored in <code class="docutils literal notranslate"><span class="pre">adata_st.var_names</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_types</th>
+      <th>genome</th>
+      <th>feature_name</th>
+    </tr>
+    <tr>
+      <th>gene_ids</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ENSG00000243485</th>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+      <td>MIR1302-2HG</td>
+    </tr>
+    <tr>
+      <th>ENSG00000237613</th>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+      <td>FAM138A</td>
+    </tr>
+    <tr>
+      <th>ENSG00000186092</th>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+      <td>OR4F5</td>
+    </tr>
+    <tr>
+      <th>ENSG00000238009</th>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+      <td>AL627309.1</td>
+    </tr>
+    <tr>
+      <th>ENSG00000239945</th>
+      <td>Gene Expression</td>
+      <td>GRCh38</td>
+      <td>AL627309.3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Before we perform the spatial mapping with cell2location, it is recommended to remove mitochondrial genes from the dataset as they represent technical artifacts rather than biological abundance of mitochondria. The dataset considered here is from humans, hence mitochondrial genes are encoded with the prefix <code class="docutils literal notranslate"><span class="pre">MT-</span></code>. We can subset all mitochondrial genes and move them to <code class="docutils literal notranslate"><span class="pre">.obsm['MT']</span></code> to ensure they are still available in case one needs them for any other downstream analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># find mitochondrial (MT) genes</span>
+<span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;MT_gene&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">gene</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;MT-&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;feature_name&quot;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="c1"># remove MT genes for spatial mapping (keeping their counts in the object)</span>
+<span class="n">adata_st</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;MT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_st</span><span class="p">[:,</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;MT_gene&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<span class="n">adata_st</span> <span class="o">=</span> <span class="n">adata_st</span><span class="p">[:,</span> <span class="o">~</span><span class="n">adata_st</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;MT_gene&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we subset both datasets to the same gene set which is the baseline for the mapping between the single cell and spatial data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shared_features</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">var_names</span> <span class="k">if</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">var_names</span>
+<span class="p">]</span>
+<span class="n">adata_sc</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="p">[:,</span> <span class="n">shared_features</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_st</span> <span class="o">=</span> <span class="n">adata_st</span><span class="p">[:,</span> <span class="n">shared_features</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fitting-the-reference-model">
+<h3><span class="section-number">30.3.2. </span>Fitting the reference model<a class="headerlink" href="#fitting-the-reference-model" title="Link to this heading">#</a></h3>
+<p>The first step when running cell2location is to fit the reference model which estimates the reference cell type signature. To ensure the reference is of high quality, cell2location recommends to perform a very permissive gene selection. For this purpose, one can use the function <code class="docutils literal notranslate"><span class="pre">filter_genes</span></code> with the default parameters <code class="docutils literal notranslate"><span class="pre">cell_count_cutoff=5</span></code>, <code class="docutils literal notranslate"><span class="pre">cell_percentage_cutoff2=0.03</span></code>, <code class="docutils literal notranslate"><span class="pre">nonz_mean_cutoff=1.12</span></code>. These parameters are a good starting point, but can also be adjusted depending on the dataset at hand. For more information on how to select these filtering parameters, we refer the reader to cell2location’s documentation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">filtering</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span>
+    <span class="n">adata_sc</span><span class="p">,</span> <span class="n">cell_count_cutoff</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cell_percentage_cutoff2</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">nonz_mean_cutoff</span><span class="o">=</span><span class="mf">1.12</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+  result = getattr(ufunc, method)(*inputs, **kwargs)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/cffc913a64dbeb29f90d4f87fabe93cf95bbc2a9eac172e69085263d97982de5.png"><img alt="../_images/cffc913a64dbeb29f90d4f87fabe93cf95bbc2a9eac172e69085263d97982de5.png" src="../_images/cffc913a64dbeb29f90d4f87fabe93cf95bbc2a9eac172e69085263d97982de5.png" style="width: 343px; height: 318px;" /></a>
+</div>
+</div>
+<p>The respective function returns a 2D histogram, where the orange rectangle indicated genes that are excluded based on the defined threshold. The Y-axis shows the number of cells expressing that gene and the X-axis the average RNA count for cells with a detected gene.</p>
+<p>We can now subset both AnnData objects to the selected genes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_sc</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="p">[:,</span> <span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_st</span> <span class="o">=</span> <span class="n">adata_st</span><span class="p">[:,</span> <span class="n">selected</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Cell2location estimates the signatures from the reference data using a Negative Binomial regression model which can also account for batch effects and additional categorical covariates. We are passing the <code class="docutils literal notranslate"><span class="pre">donor_id</span></code> and the <code class="docutils literal notranslate"><span class="pre">assay</span></code> as batch and covariate in this tutorial. <code class="docutils literal notranslate"><span class="pre">setup_anndata</span></code> will create the data object that is actually used for training the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c2l</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">RegressionModel</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">adata_sc</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;donor_id&quot;</span><span class="p">,</span>
+    <span class="n">labels_key</span><span class="o">=</span><span class="s2">&quot;cell_type_original&quot;</span><span class="p">,</span>
+    <span class="n">categorical_covariate_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;assay&quot;</span><span class="p">],</span>
+    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now train the regression model and estimate the reference cell type signatures. The default number of epochs is <code class="docutils literal notranslate"><span class="pre">max_epochs=250</span></code>, which might need to be increased to achieve convergence for the dataset at hand.</p>
+<p>Additionally, one might inspect that <code class="docutils literal notranslate"><span class="pre">batch_size=2500</span></code> which is much larger compared to other defaults in scvi-tools and that <code class="docutils literal notranslate"><span class="pre">train_size=1</span></code> which performs training on all cells present in the dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">RegressionModel</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">)</span>
+<span class="c1"># default, try on GPU:</span>
+<span class="n">use_gpu</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2500</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">use_gpu</span><span class="o">=</span><span class="n">use_gpu</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python /home/icb/anna.schaar/miniconda3/envs/deconvolution_ ...
+  rank_zero_warn(
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python /home/icb/anna.schaar/miniconda3/envs/deconvolution_ ...
+  rank_zero_warn(
+/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/pytorch_lightning/trainer/configuration_validator.py:106: UserWarning: You passed in a `val_dataloader` but have no `validation_step`. Skipping val loop.
+  rank_zero_warn(&quot;You passed in a `val_dataloader` but have no `validation_step`. Skipping val loop.&quot;)
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 250/250: 100%|██████████████████| 250/250 [13:19&lt;00:00,  3.14s/it, v_num=1, elbo_train=2.95e+8]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=250` reached.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 250/250: 100%|██████████████████| 250/250 [13:19&lt;00:00,  3.20s/it, v_num=1, elbo_train=2.95e+8]
+</pre></div>
+</div>
+</div>
+</div>
+<p>By inspecting the training history, one can determine whether the model needs more training. This plot should have a decreasing trend and should level off, otherwise one needs to increase the <code class="docutils literal notranslate"><span class="pre">max_epochs</span></code> parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">plot_history</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/e8130e37f9307007aeda94810f44f70ac8e5ba3a7c45fed4b3709ece97db5b32.png"><img alt="../_images/e8130e37f9307007aeda94810f44f70ac8e5ba3a7c45fed4b3709ece97db5b32.png" src="../_images/e8130e37f9307007aeda94810f44f70ac8e5ba3a7c45fed4b3709ece97db5b32.png" style="width: 287px; height: 300px;" /></a>
+</div>
+</div>
+<p>By looking at the training history, we actually inspect that the loss curve is decreasing and leveling off. This indicates that the model converged.</p>
+<p>As a next step, cell2location summarises the posterior distribution by exporting the learned cell abundances to the anndata object. Specifically it computes the 5%, 50% and 95% quantiles of the expression signatures in each cell type in the reference dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">export_posterior</span><span class="p">(</span>
+    <span class="n">adata_sc</span><span class="p">,</span>
+    <span class="n">sample_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;num_samples&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span> <span class="s2">&quot;use_gpu&quot;</span><span class="p">:</span> <span class="n">use_gpu</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling local variables, batch:   0%|                                        | 0/17 [00:01&lt;?, ?it/s]
+Sampling global variables, sample: 100%|██████████████████████████| 999/999 [00:09&lt;00:00, 103.17it/s]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 41663 × 14364
+    obs: &#39;sample&#39;, &#39;n_counts&#39;, &#39;n_genes&#39;, &#39;percent_mito&#39;, &#39;doublet_score&#39;, &#39;dissociation_score&#39;, &#39;patient_region_id&#39;, &#39;donor_id&#39;, &#39;patient_group&#39;, &#39;major_labl&#39;, &#39;assay&#39;, &#39;disease&#39;, &#39;organism&#39;, &#39;sex&#39;, &#39;tissue&#39;, &#39;self_reported_ethnicity&#39;, &#39;development_stage&#39;, &#39;cell_type&#39;, &#39;cell_type_original&#39;, &#39;_indices&#39;, &#39;_scvi_batch&#39;, &#39;_scvi_labels&#39;
+    var: &#39;feature_is_filtered&#39;, &#39;feature_name&#39;, &#39;feature_reference&#39;, &#39;feature_biotype&#39;, &#39;n_cells&#39;, &#39;nonz_mean&#39;
+    uns: &#39;X_approximate_distribution&#39;, &#39;batch_condition&#39;, &#39;cell_type_colors&#39;, &#39;cell_type_original_colors&#39;, &#39;default_embedding&#39;, &#39;schema_version&#39;, &#39;title&#39;, &#39;_scvi_uuid&#39;, &#39;_scvi_manager_uuid&#39;, &#39;mod&#39;
+    obsm: &#39;X_harmony&#39;, &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;_scvi_extra_categorical_covs&#39;
+    varm: &#39;means_per_cluster_mu_fg&#39;, &#39;stds_per_cluster_mu_fg&#39;, &#39;q05_per_cluster_mu_fg&#39;, &#39;q95_per_cluster_mu_fg&#39;
+    layers: &#39;counts&#39;, &#39;normalized_counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Cell2location provides a function for quality control of the model fit. Two plots are generated, showing:</p>
+<ol class="arabic simple">
+<li><p>the reconstruction accuracy. This plot should have most observations along a noisy diagonal.</p></li>
+<li><p>the estimated expression signatures, which should also be mainly have observations along the diagonal.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">plot_QC</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/49d303dcc9e0c9fdba2971eea96afdd7236dc1a1a84eb565e38e1986e09bde7e.png"><img alt="../_images/49d303dcc9e0c9fdba2971eea96afdd7236dc1a1a84eb565e38e1986e09bde7e.png" src="../_images/49d303dcc9e0c9fdba2971eea96afdd7236dc1a1a84eb565e38e1986e09bde7e.png" style="width: 302px; height: 275px;" /></a>
+<a class="reference internal image-reference" href="../_images/096254cdc4912901f01888b789c6f84f1d687fb848576914c3ad65cc9994692b.png"><img alt="../_images/096254cdc4912901f01888b789c6f84f1d687fb848576914c3ad65cc9994692b.png" src="../_images/096254cdc4912901f01888b789c6f84f1d687fb848576914c3ad65cc9994692b.png" style="width: 317px; height: 300px;" /></a>
+</div>
+</div>
+<p>We can see in the quality control plots that the reconstruction accuracy and the estimated expression signatures are both roughly forming a diagonal. We can now continue with our analysis and extract the inferred cell types signatures. For the subsequent spatial mapping, cell2location needs the estimated gene expression in every cell type.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export estimated expression in each cluster</span>
+<span class="k">if</span> <span class="s2">&quot;means_per_cluster_mu_fg&quot;</span> <span class="ow">in</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">varm</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">inf_aver</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s2">&quot;means_per_cluster_mu_fg&quot;</span><span class="p">][</span>
+        <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;means_per_cluster_mu_fg_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">][</span><span class="s2">&quot;factor_names&quot;</span><span class="p">]]</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">inf_aver</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">var</span><span class="p">[</span>
+        <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;means_per_cluster_mu_fg_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">][</span><span class="s2">&quot;factor_names&quot;</span><span class="p">]]</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">inf_aver</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">][</span><span class="s2">&quot;factor_names&quot;</span><span class="p">]</span>
+<span class="n">inf_aver</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Adipocyte</th>
+      <th>Cardiomyocyte</th>
+      <th>Cycling cells</th>
+      <th>Endothelial</th>
+      <th>Fibroblast</th>
+      <th>Lymphoid</th>
+      <th>Mast</th>
+      <th>Myeloid</th>
+      <th>Neuronal</th>
+      <th>Pericyte</th>
+      <th>vSMCs</th>
+    </tr>
+    <tr>
+      <th>feature_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ENSG00000237491</th>
+      <td>0.345130</td>
+      <td>0.087746</td>
+      <td>0.132866</td>
+      <td>0.026051</td>
+      <td>0.076892</td>
+      <td>0.022174</td>
+      <td>0.040034</td>
+      <td>0.037086</td>
+      <td>0.041302</td>
+      <td>0.026012</td>
+      <td>0.059664</td>
+    </tr>
+    <tr>
+      <th>ENSG00000228794</th>
+      <td>0.311184</td>
+      <td>0.854350</td>
+      <td>0.055324</td>
+      <td>0.044600</td>
+      <td>0.045747</td>
+      <td>0.051093</td>
+      <td>0.071472</td>
+      <td>0.048005</td>
+      <td>0.055801</td>
+      <td>0.040259</td>
+      <td>0.082158</td>
+    </tr>
+    <tr>
+      <th>ENSG00000188976</th>
+      <td>0.127703</td>
+      <td>0.162105</td>
+      <td>0.104626</td>
+      <td>0.017800</td>
+      <td>0.082823</td>
+      <td>0.040612</td>
+      <td>0.026912</td>
+      <td>0.038888</td>
+      <td>0.019028</td>
+      <td>0.033144</td>
+      <td>0.064095</td>
+    </tr>
+    <tr>
+      <th>ENSG00000187642</th>
+      <td>0.058162</td>
+      <td>0.513303</td>
+      <td>0.014339</td>
+      <td>0.010231</td>
+      <td>0.006430</td>
+      <td>0.003457</td>
+      <td>0.029488</td>
+      <td>0.009087</td>
+      <td>0.003172</td>
+      <td>0.007707</td>
+      <td>0.007055</td>
+    </tr>
+    <tr>
+      <th>ENSG00000188290</th>
+      <td>0.061855</td>
+      <td>0.122690</td>
+      <td>0.017265</td>
+      <td>0.083241</td>
+      <td>0.069586</td>
+      <td>0.013826</td>
+      <td>0.019374</td>
+      <td>0.008620</td>
+      <td>0.053345</td>
+      <td>0.413005</td>
+      <td>0.512525</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>If you are running deconvolution on multiple slides for the same reference dataset, it might be reasonable to save the cell types’ signatures.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inf_aver</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;inf_aver.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="cell2location-cell-type-mapping">
+<h3><span class="section-number">30.3.3. </span>Cell2Location cell type mapping<a class="headerlink" href="#cell2location-cell-type-mapping" title="Link to this heading">#</a></h3>
+<p>Next, we can prepare the data for the actual spatial mapping with <code class="docutils literal notranslate"><span class="pre">setup_anndata</span></code> for the Cell2location model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c2l</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Cell2location</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">adata_st</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;patient&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Cell2location requires two user-provided hyperparameters (<code class="docutils literal notranslate"><span class="pre">N_cells_per_location</span></code> and <code class="docutils literal notranslate"><span class="pre">detection_alpha</span></code>).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">N_cells_per_location</span></code> describes the expected cell abundance in each location or spot. This can usually be obtained through paired histology images. We will use <code class="docutils literal notranslate"><span class="pre">N_cells_per_location=8</span></code> in this tutorial.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">detection_alpha</span></code> handles the technical variability in RNA detection sensitivity within the slide/batch. The technical variability in RNA detection sensitivity can also be extracted based on histological examination. For more information we refer the analyst to the documentation of cell2location. The default value is <code class="docutils literal notranslate"><span class="pre">detection_alpha=20</span></code>.</p></li>
+</ul>
+<p>Cell2location provides a detailed note on how to determine the model hyperparameters, which can be accessed <a class="reference external" href="https://github.com/BayraktarLab/cell2location/blob/master/docs/images/Note_on_selecting_hyperparameters.pdf">here</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Cell2location</span><span class="p">(</span>
+    <span class="n">adata_st</span><span class="p">,</span>
+    <span class="n">cell_state_df</span><span class="o">=</span><span class="n">inf_aver</span><span class="p">,</span>
+    <span class="n">N_cells_per_location</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">view_anndata_setup</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Anndata setup with scvi-tools version <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.20</span>.<span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0</span>.
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Setup via `Cell2location.setup_anndata` with arguments:
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">{</span>
+<span style="color: #7fbf7f; text-decoration-color: #7fbf7f">│   </span><span style="color: #008000; text-decoration-color: #008000">'layer'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+<span style="color: #7fbf7f; text-decoration-color: #7fbf7f">│   </span><span style="color: #008000; text-decoration-color: #008000">'batch_key'</span>: <span style="color: #008000; text-decoration-color: #008000">'patient'</span>,
+<span style="color: #7fbf7f; text-decoration-color: #7fbf7f">│   </span><span style="color: #008000; text-decoration-color: #008000">'labels_key'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+<span style="color: #7fbf7f; text-decoration-color: #7fbf7f">│   </span><span style="color: #008000; text-decoration-color: #008000">'categorical_covariate_keys'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>,
+<span style="color: #7fbf7f; text-decoration-color: #7fbf7f">│   </span><span style="color: #008000; text-decoration-color: #008000">'continuous_covariate_keys'</span>: <span style="color: #800080; text-decoration-color: #800080; font-style: italic">None</span>
+<span style="font-weight: bold">}</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">         Summary Statistics         </span>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃<span style="font-weight: bold">     Summary Stat Key     </span>┃<span style="font-weight: bold"> Value </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│<span style="color: #0087ff; text-decoration-color: #0087ff">         n_batch          </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">   4   </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">         n_cells          </span>│<span style="color: #af00d7; text-decoration-color: #af00d7"> 11725 </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff"> n_extra_categorical_covs </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">   0   </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff"> n_extra_continuous_covs  </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">   0   </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">         n_labels         </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">   1   </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">          n_vars          </span>│<span style="color: #af00d7; text-decoration-color: #af00d7"> 14364 </span>│
+└──────────────────────────┴───────┘
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">               Data Registry                </span>
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> Registry Key </span>┃<span style="font-weight: bold">    scvi-tools Location    </span>┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│<span style="color: #0087ff; text-decoration-color: #0087ff">      X       </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          adata.X          </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">    batch     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7"> adata.obs['_scvi_batch']  </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">    ind_x     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">   adata.obs['_indices']   </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">    labels    </span>│<span style="color: #af00d7; text-decoration-color: #af00d7"> adata.obs['_scvi_labels'] </span>│
+└──────────────┴───────────────────────────┘
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                   batch State Registry                    </span>
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃<span style="font-weight: bold">   Source Location    </span>┃<span style="font-weight: bold"> Categories </span>┃<span style="font-weight: bold"> scvi-tools Encoding </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│<span style="color: #0087ff; text-decoration-color: #0087ff"> adata.obs['patient'] </span>│<span style="color: #008000; text-decoration-color: #008000">     P1     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          0          </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">                      </span>│<span style="color: #008000; text-decoration-color: #008000">     P7     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          1          </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">                      </span>│<span style="color: #008000; text-decoration-color: #008000">     P8     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          2          </span>│
+│<span style="color: #0087ff; text-decoration-color: #0087ff">                      </span>│<span style="color: #008000; text-decoration-color: #008000">    P17     </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          3          </span>│
+└──────────────────────┴────────────┴─────────────────────┘
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-style: italic">                     labels State Registry                      </span>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃<span style="font-weight: bold">      Source Location      </span>┃<span style="font-weight: bold"> Categories </span>┃<span style="font-weight: bold"> scvi-tools Encoding </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│<span style="color: #0087ff; text-decoration-color: #0087ff"> adata.obs['_scvi_labels'] </span>│<span style="color: #008000; text-decoration-color: #008000">     0      </span>│<span style="color: #af00d7; text-decoration-color: #af00d7">          0          </span>│
+└───────────────────────────┴────────────┴─────────────────────┘
+</pre>
+</div></div>
+</div>
+<p>We can now train cell2location and perform the spatial mapping. We will use the following default parameters for training: <code class="docutils literal notranslate"><span class="pre">max_epochs=30000</span></code>, <code class="docutils literal notranslate"><span class="pre">batch_size=None</span></code> and <code class="docutils literal notranslate"><span class="pre">train_size=1</span></code> indicating that all data points are used in training as all cell abundances are estimated in all spots. Additionally, we can again inspect the training history after fitting the model. The training history should again have a decreasing trend and should level off, otherwise increasing <code class="docutils literal notranslate"><span class="pre">max_epochs</span></code> might help.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_gpu</span><span class="o">=</span><span class="n">use_gpu</span><span class="p">)</span>
+<span class="c1"># plot training history</span>
+<span class="n">model</span><span class="o">.</span><span class="n">plot_history</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python /home/icb/anna.schaar/miniconda3/envs/deconvolution_ ...
+  rank_zero_warn(
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/lightning_fabric/plugins/environments/slurm.py:166: PossibleUserWarning: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python /home/icb/anna.schaar/miniconda3/envs/deconvolution_ ...
+  rank_zero_warn(
+/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/pytorch_lightning/trainer/configuration_validator.py:106: UserWarning: You passed in a `val_dataloader` but have no `validation_step`. Skipping val loop.
+  rank_zero_warn(&quot;You passed in a `val_dataloader` but have no `validation_step`. Skipping val loop.&quot;)
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1600: PossibleUserWarning: The number of training batches (1) is smaller than the logging interval Trainer(log_every_n_steps=10). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 30000/30000: 100%|████████| 30000/30000 [1:16:21&lt;00:00,  6.51it/s, v_num=1, elbo_train=5.59e+7]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=30000` reached.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 30000/30000: 100%|████████| 30000/30000 [1:16:21&lt;00:00,  6.55it/s, v_num=1, elbo_train=5.59e+7]
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/2254826d2d8d1d7d8abd0f51985aba0309b87287f5f57d4ca7a60703455f1546.png"><img alt="../_images/2254826d2d8d1d7d8abd0f51985aba0309b87287f5f57d4ca7a60703455f1546.png" src="../_images/2254826d2d8d1d7d8abd0f51985aba0309b87287f5f57d4ca7a60703455f1546.png" style="width: 302px; height: 300px;" /></a>
+</div>
+</div>
+<p>Again, we see that the training history levels off and the model converged. We can now export the estimated cell type wise abundance in each spot and save it into the spatial data by sampling from the posterior distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">export_posterior</span><span class="p">(</span>
+    <span class="n">adata_st</span><span class="p">,</span>
+    <span class="n">sample_kwargs</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;num_samples&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span>
+        <span class="s2">&quot;use_gpu&quot;</span><span class="p">:</span> <span class="n">use_gpu</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling local variables, batch: 100%|█████████████████████████████████| 1/1 [00:30&lt;00:00, 30.86s/it]
+Sampling global variables, sample: 100%|███████████████████████████| 999/999 [00:27&lt;00:00, 36.86it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can again inspect the reconstruction accuracy, which should roughly show points around a noisy diagonal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">plot_QC</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/a69d2d13cb79868ea22e912ffa7306ec1b67e3ed88251bd8ffe485cc50869638.png"><img alt="../_images/a69d2d13cb79868ea22e912ffa7306ec1b67e3ed88251bd8ffe485cc50869638.png" src="../_images/a69d2d13cb79868ea22e912ffa7306ec1b67e3ed88251bd8ffe485cc50869638.png" style="width: 294px; height: 300px;" /></a>
+</div>
+</div>
+<p>As we can see the reconstruction accuracy roughly shows a diagonal, so we can continue with the analysis and inspecting the results.</p>
+<p>We can now visualize the cell abundance mapped to the spatial coordinates. In this case we are using the 5% quantile of the posterior distribution, which represents that the model has a high confidence and at last 5% are present.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">adata_st</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">][</span><span class="s2">&quot;factor_names&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span>
+    <span class="s2">&quot;q05_cell_abundance_w_sf&quot;</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># select one slide for visualization</span>
+<span class="n">slide</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">select_slide</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="s2">&quot;control_P1&quot;</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;patient_region_id&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]}):</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial</span><span class="p">(</span>
+        <span class="n">slide</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;magma&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">adata_st</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">][</span><span class="s2">&quot;factor_names&quot;</span><span class="p">],</span>
+        <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span>
+        <span class="n">img_key</span><span class="o">=</span><span class="s2">&quot;hires&quot;</span><span class="p">,</span>
+        <span class="c1"># limit color scale at 99.2% quantile of cell abundance</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="s2">&quot;p99.2&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/a344fe5a7551925d2fc198c11f5c355f601928b8b809ec5a4014151f25e163cc.png"><img alt="../_images/a344fe5a7551925d2fc198c11f5c355f601928b8b809ec5a4014151f25e163cc.png" src="../_images/a344fe5a7551925d2fc198c11f5c355f601928b8b809ec5a4014151f25e163cc.png" style="width: 1419px; height: 1032px;" /></a>
+</div>
+</div>
+<p>As one can see, the estimated cell type abundances vary between spots and cell types. Cardiomyocytes seem to be present in most spots while some cell types only appear in a few spots.</p>
+<p>We can additionally visualize multiple cell types in one panel.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clust_col</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mast&quot;</span><span class="p">,</span> <span class="s2">&quot;Cardiomyocyte&quot;</span><span class="p">,</span> <span class="s2">&quot;Endothelial&quot;</span><span class="p">]</span>
+<span class="n">clust_labels</span> <span class="o">=</span> <span class="n">clust_col</span>
+
+<span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)}):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">plt</span><span class="o">.</span><span class="n">plot_spatial</span><span class="p">(</span>
+        <span class="n">adata</span><span class="o">=</span><span class="n">slide</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">clust_col</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">clust_labels</span><span class="p">,</span>
+        <span class="n">max_color_quantile</span><span class="o">=</span><span class="mf">0.992</span><span class="p">,</span>
+        <span class="n">circle_diameter</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">show_img</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">colorbar_position</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">colorbar_shape</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;horizontal_gaps&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/34f4259a9bf815c74fae08167360c6a75c8237b70ab46f8fa53cdebbbf62b0b8.png"><img alt="../_images/34f4259a9bf815c74fae08167360c6a75c8237b70ab46f8fa53cdebbbf62b0b8.png" src="../_images/34f4259a9bf815c74fae08167360c6a75c8237b70ab46f8fa53cdebbbf62b0b8.png" style="width: 980px; height: 755px;" /></a>
+</div>
+</div>
+<p>The plot helps to identify the main cell types in the spots and assess which cell type might mainly be present in one spot. For example, we can observe that most spots are mainly formed by cardiomyocytes, but a few are also mainly composed of endothelial or mast cells.</p>
+</section>
+<section id="downstream-analysis">
+<h3><span class="section-number">30.3.4. </span>Downstream analysis<a class="headerlink" href="#downstream-analysis" title="Link to this heading">#</a></h3>
+<section id="cell-type-specific-expression-of-every-gene-in-the-spatial-data">
+<h4><span class="section-number">30.3.4.1. </span>Cell-type specific expression of every gene in the spatial data<a class="headerlink" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data" title="Link to this heading">#</a></h4>
+<p>Cell2location can additionally compute the posterior distribution of the cell type specific expression. This step extracts the cell-type specific expression of every gene at every spatial location in the spatial data. The cell-type specific expression is saved for each cell type as an additional layer to the spatial data object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute expected expression per cell type</span>
+<span class="n">expected_dict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compute_expected_per_cell_type</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="s2">&quot;post_sample_q05&quot;</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">adata_manager</span>
+<span class="p">)</span>
+
+<span class="c1"># Add to anndata layers</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">factor_names_</span><span class="p">):</span>
+    <span class="n">adata_st</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_dict</span><span class="p">[</span><span class="s2">&quot;mu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can visualize the cell-type specific expression by specifying the layer that should be used for plotting. Here we show four genes for cardiomyocytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">slide</span> <span class="o">=</span> <span class="n">c2l</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">select_slide</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="s2">&quot;control_P1&quot;</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;patient_region_id&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]}):</span>
+    <span class="n">sq</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial_scatter</span><span class="p">(</span>
+        <span class="n">slide</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NPPB&quot;</span><span class="p">,</span> <span class="s2">&quot;XIRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;FTH1&quot;</span><span class="p">,</span> <span class="s2">&quot;ATP2A2&quot;</span><span class="p">],</span>
+        <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;Cardiomyocyte&quot;</span><span class="p">,</span>
+        <span class="n">alt_var</span><span class="o">=</span><span class="s2">&quot;feature_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/c455c7ae4f1052c2efe09d672a4f13a47dc7f8530e6478178a1dc0c7427a295f.png"><img alt="../_images/c455c7ae4f1052c2efe09d672a4f13a47dc7f8530e6478178a1dc0c7427a295f.png" src="../_images/c455c7ae4f1052c2efe09d672a4f13a47dc7f8530e6478178a1dc0c7427a295f.png" style="width: 1415px; height: 338px;" /></a>
+</div>
+</div>
+</section>
+<section id="discrete-tissue-regions">
+<h4><span class="section-number">30.3.4.2. </span>Discrete tissue regions<a class="headerlink" href="#discrete-tissue-regions" title="Link to this heading">#</a></h4>
+<p>Based on the computed cell abundance estimated by cell2location, we can identify tissue regions with similar cell compositions. For this purpose we compute a KNN graph based on the 5% cell abundance and perform leiden clustering in the connectivities. The clustering is performed on all sections jointly to identify comparable tissue regions across samples.</p>
+<p>We save the resulting clustering in <code class="docutils literal notranslate"><span class="pre">adata_vis.obs['region_cluster']</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;q05_cell_abundance_w_sf&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;region_cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing neighbors
+    finished: added to `.uns[&#39;neighbors&#39;]`
+    `.obsp[&#39;distances&#39;]`, distances for each pair of neighbors
+    `.obsp[&#39;connectivities&#39;]`, weighted adjacency matrix (0:00:27)
+running Leiden clustering
+    finished: found 11 clusters and added
+    &#39;leiden&#39;, the cluster labels (adata.obs, categorical) (0:00:01)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now compute a UMAP using the KNN graph based on the cell2location output and visualize the identified tissue regions both in the UMAP and in space.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;axes.facecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}):</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+        <span class="n">adata_st</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;region_cluster&quot;</span><span class="p">],</span>
+        <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">color_map</span><span class="o">=</span><span class="s2">&quot;RdPu&quot;</span><span class="p">,</span>
+        <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">,</span>
+        <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing UMAP
+    finished: added
+    &#39;X_umap&#39;, UMAP coordinates (adata.obsm) (0:00:11)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/deconvolution_book/lib/python3.9/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/93593324c02f9bda58435a9c6b6af13521f4ece90b69d526a9e1d90137801279.png"><img alt="../_images/93593324c02f9bda58435a9c6b6af13521f4ece90b69d526a9e1d90137801279.png" src="../_images/93593324c02f9bda58435a9c6b6af13521f4ece90b69d526a9e1d90137801279.png" style="width: 538px; height: 543px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sq</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial_scatter</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;region_cluster&quot;</span><span class="p">,</span> <span class="n">library_key</span><span class="o">=</span><span class="s2">&quot;patient_region_id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/76466efa7a3121767a926d12ebfb51ca4635edca866b0f8b5863c032390e86d9.png"><img alt="../_images/76466efa7a3121767a926d12ebfb51ca4635edca866b0f8b5863c032390e86d9.png" src="../_images/76466efa7a3121767a926d12ebfb51ca4635edca866b0f8b5863c032390e86d9.png" style="width: 1291px; height: 303px;" /></a>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="further-models-in-reference-based-deconvolution">
+<h2><span class="section-number">30.4. </span>Further Models in Reference Based Deconvolution<a class="headerlink" href="#further-models-in-reference-based-deconvolution" title="Link to this heading">#</a></h2>
+<p>DestVI <span id="id14">[<a class="reference internal" href="#id551" title="Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. Nature Biotechnology, 40(9):1360–1369, September 2022. URL: https://doi.org/10.1038/s41587-022-01272-8, doi:10.1038/s41587-022-01272-8.">Lopez <em>et al.</em>, 2022</a>]</span> incorporates complex nonlinear relationships into the latent variable setup through the use of neural networks. It is the first model that allows for variation of cell type expression prototypes in the data set through a latent variable. These concepts combine to parameterize the mean of a standard negative binomial distribution with gene dependent success probability <span class="math notranslate nohighlight">\(p_g\)</span> as in Stereoscope.</p>
+<p>RCTD <span id="id15">[<a class="reference internal" href="#id552" title="Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. Nature Biotechnology, 40(4):517–526, April 2022. URL: https://doi.org/10.1038/s41587-021-00830-w, doi:10.1038/s41587-021-00830-w.">Cable <em>et al.</em>, 2022</a>]</span> is a reference based deconvolution model which uses the Poisson distribution instead of the more common negative binomial. For its reference cell type prototypes, it simply uses mean expressions for each cell type. This straightforward approach aims for maximum robustness and has shown particular promise in the deconvolution of cell doublets.</p>
+<p>SPOTlight <span id="id16">[<a class="reference internal" href="#id553" title="Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. Nucleic Acids Research, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: https://doi.org/10.1093/nar/gkab043, doi:10.1093/nar/gkab043.">Elosua-Bayes <em>et al.</em>, 2021</a>]</span> uses non-negative matrix factorisation to first decompose the cells by genes matrix from a reference into two parts. First, a cells by topics matrix <span class="math notranslate nohighlight">\(H\)</span> and a topics by genes matrix <span class="math notranslate nohighlight">\(W\)</span>. The matrix <span class="math notranslate nohighlight">\(W\)</span> is then transferred to ST where a spots by topics matrix <span class="math notranslate nohighlight">\(H'\)</span> is inferred. Topics are not exactly cell types and much care has to be put to ensure that correct latent features are modeled.</p>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">30.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Reference based deconvolution methods can be used for increasing the resolution of spot-based spatial transcriptomics data.</p></li>
+<li><p>Cell2location outperformed other approaches for cell type deconvolution, but requires more computational resources.</p></li>
+<li><p>Alternative models are SpatialDWLS and RCTD which perform best in terms of the overall accuracy score.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">30.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id17">
+<div role="list" class="citation-list">
+<div class="citation" id="id550" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialABA+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
+<p>Alma Andersson, Joseph Bergenstråhle, Michaela Asp, Ludvig Bergenstråhle, Aleksandra Jurek, José Fernández Navarro, and Joakim Lundeberg. Single-cell and spatial transcriptomics enables probabilistic inference of cell type topography. <em>Communications Biology</em>, 3(1):565, October 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">https://doi.org/10.1038/s42003-020-01247-y</a>, <a class="reference external" href="https://doi.org/10.1038/s42003-020-01247-y">doi:10.1038/s42003-020-01247-y</a>.</p>
+</div>
+<div class="citation" id="id552" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialCMZ+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
+<p>Dylan M. Cable, Evan Murray, Luli S. Zou, Aleksandrina Goeva, Evan Z. Macosko, Fei Chen, and Rafael A. Irizarry. Robust decomposition of cell type mixtures in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(4):517–526, April 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">https://doi.org/10.1038/s41587-021-00830-w</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-00830-w">doi:10.1038/s41587-021-00830-w</a>.</p>
+</div>
+<div class="citation" id="id553" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialEBNM+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id16">2</a>)</span>
+<p>Marc Elosua-Bayes, Paula Nieto, Elisabetta Mereu, Ivo Gut, and Holger Heyn. SPOTlight: seeded NMF regression to deconvolute spatial transcriptomics spots with single-cell transcriptomes. <em>Nucleic Acids Research</em>, 49(9):e50–e50, February 2021. _eprint: https://academic.oup.com/nar/article-pdf/49/9/e50/37998836/gkab043.pdf. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">https://doi.org/10.1093/nar/gkab043</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkab043">doi:10.1093/nar/gkab043</a>.</p>
+</div>
+<div class="citation" id="id548" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialKSD+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id9">3</a>)</span>
+<p>Vitalii Kleshchevnikov, Artem Shmatko, Emma Dann, Alexander Aivazidis, Hamish W. King, Tong Li, Rasa Elmentaite, Artem Lomakin, Veronika Kedlian, Adam Gayoso, Mika Sarkin Jain, Jun Sung Park, Lauma Ramona, Elizabeth Tuck, Anna Arutyunyan, Roser Vento-Tormo, Moritz Gerstung, Louisa James, Oliver Stegle, and Omer Ali Bayraktar. Cell2location maps fine-grained cell types in spatial transcriptomics. <em>Nature Biotechnology</em>, 40(5):661–671, May 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">https://doi.org/10.1038/s41587-021-01139-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-01139-4">doi:10.1038/s41587-021-01139-4</a>.</p>
+</div>
+<div class="citation" id="id549" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialKRFL+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id12">2</a>,<a role="doc-backlink" href="#id13">3</a>)</span>
+<p>Christoph Kuppe, Ricardo O. Ramirez Flores, Zhijian Li, Sikander Hayat, Rebecca T. Levinson, Xian Liao, Monica T. Hannani, Jovan Tanevski, Florian Wünnemann, James S. Nagai, Maurice Halder, David Schumacher, Sylvia Menzel, Gideon Schäfer, Konrad Hoeft, Mingbo Cheng, Susanne Ziegler, Xiaoting Zhang, Fabian Peisker, Nadine Kaesler, Turgay Saritas, Yaoxian Xu, Astrid Kassner, Jan Gummert, Michiel Morshuis, Junedh Amrute, Rogier J. A. Veltrop, Peter Boor, Karin Klingel, Linda W. Van Laake, Aryan Vink, Remco M. Hoogenboezem, Eric M. J. Bindels, Leon Schurgers, Susanne Sattler, Denis Schapiro, Rebekka K. Schneider, Kory Lavine, Hendrik Milting, Ivan G. Costa, Julio Saez-Rodriguez, and Rafael Kramann. Spatial multi-omic map of human myocardial infarction. <em>Nature</em>, 608(7924):766–777, August 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">https://doi.org/10.1038/s41586-022-05060-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-022-05060-x">doi:10.1038/s41586-022-05060-x</a>.</p>
+</div>
+<div class="citation" id="id544" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">spatialLZG+22</a><span class="fn-bracket">]</span></span>
+<p>Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. <em>Nature Methods</em>, 19(6):662–670, June 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">https://doi.org/10.1038/s41592-022-01480-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">doi:10.1038/s41592-022-01480-9</a>.</p>
+</div>
+<div class="citation" id="id551" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialLLKS+22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id14">2</a>)</span>
+<p>Romain Lopez, Baoguo Li, Hadas Keren-Shaul, Pierre Boyeau, Merav Kedmi, David Pilzer, Adam Jelinski, Ido Yofe, Eyal David, Allon Wagner, Can Ergen, Yoseph Addadi, Ofra Golani, Franca Ronchese, Michael I. Jordan, Ido Amit, and Nir Yosef. DestVI identifies continuums of cell types in spatial transcriptomics data. <em>Nature Biotechnology</em>, 40(9):1360–1369, September 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">https://doi.org/10.1038/s41587-022-01272-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-022-01272-8">doi:10.1038/s41587-022-01272-8</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">30.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<section id="authors">
+<h3><span class="section-number">30.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Leon Hetzel</p></li>
+<li><p>Anna Schaar</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">30.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "cell2loc_env"
+        },
+        kernelOptions: {
+            name: "cell2loc_env",
+            path: "./spatial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'cell2loc_env'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="spatially_variable_genes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">29. </span>Spatially variable genes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="imputation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">31. </span>Imputation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">30.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-more-mathematical-description-of-deconvolution">30.2. A more mathematical description of deconvolution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stereoscope">30.2.1. Stereoscope</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location">30.2.2. Cell2location</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-in-practice">30.3. Cell2Location in practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-of-the-spatal-and-single-cell-data">30.3.1. Pre-processing of the spatal and single-cell data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-reference-model">30.3.2. Fitting the reference model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell2location-cell-type-mapping">30.3.3. Cell2Location cell type mapping</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#downstream-analysis">30.3.4. Downstream analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-type-specific-expression-of-every-gene-in-the-spatial-data">30.3.4.1. Cell-type specific expression of every gene in the spatial data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-tissue-regions">30.3.4.2. Discrete tissue regions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-models-in-reference-based-deconvolution">30.4. Further Models in Reference Based Deconvolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">30.5. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">30.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">30.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">30.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">30.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
