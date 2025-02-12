@@ -137,7 +137,7 @@ loci
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
 
 MuData
-    A Python package for multimodal annotated data matrices.
+    A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
     The primary data structure in the scverse ecosystem for multimodal data.
 
 Muon
@@ -201,7 +201,8 @@ Spike-in RNA
 
 Splice Junctions
 splice junctions
-    Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing. These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
+    Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
+    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
 
 Trajectory inference
     Also known as pseudotemporal ordering.
