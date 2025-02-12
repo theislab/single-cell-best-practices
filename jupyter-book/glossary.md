@@ -5,7 +5,7 @@ Adapter sequences
 adapter sequences
     Short, synthetic DNA or RNA sequences that are ligated to the ends of DNA or RNA fragments during library preparation for sequencing.
     These adapters are essential for binding the fragments to the flowcell and enabling amplification and sequencing.
-    However, if adapters are not properly removed or trimmed after sequencing, they can appear in the reads, potentially interfering with alignment and downstream analyses.
+    However, if adapters are not trimmed after sequencing, they can appear in the reads, potentially interfering with alignment and downstream analyses.
 
 Algorithm
 Algorithms
