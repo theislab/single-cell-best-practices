@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="23. Single-cell ATAC sequencing" href="introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -526,33 +512,30 @@ document.write(`
 <h1><span class="section-number">24. </span>Quality Control<a class="headerlink" href="#quality-control" title="Link to this heading">#</a></h1>
 <section id="motivation">
 <h2><span class="section-number">24.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
-<p>A crucial part of every single-cell analysis is the removal of low-quality cells which can distort downstream analyses outcomes. scATAC-seq data, having only 1-10% of open chromatin regions detected in each cell, is even more sparse than scRNA-seq data <span id="id1">[<a class="reference internal" href="#id443" title="Huidong Chen, Caleb Lareau, Tommaso Andreani, Michael E. Vinyard, Sara P. Garcia, Kendell Clement, Miguel A. Andrade-Navarro, Jason D. Buenrostro, and Luca Pinello. Assessment of computational methods for the analysis of single-cell ATAC-seq data. Genome Biology, 20(1):241, 2019. URL: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5, doi:10.1186/s13059-019-1854-5.">Chen <em>et al.</em>, 2019</a>]</span>. Therefore, quality issues such as low sequencing depth per cell or poor signal-to-noise ratio can lead to uninformative observations (cells). Another challenge is the detection of multiplets (two or more cells profiled together). In the following chapter, we will introduce metrics for quality control (QC) of scATAC-seq data and introduce doublet detection methods.</p>
+<p>A crucial part of every single-cell analysis is the removal of low-quality cells which can distort downstream analyses outcomes. scATAC-seq data, having only 1-10% of open chromatin regions detected in each cell, is even more sparse than scRNA-seq data <span id="id1">[<a class="reference internal" href="#id444" title="Huidong Chen, Caleb Lareau, Tommaso Andreani, Michael E. Vinyard, Sara P. Garcia, Kendell Clement, Miguel A. Andrade-Navarro, Jason D. Buenrostro, and Luca Pinello. Assessment of computational methods for the analysis of single-cell ATAC-seq data. Genome Biology, 20(1):241, 2019. URL: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5, doi:10.1186/s13059-019-1854-5.">Chen <em>et al.</em>, 2019</a>]</span>. Therefore, quality issues such as low sequencing depth per cell or poor signal-to-noise ratio can lead to uninformative observations (cells). Another challenge is the detection of multiplets (two or more cells profiled together). In the following chapter, we will introduce metrics for quality control (QC) of scATAC-seq data and introduce doublet detection methods.</p>
 </section>
 <section id="dataset">
 <h2><span class="section-number">24.2. </span>Dataset<a class="headerlink" href="#dataset" title="Link to this heading">#</a></h2>
-<p>To showcase the processing of scATAC-seq data, we use a 10x Multiome data set generated for the single cell data integration challenge at the NeurIPS conference 2021 <span id="id2">[<a class="reference internal" href="#id446" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>. Note that this data set contains multiple samples, making feature harmonization and integration important to consider before analysing them jointly (discussed in later chapters). However, the most unbiased quality assessment can be derived by examining each sample individually. Therefore, we describe the preprocessing of one selected sample in this notebook.</p>
+<p>To showcase the processing of scATAC-seq data, we use a 10x Multiome data set generated for the single cell data integration challenge at the NeurIPS conference 2021 <span id="id2">[<a class="reference internal" href="#id447" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>. Note that this data set contains multiple samples, making feature harmonization and integration important to consider before analysing them jointly (discussed in later chapters). However, the most unbiased quality assessment can be derived by examining each sample individually. Therefore, we describe the preprocessing of one selected sample in this notebook.</p>
 <p>Our starting point is the output of <code class="docutils literal notranslate"><span class="pre">cellranger-arc</span></code>, the software solution of 10x to perform alignment, peak calling and initial QC of their 10x Multiome assay. By default, the output files contain the snRNA-seq and the scATAC-seq data. Since the preprocessing of scRNA-seq or snRNA-seq data has been described extensively in previous chapters, here, we only discuss the processing of the chromatin accessibility data (which are also applicable to data from a unimodal scATAC-seq assay).</p>
 <p>The primary file we load is the <code class="docutils literal notranslate"><span class="pre">filtered_feature_bc_matrix.h5</span></code> file containing the cell-by-peak count matrix. During loading, we leverage the functionality of <code class="docutils literal notranslate"><span class="pre">moun</span></code> to automatically detect the corresponding fragment and peak annotation files within the same directory.</p>
 <p>To get started, we import all required Python packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Single-cell packages</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
-<span class="kn">from</span> <span class="nn">muon</span> <span class="kn">import</span> <span class="n">atac</span> <span class="k">as</span> <span class="n">ac</span>  <span class="c1"># the module containing function for scATAC data processing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># General helpful packages for data analysis and visualization</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="kn">import</span> <span class="n">atac</span> <span class="k">as</span> <span class="n">ac</span>  <span class="c1"># the module containing function for scATAC data processing</span>
 
 <span class="c1"># Packages enabling to run R code</span>
-<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rpy2.robjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">pandas2ri</span>
 
 <span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>  <span class="c1"># Automatically convert rpy2 outputs to pandas DataFrames</span>
 <span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
@@ -668,10 +651,10 @@ With overloaded keys:
 </section>
 <section id="doublet-detection">
 <h2><span class="section-number">24.3. </span>Doublet detection<a class="headerlink" href="#doublet-detection" title="Link to this heading">#</a></h2>
-<p>The sparsity of scATAC data is considerably higher compared to scRNA-seq data. Therefore, it is not recommended to directly apply methods developed for scRNA-seq on scATAC-seq data. Here, we describe the use of two orthogonal methods for doublet scoring which can be used to detect clusters of cells containing doublets later on. Both approaches have been implemented in the R package scDoubletFinder <span id="id3">[<a class="reference internal" href="#id444" title="Pierre-Luc Germain, Aaron Lun, Carlos Garcia Meixide, Will Macnair, and Mark D Robinson. Doublet identification in single-cell sequencing data using scdblfinder. F1000Research, 2021.">Germain <em>et al.</em>, 2021</a>]</span> and the following steps were adapted from <a class="reference external" href="https://www.bioconductor.org/packages/devel/bioc/vignettes/scDblFinder/inst/doc/scATAC.html">this tutorial</a>.</p>
+<p>The sparsity of scATAC data is considerably higher compared to scRNA-seq data. Therefore, it is not recommended to directly apply methods developed for scRNA-seq on scATAC-seq data. Here, we describe the use of two orthogonal methods for doublet scoring which can be used to detect clusters of cells containing doublets later on. Both approaches have been implemented in the R package scDoubletFinder <span id="id3">[<a class="reference internal" href="#id445" title="Pierre-Luc Germain, Aaron Lun, Carlos Garcia Meixide, Will Macnair, and Mark D Robinson. Doublet identification in single-cell sequencing data using scdblfinder. F1000Research, 2021.">Germain <em>et al.</em>, 2021</a>]</span> and the following steps were adapted from <a class="reference external" href="https://www.bioconductor.org/packages/devel/bioc/vignettes/scDblFinder/inst/doc/scATAC.html">this tutorial</a>.</p>
 <ul class="simple">
 <li><p><strong>Approach 1: Doublet Scoring based on simulated doublets:</strong> The native scDoubletFinder method is leveraging simulated doublets to assign doublet scores (see <a class="reference internal" href="../preprocessing_visualization/quality_control.html#rna-doublet-detection"><span class="std std-ref">Doublet Detection</span></a>). Prior to generating doublets, highly correlated features are aggregated to reduce sparsity and the number of features. As with methods for scRNA-seq data, this method detects heterotypic doublets (mix of different cell types).</p></li>
-<li><p><strong>Approach 2: Coverage-based doublet scoring using AMULET</strong> <span id="id4">[<a class="reference internal" href="#id445" title="Asa Thibodeau, Alper Eroglu, Christopher S. McGinnis, Nathan Lawlor, Djamel Nehar-Belaid, Romy Kursawe, Radu Marches, Daniel N. Conrad, George A. Kuchel, Zev J. Gartner, Jacques Banchereau, Michael L. Stitzel, A. Ercument Cicek, and Duygu Ucar. AMULET: a novel read count-based method for effective multiplet detection from single nucleus ATAC-seq data. Genome Biology, 22(1):252, September 2021. URL: https://doi.org/10.1186/s13059-021-02469-x (visited on 2022-10-25), doi:10.1186/s13059-021-02469-x.">Thibodeau <em>et al.</em>, 2021</a>]</span>: Since DNA is only present as two copies in a diploid organism, one can expect a maximum count of two for any given position in the genome. AMULET makes use of this characteristic and evaluates the number of instances with more than two overlapping fragments for a given position (see figure below). An unexpected high number of such instances indicates a doublet (a small number of positions with more than two overlapping fragments is expected due to errors like duplication errors, sequencing and alignment errors or repetitive sequence content). AMULET performs best with a sufficient sequencing depth (&gt; 10-15k reads per cell) and can capture heterotypic and homotypic doublets (identical cell type).</p></li>
+<li><p><strong>Approach 2: Coverage-based doublet scoring using AMULET</strong> <span id="id4">[<a class="reference internal" href="#id446" title="Asa Thibodeau, Alper Eroglu, Christopher S. McGinnis, Nathan Lawlor, Djamel Nehar-Belaid, Romy Kursawe, Radu Marches, Daniel N. Conrad, George A. Kuchel, Zev J. Gartner, Jacques Banchereau, Michael L. Stitzel, A. Ercument Cicek, and Duygu Ucar. AMULET: a novel read count-based method for effective multiplet detection from single nucleus ATAC-seq data. Genome Biology, 22(1):252, September 2021. URL: https://doi.org/10.1186/s13059-021-02469-x (visited on 2022-10-25), doi:10.1186/s13059-021-02469-x.">Thibodeau <em>et al.</em>, 2021</a>]</span>: Since DNA is only present as two copies in a diploid organism, one can expect a maximum count of two for any given position in the genome. AMULET makes use of this characteristic and evaluates the number of instances with more than two overlapping fragments for a given position (see figure below). An unexpected high number of such instances indicates a doublet (a small number of positions with more than two overlapping fragments is expected due to errors like duplication errors, sequencing and alignment errors or repetitive sequence content). AMULET performs best with a sufficient sequencing depth (&gt; 10-15k reads per cell) and can capture heterotypic and homotypic doublets (identical cell type).</p></li>
 </ul>
 <figure class="align-default" id="amulet">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/amulet.png"><img alt="Amulet" class="bg-primary mb-1" src="../_images/amulet.png" style="width: 800px;" /></a>
@@ -725,7 +708,7 @@ suppressPackageStartupMessages(library(SingleCellExperiment))
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">scDblFinder</span></code> methods works on a <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> object that we create from the our <code class="docutils literal notranslate"><span class="pre">data_mat</span></code> object. The user has to decide, whether doublet detection should happen cluster based (by using the <code class="docutils literal notranslate"><span class="pre">clusters</span></code> arguments) or using random cells. Cluster-based scoring is recommended if well-distinguishable cell populations are expected (e.g.PBMCs), while it is not recommended if continuous trajectories are expected. You can either provide pre-annotated clusters by specifying a vector of cluster labels for each cell, a metadata column of the <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> containing such labels, or <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. To not use clusters and randomly sample, one can set <code class="docutils literal notranslate"><span class="pre">clusters=FALSE</span></code> or <code class="docutils literal notranslate"><span class="pre">clusters=NULL</span></code>.
-As working with all features (peaks or bins) is computationally very expensive, the authors suggest to aggregate correlated features into a small set <span id="id5">[<a class="reference internal" href="#id444" title="Pierre-Luc Germain, Aaron Lun, Carlos Garcia Meixide, Will Macnair, and Mark D Robinson. Doublet identification in single-cell sequencing data using scdblfinder. F1000Research, 2021.">Germain <em>et al.</em>, 2021</a>]</span>. This is enforced by setting <code class="docutils literal notranslate"><span class="pre">aggregateFeatures=TRUE</span></code>. This will aggregate peak or bin counts into <code class="docutils literal notranslate"><span class="pre">nfeatures</span></code> meta features. It is recommended to use a small number of features, we use 25. In a last step, the aggregated features are normalized <code class="docutils literal notranslate"><span class="pre">processing=&quot;normFeatures&quot;</span></code> before calculation of the doublet scores.</p>
+As working with all features (peaks or bins) is computationally very expensive, the authors suggest to aggregate correlated features into a small set <span id="id5">[<a class="reference internal" href="#id445" title="Pierre-Luc Germain, Aaron Lun, Carlos Garcia Meixide, Will Macnair, and Mark D Robinson. Doublet identification in single-cell sequencing data using scdblfinder. F1000Research, 2021.">Germain <em>et al.</em>, 2021</a>]</span>. This is enforced by setting <code class="docutils literal notranslate"><span class="pre">aggregateFeatures=TRUE</span></code>. This will aggregate peak or bin counts into <code class="docutils literal notranslate"><span class="pre">nfeatures</span></code> meta features. It is recommended to use a small number of features, we use 25. In a last step, the aggregated features are normalized <code class="docutils literal notranslate"><span class="pre">processing=&quot;normFeatures&quot;</span></code> before calculation of the doublet scores.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">R</span> -i data_mat -o dbl_score sce &lt;- scDblFinder(SingleCellExperiment(list(counts=data_mat)), \
@@ -865,7 +848,7 @@ R[write to console]: 3038 (17.9%) doublets called
 </section>
 <section id="coverage-based-doublet-scoring">
 <h3><span class="section-number">24.3.2. </span>Coverage-based doublet scoring<a class="headerlink" href="#coverage-based-doublet-scoring" title="Link to this heading">#</a></h3>
-<p>As described before, AMULET estimates doublet scores based on the number of genomic positions with a fragment coverage higher two. Since this assumption is based on a diploid genome, we exclude mitochondrial genes (a cell can have many copies of the mitochondrial DNA) and sex chromosomes, as suggested by <span id="id6">[<a class="reference internal" href="#id445" title="Asa Thibodeau, Alper Eroglu, Christopher S. McGinnis, Nathan Lawlor, Djamel Nehar-Belaid, Romy Kursawe, Radu Marches, Daniel N. Conrad, George A. Kuchel, Zev J. Gartner, Jacques Banchereau, Michael L. Stitzel, A. Ercument Cicek, and Duygu Ucar. AMULET: a novel read count-based method for effective multiplet detection from single nucleus ATAC-seq data. Genome Biology, 22(1):252, September 2021. URL: https://doi.org/10.1186/s13059-021-02469-x (visited on 2022-10-25), doi:10.1186/s13059-021-02469-x.">Thibodeau <em>et al.</em>, 2021</a>]</span>. In addition, we want to mask repetitive sequences in the genome (e.g. interspersed nuclear elements or satellite repeats). To do so, we downloaded the <code class="docutils literal notranslate"><span class="pre">.bed</span></code> file provided with the AMULET publication available on <a class="reference external" href="https://zenodo.org/record/5189588#.ZDlrwexBxqs">Zenodo</a> and load it with the R package <code class="docutils literal notranslate"><span class="pre">rtracklayer</span></code>, which directly creates a <code class="docutils literal notranslate"><span class="pre">GRanges</span></code> R object. Note that for this sample, with about 16k cells, AMULET takes about 4 hours to run on a personal computer (the <code class="docutils literal notranslate"><span class="pre">.bed</span></code> file of repeat elements and the AMULET output is also provided on figshare).</p>
+<p>As described before, AMULET estimates doublet scores based on the number of genomic positions with a fragment coverage higher two. Since this assumption is based on a diploid genome, we exclude mitochondrial genes (a cell can have many copies of the mitochondrial DNA) and sex chromosomes, as suggested by <span id="id6">[<a class="reference internal" href="#id446" title="Asa Thibodeau, Alper Eroglu, Christopher S. McGinnis, Nathan Lawlor, Djamel Nehar-Belaid, Romy Kursawe, Radu Marches, Daniel N. Conrad, George A. Kuchel, Zev J. Gartner, Jacques Banchereau, Michael L. Stitzel, A. Ercument Cicek, and Duygu Ucar. AMULET: a novel read count-based method for effective multiplet detection from single nucleus ATAC-seq data. Genome Biology, 22(1):252, September 2021. URL: https://doi.org/10.1186/s13059-021-02469-x (visited on 2022-10-25), doi:10.1186/s13059-021-02469-x.">Thibodeau <em>et al.</em>, 2021</a>]</span>. In addition, we want to mask repetitive sequences in the genome (e.g. interspersed nuclear elements or satellite repeats). To do so, we downloaded the <code class="docutils literal notranslate"><span class="pre">.bed</span></code> file provided with the AMULET publication available on <a class="reference external" href="https://zenodo.org/record/5189588#.ZDlrwexBxqs">Zenodo</a> and load it with the R package <code class="docutils literal notranslate"><span class="pre">rtracklayer</span></code>, which directly creates a <code class="docutils literal notranslate"><span class="pre">GRanges</span></code> R object. Note that for this sample, with about 16k cells, AMULET takes about 4 hours to run on a personal computer (the <code class="docutils literal notranslate"><span class="pre">.bed</span></code> file of repeat elements and the AMULET output is also provided on figshare).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -1055,7 +1038,7 @@ toExclude &lt;- suppressWarnings(c(repeats, otherChroms))
 <p>Additional metrics that can be considered:</p>
 <ul class="simple">
 <li><p><strong>reads_in_peaks_frac:</strong> The fraction of fragments in peak regions versus fragments outside of peaks. Similar to the TSS score, this is an indicator for the signal-to-noise ratio.</p></li>
-<li><p><strong>blacklist_fraction:</strong> The ratio of fragments in genomic blacklist regions, which have been associated with artefactual signal (defined by ENCODE). Benchmarking studies on processing of single-cell ATAC-seq data <span id="id7">[<a class="reference internal" href="#id443" title="Huidong Chen, Caleb Lareau, Tommaso Andreani, Michael E. Vinyard, Sara P. Garcia, Kendell Clement, Miguel A. Andrade-Navarro, Jason D. Buenrostro, and Luca Pinello. Assessment of computational methods for the analysis of single-cell ATAC-seq data. Genome Biology, 20(1):241, 2019. URL: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5, doi:10.1186/s13059-019-1854-5.">Chen <em>et al.</em>, 2019</a>]</span> and based on our own experience, often the mapping of reads to blacklist regions is not a major issue single-cell data.</p></li>
+<li><p><strong>blacklist_fraction:</strong> The ratio of fragments in genomic blacklist regions, which have been associated with artefactual signal (defined by ENCODE). Benchmarking studies on processing of single-cell ATAC-seq data <span id="id7">[<a class="reference internal" href="#id444" title="Huidong Chen, Caleb Lareau, Tommaso Andreani, Michael E. Vinyard, Sara P. Garcia, Kendell Clement, Miguel A. Andrade-Navarro, Jason D. Buenrostro, and Luca Pinello. Assessment of computational methods for the analysis of single-cell ATAC-seq data. Genome Biology, 20(1):241, 2019. URL: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5, doi:10.1186/s13059-019-1854-5.">Chen <em>et al.</em>, 2019</a>]</span> and based on our own experience, often the mapping of reads to blacklist regions is not a major issue single-cell data.</p></li>
 </ul>
 <p>Besides cell-level QC metrics, we also recommend to assess sample-level quality, for instance, by assessing the number of detected cells per sample and comparing the distributions of cell-level metrics. For the later, a violin plots grouped by sample is very informative.</p>
 <section id="total-fragment-count-and-number-of-features">
@@ -1587,21 +1570,21 @@ Number of cells after filtering on nucleosome_signal: 15286
 <h2><span class="section-number">24.8. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id8">
 <div role="list" class="citation-list">
-<div class="citation" id="id443" role="doc-biblioentry">
+<div class="citation" id="id444" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atacCLA+19<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
 <p>Huidong Chen, Caleb Lareau, Tommaso Andreani, Michael E. Vinyard, Sara P. Garcia, Kendell Clement, Miguel A. Andrade-Navarro, Jason D. Buenrostro, and Luca Pinello. Assessment of computational methods for the analysis of single-cell ATAC-seq data. <em>Genome Biology</em>, 20(1):241, 2019. URL: <a class="reference external" href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5">https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1854-5</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-019-1854-5">doi:10.1186/s13059-019-1854-5</a>.</p>
 </div>
-<div class="citation" id="id444" role="doc-biblioentry">
+<div class="citation" id="id445" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atacGLM+21<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
 <p>Pierre-Luc Germain, Aaron Lun, Carlos Garcia Meixide, Will Macnair, and Mark D Robinson. Doublet identification in single-cell sequencing data using scdblfinder. <em>F1000Research</em>, 2021.</p>
 </div>
-<div class="citation" id="id446" role="doc-biblioentry">
+<div class="citation" id="id447" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">atacLBC+21</a><span class="fn-bracket">]</span></span>
 <p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. 2021. URL: <a class="reference external" href="https://openreview.net/forum?id=gN35BGa1Rt">https://openreview.net/forum?id=gN35BGa1Rt</a>.</p>
 </div>
-<div class="citation" id="id445" role="doc-biblioentry">
+<div class="citation" id="id446" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atacTEM+21<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
 <p>Asa Thibodeau, Alper Eroglu, Christopher S. McGinnis, Nathan Lawlor, Djamel Nehar-Belaid, Romy Kursawe, Radu Marches, Daniel N. Conrad, George A. Kuchel, Zev J. Gartner, Jacques Banchereau, Michael L. Stitzel, A. Ercument Cicek, and Duygu Ucar. AMULET: a novel read count-based method for effective multiplet detection from single nucleus ATAC-seq data. <em>Genome Biology</em>, 22(1):252, September 2021. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-021-02469-x">https://doi.org/10.1186/s13059-021-02469-x</a> (visited on 2022-10-25), <a class="reference external" href="https://doi.org/10.1186/s13059-021-02469-x">doi:10.1186/s13059-021-02469-x</a>.</p>
@@ -1684,7 +1667,8 @@ Number of cells after filtering on nucleosome_signal: 15286
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1775,8 +1759,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

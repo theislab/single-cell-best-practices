@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="43. Specificity analysis" href="specificity.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -550,7 +536,7 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
     <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
@@ -559,11 +545,10 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">scirpy</span> <span class="k">as</span> <span class="nn">ir</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scirpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ir</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
 </pre></div>
@@ -710,8 +695,8 @@ Until we update this chapter, please also refer to the <a class="reference exter
 <p>Next, we will generate frequency plots to see, whether the TCRs from cells with elevated IFNg expression, follow specific sequence patterns compared to the remaining cells. First, we select all cells with annotated CDR3β, followed by separation into background cells and cells with elevated IFNG. Finally, we construct the motifs and plot them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">palmotif</span> <span class="kn">import</span> <span class="n">compute_pal_motif</span><span class="p">,</span> <span class="n">mpl_logo</span><span class="p">,</span> <span class="n">svg_logo</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">palmotif</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_pal_motif</span><span class="p">,</span> <span class="n">svg_logo</span>
 
 <span class="n">df_sequences</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span>
     <span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span> <span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span>
@@ -812,8 +797,8 @@ Until we update this chapter, please also refer to the <a class="reference exter
 </div>
 <section id="tessa">
 <h4><span class="section-number">44.4.1.1. </span>TESSA<a class="headerlink" href="#tessa" title="Link to this heading">#</a></h4>
-<p>Zhang et al. developed TCR functional landscape estimation supervised with scRNA-seq analysis (TESSA) <span id="id1">[<a class="reference internal" href="#id509" title="Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. Nature methods, 18(1):92–99, 2021.">Zhang <em>et al.</em>, 2021</a>]</span>, which aims at embedding and clustering T cell clones based on their TCR sequence and transcriptome via Bayesian modelling. The CDR3β sequence is first compressed to a 30-dimensional numeric representation using a pretrained autoencoder. Following, the dimensions are upweighted to correlate the TCR representation with the gene expression of similar TCR-groups, thereby assigning importance of TCR position for explaining the cells’ gene expression. In an interactive process, weights and groups are updated until convergence to reach a maximal alignment between both modalities.</p>
-<p>TESSA produced clusters of high purity when embedding T-cells with known epitope specificity from <span id="id2">[<a class="reference internal" href="#id512" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span>, surpassing the uni-modal model GLIPH <span id="id3">[<a class="reference internal" href="specificity.html#id498" title="Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. Nature, 547(7661):94–98, 2017.">Glanville <em>et al.</em>, 2017</a>]</span>, which is commonly used for clustering TCR sequences. Further, cluster centrality was indicative for higher avidity clones shown by clonal expansion and high ADT counts. Using TESSA on data from <span id="id4">[<a class="reference internal" href="#id510" title="Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. Nature medicine, 25(8):1251–1259, 2019.">Yost <em>et al.</em>, 2019</a>]</span>, the author detected novel clusters of responder T cell in patients undergoing PD-1 blockade.</p>
+<p>Zhang et al. developed TCR functional landscape estimation supervised with scRNA-seq analysis (TESSA) <span id="id1">[<a class="reference internal" href="#id510" title="Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. Nature methods, 18(1):92–99, 2021.">Zhang <em>et al.</em>, 2021</a>]</span>, which aims at embedding and clustering T cell clones based on their TCR sequence and transcriptome via Bayesian modelling. The CDR3β sequence is first compressed to a 30-dimensional numeric representation using a pretrained autoencoder. Following, the dimensions are upweighted to correlate the TCR representation with the gene expression of similar TCR-groups, thereby assigning importance of TCR position for explaining the cells’ gene expression. In an interactive process, weights and groups are updated until convergence to reach a maximal alignment between both modalities.</p>
+<p>TESSA produced clusters of high purity when embedding T-cells with known epitope specificity from <span id="id2">[<a class="reference internal" href="#id513" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span>, surpassing the uni-modal model GLIPH <span id="id3">[<a class="reference internal" href="specificity.html#id499" title="Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. Nature, 547(7661):94–98, 2017.">Glanville <em>et al.</em>, 2017</a>]</span>, which is commonly used for clustering TCR sequences. Further, cluster centrality was indicative for higher avidity clones shown by clonal expansion and high ADT counts. Using TESSA on data from <span id="id4">[<a class="reference internal" href="#id511" title="Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. Nature medicine, 25(8):1251–1259, 2019.">Yost <em>et al.</em>, 2019</a>]</span>, the author detected novel clusters of responder T cell in patients undergoing PD-1 blockade.</p>
 <p>The code and instructions for installation can be found <a class="reference external" href="https://github.com/jcao89757/TESSA">here</a>.</p>
 <section id="data-preprocessing">
 <h5><span class="section-number">44.4.1.1.1. </span>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h5>
@@ -1096,8 +1081,8 @@ Until we update this chapter, please also refer to the <a class="reference exter
     <span class="s2">&quot;tcr&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_tcrs.csv&quot;</span><span class="p">,</span>
     <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_gex.csv&quot;</span><span class="p">,</span>
     <span class="c1"># TESSA models</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;TESSA/BriseisEncoder/TrainedEncoder.h5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;embeding_vectors&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;TESSA/BriseisEncoder/Atchley_factors.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;TESSA/BriseisEncoder/TrainedEncoder.h5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;embeding_vectors&quot;</span><span class="p">:</span> <span class="s2">&quot;TESSA/BriseisEncoder/Atchley_factors.csv&quot;</span><span class="p">,</span>
     <span class="c1"># Output files</span>
     <span class="s2">&quot;output_TCR&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_tcr_embedding.csv&quot;</span><span class="p">,</span>
     <span class="s2">&quot;output_log&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_log.log&quot;</span><span class="p">,</span>
@@ -1226,15 +1211,13 @@ Unique clusters: 134
 </section>
 <section id="conga">
 <h4><span class="section-number">44.4.1.2. </span>CoNGA<a class="headerlink" href="#conga" title="Link to this heading">#</a></h4>
-<p>clonotype neighbor graph analysis (CoNGA) <span id="id5">[<a class="reference internal" href="#id511" title="Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). Nature Biotechnology, 40(1):54–63, 2022.">Schattgen <em>et al.</em>, 2022</a>]</span> uses similarity graphs at a clonotype level on GEX and TCR, for which the well known distance metric TCRDist <span id="id6">[<a class="reference internal" href="specificity.html#id495" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span> is used. Based on the graph neighborhood, clusters are formed by shared GEX and TCR assignments. These so called “CoNGA clusters” thereby share similar receptor sequences as well as similar gene expression. CoNGA clusters contained clonotypes with highly alike TCRs based on e.g. length and physio-chemical properties and were shown to capture specificity. The following explanation runs the main CoNGA pipeline. Since the different aspects of the pipeline are explained <a class="reference external" href="https://github.com/phbradley/conga/blob/master/colab_conga_pipeline.ipynb">here</a>, the following description is mainly focused on how to transform the data and run the pipeline.</p>
+<p>clonotype neighbor graph analysis (CoNGA) <span id="id5">[<a class="reference internal" href="#id512" title="Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). Nature Biotechnology, 40(1):54–63, 2022.">Schattgen <em>et al.</em>, 2022</a>]</span> uses similarity graphs at a clonotype level on GEX and TCR, for which the well known distance metric TCRDist <span id="id6">[<a class="reference internal" href="specificity.html#id496" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span> is used. Based on the graph neighborhood, clusters are formed by shared GEX and TCR assignments. These so called “CoNGA clusters” thereby share similar receptor sequences as well as similar gene expression. CoNGA clusters contained clonotypes with highly alike TCRs based on e.g. length and physio-chemical properties and were shown to capture specificity. The following explanation runs the main CoNGA pipeline. Since the different aspects of the pipeline are explained <a class="reference external" href="https://github.com/phbradley/conga/blob/master/colab_conga_pipeline.ipynb">here</a>, the following description is mainly focused on how to transform the data and run the pipeline.</p>
 <section id="id7">
 <h5><span class="section-number">44.4.1.2.1. </span>Data Preparation<a class="headerlink" href="#id7" title="Link to this heading">#</a></h5>
 <p>CoNGA conveniently supports several input types for the gene expression matrix including h5ad-files. For the clonotype information, we need to create a clone_file first by running a preprocessing script on the Cell Ranger output.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">conga</span>
-
-<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_read_aligned.csv&quot;</span><span class="p">,</span>
     <span class="c1"># index_col=&#39;barcode&#39;,</span>
 <span class="p">)</span>
@@ -1316,19 +1299,19 @@ Unique clusters: 134
 </section>
 <section id="mvtcr">
 <h4><span class="section-number">44.4.1.3. </span>mvTCR<a class="headerlink" href="#mvtcr" title="Link to this heading">#</a></h4>
-<p>mvTCR by An et al. is a multiview Variational autoencoder that compresses TCR sequence and gene expression into a lower-dimensional representation <span id="id9">[<a class="reference internal" href="#id513" title="Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. bioRxiv, 2021.">An <em>et al.</em>, 2021</a>]</span>. Two deep learning architectures - Transformer and Multi-layer perceptron - extract information from both TCR and GEX, respectively, before they are fused to derive the joint space. Following, the trained models can be used to embed similar data.</p>
-<p>The authors showed, that multi-modal models can better capture antigen specificity, than uni-modal embeddings on the data from <span id="id10">[<a class="reference internal" href="#id512" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span> for prediction and clustering. Additionally, they showed that cell type and cell functionality are preserved in the embedding space on a SARS-CoV-2 dataset from <span id="id11">[<a class="reference internal" href="#id514" title="David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. Nature communications, 12(1):1–14, 2021.">Fischer <em>et al.</em>, 2021</a>]</span>. Code and further explanations are available <a class="reference external" href="https://github.com/SchubertLab/mvTCR">here</a>.</p>
+<p>mvTCR by An et al. is a multiview Variational autoencoder that compresses TCR sequence and gene expression into a lower-dimensional representation <span id="id9">[<a class="reference internal" href="#id514" title="Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. bioRxiv, 2021.">An <em>et al.</em>, 2021</a>]</span>. Two deep learning architectures - Transformer and Multi-layer perceptron - extract information from both TCR and GEX, respectively, before they are fused to derive the joint space. Following, the trained models can be used to embed similar data.</p>
+<p>The authors showed, that multi-modal models can better capture antigen specificity, than uni-modal embeddings on the data from <span id="id10">[<a class="reference internal" href="#id513" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span> for prediction and clustering. Additionally, they showed that cell type and cell functionality are preserved in the embedding space on a SARS-CoV-2 dataset from <span id="id11">[<a class="reference internal" href="#id515" title="David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. Nature communications, 12(1):1–14, 2021.">Fischer <em>et al.</em>, 2021</a>]</span>. Code and further explanations are available <a class="reference external" href="https://github.com/SchubertLab/mvTCR">here</a>.</p>
 <p>mvTCR relies on the AnnData format and we therefore need to prepare our AnnData object for training. For that, the several functions are provided.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mvTCR&quot;</span><span class="p">)</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">tcr_embedding.utils_training</span> <span class="k">as</span> <span class="nn">utils</span>
-<span class="kn">from</span> <span class="nn">tcr_embedding.models.model_selection</span> <span class="kn">import</span> <span class="n">run_model_selection</span>
-<span class="kn">from</span> <span class="nn">tcr_embedding.utils_preprocessing</span> <span class="kn">import</span> <span class="n">group_shuffle_split</span><span class="p">,</span> <span class="n">encode_tcr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tcr_embedding.utils_training</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tcr_embedding.models.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model_selection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tcr_embedding.utils_preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_tcr</span><span class="p">,</span> <span class="n">group_shuffle_split</span>
 </pre></div>
 </div>
 </div>
@@ -1486,7 +1469,7 @@ Best trial:
 </section>
 <section id="integrating-bcr-and-gex">
 <h3><span class="section-number">44.4.2. </span>Integrating BCR and GEX<a class="headerlink" href="#integrating-bcr-and-gex" title="Link to this heading">#</a></h3>
-<p>The three models above were developed TCRs. However, Conga and mvTCR might be applicable for B cells due to similar structures of TCR and BCR. However, both models have not been evaluated for B cells in their publication. TESSA relies on a pre-trained TCR autoencoder and should therefore not be used for BCR-GEX integration. The authors recently published <a class="reference external" href="https://github.com/wooyongc/Benisse">Benisse</a>, which is similar to TESSA but applied on B cells <span id="id12">[<a class="reference internal" href="#id515" title="Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. Nature Machine Intelligence, pages 1–9, 2022.">Zhang <em>et al.</em>, 2022</a>]</span>.</p>
+<p>The three models above were developed TCRs. However, Conga and mvTCR might be applicable for B cells due to similar structures of TCR and BCR. However, both models have not been evaluated for B cells in their publication. TESSA relies on a pre-trained TCR autoencoder and should therefore not be used for BCR-GEX integration. The authors recently published <a class="reference external" href="https://github.com/wooyongc/Benisse">Benisse</a>, which is similar to TESSA but applied on B cells <span id="id12">[<a class="reference internal" href="#id516" title="Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. Nature Machine Intelligence, pages 1–9, 2022.">Zhang <em>et al.</em>, 2022</a>]</span>.</p>
 <p>Similar as for TCR, multimodal BCR integration tools are still novel and have not been used in standard analysis pipelines. Therefore, we recommend caution, when applying these models.</p>
 <section id="benisse">
 <h4><span class="section-number">44.4.2.1. </span>Benisse<a class="headerlink" href="#benisse" title="Link to this heading">#</a></h4>
@@ -1857,7 +1840,7 @@ Best trial:
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">IFrame</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">IFrame</span>
 
 <span class="n">IFrame</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/connectionplot.pdf&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
 </pre></div>
@@ -1948,40 +1931,40 @@ Best trial:
 <h2><span class="section-number">44.7. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id15">
 <div role="list" class="citation-list">
-<div class="citation" id="id512" role="doc-biblioentry">
+<div class="citation" id="id513" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>10xG19<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
 <p>10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. <em>Tech. rep</em>, 2019.</p>
 </div>
-<div class="citation" id="id513" role="doc-biblioentry">
+<div class="citation" id="id514" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">ADT+21</a><span class="fn-bracket">]</span></span>
 <p>Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. <em>bioRxiv</em>, 2021.</p>
 </div>
-<div class="citation" id="id493" role="doc-biblioentry">
+<div class="citation" id="id494" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">DFGH+17</a><span class="fn-bracket">]</span></span>
 <p>Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. <em>Nature</em>, 547(7661):89–93, 2017.</p>
 </div>
-<div class="citation" id="id514" role="doc-biblioentry">
+<div class="citation" id="id515" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">FAW+21</a><span class="fn-bracket">]</span></span>
 <p>David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. <em>Nature communications</em>, 12(1):1–14, 2021.</p>
 </div>
-<div class="citation" id="id496" role="doc-biblioentry">
+<div class="citation" id="id497" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">GHN+17</a><span class="fn-bracket">]</span></span>
 <p>Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. <em>Nature</em>, 547(7661):94–98, 2017.</p>
 </div>
-<div class="citation" id="id511" role="doc-biblioentry">
+<div class="citation" id="id512" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">SGC+22</a><span class="fn-bracket">]</span></span>
 <p>Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). <em>Nature Biotechnology</em>, 40(1):54–63, 2022.</p>
 </div>
-<div class="citation" id="id510" role="doc-biblioentry">
+<div class="citation" id="id511" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">YSW+19</a><span class="fn-bracket">]</span></span>
 <p>Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. <em>Nature medicine</em>, 25(8):1251–1259, 2019.</p>
 </div>
-<div class="citation" id="id515" role="doc-biblioentry">
+<div class="citation" id="id516" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">ZCW+22</a><span class="fn-bracket">]</span></span>
 <p>Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. <em>Nature Machine Intelligence</em>, pages 1–9, 2022.</p>
 </div>
-<div class="citation" id="id509" role="doc-biblioentry">
+<div class="citation" id="id510" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ZXW+21</a><span class="fn-bracket">]</span></span>
 <p>Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. <em>Nature methods</em>, 18(1):92–99, 2021.</p>
 </div>
@@ -2045,7 +2028,8 @@ Best trial:
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2146,8 +2130,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

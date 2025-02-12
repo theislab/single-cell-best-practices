@@ -38,7 +38,7 @@ It is unfortunately not always possible to find such "simple" associations betwe
 Although DNA was already first isolated in 1869 by Friedrich Miescher, it took the scientific community more than 100 years to develop high throughput sequencing technologies.
 In 1953, Watson, Crick and Franklin discovered the structure of DNA; and in 1965 Robert Holley sequenced the first tRNA.
 Seven years later, in 1972, Walter Fiers was the first to sequence a complete gene (the coat protein of bacteriophage MS2) using RNAses to digest the virus RNA, isolate oligonucleotides and finally separate them with electrophoresis and chromatography{cite}`JOU1972`.
-In parallel, Friedrich Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and being time-consuming.
+In parallel, Frederick Sanger developed a DNA sequencing method using radiolabeled, partially digested fragments termed "chain termination method", which is more commonly known as "Sanger Sequencing". Although Sanger Sequencing is still used even today, it suffered from several shortcomings, including lack of automation and being time-consuming.
 In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument that automates the Sanger Sequencing process. Its most important innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules. This change not only made the method safer to perform, but also allowed for computers to analyze the acquired data{cite}`Hood1987`.
 
 Strengths:
@@ -122,7 +122,7 @@ RNA-Seq largely follows the DNA sequencing protocols, but includes a reverse tra
 Sequencing RNA allows scientists to obtain snapshots of cells, tissues or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, under different environmental conditions, when comparing genotypes and other experimental designs.
 
-Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to for example microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features, resulting in rich data sets that can be used for exploratory data analysis.

@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="3. Raw data processing" href="raw_data_processing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -549,7 +535,7 @@ document.write(`
 <span id="introduction-analysis-frameworks"></span><h1><span class="section-number">4. </span>Analysis frameworks and tools<a class="headerlink" href="#analysis-frameworks-and-tools" title="Link to this heading">#</a></h1>
 <section id="single-cell-analysis-frameworks-and-consortia">
 <h2><span class="section-number">4.1. </span>Single-cell analysis frameworks and consortia<a class="headerlink" href="#single-cell-analysis-frameworks-and-consortia" title="Link to this heading">#</a></h2>
-<p>After having obtained the count matrices, as described earlier, the exploratory data analysis phase begins. Due to the size and complexity of the data, specialized tooling is required. While in the early days of single-cell analysis people used to analyze their data with custom scripts, frameworks for specifically this purpose now exist. The three most popular options are the R based Bioconductor<span id="id1">[<a class="reference internal" href="#id138" title="Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. Nature Methods, 12(2):115-121, Feb 2015. URL: https://doi.org/10.1038/nmeth.3252, doi:10.1038/nmeth.3252.">Huber <em>et al.</em>, 2015</a>]</span> and Seurat<span id="id2">[<a class="reference internal" href="#id112" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 2021. URL: https://doi.org/10.1016/j.cell.2021.04.048, doi:10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span> ecosystems and the Python based scverse<span id="id3">[<a class="reference internal" href="#id113" title="scverse. Scverse. https://scverse.org, 2022. Accessed: 2022-04-21.">scverse, 2022</a>]</span> ecosystem. These differ not only in the used programming languages, but also in the underlying data structures and available specialized analysis tools.</p>
+<p>After having obtained the count matrices, as described earlier, the exploratory data analysis phase begins. Due to the size and complexity of the data, specialized tooling is required. While in the early days of single-cell analysis people used to analyze their data with custom scripts, frameworks for specifically this purpose now exist. The three most popular options are the R based Bioconductor<span id="id1">[<a class="reference internal" href="#id139" title="Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. Nature Methods, 12(2):115-121, Feb 2015. URL: https://doi.org/10.1038/nmeth.3252, doi:10.1038/nmeth.3252.">Huber <em>et al.</em>, 2015</a>]</span> and Seurat<span id="id2">[<a class="reference internal" href="#id113" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 2021. URL: https://doi.org/10.1016/j.cell.2021.04.048, doi:10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span> ecosystems and the Python based scverse<span id="id3">[<a class="reference internal" href="#id114" title="scverse. Scverse. https://scverse.org, 2022. Accessed: 2022-04-21.">scverse, 2022</a>]</span> ecosystem. These differ not only in the used programming languages, but also in the underlying data structures and available specialized analysis tools.</p>
 <p>Bioconductor is a project which develops, supports and shares free open source software with a focus on rigorous and reproducible analysis of data for many different biological assays including single-cell. A homogeneous developer and user experience and extensive documentation with user friendly vignettes are the biggest strengths of Bioconductor. Seurat is a well regarded R package specifically designed for the analysis of single-cell data. It offers tooling for all steps of the analysis including multimodal and spatial data. The well written vignettes and the large user-base is what Seurat is known for.
 However, both R options can run into scalability issues for extremely large datasets (more than half a million cells) which motivated the Python based community to develop the scverse ecosystem. scverse is an organization and an ecosystem dedicated to foundational tools in the life sciences with an initial focus on single-cell. Scalability, extendability and strong interoperability with the existing Python data and machine learning tooling are some of the advantages of the scverse ecosystem.</p>
 <p>All three ecosystems are involved in many efforts to allow for interoperability of the involved frameworks. This will be discussed in the “Interoperability” chapter. This book always focuses on the best tools for the corresponding question and will therefore use a mix of the above-mentioned ecosystems for specific issues. However, the basis of all analyses will be the scverse ecosystem for two reasons:</p>
@@ -561,14 +547,14 @@ However, both R options can run into scalability issues for extremely large data
 </section>
 <section id="storing-unimodal-data-with-anndata">
 <h2><span class="section-number">4.2. </span>Storing unimodal data with AnnData<a class="headerlink" href="#storing-unimodal-data-with-anndata" title="Link to this heading">#</a></h2>
-<p>As previously discussed, after alignment and gene annotation, genomics data is typically summarized to a feature matrix. This matrix will be of the shape <code class="docutils literal notranslate"><span class="pre">number_observations</span> <span class="pre">x</span> <span class="pre">number_variables</span></code> – where for scRNA-seq observations are cellular barcodes and the variables are annotated genes. Over the course of an analysis the observations and variables of this matrix are annotated with computationally derived measurements (e.g. quality control metrics, or latent space embeddings) and prior knowledge (e.g. source donor or alternative gene identifier). In the scverse ecosystem, AnnData<span id="id4">[<a class="reference internal" href="#id114" title="Isaac Virshup, Sergei Rybakov, Fabian J. Theis, Philipp Angerer, and F. Alexander Wolf. Anndata: annotated data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007, arXiv:https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf, doi:10.1101/2021.12.16.473007.">Virshup <em>et al.</em>, 2021</a>]</span> is used to associate the data matrix with these annotations. To allow for fast and memory efficient transformations, AnnData also supports sparse matrices and partial reading.</p>
+<p>As previously discussed, after alignment and gene annotation, genomics data is typically summarized to a feature matrix. This matrix will be of the shape <code class="docutils literal notranslate"><span class="pre">number_observations</span> <span class="pre">x</span> <span class="pre">number_variables</span></code> – where for scRNA-seq observations are cellular barcodes and the variables are annotated genes. Over the course of an analysis the observations and variables of this matrix are annotated with computationally derived measurements (e.g. quality control metrics, or latent space embeddings) and prior knowledge (e.g. source donor or alternative gene identifier). In the scverse ecosystem, AnnData<span id="id4">[<a class="reference internal" href="#id115" title="Isaac Virshup, Sergei Rybakov, Fabian J. Theis, Philipp Angerer, and F. Alexander Wolf. Anndata: annotated data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007, arXiv:https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf, doi:10.1101/2021.12.16.473007.">Virshup <em>et al.</em>, 2021</a>]</span> is used to associate the data matrix with these annotations. To allow for fast and memory efficient transformations, AnnData also supports sparse matrices and partial reading.</p>
 <p>While AnnData is broadly similar to data structures from the R ecosystems (e.g. <a class="reference external" href="https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html">Bioconductor’s SummarizedExperiment</a> or <a class="reference external" href="https://mojaveazure.github.io/seurat-object/">Seurat’s object</a>), R packages use a transposed feature matrix.</p>
 <p>At its core, an AnnData object stores a sparse or dense matrix (the count matrix in the case of scRNA-Seq) in <code class="docutils literal notranslate"><span class="pre">X</span></code>. This matrix has the dimensions of <code class="docutils literal notranslate"><span class="pre">obs_names</span> <span class="pre">x</span> <span class="pre">var_names</span></code> where the obs (=observations) correspond to the cells’ barcodes and the var (=variables) correspond to the gene identifiers. This matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> is surrounded by Pandas DataFrames <code class="docutils literal notranslate"><span class="pre">obs</span></code> and <code class="docutils literal notranslate"><span class="pre">var</span></code> which save annotations of cells and genes respectively. Further, AnnData saves whole matrices of calculations for the observations (<code class="docutils literal notranslate"><span class="pre">obsm</span></code>) or variables (<code class="docutils literal notranslate"><span class="pre">varm</span></code>) with the corresponding dimensions. Graph like structures which associate cells with cells or genes with genes are usually saved in <code class="docutils literal notranslate"><span class="pre">obsp</span></code> and <code class="docutils literal notranslate"><span class="pre">varp</span></code>. Any other unstructured data which does not fit any other slot is saved as unstructured data in <code class="docutils literal notranslate"><span class="pre">uns</span></code>. It is further possible to store more values of <code class="docutils literal notranslate"><span class="pre">X</span></code> in <code class="docutils literal notranslate"><span class="pre">layers</span></code>. Use cases for this are for example the storage of raw, unnormalized count data in a <code class="docutils literal notranslate"><span class="pre">counts</span></code> layer and the normalized data in the unnamed default layer.<br />
 AnnData is primarily designed for unimodal (for example just scRNA-Seq) data. However, extensions of AnnData such as MuData, which is covered later in this chapter, allow for the efficient storage and access of multimodal data.</p>
 <figure class="align-default" id="anndata-fig">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/anndata.jpg"><img alt="AnnData Overview" class="bg-primary mb-1" src="../_images/anndata.jpg" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4.1 </span><span class="caption-text">AnnData overview. Image obtained from <span id="id5">[<a class="reference internal" href="#id114" title="Isaac Virshup, Sergei Rybakov, Fabian J. Theis, Philipp Angerer, and F. Alexander Wolf. Anndata: annotated data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007, arXiv:https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf, doi:10.1101/2021.12.16.473007.">Virshup <em>et al.</em>, 2021</a>]</span>.</span><a class="headerlink" href="#anndata-fig" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4.1 </span><span class="caption-text">AnnData overview. Image obtained from <span id="id5">[<a class="reference internal" href="#id115" title="Isaac Virshup, Sergei Rybakov, Fabian J. Theis, Philipp Angerer, and F. Alexander Wolf. Anndata: annotated data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007, arXiv:https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf, doi:10.1101/2021.12.16.473007.">Virshup <em>et al.</em>, 2021</a>]</span>.</span><a class="headerlink" href="#anndata-fig" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="installation">
@@ -585,10 +571,10 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <p>Let us create a simple AnnData object with sparse count information which may for example represent gene expression counts. First, we import the required packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 </pre></div>
 </div>
 </div>
@@ -596,7 +582,9 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <p>As a next step we initialize an AnnData object with random poisson distributed data. It is an unwritten rule to name the primary AnnData object of the analysis <code class="docutils literal notranslate"><span class="pre">adata</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
 <span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 <span class="n">adata</span>
 </pre></div>
@@ -647,7 +635,7 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <p>The core of our AnnData object is now in place. As a next step we add metadata at both, the observational and variable levels. Remember, we store such annotations in the <code class="docutils literal notranslate"><span class="pre">.obs</span></code> and <code class="docutils literal notranslate"><span class="pre">.var</span></code> slots of the AnnData object for cell and gene annotations respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Monocyte&quot;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;Monocyte&quot;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,))</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>  <span class="c1"># Categoricals are preferred for efficiency</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">obs</span>
 </pre></div>
@@ -765,8 +753,10 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <p>Let us start with a randomly generated matrix that we can interpret as a UMAP embedding of the data we would like to store, as well as some random gene-level metadata.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s2">&quot;gene_stuff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">varm</span><span class="p">[</span><span class="s2">&quot;gene_stuff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span>
 </pre></div>
 </div>
@@ -1233,12 +1223,14 @@ varm                     Group
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;time_yr&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
-        <span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+        <span class="s2">&quot;time_yr&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
+        <span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
             <span class="p">[</span><span class="s2">&quot;subject 1&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 2&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 4&quot;</span><span class="p">,</span> <span class="s2">&quot;subject 8&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span>
         <span class="p">),</span>
-        <span class="s2">&quot;instrument_type&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;type a&quot;</span><span class="p">,</span> <span class="s2">&quot;type b&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
-        <span class="s2">&quot;site&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;site x&quot;</span><span class="p">,</span> <span class="s2">&quot;site y&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
+        <span class="s2">&quot;instrument_type&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;type a&quot;</span><span class="p">,</span> <span class="s2">&quot;type b&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;site&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;site x&quot;</span><span class="p">,</span> <span class="s2">&quot;site y&quot;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
     <span class="p">},</span>
     <span class="n">index</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>  <span class="c1"># these are the same IDs of observations as above!</span>
 <span class="p">)</span>
@@ -1496,14 +1488,14 @@ varm                     Group
 </section>
 <section id="unimodal-data-analysis-with-scanpy">
 <h2><span class="section-number">4.3. </span>Unimodal data analysis with scanpy<a class="headerlink" href="#unimodal-data-analysis-with-scanpy" title="Link to this heading">#</a></h2>
-<p>Now that we understood the fundamental data structure of unimodal single-cell analysis, the question remains how we can actually analyze the stored data. In the scverse ecosystem several tools for the analysis of specific omics data exist. For example, scanpy<span id="id6">[<a class="reference internal" href="#id115" title="F. Alexander Wolf, Philipp Angerer, and Fabian J. Theis. Scanpy: large-scale single-cell gene expression data analysis. Genome Biology, 19(1):15, Feb 2018. URL: https://doi.org/10.1186/s13059-017-1382-0, doi:10.1186/s13059-017-1382-0.">Wolf <em>et al.</em>, 2018</a>]</span> provides tooling for general RNA-Seq focused analysis, squidpy<span id="id7">[<a class="reference internal" href="../spatial/spatially_variable_genes.html#id105" title="Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. Nature Methods, 19(2):171-178, Feb 2022. URL: https://doi.org/10.1038/s41592-021-01358-2, doi:10.1038/s41592-021-01358-2.">Palla <em>et al.</em>, 2022</a>]</span> focuses on spatial transcriptomics and scirpy<span id="id8">[<a class="reference internal" href="#id117" title="Gregor Sturm, Tamas Szabo, Georgios Fotakis, Marlene Haider, Dietmar Rieder, Zlatko Trajanoski, and Francesca Finotello. Scirpy: a Scanpy extension for analyzing single-cell T-cell receptor-sequencing data. Bioinformatics, 36(18):4817-4818, 07 2020. URL: https://doi.org/10.1093/bioinformatics/btaa611, arXiv:https://academic.oup.com/bioinformatics/article-pdf/36/18/4817/34560298/btaa611.pdf, doi:10.1093/bioinformatics/btaa611.">Sturm <em>et al.</em>, 2020</a>]</span> provides tooling for the analysis of T-cell receptor (TCR) and B-cell receptor (BCR) data. Even though many scverse extensions for various data modalities exist, they usually use some of scanpy’s preprocessing and visualization capabilities to some extent.</p>
+<p>Now that we understood the fundamental data structure of unimodal single-cell analysis, the question remains how we can actually analyze the stored data. In the scverse ecosystem several tools for the analysis of specific omics data exist. For example, scanpy<span id="id6">[<a class="reference internal" href="#id116" title="F. Alexander Wolf, Philipp Angerer, and Fabian J. Theis. Scanpy: large-scale single-cell gene expression data analysis. Genome Biology, 19(1):15, Feb 2018. URL: https://doi.org/10.1186/s13059-017-1382-0, doi:10.1186/s13059-017-1382-0.">Wolf <em>et al.</em>, 2018</a>]</span> provides tooling for general RNA-Seq focused analysis, squidpy<span id="id7">[<a class="reference internal" href="../spatial/spatially_variable_genes.html#id106" title="Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. Nature Methods, 19(2):171-178, Feb 2022. URL: https://doi.org/10.1038/s41592-021-01358-2, doi:10.1038/s41592-021-01358-2.">Palla <em>et al.</em>, 2022</a>]</span> focuses on spatial transcriptomics and scirpy<span id="id8">[<a class="reference internal" href="#id118" title="Gregor Sturm, Tamas Szabo, Georgios Fotakis, Marlene Haider, Dietmar Rieder, Zlatko Trajanoski, and Francesca Finotello. Scirpy: a Scanpy extension for analyzing single-cell T-cell receptor-sequencing data. Bioinformatics, 36(18):4817-4818, 07 2020. URL: https://doi.org/10.1093/bioinformatics/btaa611, arXiv:https://academic.oup.com/bioinformatics/article-pdf/36/18/4817/34560298/btaa611.pdf, doi:10.1093/bioinformatics/btaa611.">Sturm <em>et al.</em>, 2020</a>]</span> provides tooling for the analysis of T-cell receptor (TCR) and B-cell receptor (BCR) data. Even though many scverse extensions for various data modalities exist, they usually use some of scanpy’s preprocessing and visualization capabilities to some extent.</p>
 <p>More specifically, scanpy is a Python package which builds on top of AnnData to facilitate the analysis of single-cell gene expression data. Several methods for preprocessing, embedding, visualization, clustering, differential gene expression testing, pseudotime and trajectory inference, and simulation of gene regulatory networks are accessible through scanpy. The efficient implementation based on the Python data science and machine learning libraries allows scanpy to scale to millions of cells.<br />
-Generally, best-practice single-cell data analysis is an interactive process. Many of the decisions and analysis steps depend on the results of previous steps and potentially input of experimental partners. Pipelines such as scflow<span id="id9">[<a class="reference internal" href="#id120" title="Combiz Khozoie, Nurun Fancy, Mahdi M. Marjaneh, Alan E. Murphy, Paul M. Matthews, and Nathan Skene. Scflow: a scalable and reproducible analysis pipeline for single-cell term`rna` sequencing data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1, arXiv:https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1.full.pdf, doi:10.1101/2021.08.16.456499.">Khozoie <em>et al.</em>, 2021</a>]</span>, which fully automate some downstream analysis steps, started to appear only recently. These pipelines have to make assumptions and simplifications which may not result in the most robust analysis.
-scanpy is therefore designed to be used for interactive analyses with for example Jupyter Notebooks<span id="id10">[<a class="reference internal" href="#id121" title="Project Jupyter. Jupyter. https://jupyter.org/, 2022. Accessed: 2022-04-21.">Jupyter, 2022</a>]</span>.</p>
+Generally, best-practice single-cell data analysis is an interactive process. Many of the decisions and analysis steps depend on the results of previous steps and potentially input of experimental partners. Pipelines such as scflow<span id="id9">[<a class="reference internal" href="#id121" title="Combiz Khozoie, Nurun Fancy, Mahdi M. Marjaneh, Alan E. Murphy, Paul M. Matthews, and Nathan Skene. Scflow: a scalable and reproducible analysis pipeline for single-cell term`rna` sequencing data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1, arXiv:https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1.full.pdf, doi:10.1101/2021.08.16.456499.">Khozoie <em>et al.</em>, 2021</a>]</span>, which fully automate some downstream analysis steps, started to appear only recently. These pipelines have to make assumptions and simplifications which may not result in the most robust analysis.
+scanpy is therefore designed to be used for interactive analyses with for example Jupyter Notebooks<span id="id10">[<a class="reference internal" href="#id122" title="Project Jupyter. Jupyter. https://jupyter.org/, 2022. Accessed: 2022-04-21.">Jupyter, 2022</a>]</span>.</p>
 <figure class="align-default" id="scanpy-fig">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/scanpy.jpg"><img alt="scanpy Overview" class="bg-primary mb-1" src="../_images/scanpy.jpg" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4.2 </span><span class="caption-text">scanpy overview. Image obtained from <span id="id11">[<a class="reference internal" href="#id115" title="F. Alexander Wolf, Philipp Angerer, and Fabian J. Theis. Scanpy: large-scale single-cell gene expression data analysis. Genome Biology, 19(1):15, Feb 2018. URL: https://doi.org/10.1186/s13059-017-1382-0, doi:10.1186/s13059-017-1382-0.">Wolf <em>et al.</em>, 2018</a>]</span>.</span><a class="headerlink" href="#scanpy-fig" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4.2 </span><span class="caption-text">scanpy overview. Image obtained from <span id="id11">[<a class="reference internal" href="#id116" title="F. Alexander Wolf, Philipp Angerer, and Fabian J. Theis. Scanpy: large-scale single-cell gene expression data analysis. Genome Biology, 19(1):15, Feb 2018. URL: https://doi.org/10.1186/s13059-017-1382-0, doi:10.1186/s13059-017-1382-0.">Wolf <em>et al.</em>, 2018</a>]</span>.</span><a class="headerlink" href="#scanpy-fig" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="id12">
@@ -1517,7 +1509,7 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <section id="scanpy-api-design">
 <h3><span class="section-number">4.3.2. </span>Scanpy API design<a class="headerlink" href="#scanpy-api-design" title="Link to this heading">#</a></h3>
 <p>The scanpy framework is designed in a way that functions belonging to the same step are grouped in corresponding modules. For example, all preprocessing functions are available in the <code class="docutils literal notranslate"><span class="pre">scanpy.preprocessing</span></code> module, all transformation of a data matrix which are not preprocessing are available in <code class="docutils literal notranslate"><span class="pre">scanpy.tools</span></code> and all visualizations are available in <code class="docutils literal notranslate"><span class="pre">scanpy.plot</span></code>. These modules are commonly accessed after having imported scanpy like <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">scanpy</span> <span class="pre">as</span> <span class="pre">sc</span></code> with the corresponding abbreviations <code class="docutils literal notranslate"><span class="pre">sc.pp</span></code> for preprocessing, <code class="docutils literal notranslate"><span class="pre">sc.tl</span></code> for tools and <code class="docutils literal notranslate"><span class="pre">sc.pl</span></code> for plots. All modules which read or write data are directly accessed. Further, a module for various datasets is available as <code class="docutils literal notranslate"><span class="pre">sc.datasets</span></code>.
-All functions with their corresponding parameters and potentially example plots are documented in the scanpy API documentation<span id="id13">[<a class="reference internal" href="#id122" title="scverse scanpy. Scanpy api. https://scanpy.readthedocs.io/en/stable/api.html#, 2022. Accessed: 2022-04-21.">scverse scanpy, 2022</a>]</span>.</p>
+All functions with their corresponding parameters and potentially example plots are documented in the scanpy API documentation<span id="id13">[<a class="reference internal" href="#id123" title="scverse scanpy. Scanpy api. https://scanpy.readthedocs.io/en/stable/api.html#, 2022. Accessed: 2022-04-21.">scverse scanpy, 2022</a>]</span>.</p>
 <p>Note that this tutorial only covers a very small subset of scanpy’s features and options. Readers are strongly encouraged to examine <a class="reference external" href="https://scanpy.readthedocs.io/">scanpy’s documentation</a> for more details.</p>
 <figure class="align-default" id="scanpy-api">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/scanpy_api.png"><img alt="scanpy API" class="bg-primary mb-1" src="../_images/scanpy_api.png" style="width: 800px;" /></a>
@@ -1533,7 +1525,7 @@ All functions with their corresponding parameters and potentially example plots 
 <p>As a first step we import scanpy and define defaults for our following quick scanpy demo. We use scanpy’s setting object to  set the Matplotlib plotting defaults for all of scanpy’s plots and finally print scanpy’s header. This header contains the versions of all relevant Python packages in the current environment including Scanpy and AnnData. This output is especially useful when reporting bugs to the scverse team and for reproducibility reasons.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
 
 <span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">print_header</span><span class="p">()</span>
@@ -1718,12 +1710,12 @@ All functions with their corresponding parameters and potentially example plots 
 </section>
 <section id="advanced-using-mudata-to-store-multimodal-data">
 <span id="at-mudata"></span><h2><span class="section-number">4.4. </span>Advanced: Using MuData to store multimodal data<a class="headerlink" href="#advanced-using-mudata-to-store-multimodal-data" title="Link to this heading">#</a></h2>
-<p>AnnData is primarily designed for storing and manipulating unimodal data. However, multimodal assays such as CITE-Seq generate multimodal data by simultaneously measuring RNA and surface proteins. This data requires more advanced ways of storing, which is where MuData comes into play. MuData builds on top of AnnData to store and manipulate multimodal data. muon<span id="id14">[<a class="reference internal" href="#id125" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>, a “scanpy equivalent” and core package of scverse, can then be used to analyze the multimodal omics data.
-The following section is based on the MuData Quickstart tutorial<span id="id15">[<a class="reference internal" href="#id126" title="scverse mudata. Mudata quickstart. https://mudata.readthedocs.io/en/latest/notebooks/quickstart_mudata.html, 2022. Accessed: 2022-04-21.">scverse mudata, 2022</a>]</span> and the Multimodal data objects tutorial<span id="id16">[<a class="reference internal" href="#id127" title="scverse mudata. Mudata quickstart. https://mudata.readthedocs.io/en/latest/io/mudata.html, 2022. Accessed: 2022-04-21.">scverse mudata, 2022</a>]</span>.</p>
+<p>AnnData is primarily designed for storing and manipulating unimodal data. However, multimodal assays such as CITE-Seq generate multimodal data by simultaneously measuring RNA and surface proteins. This data requires more advanced ways of storing, which is where MuData comes into play. MuData builds on top of AnnData to store and manipulate multimodal data. muon<span id="id14">[<a class="reference internal" href="#id126" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>, a “scanpy equivalent” and core package of scverse, can then be used to analyze the multimodal omics data.
+The following section is based on the MuData Quickstart tutorial<span id="id15">[<a class="reference internal" href="#id127" title="scverse mudata. Mudata quickstart. https://mudata.readthedocs.io/en/latest/notebooks/quickstart_mudata.html, 2022. Accessed: 2022-04-21.">scverse mudata, 2022</a>]</span> and the Multimodal data objects tutorial<span id="id16">[<a class="reference internal" href="#id128" title="scverse mudata. Mudata quickstart. https://mudata.readthedocs.io/en/latest/io/mudata.html, 2022. Accessed: 2022-04-21.">scverse mudata, 2022</a>]</span>.</p>
 <figure class="align-default" id="mudata-fig">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/mudata.png"><img alt="MuData Overview" class="bg-primary mb-1" src="../_images/mudata.png" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4.4 </span><span class="caption-text">MuData overview. Image obtained from <span id="id17">[<a class="reference internal" href="#id125" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>.</span><a class="headerlink" href="#mudata-fig" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4.4 </span><span class="caption-text">MuData overview. Image obtained from <span id="id17">[<a class="reference internal" href="#id126" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>.</span><a class="headerlink" href="#mudata-fig" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="id18">
@@ -1740,7 +1732,7 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <p>We will start by importing MuData from the mudata package.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mudata</span> <span class="k">as</span> <span class="nn">md</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mudata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">md</span>
 </pre></div>
 </div>
 </div>
@@ -1750,8 +1742,10 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>
 
-<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+    <span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1782,7 +1776,7 @@ conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> <
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d2</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
 <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">w2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
 <span class="n">adata2</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>
@@ -1887,9 +1881,9 @@ AnnData object with n_obs × n_vars = 1000 × 100
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outdated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outdated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
 <span class="n">mdata</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Updated variables names: ...,&quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]))</span>
 </pre></div>
 </div>
 </div>
@@ -2070,11 +2064,11 @@ True
 </div>
 </div>
 <p>We can write a simple function to run principal component analysis on such a concatenated matrix. MuData object provides a place to store multimodal embeddings: MuData<code class="docutils literal notranslate"><span class="pre">.obsm</span></code>. It is similar to how the embeddings generated on individual modalities are stored, only this time it is saved inside the MuData object rather than in AnnData<code class="docutils literal notranslate"><span class="pre">.obsm</span></code>.</p>
-<p>To calculate for example a principal component analysis (PCA) for the joint values of the modalities, we horizontally stack the values stored in the individual modalities and then perform the PCA on the stacked matrix. This is possible because the number of observations matches across modalities (remember, the number of features does per modality does not have to match).</p>
+<p>To calculate for example a principal component analysis (PCA) for the joint values of the modalities, we horizontally stack the values stored in the individual modalities and then perform the PCA on the stacked matrix. This is possible because the number of observations matches across modalities (remember, the number of features per modality does not have to match).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">simple_pca</span><span class="p">(</span><span class="n">mdata</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">decomposition</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">simple_pca</span><span class="p">(</span><span class="n">mdata</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">decomposition</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">m</span><span class="o">.</span><span class="n">X</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mdata</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
 
@@ -2106,7 +2100,7 @@ True
 </div>
 </div>
 <p>Our calculated principal components are now stored in the MuData object itself and accessible for further multimodal transformations.</p>
-<p>In reality, however, having different modalities often means that the features between them come from different generative processes and are not comparable. This is where special multimodal integration methods come into play. For omics technologies, these methods are frequently addressed as multi-omics integration methods. In the following section we will introduce muon which provides many tools to preprocess unimodal data besides beyond RNA-Seq and multi-omics integration methods.</p>
+<p>In reality, however, having different modalities often means that the features between them come from different generative processes and are not comparable. This is where special multimodal integration methods come into play. For omics technologies, these methods are frequently addressed as multi-omics integration methods. In the following section we will introduce muon which provides many tools to preprocess unimodal data beyond RNA-Seq and multi-omics integration methods.</p>
 </section>
 </section>
 <section id="advanced-multimodal-data-analysis-with-muon">
@@ -2115,7 +2109,7 @@ True
 <figure class="align-default" id="muon-fig">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/muon.png"><img alt="muon Overview" class="bg-primary mb-1" src="../_images/muon.png" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4.5 </span><span class="caption-text">muon overview. Image obtained from <span id="id19">[<a class="reference internal" href="#id125" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>.</span><a class="headerlink" href="#muon-fig" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4.5 </span><span class="caption-text">muon overview. Image obtained from <span id="id19">[<a class="reference internal" href="#id126" title="Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. Genome Biology, 23(1):42, Feb 2022. URL: https://doi.org/10.1186/s13059-021-02577-8, doi:10.1186/s13059-021-02577-8.">Bredikhin <em>et al.</em>, 2022</a>]</span>.</span><a class="headerlink" href="#muon-fig" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="id20">
@@ -2141,8 +2135,8 @@ True
 <p>The dataset for our demo is a publicly available 10x Genomics Multiome dataset for human PBMCs. Let us import muon and get the dataset with mudatasets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mudatasets</span> <span class="k">as</span> <span class="nn">mds</span>
-<span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mudatasets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mds</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
 </pre></div>
 </div>
 </div>
@@ -2270,7 +2264,7 @@ Located fragments file: /home/zeth/mudatasets/pbmc10k_multiome/atac_fragments.ts
 <p>Now that we rudimentary filtered out cells with too few peaks and peaks detected in too few cells, we can start with ATAC specific quality control with muon. muon has modality specific preprocessing functions in corresponding modules. We import the ATAC module to access the ATAC specific preprocessing functions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">muon</span> <span class="kn">import</span> <span class="n">atac</span> <span class="k">as</span> <span class="n">ac</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="kn">import</span> <span class="n">atac</span> <span class="k">as</span> <span class="n">ac</span>
 </pre></div>
 </div>
 </div>
@@ -2357,57 +2351,57 @@ Fetching Regions...: 100%|██████████| 1000/1000 [00:19&lt;00
 <h2><span class="section-number">4.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id21">
 <div role="list" class="citation-list">
-<div class="citation" id="id125" role="doc-biblioentry">
+<div class="citation" id="id126" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atBKS22<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id14">1</a>,<a role="doc-backlink" href="#id17">2</a>,<a role="doc-backlink" href="#id19">3</a>)</span>
 <p>Danila Bredikhin, Ilia Kats, and Oliver Stegle. Muon: multimodal omics analysis framework. <em>Genome Biology</em>, 23(1):42, Feb 2022. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-021-02577-8">https://doi.org/10.1186/s13059-021-02577-8</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02577-8">doi:10.1186/s13059-021-02577-8</a>.</p>
 </div>
-<div class="citation" id="id112" role="doc-biblioentry">
+<div class="citation" id="id113" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">atHHAN+21</a><span class="fn-bracket">]</span></span>
 <p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck III, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zagar, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar B. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 2021. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">https://doi.org/10.1016/j.cell.2021.04.048</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2021.04.048">doi:10.1016/j.cell.2021.04.048</a>.</p>
 </div>
-<div class="citation" id="id138" role="doc-biblioentry">
+<div class="citation" id="id139" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">atHCG+15</a><span class="fn-bracket">]</span></span>
 <p>Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. <em>Nature Methods</em>, 12(2):115–121, Feb 2015. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.3252">https://doi.org/10.1038/nmeth.3252</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.3252">doi:10.1038/nmeth.3252</a>.</p>
 </div>
-<div class="citation" id="id121" role="doc-biblioentry">
+<div class="citation" id="id122" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">atJup22</a><span class="fn-bracket">]</span></span>
 <p>Project Jupyter. Jupyter. <a class="reference external" href="https://jupyter.org/">https://jupyter.org/</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id120" role="doc-biblioentry">
+<div class="citation" id="id121" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">atKFM+21</a><span class="fn-bracket">]</span></span>
 <p>Combiz Khozoie, Nurun Fancy, Mahdi M. Marjaneh, Alan E. Murphy, Paul M. Matthews, and Nathan Skene. Scflow: a scalable and reproducible analysis pipeline for single-cell term`rna` sequencing data. <em>bioRxiv</em>, 2021. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1">https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1.full.pdf">arXiv:https://www.biorxiv.org/content/early/2021/08/19/2021.08.16.456499.1.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2021.08.16.456499">doi:10.1101/2021.08.16.456499</a>.</p>
 </div>
-<div class="citation" id="id116" role="doc-biblioentry">
+<div class="citation" id="id117" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">atPSK+22</a><span class="fn-bracket">]</span></span>
 <p>Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. <em>Nature Methods</em>, 19(2):171–178, Feb 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">https://doi.org/10.1038/s41592-021-01358-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">doi:10.1038/s41592-021-01358-2</a>.</p>
 </div>
-<div class="citation" id="id113" role="doc-biblioentry">
+<div class="citation" id="id114" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">atscv22</a><span class="fn-bracket">]</span></span>
 <p>scverse. Scverse. <a class="reference external" href="https://scverse.org">https://scverse.org</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id126" role="doc-biblioentry">
+<div class="citation" id="id127" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">atsm22a</a><span class="fn-bracket">]</span></span>
 <p>scverse mudata. Mudata quickstart. <a class="reference external" href="https://mudata.readthedocs.io/en/latest/notebooks/quickstart_mudata.html">https://mudata.readthedocs.io/en/latest/notebooks/quickstart_mudata.html</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id127" role="doc-biblioentry">
+<div class="citation" id="id128" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">atsm22b</a><span class="fn-bracket">]</span></span>
 <p>scverse mudata. Mudata quickstart. <a class="reference external" href="https://mudata.readthedocs.io/en/latest/io/mudata.html">https://mudata.readthedocs.io/en/latest/io/mudata.html</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id122" role="doc-biblioentry">
+<div class="citation" id="id123" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">atss22</a><span class="fn-bracket">]</span></span>
 <p>scverse scanpy. Scanpy api. <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/api.html#">https://scanpy.readthedocs.io/en/stable/api.html#</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id117" role="doc-biblioentry">
+<div class="citation" id="id118" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">atSSF+20</a><span class="fn-bracket">]</span></span>
 <p>Gregor Sturm, Tamas Szabo, Georgios Fotakis, Marlene Haider, Dietmar Rieder, Zlatko Trajanoski, and Francesca Finotello. Scirpy: a Scanpy extension for analyzing single-cell T-cell receptor-sequencing data. <em>Bioinformatics</em>, 36(18):4817–4818, 07 2020. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btaa611">https://doi.org/10.1093/bioinformatics/btaa611</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bioinformatics/article-pdf/36/18/4817/34560298/btaa611.pdf">arXiv:https://academic.oup.com/bioinformatics/article-pdf/36/18/4817/34560298/btaa611.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btaa611">doi:10.1093/bioinformatics/btaa611</a>.</p>
 </div>
-<div class="citation" id="id114" role="doc-biblioentry">
+<div class="citation" id="id115" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atVRT+21<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
 <p>Isaac Virshup, Sergei Rybakov, Fabian J. Theis, Philipp Angerer, and F. Alexander Wolf. Anndata: annotated data. <em>bioRxiv</em>, 2021. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007">https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf">arXiv:https://www.biorxiv.org/content/early/2021/12/19/2021.12.16.473007.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2021.12.16.473007">doi:10.1101/2021.12.16.473007</a>.</p>
 </div>
-<div class="citation" id="id115" role="doc-biblioentry">
+<div class="citation" id="id116" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>atWAT18<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
 <p>F. Alexander Wolf, Philipp Angerer, and Fabian J. Theis. Scanpy: large-scale single-cell gene expression data analysis. <em>Genome Biology</em>, 19(1):15, Feb 2018. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-017-1382-0">https://doi.org/10.1186/s13059-017-1382-0</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-017-1382-0">doi:10.1186/s13059-017-1382-0</a>.</p>
@@ -2488,7 +2482,8 @@ Fetching Regions...: 100%|██████████| 1000/1000 [00:19&lt;00
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2602,8 +2597,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

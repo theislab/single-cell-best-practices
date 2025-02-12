@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="Single-cell best practices" href="../preamble.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -500,37 +486,55 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="prior-art">
 <h1><span class="section-number">1. </span>Prior art<a class="headerlink" href="#prior-art" title="Link to this heading">#</a></h1>
-<p>Single-cell analysis is slowly transitioning from an interesting niche topic to a more mature field. Hence, we are arguably not the first to write a book on single-cell analysis, let alone guides and tutorials. In the following sections, we highlight two existing and ongoing efforts to teach single-cell analysis and emphasize commonalities and differences to this book.</p>
+<p>Single-cell analysis has evolving from a niche area of interest into a well-established field of study.
+As a result, we are certainly not the first to produce a book on this subject, nor to provide guides and tutorials.
+In the sections that follow, we review two notable and ongoing initiatives aimed at teaching single-cell analysis, highlighting both their similarities to and differences from this book.</p>
 <section id="bioconductor-osca-and-osta-books">
 <h2><span class="section-number">1.1. </span>Bioconductor OSCA and OSTA books<a class="headerlink" href="#bioconductor-osca-and-osta-books" title="Link to this heading">#</a></h2>
-<p>Orchestrating Single-Cell Analysis with Bioconductor (Bioconductor OSCA)<span id="id1">[<a class="reference internal" href="#id121" title="Robert Amezquita, Aaron Lun, Stephanie Hicks, and Gottardo Raphael. Orchestrating single-cell analysis with bioconductor. https://bioconductor.org/books/release/OSCA/, 2022. Accessed: 2022-04-21.">Amezquita <em>et al.</em>, 2022</a>]</span> accessible at <a class="reference external" href="https://bioconductor.org/books/release/OSCA/">https://bioconductor.org/books/release/OSCA/</a> is a digital book which aims to teach common workflows for the analysis of single-cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-Seq with the R based Bioconductor<span id="id2">[<a class="reference internal" href="#id10" title="Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. Nature Methods, 12(2):115-121, Feb 2015. URL: https://doi.org/10.1038/nmeth.3252, doi:10.1038/nmeth.3252.">Huber <em>et al.</em>, 2015</a>]</span> ecosystem. A paper with the same name<span id="id3">[<a class="reference internal" href="#id122" title="Robert A. Amezquita, Aaron T. L. Lun, Etienne Becht, Vince J. Carey, Lindsay N. Carpp, Ludwig Geistlinger, Federico Marini, Kevin Rue-Albrecht, Davide Risso, Charlotte Soneson, Levi Waldron, Hervé Pagès, Mike L. Smith, Wolfgang Huber, Martin Morgan, Raphael Gottardo, and Stephanie C. Hicks. Orchestrating single-cell analysis with bioconductor. Nature Methods, 17(2):137-145, Feb 2020. URL: https://doi.org/10.1038/s41592-019-0654-x, doi:10.1038/s41592-019-0654-x.">Amezquita <em>et al.</em>, 2020</a>]</span> presented an overview of single-cell analysis with Bioconductor and the book is an associated online version which goes into greater detail with extensive code examples. The book is very comprehensive with respect to basic single-cell RNA-Seq analysis with great explanations and extensive workflow examples. However, it does not comprise other single-cell omics such as scATAC-seq. Spatial transcriptomics is covered in the complementary Orchestrating Spatially-Resolved Transcriptomics Analysis with Bioconductor (Bioconductor OSTA) book (<a class="reference external" href="https://lmweber.org/OSTA-book/">https://lmweber.org/OSTA-book/</a>). Since the books are designed for the Bioconductor ecosystem they only employ tools available on Bioconductor. These do not necessarily result in an optimal analysis as denoted in the books themselves. We perceive the Bioconductor books as especially useful for people with a basic R and stronger biology background who are interested in learning how to analyze single-cell and spatial transcriptomics data analysis with Bioconductor.</p>
+<p>Orchestrating Single-Cell Analysis with Bioconductor (Bioconductor OSCA) <span id="id1">[<a class="reference internal" href="#id122" title="Robert Amezquita, Aaron Lun, Stephanie Hicks, and Gottardo Raphael. Orchestrating single-cell analysis with bioconductor. https://bioconductor.org/books/release/OSCA/, 2022. Accessed: 2022-04-21.">Amezquita <em>et al.</em>, 2022</a>]</span>, available online at <a class="reference external" href="https://bioconductor.org/books/release/OSCA/">https://bioconductor.org/books/release/OSCA/</a>, is an online book designed to teach common workflows for analyzing of single-cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-Sequencing (scRNA-seq) data using the R based Bioconductor ecosystem <span id="id2">[<a class="reference internal" href="#id11" title="Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. Nature Methods, 12(2):115-121, Feb 2015. URL: https://doi.org/10.1038/nmeth.3252, doi:10.1038/nmeth.3252.">Huber <em>et al.</em>, 2015</a>]</span>.
+An accompanying paper with the same title <span id="id3">[<a class="reference internal" href="#id123" title="Robert A. Amezquita, Aaron T. L. Lun, Etienne Becht, Vince J. Carey, Lindsay N. Carpp, Ludwig Geistlinger, Federico Marini, Kevin Rue-Albrecht, Davide Risso, Charlotte Soneson, Levi Waldron, Hervé Pagès, Mike L. Smith, Wolfgang Huber, Martin Morgan, Raphael Gottardo, and Stephanie C. Hicks. Orchestrating single-cell analysis with bioconductor. Nature Methods, 17(2):137-145, Feb 2020. URL: https://doi.org/10.1038/s41592-019-0654-x, doi:10.1038/s41592-019-0654-x.">Amezquita <em>et al.</em>, 2020</a>]</span>provides an overview of single-cell analysis with Bioconductor, while the online book offers more in-depth coverage, featuring detailed explanations and extensive code examples.</p>
+<p>The OSCA book is highly comprehensive in its treatment of basic scRNA-seq analysis, offering clear explanations and detailed workflow examples.
+However, it does not extend to other single-cell omics, such as single-cell ATAC-seq (scATAC-seq).
+Spatial transcriptomics is addressed separately in the complementary book Orchestrating Spatially-Resolved Transcriptomics Analysis with Bioconductor (Bioconductor OSTA), available at <a class="reference external" href="https://lmweber.org/OSTA-book/">https://lmweber.org/OSTA-book/</a>.</p>
+<p>As both books are tailored to the Bioconductor ecosystem, they exclusively use tools available within Bioconductor.
+While these tools are highly effective, they may not always provide the most optimal solution for every analysis, as acknowledged by the books themselves.
+Overall, the Bioconductor books are particularly well-suited for individuals with a foundational knowledge of R and a strong background in biology who wish to learn how to analyze single-cell and spatial transcriptomics data within the Bioconductor framework.</p>
 </section>
 <section id="current-best-practices-in-single-cell-rna-seq-analysis-a-tutorial">
 <h2><span class="section-number">1.2. </span>Current best practices in single-cell RNA-seq analysis: a tutorial<a class="headerlink" href="#current-best-practices-in-single-cell-rna-seq-analysis-a-tutorial" title="Link to this heading">#</a></h2>
-<p>Current best practices in single-cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-seq analysis: a tutorial<span id="id4">[<a class="reference internal" href="#id12" title="Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. Molecular Systems Biology, 15(6):e8746, 2019. URL: https://www.embopress.org/doi/abs/10.15252/msb.20188746, arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746, doi:https://doi.org/10.15252/msb.20188746.">Luecken and Theis, 2019</a>]</span> is a paper written by Malte Lücken and Fabian Theis which introduces best practice single-cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-Seq analysis. The unique contribution of the paper to the field is that it not only serves as a review of the possible analysis steps, but always suggests best practices based on independent benchmarks. Whenever recommendations for best practices are not available, general recommendations for analysis approaches are suggested. The paper itself is accompanied with an <a class="reference external" href="https://github.com/theislab/single-cell-tutorial/">example analysis of mouse intestinal epithelium regions</a> from Haber et al. <span id="id5">[<a class="reference internal" href="#id11" title="Adam L. Haber, Moshe Biton, Noga Rogel, Rebecca H. Herbst, Karthik Shekhar, Christopher Smillie, Grace Burgin, Toni M. Delorey, Michael R. Howitt, Yarden Katz, Itay Tirosh, Semir Beyaz, Danielle Dionne, Mei Zhang, Raktima Raychowdhury, Wendy S. Garrett, Orit Rozenblatt-Rosen, Hai Ning Shi, Omer Yilmaz, Ramnik J. Xavier, and Aviv Regev. A single-cell survey of the small intestinal epithelium. Nature, 551(7680):333-339, Nov 2017. URL: https://doi.org/10.1038/nature24489, doi:10.1038/nature24489.">Haber <em>et al.</em>, 2017</a>]</span>.</p>
-<p>Compared to Bioconductor OSCA, the paper and the example analysis is not biased by the tools that it showcases and more complete in content with respect to the breadth of covered topics. Nevertheless, the associated example analysis lacks in newbie friendliness and has already become outdated. Moreover, similarly to the Bioconductor OSCA paper and book, Lücken and Theis do not cover more recent topics such as RNA velocity, spatial transcriptomics or multi-omics. We strongly recommend the paper as an introduction and overview to the field and initial analysis best-practice recommendations. The chapters in this book are based on the most recent best practices and provide an updated view on the field. Additionally, the analysis workflows in this book are explained in much more detail to provide readers more background information needed to run the methods. We generally advise against examining the associated case-study and suggest to instead read the chapters of this book in detail.</p>
+<p>Current Best Practices in Single-Cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-Seq Analysis: A Tutorial <span id="id4">[<a class="reference internal" href="#id13" title="Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. Molecular Systems Biology, 15(6):e8746, 2019. URL: https://www.embopress.org/doi/abs/10.15252/msb.20188746, arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746, doi:https://doi.org/10.15252/msb.20188746.">Luecken and Theis, 2019</a>]</span> by Malte Lücken and Fabian Theis introduces best practices for scRNA-seq analysis.
+Its key contribution lies in not only reviewing potential analysis steps but also recommending best practices based on independent benchmarks.
+When specific best-practice guidelines are unavailable, the authors provide general recommendations for analysis approaches.
+The fundamental idea of focusing on independent benchmarks inspired our work substantially.
+The paper is complemented by an <a class="reference external" href="https://github.com/theislab/single-cell-tutorial/">example analysis of mouse intestinal epithelium regions</a> from Haber et al. <span id="id5">[<a class="reference internal" href="#id12" title="Adam L. Haber, Moshe Biton, Noga Rogel, Rebecca H. Herbst, Karthik Shekhar, Christopher Smillie, Grace Burgin, Toni M. Delorey, Michael R. Howitt, Yarden Katz, Itay Tirosh, Semir Beyaz, Danielle Dionne, Mei Zhang, Raktima Raychowdhury, Wendy S. Garrett, Orit Rozenblatt-Rosen, Hai Ning Shi, Omer Yilmaz, Ramnik J. Xavier, and Aviv Regev. A single-cell survey of the small intestinal epithelium. Nature, 551(7680):333-339, Nov 2017. URL: https://doi.org/10.1038/nature24489, doi:10.1038/nature24489.">Haber <em>et al.</em>, 2017</a>]</span>.</p>
+<p>In comparison to Bioconductor OSCA, this paper and its associated analysis are not constrained by a specific tool ecosystem, offering a broader perspective on the range of topics covered.
+However, the accompanying example analysis lacks beginner-friendliness and has become outdated.
+Analogously to Bioconductor OSCA, Lücken &amp; Theis do not address newer developments such as RNA velocity, spatial transcriptomics, or multi-omics.</p>
+<p>Despite these limitations, we highly recommend this paper as a valuable introduction to the field and as a guide to initial best practices in scRNA-seq analysis.
+The chapters in this book build on the latest best practices, offering an updated perspective on the field. Furthermore, the workflows in this book are explained in greater detail, providing readers with the background information necessary to effectively apply the methods.
+We advise against relying on the example case study provided with the paper and instead encourage readers to explore the detailed chapters in this book for a more comprehensive and up to date understanding.</p>
 </section>
 <section id="references">
 <h2><span class="section-number">1.3. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id6">
 <div role="list" class="citation-list">
-<div class="citation" id="id121" role="doc-biblioentry">
+<div class="citation" id="id122" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">paALHR22</a><span class="fn-bracket">]</span></span>
 <p>Robert Amezquita, Aaron Lun, Stephanie Hicks, and Gottardo Raphael. Orchestrating single-cell analysis with bioconductor. <a class="reference external" href="https://bioconductor.org/books/release/OSCA/">https://bioconductor.org/books/release/OSCA/</a>, 2022. Accessed: 2022-04-21.</p>
 </div>
-<div class="citation" id="id122" role="doc-biblioentry">
+<div class="citation" id="id123" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">paALB+20</a><span class="fn-bracket">]</span></span>
 <p>Robert A. Amezquita, Aaron T. L. Lun, Etienne Becht, Vince J. Carey, Lindsay N. Carpp, Ludwig Geistlinger, Federico Marini, Kevin Rue-Albrecht, Davide Risso, Charlotte Soneson, Levi Waldron, Hervé Pagès, Mike L. Smith, Wolfgang Huber, Martin Morgan, Raphael Gottardo, and Stephanie C. Hicks. Orchestrating single-cell analysis with bioconductor. <em>Nature Methods</em>, 17(2):137–145, Feb 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-019-0654-x">https://doi.org/10.1038/s41592-019-0654-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-019-0654-x">doi:10.1038/s41592-019-0654-x</a>.</p>
 </div>
-<div class="citation" id="id11" role="doc-biblioentry">
+<div class="citation" id="id12" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">paHBR+17</a><span class="fn-bracket">]</span></span>
 <p>Adam L. Haber, Moshe Biton, Noga Rogel, Rebecca H. Herbst, Karthik Shekhar, Christopher Smillie, Grace Burgin, Toni M. Delorey, Michael R. Howitt, Yarden Katz, Itay Tirosh, Semir Beyaz, Danielle Dionne, Mei Zhang, Raktima Raychowdhury, Wendy S. Garrett, Orit Rozenblatt-Rosen, Hai Ning Shi, Omer Yilmaz, Ramnik J. Xavier, and Aviv Regev. A single-cell survey of the small intestinal epithelium. <em>Nature</em>, 551(7680):333–339, Nov 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nature24489">https://doi.org/10.1038/nature24489</a>, <a class="reference external" href="https://doi.org/10.1038/nature24489">doi:10.1038/nature24489</a>.</p>
 </div>
-<div class="citation" id="id10" role="doc-biblioentry">
+<div class="citation" id="id11" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">paHCG+15</a><span class="fn-bracket">]</span></span>
 <p>Wolfgang Huber, Vincent J. Carey, Robert Gentleman, Simon Anders, Marc Carlson, Benilton S. Carvalho, Hector Corrada Bravo, Sean Davis, Laurent Gatto, Thomas Girke, Raphael Gottardo, Florian Hahne, Kasper D. Hansen, Rafael A. Irizarry, Michael Lawrence, Michael I. Love, James MacDonald, Valerie Obenchain, Andrzej K. Oleś, Hervé Pagès, Alejandro Reyes, Paul Shannon, Gordon K. Smyth, Dan Tenenbaum, Levi Waldron, and Martin Morgan. Orchestrating high-throughput genomic analysis with bioconductor. <em>Nature Methods</em>, 12(2):115–121, Feb 2015. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.3252">https://doi.org/10.1038/nmeth.3252</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.3252">doi:10.1038/nmeth.3252</a>.</p>
 </div>
-<div class="citation" id="id12" role="doc-biblioentry">
+<div class="citation" id="id13" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">paLT19</a><span class="fn-bracket">]</span></span>
 <p>Malte D Luecken and Fabian J Theis. Current best practices in single-cell term`rna`-seq analysis: a tutorial. <em>Molecular Systems Biology</em>, 15(6):e8746, 2019. URL: <a class="reference external" href="https://www.embopress.org/doi/abs/10.15252/msb.20188746">https://www.embopress.org/doi/abs/10.15252/msb.20188746</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.embopress.org/doi/pdf/10.15252/msb.20188746">arXiv:https://www.embopress.org/doi/pdf/10.15252/msb.20188746</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.15252/msb.20188746">doi:https://doi.org/10.15252/msb.20188746</a>.</p>
 </div>
@@ -594,7 +598,8 @@ document.write(`
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -661,8 +666,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

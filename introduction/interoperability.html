@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="4. Analysis frameworks and tools" href="analysis_tools.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -556,7 +542,7 @@ document.write(`
 </div>
 <section id="motivation">
 <h2><span class="section-number">5.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
-<p>As we have discussed in the <a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a> there are three main ecosystems for single-cell analysis, the <a class="reference external" href="https://bioconductor.org/">Bioconductor</a> and <a class="reference external" href="https://satijalab.org/seurat/index.html">Seurat</a> ecosystems in R and the Python-based <a class="reference external" href="https://scverse.org/">scverse</a> ecosystem. A common question from new analysts is which ecosystem they should focus on learning and using? While it makes sense to focus on one to start with, and a successful standard analysis can be performed in any ecosystem, we promote the idea that competent analysts should be familiar with all three ecosystems and comfortable moving between them. This approach allows analysts to use the best-performing tools and methods regardless of how they were implemented. When analysts are not comfortable moving between ecosystems they often tend to use packages that are easy to access, even when they have been shown to have shortcomings compared to packages in another ecosystem. The ability of analysts to move between ecosystems allows developers to take advantage of the different strengths of programming languages. For example, R has strong inbuilt support for complex statistical modelling while the majority of deep learning libraries are focused on Python. By supporting common on-disk data formats and in-memory data structures developers can be confident that analysts can access their package and can use the platform the platform that is most appropriate for their method. Another motivation for being comfortable with multiple ecosystems is the accessibility and availability of data, results and documentation. Often data or results are only made available in one format and analysts will need to be familiar with that format in order to access it. A basic understanding of other ecosystems is also necessary to understand package documentation and tutorials when deciding which methods to use.</p>
+<p>As we have discussed in the <a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a> there are three main ecosystems for single-cell analysis, the <a class="reference external" href="https://bioconductor.org/">Bioconductor</a> and <a class="reference external" href="https://satijalab.org/seurat/index.html">Seurat</a> ecosystems in R and the Python-based <a class="reference external" href="https://scverse.org/">scverse</a> ecosystem. A common question from new analysts is which ecosystem they should focus on learning and using? While it makes sense to focus on one to start with, and a successful standard analysis can be performed in any ecosystem, we promote the idea that competent analysts should be familiar with all three ecosystems and comfortable moving between them. This approach allows analysts to use the best-performing tools and methods regardless of how they were implemented. When analysts are not comfortable moving between ecosystems they often tend to use packages that are easy to access, even when they have been shown to have shortcomings compared to packages in another ecosystem. The ability of analysts to move between ecosystems allows developers to take advantage of the different strengths of programming languages. For example, R has strong inbuilt support for complex statistical modelling while the majority of deep learning libraries are focused on Python. By supporting common on-disk data formats and in-memory data structures developers can be confident that analysts can access their package and can use the platform that is most appropriate for their method. Another motivation for being comfortable with multiple ecosystems is the accessibility and availability of data, results and documentation. Often data or results are only made available in one format and analysts will need to be familiar with that format in order to access it. A basic understanding of other ecosystems is also necessary to understand package documentation and tutorials when deciding which methods to use.</p>
 <p>While we encourage analysts to be comfortable with all the major ecosystems, moving between them is only possible when they are interoperable. Thankfully, lots of work has been done in this area and it is now relatively simple in most cases using standard packages. In this chapter, we discuss the various ways data can be moved between ecosystems via disk or in-memory, the differences between them and their advantages. We focus on single-modality data and moving between R and Python as these are the most common cases but we also touch on multimodal data and other languages.</p>
 </section>
 <section id="nomenclature">
@@ -572,15 +558,16 @@ document.write(`
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">scanpy</span>
-<span class="kn">import</span> <span class="nn">mudata</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">rpy2.robjects</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mudata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rpy2.robjects</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
 <span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
 <span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
@@ -591,7 +578,7 @@ document.write(`
 </section>
 <section id="disk-based-interoperability">
 <h2><span class="section-number">5.3. </span>Disk-based interoperability<a class="headerlink" href="#disk-based-interoperability" title="Link to this heading">#</a></h2>
-<p>The first approach to moving between languages is via disk-based interoperability. This involves writing a file to disk in one language and then reading that file into a second language. In many cases, this approach is simpler, more reliable and scalable than in-memory interoperability (which we discuss below) but it comes at the cost of greater storage requirements and reduced interactivity. Disk-based interoperability tends to work particularly well when there are established processes for each stage of analysis and you want to pass objects from one to the next (especially as part of a pipeline developed using a workflow manager such as <a class="reference external" href="https://www.nextflow.io/index.html">NextFlow</a> or <a class="reference external" href="https://snakemake.readthedocs.io/en/stable/">snakemake</a>). However, disk-based interoperability is less convenient for interactive steps such as data exploration or experimenting with methods as you need to write a new file whenever you want to move between languages.</p>
+<p>The first approach to moving between languages is via disk-based interoperability. This involves writing a file to disk in one language and then reading that file into a second language. In many cases, this approach is simpler, more reliable and scalable than in-memory interoperability (which we discuss below) but it comes at the cost of greater storage requirements and reduced interactivity. Disk-based interoperability tends to work particularly well when there are established processes for each stage of analysis and you want to pass objects from one to the next (especially as part of a pipeline developed using a workflow manager such as <a class="reference external" href="https://www.nextflow.io/index.html">Nextflow</a> or <a class="reference external" href="https://snakemake.readthedocs.io/en/stable/">snakemake</a>). However, disk-based interoperability is less convenient for interactive steps such as data exploration or experimenting with methods as you need to write a new file whenever you want to move between languages.</p>
 <section id="simple-formats">
 <h3><span class="section-number">5.3.1. </span>Simple formats<a class="headerlink" href="#simple-formats" title="Link to this heading">#</a></h3>
 <p>Before discussing file formats specifically developed for single-cell data we want to briefly mention that common simple text file formats (such as CSV, TSV, JSON etc.) can often be the answer to transferring data between languages. They work well in cases where some analysis has been performed and what you want to transfer is a subset of the information about an experiment. For example, you may want to transfer only the cell metadata but do not require the feature metadata, expression matrices etc. The advantage of using simple text formats is that they are well supported by almost any language and do not require single-cell specific packages. However, they can quickly become impractical as what you want to transfer becomes more complex.</p>
@@ -606,7 +593,9 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a randomly generated AnnData object to use as an example</span>
-<span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_generator</span><span class="p">()</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
 <span class="n">adata</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Cell_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)]</span>
 <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Gene_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">)]</span>
@@ -640,7 +629,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span>
-<span class="n">h5ad_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;example.h5ad&quot;</span><span class="p">)</span>
+<span class="n">h5ad_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;example.h5ad&quot;</span>
 
 <span class="n">adata</span><span class="o">.</span><span class="n">write_h5ad</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">)</span>
 </pre></div>
@@ -650,7 +639,7 @@ document.write(`
 <p>Several packages exist for reading and writing H5AD files from R. While they result in a file on disk these packages usually rely on wrapping the Python <strong>anndata</strong> package to handle the actual reading and writing of files with an in-memory conversion step to convert between R and Python.</p>
 <section id="reading-writing-h5ad-with-bioconductor">
 <h5><span class="section-number">5.3.2.1.1. </span>Reading/writing H5AD with Bioconductor<a class="headerlink" href="#reading-writing-h5ad-with-bioconductor" title="Link to this heading">#</a></h5>
-<p>The <a class="reference external" href="https://bioconductor.org/packages/zellkonverter/">Bioconductor <strong>{zellkonverter}</strong> package</a> helps makes this easier by using the <a class="reference external" href="https://bioconductor.org/packages/basilisk/"><strong>{basilisk}</strong> package</a> to manage creating an appropriate Python environment. If that all sounds a bit technical, the end result is that Bioconductor users can read and write H5AD files using commands like below without requiring any knowledge of Python.</p>
+<p>The <a class="reference external" href="https://bioconductor.org/packages/zellkonverter/">Bioconductor <strong>{zellkonverter}</strong> package</a> helps make this easier by using the <a class="reference external" href="https://bioconductor.org/packages/basilisk/"><strong>{basilisk}</strong> package</a> to manage creating an appropriate Python environment. If that all sounds a bit technical, the end result is that Bioconductor users can read and write H5AD files using commands like below without requiring any knowledge of Python.</p>
 <p>Unfortunately, because of the way this book is made, we are unable to run the code directly here. Instead, we will show the code and what the output looks like when run in an R session:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">sce</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">zellkonverter</span><span class="o">::</span><span class="nf">readH5AD</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
@@ -876,7 +865,7 @@ Active assay: RNA (2000 features, 0 variable features)
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">Warning</span><span class="p">:</span> <span class="n">Feature</span> <span class="n">names</span> <span class="n">cannot</span> <span class="n">have</span> <span class="n">underscores</span> <span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="n">replacing</span> <span class="k">with</span> <span class="n">dashes</span> <span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">-&gt;</span> <span class="n">counts</span>
-<span class="n">An</span> <span class="nb">object</span> <span class="n">of</span> <span class="k">class</span> <span class="nc">Seurat</span>
+<span class="n">An</span> <span class="nb">object</span> <span class="n">of</span> <span class="k">class</span><span class="w"> </span><span class="nc">Seurat</span>
 <span class="mi">2000</span> <span class="n">features</span> <span class="n">across</span> <span class="mi">100</span> <span class="n">samples</span> <span class="n">within</span> <span class="mi">1</span> <span class="n">assay</span>
 <span class="n">Active</span> <span class="n">assay</span><span class="p">:</span> <span class="n">RNA</span> <span class="p">(</span><span class="mi">2000</span> <span class="n">features</span><span class="p">,</span> <span class="mi">0</span> <span class="n">variable</span> <span class="n">features</span><span class="p">)</span>
  <span class="mi">2</span> <span class="n">dimensional</span> <span class="n">reductions</span> <span class="n">calculated</span><span class="p">:</span> <span class="n">pca</span><span class="p">,</span> <span class="n">umap</span>
@@ -1259,7 +1248,7 @@ AnnData object with n_obs × n_vars = 100 × 2000
 <span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
 
 <span class="c1"># Write new file</span>
-<span class="n">python_h5mu_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;python.h5mu&quot;</span><span class="p">)</span>
+<span class="n">python_h5mu_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;python.h5mu&quot;</span>
 <span class="n">mdata</span><span class="o">.</span><span class="n">write_h5mu</span><span class="p">(</span><span class="n">python_h5mu_file</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1455,7 +1444,7 @@ R[write to console]: Added .var[&#39;highly_variable&#39;] with highly variable 
 <h2><span class="section-number">5.8. </span>Python<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">session_info</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">session_info</span>
 
 <span class="n">session_info</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1841,7 +1830,8 @@ sessioninfo::session_info()
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1953,8 +1943,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

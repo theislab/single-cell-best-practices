@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -70,6 +73,7 @@
     <link rel="prev" title="30. Spatial deconvolution" href="deconvolution.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -85,19 +89,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -105,7 +98,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -113,8 +105,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -130,7 +122,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -160,21 +153,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -282,9 +271,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -445,24 +439,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -524,7 +510,7 @@ document.write(`
 </section>
 <section id="constructing-a-map-between-technologies">
 <h2><span class="section-number">31.2. </span>Constructing a map between technologies<a class="headerlink" href="#constructing-a-map-between-technologies" title="Link to this heading">#</a></h2>
-<p>A method that is widely applicable in the context of aligning spatial profiling measurements with common sc/snRNA-seq profiles is Tangram<span id="id1">[<a class="reference internal" href="#id534" title="Tommaso Biancalani, Gabriele Scalia, Lorenzo Buffoni, Raghav Avasthi, Ziqing Lu, Aman Sanger, Neriman Tokcan, Charles R. Vanderburg, Åsa Segerstolpe, Meng Zhang, Inbal Avraham-Davidi, Sanja Vickovic, Mor Nitzan, Sai Ma, Ayshwarya Subramanian, Michal Lipinski, Jason Buenrostro, Nik Bear Brown, Duccio Fanelli, Xiaowei Zhuang, Evan Z. Macosko, and Aviv Regev. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. Nature Methods, 18(11):1352–1362, November 2021. URL: https://doi.org/10.1038/s41592-021-01264-7, doi:10.1038/s41592-021-01264-7.">Biancalani <em>et al.</em>, 2021</a>]</span>. An independent benchmark<span id="id2">[<a class="reference internal" href="#id535" title="Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. Nature Methods, 19(6):662–670, June 2022. URL: https://doi.org/10.1038/s41592-022-01480-9, doi:10.1038/s41592-022-01480-9.">Li <em>et al.</em>, 2022</a>]</span> showed that Tangram outperformed other imputation methods like gimVI<span id="id3">[<a class="reference internal" href="#id536" title="Romain Lopez, Achille Nazaret, Maxime Langevin, Jules Samaran, Jeffrey Regier, Michael I. Jordan, and Nir Yosef. A joint model of unpaired data from scrna-seq and spatial transcriptomics for imputing missing gene expression measurements. CoRR, 2019. URL: http://arxiv.org/abs/1905.02269, arXiv:1905.02269.">Lopez <em>et al.</em>, 2019</a>]</span> and SpaGE<span id="id4">[<a class="reference internal" href="#id537" title="Tamim Abdelaal, Soufiane Mourragui, Ahmed Mahfouz, and Marcel J T Reinders. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Research, 48(18):e107-e107, 09 2020. URL: https://doi.org/10.1093/nar/gkaa740, arXiv:https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf, doi:10.1093/nar/gkaa740.">Abdelaal <em>et al.</em>, 2020</a>]</span> in terms of different accuracy metrics and scalability. While Tangram can also be applied in the previously described deconvolution context, we focus on its ability to map MERFISH data to whole genome expression profiles. The underlying idea of Tangram is the probabilistic alignment of two different technologies by means of a single shared modality, typically RNA-seq data. This way, limitations with respect to the number of genes that are measured or spatial resolution can be overcome.</p>
+<p>A method that is widely applicable in the context of aligning spatial profiling measurements with common sc/snRNA-seq profiles is Tangram<span id="id1">[<a class="reference internal" href="#id535" title="Tommaso Biancalani, Gabriele Scalia, Lorenzo Buffoni, Raghav Avasthi, Ziqing Lu, Aman Sanger, Neriman Tokcan, Charles R. Vanderburg, Åsa Segerstolpe, Meng Zhang, Inbal Avraham-Davidi, Sanja Vickovic, Mor Nitzan, Sai Ma, Ayshwarya Subramanian, Michal Lipinski, Jason Buenrostro, Nik Bear Brown, Duccio Fanelli, Xiaowei Zhuang, Evan Z. Macosko, and Aviv Regev. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. Nature Methods, 18(11):1352–1362, November 2021. URL: https://doi.org/10.1038/s41592-021-01264-7, doi:10.1038/s41592-021-01264-7.">Biancalani <em>et al.</em>, 2021</a>]</span>. An independent benchmark<span id="id2">[<a class="reference internal" href="#id536" title="Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. Nature Methods, 19(6):662–670, June 2022. URL: https://doi.org/10.1038/s41592-022-01480-9, doi:10.1038/s41592-022-01480-9.">Li <em>et al.</em>, 2022</a>]</span> showed that Tangram outperformed other imputation methods like gimVI<span id="id3">[<a class="reference internal" href="#id537" title="Romain Lopez, Achille Nazaret, Maxime Langevin, Jules Samaran, Jeffrey Regier, Michael I. Jordan, and Nir Yosef. A joint model of unpaired data from scrna-seq and spatial transcriptomics for imputing missing gene expression measurements. CoRR, 2019. URL: http://arxiv.org/abs/1905.02269, arXiv:1905.02269.">Lopez <em>et al.</em>, 2019</a>]</span> and SpaGE<span id="id4">[<a class="reference internal" href="#id538" title="Tamim Abdelaal, Soufiane Mourragui, Ahmed Mahfouz, and Marcel J T Reinders. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Research, 48(18):e107-e107, 09 2020. URL: https://doi.org/10.1093/nar/gkaa740, arXiv:https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf, doi:10.1093/nar/gkaa740.">Abdelaal <em>et al.</em>, 2020</a>]</span> in terms of different accuracy metrics and scalability. While Tangram can also be applied in the previously described deconvolution context, we focus on its ability to map MERFISH data to whole genome expression profiles. The underlying idea of Tangram is the probabilistic alignment of two different technologies by means of a single shared modality, typically RNA-seq data. This way, limitations with respect to the number of genes that are measured or spatial resolution can be overcome.</p>
 <p>The mapping algorithm of Tangram builds on count matrices from the two technologies at hand. For sc/snRNa-seq data, this means to compute the matrix <span class="math notranslate nohighlight">\(S\)</span> whose entry <span class="math notranslate nohighlight">\(S_{ik}\)</span> indicates the expression level for cell <span class="math notranslate nohighlight">\(i\)</span> and gene <span class="math notranslate nohighlight">\(k\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[S \in \mathbb{R}_+^{n_{\text{cells}}\times n_{\text{genes}}} \ \ \text{ with } \ \ S_{ik}&gt;0 \quad . \]</div>
@@ -561,13 +547,12 @@ document.write(`
 <p>Before we enter this notebook’s analysis, let’s set up our environment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">tangram</span> <span class="k">as</span> <span class="nn">tg</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tangram</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
 
 <span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
@@ -575,7 +560,7 @@ document.write(`
 </div>
 </div>
 </div>
-<p>The dataset used in this tutorial was measured by multiplexed error robust fluorescence in situ hybridization (MERFISH) and investigates the spatial organization and transcriptional profile of wild type hematopoietic stem cell (HSC) niches in fetal liver<span id="id6">[<a class="reference internal" href="#id538" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>. The dataset contains 140 images across four fetal livers at E14.5 with 132 genes observed in 40,864 cells. Lu et al.<span id="id7">[<a class="reference internal" href="#id538" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span> additionally performed single-cell RNA sequencing of E14.5 whole fetal liver cells by 10x Genomics platform, which we will use as a whole transcriptome reference for this tutorial.</p>
+<p>The dataset used in this tutorial was measured by multiplexed error robust fluorescence in situ hybridization (MERFISH) and investigates the spatial organization and transcriptional profile of wild type hematopoietic stem cell (HSC) niches in fetal liver<span id="id6">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>. The dataset contains 140 images across four fetal livers at E14.5 with 132 genes observed in 40,864 cells. Lu et al.<span id="id7">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span> additionally performed single-cell RNA sequencing of E14.5 whole fetal liver cells by 10x Genomics platform, which we will use as a whole transcriptome reference for this tutorial.</p>
 <p>We will first load the reference dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -943,7 +928,7 @@ Score: 0.941, KL reg: 0.001
 </section>
 <section id="validation-on-expression-level">
 <h3><span class="section-number">31.3.4. </span>Validation on expression level<a class="headerlink" href="#validation-on-expression-level" title="Link to this heading">#</a></h3>
-<p>An additional step for the task of imputation might be to validate if the cell-type specific expression levels can still be recovered with the predicted counts. For this purpose, one selects a few highly expressed markers per cluster and compares the normalized expression levels. For convenience, we use the markers as described by Lu et al.<span id="id8">[<a class="reference internal" href="#id538" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>, but one could also run a simple differential expression test between clusters to identify marker genes.</p>
+<p>An additional step for the task of imputation might be to validate if the cell-type specific expression levels can still be recovered with the predicted counts. For this purpose, one selects a few highly expressed markers per cluster and compares the normalized expression levels. For convenience, we use the markers as described by Lu et al.<span id="id8">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>, but one could also run a simple differential expression test between clusters to identify marker genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">control_markers</span> <span class="o">=</span> <span class="p">[</span>
@@ -1025,23 +1010,23 @@ Score: 0.941, KL reg: 0.001
 <h2><span class="section-number">31.5. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id9">
 <div role="list" class="citation-list">
-<div class="citation" id="id537" role="doc-biblioentry">
+<div class="citation" id="id538" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">spatialAMMR20</a><span class="fn-bracket">]</span></span>
 <p>Tamim Abdelaal, Soufiane Mourragui, Ahmed Mahfouz, and Marcel J T Reinders. SpaGE: Spatial Gene Enhancement using scRNA-seq. <em>Nucleic Acids Research</em>, 48(18):e107–e107, 09 2020. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkaa740">https://doi.org/10.1093/nar/gkaa740</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf">arXiv:https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkaa740">doi:10.1093/nar/gkaa740</a>.</p>
 </div>
-<div class="citation" id="id534" role="doc-biblioentry">
+<div class="citation" id="id535" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">spatialBSB+21</a><span class="fn-bracket">]</span></span>
 <p>Tommaso Biancalani, Gabriele Scalia, Lorenzo Buffoni, Raghav Avasthi, Ziqing Lu, Aman Sanger, Neriman Tokcan, Charles R. Vanderburg, Åsa Segerstolpe, Meng Zhang, Inbal Avraham-Davidi, Sanja Vickovic, Mor Nitzan, Sai Ma, Ayshwarya Subramanian, Michal Lipinski, Jason Buenrostro, Nik Bear Brown, Duccio Fanelli, Xiaowei Zhuang, Evan Z. Macosko, and Aviv Regev. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. <em>Nature Methods</em>, 18(11):1352–1362, November 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01264-7">https://doi.org/10.1038/s41592-021-01264-7</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01264-7">doi:10.1038/s41592-021-01264-7</a>.</p>
 </div>
-<div class="citation" id="id535" role="doc-biblioentry">
+<div class="citation" id="id536" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">spatialLZG+22</a><span class="fn-bracket">]</span></span>
 <p>Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. <em>Nature Methods</em>, 19(6):662–670, June 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">https://doi.org/10.1038/s41592-022-01480-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">doi:10.1038/s41592-022-01480-9</a>.</p>
 </div>
-<div class="citation" id="id536" role="doc-biblioentry">
+<div class="citation" id="id537" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">spatialLNL+19</a><span class="fn-bracket">]</span></span>
 <p>Romain Lopez, Achille Nazaret, Maxime Langevin, Jules Samaran, Jeffrey Regier, Michael I. Jordan, and Nir Yosef. A joint model of unpaired data from scrna-seq and spatial transcriptomics for imputing missing gene expression measurements. <em>CoRR</em>, 2019. URL: <a class="reference external" href="http://arxiv.org/abs/1905.02269">http://arxiv.org/abs/1905.02269</a>, <a class="reference external" href="https://arxiv.org/abs/1905.02269">arXiv:1905.02269</a>.</p>
 </div>
-<div class="citation" id="id538" role="doc-biblioentry">
+<div class="citation" id="id539" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>spatialLLY+21<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
 <p>Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. <em>Cell Discovery</em>, 7(1):47, June 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41421-021-00266-1">https://doi.org/10.1038/s41421-021-00266-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41421-021-00266-1">doi:10.1038/s41421-021-00266-1</a>.</p>
@@ -1122,7 +1107,8 @@ Score: 0.941, KL reg: 0.001
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1205,8 +1191,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

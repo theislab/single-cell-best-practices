@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="19. Perturbation modeling" href="../conditions/perturbation_modeling.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -531,7 +517,7 @@ document.write(`
 <p>The purpose of this chapter is to showcase the general pipeline of how a GRN can be generated, using methods that have been to our knowledge presented in a way that allows a validation with a low amount of software dependencies. Due to the benchmarking limitations of GRN tools in general, we recommend these tools but we cannot say that they will perform best in all possible scenarios. We would rather recommend those as a starting point, given available data, to then explore their generated GRN representations with the lowest computational effort.</p>
 <section id="gathering-tf-regulons-from-public-data">
 <h3><span class="section-number">20.1.1. </span>Gathering TF regulons from public data<a class="headerlink" href="#gathering-tf-regulons-from-public-data" title="Link to this heading">#</a></h3>
-<p>TF- Regulons have been annotated in academic studies, databases that compiled those, and also consortia efforts such as ENCODE. As general recommendations, one can inspect <a class="reference external" href="https://www.grnpedia.org/trrust/">TTRUST</a> <span id="id1">[<a class="reference internal" href="#id410" title="Heonjong Han, Hongseok Shim, Donghyun Shin, Jung Eun Shim, Yunhee Ko, Junha Shin, Hanhae Kim, Ara Cho, Eiru Kim, Tak Lee, Hyojin Kim, Kyungsoo Kim, Sunmo Yang, Dasom Bae, Ayoung Yun, Sunphil Kim, Chan Yeong Kim, Hyeon Jin Cho, Byunghee Kang, Susie Shin, and Insuk Lee. TRRUST: a reference database of human transcriptional regulatory interactions. Sci. Rep., 5:11432, June 2015.">Han <em>et al.</em>, 2015</a>]</span>, <a class="reference external" href="https://saezlab.github.io/dorothea/">DoRothEA</a> <span id="id2">[<a class="reference internal" href="#id411" title="Luz Garcia-Alonso, Christian H Holland, Mahmoud M Ibrahim, Denes Turei, and Julio Saez-Rodriguez. Benchmark and integration of resources for the estimation of human transcription factor activities. Genome Res., 29(8):1363–1375, August 2019.">Garcia-Alonso <em>et al.</em>, 2019</a>]</span>, <a class="reference external" href="http://www.licpathway.net/KnockTFv2/index.php">KnockTF</a> <span id="id3">[<a class="reference internal" href="#id413" title="Chenchen Feng, Chao Song, Yuejuan Liu, Fengcui Qian, Yu Gao, Ziyu Ning, Qiuyu Wang, Yong Jiang, Yanyu Li, Meng Li, Jiaxin Chen, Jian Zhang, and Chunquan Li. KnockTF: a comprehensive human gene expression profile database with knockdown/knockout of transcription factors. Nucleic Acids Res., 48(D1):D93–D100, January 2020.">Feng <em>et al.</em>, 2020</a>]</span>, among others, for eukaryotic TF-regulons. For prokaryotes <a class="reference external" href="https://regulondb.ccg.unam.mx/">RegulonDB</a> <span id="id4">[<a class="reference internal" href="#id409" title="Alberto Santos-Zavaleta, Mishael Sánchez-Pérez, Heladia Salgado, David A Velázquez-Ramírez, Socorro Gama-Castro, Víctor H Tierrafría, Stephen J W Busby, Patricia Aquino, Xin Fang, Bernhard O Palsson, James E Galagan, and Julio Collado-Vides. A unified resource for transcriptional regulation in escherichia coli K-12 incorporating high-throughput-generated binding data into RegulonDB version 10.0. BMC Biol., 16(1):91, August 2018.">Santos-Zavaleta <em>et al.</em>, 2018</a>]</span> is a known and recognized database.</p>
+<p>TF- Regulons have been annotated in academic studies, databases that compiled those, and also consortia efforts such as ENCODE. As general recommendations, one can inspect <a class="reference external" href="https://www.grnpedia.org/trrust/">TTRUST</a> <span id="id1">[<a class="reference internal" href="#id411" title="Heonjong Han, Hongseok Shim, Donghyun Shin, Jung Eun Shim, Yunhee Ko, Junha Shin, Hanhae Kim, Ara Cho, Eiru Kim, Tak Lee, Hyojin Kim, Kyungsoo Kim, Sunmo Yang, Dasom Bae, Ayoung Yun, Sunphil Kim, Chan Yeong Kim, Hyeon Jin Cho, Byunghee Kang, Susie Shin, and Insuk Lee. TRRUST: a reference database of human transcriptional regulatory interactions. Sci. Rep., 5:11432, June 2015.">Han <em>et al.</em>, 2015</a>]</span>, <a class="reference external" href="https://saezlab.github.io/dorothea/">DoRothEA</a> <span id="id2">[<a class="reference internal" href="#id412" title="Luz Garcia-Alonso, Christian H Holland, Mahmoud M Ibrahim, Denes Turei, and Julio Saez-Rodriguez. Benchmark and integration of resources for the estimation of human transcription factor activities. Genome Res., 29(8):1363–1375, August 2019.">Garcia-Alonso <em>et al.</em>, 2019</a>]</span>, <a class="reference external" href="http://www.licpathway.net/KnockTFv2/index.php">KnockTF</a> <span id="id3">[<a class="reference internal" href="#id414" title="Chenchen Feng, Chao Song, Yuejuan Liu, Fengcui Qian, Yu Gao, Ziyu Ning, Qiuyu Wang, Yong Jiang, Yanyu Li, Meng Li, Jiaxin Chen, Jian Zhang, and Chunquan Li. KnockTF: a comprehensive human gene expression profile database with knockdown/knockout of transcription factors. Nucleic Acids Res., 48(D1):D93–D100, January 2020.">Feng <em>et al.</em>, 2020</a>]</span>, among others, for eukaryotic TF-regulons. For prokaryotes <a class="reference external" href="https://regulondb.ccg.unam.mx/">RegulonDB</a> <span id="id4">[<a class="reference internal" href="#id410" title="Alberto Santos-Zavaleta, Mishael Sánchez-Pérez, Heladia Salgado, David A Velázquez-Ramírez, Socorro Gama-Castro, Víctor H Tierrafría, Stephen J W Busby, Patricia Aquino, Xin Fang, Bernhard O Palsson, James E Galagan, and Julio Collado-Vides. A unified resource for transcriptional regulation in escherichia coli K-12 incorporating high-throughput-generated binding data into RegulonDB version 10.0. BMC Biol., 16(1):91, August 2018.">Santos-Zavaleta <em>et al.</em>, 2018</a>]</span> is a known and recognized database.</p>
 </section>
 <section id="limitations-of-tf-regulons">
 <h3><span class="section-number">20.1.2. </span>Limitations of TF regulons<a class="headerlink" href="#limitations-of-tf-regulons" title="Link to this heading">#</a></h3>
@@ -539,7 +525,7 @@ document.write(`
 </section>
 <section id="generation-of-grns-using-rna-data">
 <h3><span class="section-number">20.1.3. </span>Generation of GRNs using RNA data<a class="headerlink" href="#generation-of-grns-using-rna-data" title="Link to this heading">#</a></h3>
-<p>We will explore scRNA-seq data and predicted TF-regulons, using the tool SCENIC. Specifically, we will execute SCENIC <span id="id5">[<a class="reference internal" href="#id412" title="Sara Aibar, Carmen Bravo González-Blas, Thomas Moerman, Vân Anh Huynh-Thu, Hana Imrichova, Gert Hulselmans, Florian Rambow, Jean-Christophe Marine, Pierre Geurts, Jan Aerts, Joost van den Oord, Zeynep Kalender Atak, Jasper Wouters, and Stein Aerts. SCENIC: single-cell regulatory network inference and clustering. Nat. Methods, 14(11):1083–1086, November 2017.">Aibar <em>et al.</em>, 2017</a>]</span> on a donor of the NeurIPS 2021 dataset, and we will interpret the results. The main processing steps described in this notebook are adapted based on SCENIC’s core tutorials <a class="reference external" href="https://github.com/aertslab/SCENICprotocol/blob/master/notebooks/PBMC10k_SCENIC-protocol-CLI.ipynb">Tutorial</a></p>
+<p>We will explore scRNA-seq data and predicted TF-regulons, using the tool SCENIC. Specifically, we will execute SCENIC <span id="id5">[<a class="reference internal" href="#id413" title="Sara Aibar, Carmen Bravo González-Blas, Thomas Moerman, Vân Anh Huynh-Thu, Hana Imrichova, Gert Hulselmans, Florian Rambow, Jean-Christophe Marine, Pierre Geurts, Jan Aerts, Joost van den Oord, Zeynep Kalender Atak, Jasper Wouters, and Stein Aerts. SCENIC: single-cell regulatory network inference and clustering. Nat. Methods, 14(11):1083–1086, November 2017.">Aibar <em>et al.</em>, 2017</a>]</span> on a donor of the NeurIPS 2021 dataset, and we will interpret the results. The main processing steps described in this notebook are adapted based on SCENIC’s core tutorials <a class="reference external" href="https://github.com/aertslab/SCENICprotocol/blob/master/notebooks/PBMC10k_SCENIC-protocol-CLI.ipynb">Tutorial</a></p>
 </section>
 <section id="outcome-of-the-analysis">
 <h3><span class="section-number">20.1.4. </span>Outcome of the analysis<a class="headerlink" href="#outcome-of-the-analysis" title="Link to this heading">#</a></h3>
@@ -548,25 +534,25 @@ document.write(`
 </section>
 <section id="dataset-description">
 <h2><span class="section-number">20.2. </span>Dataset description<a class="headerlink" href="#dataset-description" title="Link to this heading">#</a></h2>
-<p>Cell-type clusters of 100,000 human PBMCs and the NeurIPS dataset, which contain healthy donors as well as COVID-19 patients<span id="id6">[<a class="reference internal" href="#id415" title="Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. Cell, 182(6):1419-1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: https://doi.org/10.1016/j.cell.2020.08.001, doi:10.1016/j.cell.2020.08.001.">Schulte-Schrepping <em>et al.</em>, 2020</a>]</span>.</p>
+<p>Cell-type clusters of 100,000 human PBMCs and the NeurIPS dataset, which contain healthy donors as well as COVID-19 patients<span id="id6">[<a class="reference internal" href="#id416" title="Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. Cell, 182(6):1419-1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: https://doi.org/10.1016/j.cell.2020.08.001, doi:10.1016/j.cell.2020.08.001.">Schulte-Schrepping <em>et al.</em>, 2020</a>]</span>.</p>
 </section>
 <section id="environment-setup">
 <h2><span class="section-number">20.3. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">pyscenic</span>
-<span class="kn">import</span> <span class="nn">loompy</span> <span class="k">as</span> <span class="nn">lp</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
-<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">loompy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 </pre></div>
 </div>
 </div>
@@ -722,7 +708,7 @@ Name: batch, dtype: int64
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">use_hvg</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">if</span> <span class="n">use_hvg</span><span class="p">:</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">adata_batch</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">adata_batch</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">adata_batch</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">adata_batch</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
         <span class="n">tfs</span>
     <span class="p">)</span>
     <span class="n">adata_batch</span> <span class="o">=</span> <span class="n">adata_batch</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span>
@@ -759,7 +745,7 @@ Name: batch, dtype: int64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outpath_adj</span> <span class="o">=</span> <span class="s2">&quot;adj.csv&quot;</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath_adj</span><span class="p">):</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">outpath_adj</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="err">!</span><span class="n">pyscenic</span> <span class="n">grn</span> <span class="p">{</span><span class="n">loom_path</span><span class="p">}</span> <span class="p">{</span><span class="n">tfs_path</span><span class="p">}</span> <span class="o">-</span><span class="n">o</span> <span class="err">$</span><span class="n">outpath_adj</span> <span class="o">--</span><span class="n">num_workers</span> <span class="p">{</span><span class="n">num_workers</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -867,12 +853,9 @@ Name: batch, dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="c1"># ranking databases</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ranking databases</span>
 <span class="n">db_glob</span> <span class="o">=</span> <span class="s2">&quot;*feather&quot;</span>
-<span class="n">db_names</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">db_glob</span><span class="p">))</span>
+<span class="n">db_names</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">db_glob</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -902,7 +885,7 @@ Name: batch, dtype: int64
 This step can take several minutes on consumer grade hardware.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;reg.csv&#39;</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;reg.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="err">!</span><span class="n">pyscenic</span> <span class="n">ctx</span> <span class="n">adj</span><span class="o">.</span><span class="n">csv</span> \
         <span class="p">{</span><span class="n">db_names</span><span class="p">}</span> \
         <span class="o">--</span><span class="n">annotations_fname</span> <span class="p">{</span><span class="n">motif_path</span><span class="p">}</span> \
@@ -918,7 +901,7 @@ This step can take several minutes on consumer grade hardware.</p>
 <p>Define custom quantiles for further exploration</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">n_genes_detected_per_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adata_batch</span><span class="o">.</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">percentiles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">n_genes_detected_per_cell</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span>
@@ -969,7 +952,7 @@ dtype: float64
 <p>Using the above-generated matrix of cell x TFs and those scores, we can calculate a new embedding using only those.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">loom_path_output</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">loom_path_output</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="err">!</span><span class="n">pyscenic</span> <span class="n">aucell</span> <span class="err">$</span><span class="n">loom_path</span> \
         <span class="n">reg</span><span class="o">.</span><span class="n">csv</span> \
         <span class="o">--</span><span class="n">output</span> <span class="p">{</span><span class="n">loom_path_output</span><span class="p">}</span> \
@@ -980,11 +963,7 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">zlib</span>
-<span class="kn">import</span> <span class="nn">base64</span>
-
-<span class="c1"># collect SCENIC AUCell output</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># collect SCENIC AUCell output</span>
 <span class="n">lf</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">loom_path_output</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">auc_mtx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">lf</span><span class="o">.</span><span class="n">ca</span><span class="o">.</span><span class="n">RegulonsAUC</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">lf</span><span class="o">.</span><span class="n">ca</span><span class="o">.</span><span class="n">CellID</span><span class="p">)</span>
 <span class="n">lf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -994,7 +973,7 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
 
 <span class="n">ad_auc_mtx</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">auc_mtx</span><span class="p">)</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">ad_auc_mtx</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">)</span>
@@ -1045,7 +1024,7 @@ dtype: float64
 <h3><span class="section-number">20.5.1. </span><strong>Interpretation of results</strong><a class="headerlink" href="#interpretation-of-results" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 </pre></div>
 </div>
 </div>
@@ -1093,7 +1072,7 @@ dtype: float64
 <p>As the red heatmap is suggesting that some TFs are strongly associated to particular cell types, we can verify the expression of their expression levels as an additional validation. This is done by matching the TF names we want to highlight, and visualize those using Scanpy’s (red heatmap).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tf_names</span> <span class="o">=</span> <span class="n">top_tfs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;\(\+\)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tf_names</span> <span class="o">=</span> <span class="n">top_tfs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\(\+\)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="n">adata_batch_top_tfs</span> <span class="o">=</span> <span class="n">adata_batch</span><span class="p">[:,</span> <span class="n">adata_batch</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tf_names</span><span class="p">)]</span>
 </pre></div>
 </div>
@@ -1159,27 +1138,27 @@ WARNING: You’re trying to run this on 2785 dimensions of `.X`, if you really w
 <h2><span class="section-number">20.8. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id7">
 <div role="list" class="citation-list">
-<div class="citation" id="id412" role="doc-biblioentry">
+<div class="citation" id="id413" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">grnAGonzalezBM+17</a><span class="fn-bracket">]</span></span>
 <p>Sara Aibar, Carmen Bravo González-Blas, Thomas Moerman, Vân Anh Huynh-Thu, Hana Imrichova, Gert Hulselmans, Florian Rambow, Jean-Christophe Marine, Pierre Geurts, Jan Aerts, Joost van den Oord, Zeynep Kalender Atak, Jasper Wouters, and Stein Aerts. SCENIC: single-cell regulatory network inference and clustering. <em>Nat. Methods</em>, 14(11):1083–1086, November 2017.</p>
 </div>
-<div class="citation" id="id413" role="doc-biblioentry">
+<div class="citation" id="id414" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">grnFSL+20</a><span class="fn-bracket">]</span></span>
 <p>Chenchen Feng, Chao Song, Yuejuan Liu, Fengcui Qian, Yu Gao, Ziyu Ning, Qiuyu Wang, Yong Jiang, Yanyu Li, Meng Li, Jiaxin Chen, Jian Zhang, and Chunquan Li. KnockTF: a comprehensive human gene expression profile database with knockdown/knockout of transcription factors. <em>Nucleic Acids Res.</em>, 48(D1):D93–D100, January 2020.</p>
 </div>
-<div class="citation" id="id411" role="doc-biblioentry">
+<div class="citation" id="id412" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">grnGAHI+19</a><span class="fn-bracket">]</span></span>
 <p>Luz Garcia-Alonso, Christian H Holland, Mahmoud M Ibrahim, Denes Turei, and Julio Saez-Rodriguez. Benchmark and integration of resources for the estimation of human transcription factor activities. <em>Genome Res.</em>, 29(8):1363–1375, August 2019.</p>
 </div>
-<div class="citation" id="id410" role="doc-biblioentry">
+<div class="citation" id="id411" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">grnHSS+15</a><span class="fn-bracket">]</span></span>
 <p>Heonjong Han, Hongseok Shim, Donghyun Shin, Jung Eun Shim, Yunhee Ko, Junha Shin, Hanhae Kim, Ara Cho, Eiru Kim, Tak Lee, Hyojin Kim, Kyungsoo Kim, Sunmo Yang, Dasom Bae, Ayoung Yun, Sunphil Kim, Chan Yeong Kim, Hyeon Jin Cho, Byunghee Kang, Susie Shin, and Insuk Lee. TRRUST: a reference database of human transcriptional regulatory interactions. <em>Sci. Rep.</em>, 5:11432, June 2015.</p>
 </div>
-<div class="citation" id="id409" role="doc-biblioentry">
+<div class="citation" id="id410" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">grnSZSanchezPerezS+18</a><span class="fn-bracket">]</span></span>
 <p>Alberto Santos-Zavaleta, Mishael Sánchez-Pérez, Heladia Salgado, David A Velázquez-Ramírez, Socorro Gama-Castro, Víctor H Tierrafría, Stephen J W Busby, Patricia Aquino, Xin Fang, Bernhard O Palsson, James E Galagan, and Julio Collado-Vides. A unified resource for transcriptional regulation in escherichia coli K-12 incorporating high-throughput-generated binding data into RegulonDB version 10.0. <em>BMC Biol.</em>, 16(1):91, August 2018.</p>
 </div>
-<div class="citation" id="id415" role="doc-biblioentry">
+<div class="citation" id="id416" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">grnSSRP+20</a><span class="fn-bracket">]</span></span>
 <p>Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. <em>Cell</em>, 182(6):1419–1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">https://doi.org/10.1016/j.cell.2020.08.001</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">doi:10.1016/j.cell.2020.08.001</a>.</p>
 </div>
@@ -1260,7 +1239,8 @@ WARNING: You’re trying to run this on 2785 dimensions of `.X`, if you really w
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1350,8 +1330,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -70,6 +73,7 @@
     <link rel="prev" title="24. Quality Control" href="quality_control.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -85,19 +89,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -105,7 +98,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -113,8 +105,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -130,7 +122,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -160,21 +153,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -282,9 +271,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -445,24 +439,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -524,10 +510,10 @@ document.write(`
 <h1><span class="section-number">25. </span>Gene regulatory networks using chromatin accessibility<a class="headerlink" href="#gene-regulatory-networks-using-chromatin-accessibility" title="Link to this heading">#</a></h1>
 <section id="motivation">
 <h2><span class="section-number">25.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
-<p>Analyzing chromatin accessibility and gene expression together to understand gene regulation is helpful due to the mechanistic relationship between those two during the control of gene regulation, mediated through transcription factors (TFs) and other epigenetic modulators <span id="id1">[<a class="reference internal" href="#id444" title="François Spitz and Eileen E M Furlong. Transcription factors: from enhancer binding to developmental control. Nat. Rev. Genet., 13(9):613–626, 2012.">Spitz and Furlong, 2012</a>]</span>. Briefly, regulatory regions annotated as promoters and local/distal enhancers are engaged during the early phases of gene expression regulation, and chromatin accessibility increase, or decrease, can be used as a proxy for changes in their activity. Hence, the global positive or negative correlation between proximal and distal accessible elements (measured by ATAC-seq) and target genes (measured by RNA-seq) within a genome neighborhood distance (e.g. less than 200 Kbp), serves to annotate genomic regulatory relationships during the inference of Gene Regulatory Networks (GRNs). Using sequencing data describing gene (RNA) and peak (ATAC) features, tools that build correlation matrices between peaks and matrices help summarize strong peak-gene interactions.</p>
+<p>Analyzing chromatin accessibility and gene expression together to understand gene regulation is helpful due to the mechanistic relationship between those two during the control of gene regulation, mediated through transcription factors (TFs) and other epigenetic modulators <span id="id1">[<a class="reference internal" href="#id445" title="François Spitz and Eileen E M Furlong. Transcription factors: from enhancer binding to developmental control. Nat. Rev. Genet., 13(9):613–626, 2012.">Spitz and Furlong, 2012</a>]</span>. Briefly, regulatory regions annotated as promoters and local/distal enhancers are engaged during the early phases of gene expression regulation, and chromatin accessibility increase, or decrease, can be used as a proxy for changes in their activity. Hence, the global positive or negative correlation between proximal and distal accessible elements (measured by ATAC-seq) and target genes (measured by RNA-seq) within a genome neighborhood distance (e.g. less than 200 Kbp), serves to annotate genomic regulatory relationships during the inference of Gene Regulatory Networks (GRNs). Using sequencing data describing gene (RNA) and peak (ATAC) features, tools that build correlation matrices between peaks and matrices help summarize strong peak-gene interactions.</p>
 <section id="gene-regulatory-network-inference-using-rna-and-atac-features">
 <h3><span class="section-number">25.1.1. </span>Gene regulatory network inference using RNA and ATAC features<a class="headerlink" href="#gene-regulatory-network-inference-using-rna-and-atac-features" title="Link to this heading">#</a></h3>
-<p>In this notebook, we will use the package <strong>FigR</strong> <span id="id2">[<a class="reference internal" href="#id445" title="Vinay K Kartha, Fabiana M Duarte, Yan Hu, Sai Ma, Jennifer G Chew, Caleb A Lareau, Andrew Earl, Zach D Burkett, Andrew S Kohlway, Ronald Lebofsky, and Jason D Buenrostro. Functional inference of gene regulation using single-cell multi-omics. Cell Genom, September 2022.">Kartha <em>et al.</em>, 2022</a>]</span> to describe such GRN-building steps on a donor of the NeurIPs dataset. Preparation scripts of this notebook will also call cisTopic <span id="id3">[<a class="reference internal" href="#id446" title="Carmen Bravo González-Blas, Liesbeth Minnoye, Dafni Papasokrati, Sara Aibar, Gert Hulselmans, Valerie Christiaens, Kristofer Davie, Jasper Wouters, and Stein Aerts. Cistopic: cis-regulatory topic modeling on single-cell ATAC-seq data. Nat. Methods, 16(5):397–400, May 2019.">Bravo González-Blas <em>et al.</em>, 2019</a>]</span> to generate peak clusters or <strong>topics</strong> from the ATAC seq counts matrix. During the calculation of RNA-ATAC correlations, FigR uses ChromVAR <span id="id4">[<a class="reference internal" href="#id447" title="Alicia N Schep, Beijing Wu, Jason D Buenrostro, and William J Greenleaf. chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. Nat. Methods, 14(10):975–978, October 2017.">Schep <em>et al.</em>, 2017</a>]</span> to map Transcription Factor motifs to the mapped peaks. The main processing steps described in this notebook are adapted based on FigR’s core tutorial for SHARE-seq data <a class="reference external" href="https://buenrostrolab.github.io/FigR/articles/FigR_shareseq.html">Tutorial</a></p>
+<p>In this notebook, we will use the package <strong>FigR</strong> <span id="id2">[<a class="reference internal" href="#id446" title="Vinay K Kartha, Fabiana M Duarte, Yan Hu, Sai Ma, Jennifer G Chew, Caleb A Lareau, Andrew Earl, Zach D Burkett, Andrew S Kohlway, Ronald Lebofsky, and Jason D Buenrostro. Functional inference of gene regulation using single-cell multi-omics. Cell Genom, September 2022.">Kartha <em>et al.</em>, 2022</a>]</span> to describe such GRN-building steps on a donor of the NeurIPs dataset. Preparation scripts of this notebook will also call cisTopic <span id="id3">[<a class="reference internal" href="#id447" title="Carmen Bravo González-Blas, Liesbeth Minnoye, Dafni Papasokrati, Sara Aibar, Gert Hulselmans, Valerie Christiaens, Kristofer Davie, Jasper Wouters, and Stein Aerts. Cistopic: cis-regulatory topic modeling on single-cell ATAC-seq data. Nat. Methods, 16(5):397–400, May 2019.">Bravo González-Blas <em>et al.</em>, 2019</a>]</span> to generate peak clusters or <strong>topics</strong> from the ATAC seq counts matrix. During the calculation of RNA-ATAC correlations, FigR uses ChromVAR <span id="id4">[<a class="reference internal" href="#id448" title="Alicia N Schep, Beijing Wu, Jason D Buenrostro, and William J Greenleaf. chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. Nat. Methods, 14(10):975–978, October 2017.">Schep <em>et al.</em>, 2017</a>]</span> to map Transcription Factor motifs to the mapped peaks. The main processing steps described in this notebook are adapted based on FigR’s core tutorial for SHARE-seq data <a class="reference external" href="https://buenrostrolab.github.io/FigR/articles/FigR_shareseq.html">Tutorial</a></p>
 <p>Disclaimer: At the time of writing this chapter, several methods that utilize single-cell RNA and ATAC information for GRN inference are currently available. Due to similar benchmarking reasons as the one indicated in the previous chapter, we cannot say that these methods will perform best in the majority of scenarios. We globally recommend either of those as a starting point, given available data, to infer preliminary GRNs.</p>
 </section>
 <section id="install-and-load-figr-package">
@@ -535,7 +521,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># the installation of this package is required for the proper execution of this notebook.</span>
-<span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;FigR&quot;</span><span class="p">))){</span>
+<span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;FigR&quot;</span><span class="p">))){</span>
 <span class="w">    </span><span class="nf">suppressMessages</span><span class="p">(</span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;caleblareau/BuenColors&quot;</span><span class="p">))</span><span class="w"> </span><span class="c1"># the package BuenColors is also a devtools dependency to install FigR.</span>
 <span class="w">    </span><span class="nf">suppressMessages</span><span class="p">(</span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;buenrostrolab/FigR&quot;</span><span class="p">))</span>
 <span class="p">}</span>
@@ -593,7 +579,7 @@ document.write(`
 <p>Download the list of TFs annotations for hg38, using the same gene labels as the RNA-only tutorial. Other annotations, such as <a class="reference external" href="http://humantfs.ccbr.utoronto.ca/">HumanTFs</a>, can also be used.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="s">&#39;allTFs_hg38.txt&#39;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="s">&#39;allTFs_hg38.txt&#39;</span><span class="p">))</span>
 <span class="w">    </span><span class="nf">download.file</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/aertslab/SCENICprotocol/master/example/allTFs_hg38.txt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;allTFs_hg38.txt&#39;</span><span class="p">)</span>
 <span class="n">tf_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="nf">read.table</span><span class="p">(</span><span class="s">&#39;allTFs_hg38.txt&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">row.names</span><span class="o">=</span><span class="m">1</span><span class="p">))</span>
 <span class="nf">print</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">tf_names</span><span class="p">))</span>
@@ -609,11 +595,11 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># subset by cells:</span>
-<span class="nf">if</span><span class="p">(</span><span class="n">ncells</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
+<span class="kr">if</span><span class="p">(</span><span class="n">ncells</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
 <span class="w">    </span><span class="n">RNA</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">RNA</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="n">ncells</span><span class="p">]</span>
 <span class="w">    </span><span class="n">ATAC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ATAC</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="n">ncells</span><span class="p">]</span>
 <span class="p">}</span>
-<span class="nf">if</span><span class="p">(</span><span class="n">nfeatures_rna</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
+<span class="kr">if</span><span class="p">(</span><span class="n">nfeatures_rna</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
 
 <span class="w">    </span><span class="c1"># select all TFs and a subset of non-TFs</span>
 <span class="w">    </span><span class="n">is_tf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">RNA</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="n">tf_names</span>
@@ -629,7 +615,7 @@ document.write(`
 <p>Selection of peaks, based on the coefficient of variation criterion, adapted from the <a class="reference external" href="https://episcanpy.readthedocs.io/en/anna/api/episcanpy.pp.select_var_feature.html">EpiScanpy’s implementation</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">){</span>
 <span class="w">    </span><span class="n">frac_atac</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rowSums</span><span class="p">(</span><span class="nf">assay</span><span class="p">(</span><span class="n">ATAC</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">ncol</span><span class="p">(</span><span class="n">ATAC</span><span class="p">)</span>
 <span class="w">    </span><span class="n">acc_score</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="m">0.5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">frac_atac</span><span class="p">)</span>
 <span class="w">    </span><span class="n">peak_mask</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">ATAC</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="nf">sort</span><span class="p">(</span><span class="n">acc_score</span><span class="p">))[</span><span class="m">1</span><span class="o">:</span><span class="n">nfeatures_atac</span><span class="p">]</span>
@@ -685,7 +671,7 @@ document.write(`
 (restart of kernel might be required)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;cisTopic&quot;</span><span class="p">)))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;cisTopic&quot;</span><span class="p">)))</span>
 <span class="w">    </span><span class="nf">suppressMessages</span><span class="p">(</span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;aertslab/cisTopic&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -709,7 +695,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">cistopic_bkp_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;../../data/openproblems_bmmc_multiome_genes_filtered_atac_s1d1_counts_cisTopic.rds&quot;</span>
-<span class="nf">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">)</span>
+<span class="kr">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">)</span>
 <span class="w">    </span><span class="n">cistopic_bkp_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;../../data/openproblems_bmmc_multiome_genes_filtered_atac_s1d1_counts_cisTopic_npeaks&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nfeatures_atac</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.rds&quot;</span><span class="p">)</span>
 <span class="nf">print</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">cistopic_bkp_path</span><span class="p">),</span><span class="w"> </span><span class="n">cistopic_bkp_path</span><span class="p">))</span>
 </pre></div>
@@ -730,7 +716,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">overwrite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> </span><span class="c1"># to visualize plots, this will always execute. Modify to FALSE to avoid replacing output from previous runs.</span>
-<span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">cistopic_bkp_path</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">overwrite</span><span class="p">){</span>
+<span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">cistopic_bkp_path</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">overwrite</span><span class="p">){</span>
 <span class="w">    </span><span class="c1"># the number of topics to test</span>
 <span class="w">    </span><span class="n">n_topics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">25</span>
 
@@ -853,8 +839,8 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># if the hg38 genome is not installed successfully during environment building, it can be installed here.</span>
 <span class="c1"># this might require a kernel restart</span>
-<span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&#39;BSgenome.Hsapiens.UCSC.hg38&#39;</span><span class="p">))){</span>
-<span class="w">    </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">quietly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span>
+<span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="s">&#39;BSgenome.Hsapiens.UCSC.hg38&#39;</span><span class="p">))){</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">quietly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span>
 <span class="w">        </span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">(</span><span class="s">&quot;BSgenome.Hsapiens.UCSC.hg38&quot;</span><span class="p">)</span>
 <span class="p">}</span>
@@ -952,10 +938,10 @@ document.write(`
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># This snippet can be run interactively, but it takes a long time.</span>
 <span class="n">nCores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
 <span class="n">bkp_path_ciscorr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&#39;../../data/openproblems_bmmc_multiome_genes_filtered_s1d1_ciscorr.rds&#39;</span>
-<span class="nf">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">)</span>
+<span class="kr">if</span><span class="p">(</span><span class="n">nfeatures_atac</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">-1</span><span class="p">)</span>
 <span class="w">    </span><span class="n">cistopic_bkp_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;../../data/openproblems_bmmc_multiome_genes_filtered_s1d1_ciscorr_npeaks&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nfeatures_atac</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.rds&quot;</span><span class="p">)</span>
 
-<span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">bkp_path_ciscorr</span><span class="p">)){</span>
+<span class="kr">if</span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">bkp_path_ciscorr</span><span class="p">)){</span>
 <span class="w">    </span><span class="n">cisCorr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">FigR</span><span class="o">::</span><span class="nf">runGenePeakcorr</span><span class="p">(</span><span class="n">ATAC.se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ATAC.se</span><span class="p">,</span>
 <span class="w">                               </span><span class="n">RNAmat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RNAmat</span><span class="p">,</span>
 <span class="w">                               </span><span class="n">genome</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hg38&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1"># One of hg19, mm10 or hg38</span>
@@ -987,7 +973,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">if</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">cisCorr.filt</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">cisCorr.filt</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
 <span class="w">    </span><span class="nf">print</span><span class="p">(</span><span class="s">&#39;increase the number of cells/peaks/genes to discover more associations&#39;</span><span class="p">)</span>
 <span class="nf">stopifnot</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">cisCorr.filt</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
 </pre></div>
@@ -1677,19 +1663,19 @@ loaded via a namespace (and not attached):
 <h2><span class="section-number">25.5. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id5">
 <div role="list" class="citation-list">
-<div class="citation" id="id446" role="doc-biblioentry">
+<div class="citation" id="id447" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">atacBGonzalezBMP+19</a><span class="fn-bracket">]</span></span>
 <p>Carmen Bravo González-Blas, Liesbeth Minnoye, Dafni Papasokrati, Sara Aibar, Gert Hulselmans, Valerie Christiaens, Kristofer Davie, Jasper Wouters, and Stein Aerts. Cistopic: cis-regulatory topic modeling on single-cell ATAC-seq data. <em>Nat. Methods</em>, 16(5):397–400, May 2019.</p>
 </div>
-<div class="citation" id="id445" role="doc-biblioentry">
+<div class="citation" id="id446" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">atacKDH+22</a><span class="fn-bracket">]</span></span>
 <p>Vinay K Kartha, Fabiana M Duarte, Yan Hu, Sai Ma, Jennifer G Chew, Caleb A Lareau, Andrew Earl, Zach D Burkett, Andrew S Kohlway, Ronald Lebofsky, and Jason D Buenrostro. Functional inference of gene regulation using single-cell multi-omics. <em>Cell Genom</em>, September 2022.</p>
 </div>
-<div class="citation" id="id447" role="doc-biblioentry">
+<div class="citation" id="id448" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">atacSWBG17</a><span class="fn-bracket">]</span></span>
 <p>Alicia N Schep, Beijing Wu, Jason D Buenrostro, and William J Greenleaf. chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. <em>Nat. Methods</em>, 14(10):975–978, October 2017.</p>
 </div>
-<div class="citation" id="id444" role="doc-biblioentry">
+<div class="citation" id="id445" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">atacSF12</a><span class="fn-bracket">]</span></span>
 <p>François Spitz and Eileen E M Furlong. Transcription factors: from enhancer binding to developmental control. <em>Nat. Rev. Genet.</em>, 13(9):613–626, 2012.</p>
 </div>
@@ -1770,7 +1756,8 @@ loaded via a namespace (and not attached):
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1857,8 +1844,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

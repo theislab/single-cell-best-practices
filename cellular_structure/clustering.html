@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="9. Dimensionality Reduction" href="../preprocessing_visualization/dimensionality_reduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -510,23 +496,23 @@ document.write(`
 <h2><span class="section-number">10.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>Preprocessing and visualization enabled us to describe our scRNA-seq dataset and reduce its dimensionality. Up to this point, we embedded and visualized cells to understand the underlying properties of our dataset. However, they are still rather abstractly defined. The next natural step in single-cell analysis is the identification of cellular structure in the dataset.</p>
 <p>In scRNA-seq data analysis, we describe cellular structure in our dataset with finding cell identities that relate to known cell states or cell cycle stages. This process is usually called cell identity annotation. For this purpose, we structure cells into clusters to infer the identity of similar cells. Clustering itself is a common unsupervised machine learning problem.
-We can derive clusters by minimizing the intra-cluster distance in the reduced expression space. In this case, the expression space determines the gene expression similarity of cells with respect to a dimensionality-reduced representation. This lower dimensional representation is, for example, determined with a principle-component analysis and the similarity scoring is then based on Euclidean distances.</p>
-<p>In the KNN graph consists of nodes reflecting the cells in the dataset. We first calculate a Euclidean distance matrix on the PC-reduced expression space for all cells and then connect each cell to its K most similar cells. Usually, K is set to values between 5 and 100 depending on the size of the dataset. The KNN graph reflects the underlying topology of the expression data by representing dense regions with respect to expression space also as densely connected regions in the graph <span id="id1">[<a class="reference internal" href="#id171" title="F. Alexander Wolf, Fiona K. Hamey, Mireya Plass, Jordi Solana, Joakim S. Dahlin, Berthold Göttgens, Nikolaus Rajewsky, Lukas Simon, and Fabian J. Theis. PAGA: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. Genome Biology, 20(1):59, March 2019. URL: https://doi.org/10.1186/s13059-019-1663-x, doi:10.1186/s13059-019-1663-x.">Wolf <em>et al.</em>, 2019</a>]</span>. Dense regions in the KNN-graph are detected by community detection methods like Leiden and Louvain<span id="id2">[<a class="reference internal" href="#id165" title="Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne Lefebvre. Fast unfolding of communities in large networks. Journal of Statistical Mechanics: Theory and Experiment, 2008(10):P10008, October 2008. Publisher: IOP Publishing. URL: https://doi.org/10.1088/1742-5468/2008/10/p10008, doi:10.1088/1742-5468/2008/10/p10008.">Blondel <em>et al.</em>, 2008</a>]</span>.</p>
-<p>The Leiden algorithm is as an improved version of the Louvain algorithm which outperformed other clustering methods for single-cell RNA-seq data analysis (<span id="id3">[<a class="reference internal" href="#id167" title="A Du, MD Robinson, and C Soneson. A systematic performance evaluation of clustering methods for single-cell term`RNA`-seq data [version 1; peer review: 2 approved with reservations]. F1000Research, 2018. doi:10.12688/f1000research.15666.1.">Du <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id168" title="S Freytag, L Tian, I L�nnstedt, M Ng, and M Bahlo. Comparison of clustering tools in R for medium-sized 10x Genomics single-cell term`RNA`-sequencing data [version 1; peer review: 1 approved, 2 approved with reservations]. F1000Research, 2018. doi:10.12688/f1000research.15809.1.">Freytag <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id169" title="Lukas M. Weber and Mark D. Robinson. Comparison of clustering methods for high-dimensional single-cell flow and mass cytometry data. Cytometry Part A, 89(12):1084–1096, 2016. _eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1002/cyto.a.23030. URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/cyto.a.23030, doi:https://doi.org/10.1002/cyto.a.23030.">Weber and Robinson, 2016</a>]</span>). Since the Louvain algorithm is no longer maintained, using Leiden instead is preferred.</p>
-<p>We, therefore, propose to use the Leiden algorithm<span id="id4">[<a class="reference internal" href="#id166" title="V. A. Traag, L. Waltman, and N. J. van Eck. From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports, 9(1):5233, March 2019. URL: https://doi.org/10.1038/s41598-019-41695-z, doi:10.1038/s41598-019-41695-z.">Traag <em>et al.</em>, 2019</a>]</span> on single-cell k-nearest-neighbour (KNN) graphs to cluster single-cell datasets.</p>
+We can derive clusters by minimizing the intra-cluster distance in the reduced expression space. In this case, the expression space determines the gene expression similarity of cells with respect to a dimensionality-reduced representation. This lower dimensional representation is, for example, determined with a principal-component analysis and the similarity scoring is then based on Euclidean distances.</p>
+<p>The KNN graph consists of nodes reflecting the cells in the dataset. We first calculate a Euclidean distance matrix on the PC-reduced expression space for all cells and then connect each cell to its K most similar cells. Usually, K is set to values between 5 and 100 depending on the size of the dataset. The KNN graph reflects the underlying topology of the expression data by representing dense regions with respect to expression space also as densely connected regions in the graph <span id="id1">[<a class="reference internal" href="#id172" title="F. Alexander Wolf, Fiona K. Hamey, Mireya Plass, Jordi Solana, Joakim S. Dahlin, Berthold Göttgens, Nikolaus Rajewsky, Lukas Simon, and Fabian J. Theis. PAGA: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. Genome Biology, 20(1):59, March 2019. URL: https://doi.org/10.1186/s13059-019-1663-x, doi:10.1186/s13059-019-1663-x.">Wolf <em>et al.</em>, 2019</a>]</span>. Dense regions in the KNN-graph are detected by community detection methods like Leiden and Louvain<span id="id2">[<a class="reference internal" href="#id166" title="Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne Lefebvre. Fast unfolding of communities in large networks. Journal of Statistical Mechanics: Theory and Experiment, 2008(10):P10008, October 2008. Publisher: IOP Publishing. URL: https://doi.org/10.1088/1742-5468/2008/10/p10008, doi:10.1088/1742-5468/2008/10/p10008.">Blondel <em>et al.</em>, 2008</a>]</span>.</p>
+<p>The Leiden algorithm is an improved version of the Louvain algorithm which outperformed other clustering methods for single-cell RNA-seq data analysis (<span id="id3">[<a class="reference internal" href="#id168" title="A Du, MD Robinson, and C Soneson. A systematic performance evaluation of clustering methods for single-cell term`RNA`-seq data [version 1; peer review: 2 approved with reservations]. F1000Research, 2018. doi:10.12688/f1000research.15666.1.">Du <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id169" title="S Freytag, L Tian, I L�nnstedt, M Ng, and M Bahlo. Comparison of clustering tools in R for medium-sized 10x Genomics single-cell term`RNA`-sequencing data [version 1; peer review: 1 approved, 2 approved with reservations]. F1000Research, 2018. doi:10.12688/f1000research.15809.1.">Freytag <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id170" title="Lukas M. Weber and Mark D. Robinson. Comparison of clustering methods for high-dimensional single-cell flow and mass cytometry data. Cytometry Part A, 89(12):1084–1096, 2016. _eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1002/cyto.a.23030. URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/cyto.a.23030, doi:https://doi.org/10.1002/cyto.a.23030.">Weber and Robinson, 2016</a>]</span>). Since the Louvain algorithm is no longer maintained, using Leiden instead is preferred.</p>
+<p>We, therefore, propose to use the Leiden algorithm<span id="id4">[<a class="reference internal" href="#id167" title="V. A. Traag, L. Waltman, and N. J. van Eck. From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports, 9(1):5233, March 2019. URL: https://doi.org/10.1038/s41598-019-41695-z, doi:10.1038/s41598-019-41695-z.">Traag <em>et al.</em>, 2019</a>]</span> on single-cell k-nearest-neighbour (KNN) graphs to cluster single-cell datasets.</p>
 <p>Leiden creates clusters by taking into account the number of links between cells in a cluster versus the overall expected number of links in the dataset.</p>
 <figure class="align-default" id="id5">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/clustering.jpeg"><img alt="Clustering Overview" class="bg-primary mb-1" src="../_images/clustering.jpeg" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 10.1 </span><span class="caption-text">The Leiden algorithm computes a clustering on a KNN graph obtained from the PC reduced expression space. It starts with an initial partition where each node from its own community. Next, the algorithm moves single nodes from one community to another to find a partition, which is then refined. Based on a refined partition an aggregate network is generated, which is again refined until no further improvements can be obtained, and the final partition is reached.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 10.1 </span><span class="caption-text">The Leiden algorithm computes a clustering on a KNN graph obtained from the PC reduced expression space. It starts with an initial partition where each node forms its own community. Next, the algorithm moves single nodes from one community to another to find a partition, which is then refined. Based on a refined partition an aggregate network is generated, which is again refined until no further improvements can be obtained, and the final partition is reached.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The starting point is a singleton partition in which each node functions as its own community (a). As a next step, the algorithm creates partitions by moving individual nodes from one community to another (b), which is refined afterwards to enhance the partitioning (c). The refined partition is then aggregated to a network (d). Subsequently, the algorithm moves again individual nodes in the aggregate network (e), until refinement does no longer change the partition (f). All steps are repeated until the final clustering is created and partitions no longer change.</p>
-<p>The Leiden module has a resolution parameter which allows to determine the scale of the partition cluster and therefore the coarseness of the clustering. A higher resolution parameter leads to more clusters. The algorithm additionally allows efficient sub-clustering of particular clusters in the dataset by sub-setting the KNN graph. Sub-clustering enables the user to identify cell-type specific states within clusters or a finer cell type labeling<span id="id6">[<a class="reference internal" href="#id170" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145–1160, November 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span>, but can also lead to patterns that are only due to noise present in the data.</p>
+<p>The Leiden module has a resolution parameter which allows to determine the scale of the partition cluster and therefore the coarseness of the clustering. A higher resolution parameter leads to more clusters. The algorithm additionally allows efficient sub-clustering of particular clusters in the dataset by sub-setting the KNN graph. Sub-clustering enables the user to identify cell-type specific states within clusters or a finer cell type labeling<span id="id6">[<a class="reference internal" href="#id171" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145–1160, November 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span>, but can also lead to patterns that are only due to noise present in the data.</p>
 <p>As mentioned before, the Leiden algorithm is implemented in scanpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
 
 <span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -609,31 +595,31 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
 <h2><span class="section-number">10.4. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id7">
 <div role="list" class="citation-list">
-<div class="citation" id="id165" role="doc-biblioentry">
+<div class="citation" id="id166" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">BGLL08</a><span class="fn-bracket">]</span></span>
 <p>Vincent D. Blondel, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne Lefebvre. Fast unfolding of communities in large networks. <em>Journal of Statistical Mechanics: Theory and Experiment</em>, 2008(10):P10008, October 2008. Publisher: IOP Publishing. URL: <a class="reference external" href="https://doi.org/10.1088/1742-5468/2008/10/p10008">https://doi.org/10.1088/1742-5468/2008/10/p10008</a>, <a class="reference external" href="https://doi.org/10.1088/1742-5468/2008/10/p10008">doi:10.1088/1742-5468/2008/10/p10008</a>.</p>
 </div>
-<div class="citation" id="id167" role="doc-biblioentry">
+<div class="citation" id="id168" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">DRS18</a><span class="fn-bracket">]</span></span>
 <p>A Du, MD Robinson, and C Soneson. A systematic performance evaluation of clustering methods for single-cell term`RNA`-seq data [version 1; peer review: 2 approved with reservations]. <em>F1000Research</em>, 2018. <a class="reference external" href="https://doi.org/10.12688/f1000research.15666.1">doi:10.12688/f1000research.15666.1</a>.</p>
 </div>
-<div class="citation" id="id168" role="doc-biblioentry">
+<div class="citation" id="id169" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">FTLnnstedt+18</a><span class="fn-bracket">]</span></span>
 <p>S Freytag, L Tian, I L�nnstedt, M Ng, and M Bahlo. Comparison of clustering tools in R for medium-sized 10x Genomics single-cell term`RNA`-sequencing data [version 1; peer review: 1 approved, 2 approved with reservations]. <em>F1000Research</em>, 2018. <a class="reference external" href="https://doi.org/10.12688/f1000research.15809.1">doi:10.12688/f1000research.15809.1</a>.</p>
 </div>
-<div class="citation" id="id166" role="doc-biblioentry">
+<div class="citation" id="id167" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">TWvE19</a><span class="fn-bracket">]</span></span>
 <p>V. A. Traag, L. Waltman, and N. J. van Eck. From Louvain to Leiden: guaranteeing well-connected communities. <em>Scientific Reports</em>, 9(1):5233, March 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">https://doi.org/10.1038/s41598-019-41695-z</a>, <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">doi:10.1038/s41598-019-41695-z</a>.</p>
 </div>
-<div class="citation" id="id170" role="doc-biblioentry">
+<div class="citation" id="id171" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">WRY16</a><span class="fn-bracket">]</span></span>
 <p>Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. <em>Nature Biotechnology</em>, 34(11):1145–1160, November 2016. URL: <a class="reference external" href="https://doi.org/10.1038/nbt.3711">https://doi.org/10.1038/nbt.3711</a>, <a class="reference external" href="https://doi.org/10.1038/nbt.3711">doi:10.1038/nbt.3711</a>.</p>
 </div>
-<div class="citation" id="id169" role="doc-biblioentry">
+<div class="citation" id="id170" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">WR16</a><span class="fn-bracket">]</span></span>
 <p>Lukas M. Weber and Mark D. Robinson. Comparison of clustering methods for high-dimensional single-cell flow and mass cytometry data. <em>Cytometry Part A</em>, 89(12):1084–1096, 2016. _eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1002/cyto.a.23030. URL: <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/cyto.a.23030">https://onlinelibrary.wiley.com/doi/abs/10.1002/cyto.a.23030</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1002/cyto.a.23030">doi:https://doi.org/10.1002/cyto.a.23030</a>.</p>
 </div>
-<div class="citation" id="id171" role="doc-biblioentry">
+<div class="citation" id="id172" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">WHP+19</a><span class="fn-bracket">]</span></span>
 <p>F. Alexander Wolf, Fiona K. Hamey, Mireya Plass, Jordi Solana, Joakim S. Dahlin, Berthold Göttgens, Nikolaus Rajewsky, Lukas Simon, and Fabian J. Theis. PAGA: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. <em>Genome Biology</em>, 20(1):59, March 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-019-1663-x">https://doi.org/10.1186/s13059-019-1663-x</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-019-1663-x">doi:10.1186/s13059-019-1663-x</a>.</p>
 </div>
@@ -713,7 +699,8 @@ OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -786,8 +773,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

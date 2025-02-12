@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="32. Quality control" href="quality_control.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -510,22 +496,22 @@ document.write(`
 <h1><span class="section-number">33. </span>Normalization<a class="headerlink" href="#normalization" title="Link to this heading">#</a></h1>
 <section id="motivation">
 <h2><span class="section-number">33.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
-<p>Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id1">[<a class="reference internal" href="quality_control.html#id466" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>.
+<p>Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id1">[<a class="reference internal" href="quality_control.html#id467" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>.
 The capture efficiency varies from cell to cell due to difference in biophysical properties. Since CITE-seq experiments enrich for a priori selected features, compositional biases are more severe.
 Analogously to scRNA-seq data, many approaches to normalization exist.
 We cover the two most widely used ideas methods that require different input data and starting points.</p>
-<p>ADT data can be normalized using Centered Log-Ratio (CLR) transformation <span id="id2">[<a class="reference internal" href="#id379" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865-868, Sep 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>. Nevertheless, a new low-level normalization method tailored to dealing with the challenges this modality poses now exists: DSB (denoised and scaled by background). DSB normalization removes two kinds of noise. First, it uses the empty droplets to estimate a background noise and remove the ambient noise. Secondly, it uses the background population mean and isotypes (antibodies that bind non-specifically to the cells) to define and remove cell-to-cell technical noise<span id="id3">[<a class="reference internal" href="#id451" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span></p>
+<p>ADT data can be normalized using Centered Log-Ratio (CLR) transformation <span id="id2">[<a class="reference internal" href="#id380" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865-868, Sep 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>. Nevertheless, a new low-level normalization method tailored to dealing with the challenges this modality poses now exists: DSB (denoised and scaled by background). DSB normalization removes two kinds of noise. First, it uses the empty droplets to estimate a background noise and remove the ambient noise. Secondly, it uses the background population mean and isotypes (antibodies that bind non-specifically to the cells) to define and remove cell-to-cell technical noise<span id="id3">[<a class="reference internal" href="#id452" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span></p>
 </section>
 <section id="environment-setup">
 <h2><span class="section-number">33.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">muon</span> <span class="k">as</span> <span class="nn">mu</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pooch</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
@@ -678,7 +664,7 @@ Name: count, Length: 9999, dtype: int64
 </section>
 <section id="centered-log-ratio-normalization">
 <h2><span class="section-number">33.5. </span>Centered Log-Ratio normalization<a class="headerlink" href="#centered-log-ratio-normalization" title="Link to this heading">#</a></h2>
-<p>If you don’t have the unfiltered data available, you can also normalize the ADT data with <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.clr</span></code>, implementing <strong>C</strong>entered <strong>L</strong>og-<strong>R</strong>atio normalization. There is no denoising in this type of normalization. We instead assume that the geometric mean is a good reference to make all else relative to (divide by)<span id="id4">[<a class="reference internal" href="#id461" title="Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. Bioinformatics, 34(16):2870–2878, Aug 2018. doi:10.1093/bioinformatics/bty175.">Quinn <em>et al.</em>, 2018</a>]</span>. We are in fact taking the natural log ratio of each protein in each cell relative to either other proteins or other cells, depending on the implementation. At first, it was done across proteins, but then it was changed to across cells. This change made the normalization less dependent on the antibody panel<span id="id5">[<a class="reference internal" href="#id451" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span>.</p>
+<p>If you don’t have the unfiltered data available, you can also normalize the ADT data with <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.clr</span></code>, implementing <strong>C</strong>entered <strong>L</strong>og-<strong>R</strong>atio normalization. There is no denoising in this type of normalization. We instead assume that the geometric mean is a good reference to make all else relative to (divide by)<span id="id4">[<a class="reference internal" href="#id462" title="Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. Bioinformatics, 34(16):2870–2878, Aug 2018. doi:10.1093/bioinformatics/bty175.">Quinn <em>et al.</em>, 2018</a>]</span>. We are in fact taking the natural log ratio of each protein in each cell relative to either other proteins or other cells, depending on the implementation. At first, it was done across proteins, but then it was changed to across cells. This change made the normalization less dependent on the antibody panel<span id="id5">[<a class="reference internal" href="#id452" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span>
@@ -709,20 +695,20 @@ Name: count, Length: 9999, dtype: int64
 <h2><span class="section-number">33.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id6">
 <div role="list" class="citation-list">
-<div class="citation" id="id451" role="doc-biblioentry">
+<div class="citation" id="id452" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>MMT22<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
 <p>Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. <em>Nature Communications</em>, 13(11):2099, Apr 2022. <a class="reference external" href="https://doi.org/10.1038/s41467-022-29356-8">doi:10.1038/s41467-022-29356-8</a>.</p>
 </div>
-<div class="citation" id="id461" role="doc-biblioentry">
+<div class="citation" id="id462" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">QERC18</a><span class="fn-bracket">]</span></span>
 <p>Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. <em>Bioinformatics</em>, 34(16):2870–2878, Aug 2018. <a class="reference external" href="https://doi.org/10.1093/bioinformatics/bty175">doi:10.1093/bioinformatics/bty175</a>.</p>
 </div>
-<div class="citation" id="id379" role="doc-biblioentry">
+<div class="citation" id="id380" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">SHS+17</a><span class="fn-bracket">]</span></span>
 <p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, Sep 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
 </div>
-<div class="citation" id="id458" role="doc-biblioentry">
+<div class="citation" id="id459" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ZJT+22</a><span class="fn-bracket">]</span></span>
 <p>Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989">https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.04.29.489989">doi:10.1101/2022.04.29.489989</a>.</p>
 </div>
@@ -804,7 +790,8 @@ Name: count, Length: 9999, dtype: int64
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -879,8 +866,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

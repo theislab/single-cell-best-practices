@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="10. Clustering" href="clustering.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -522,7 +508,7 @@ document.write(`
 <h2><span class="section-number">11.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>To understand your data better and make use of existing knowledge, it is important to figure out the “cellular identity” of each of the cells in your data. The process of labeling groups of cells in your data based on known (or sometimes unknown) cellular phenotypes is called “cell annotation”. Whereas there are many ways to annotate your cells (e.g. based on batch, disease, sex and more), in this notebook we will focus on the annotation of “cell types”.<br>
 So what is a cell type? Biologists use the term cell type to denote a cellular phenotype that is robust across datasets, identifiable based on expression of specific markers (i.e. proteins or gene transcripts), and often linked to specific functions. For example, a plasma B cell is a type of white blood cell that secretes antibodies used to fight pathogens and it can be identified using specific markers. Knowing which cell types are in your sample is essential in understanding your data. For example, knowing that there are specific immune cell types in a tumor or unusual hematopoietic stem cells in your bone marrow sample can be a valuable insight into the disease you might be studying.<br>
-However, like with any categorization the size of categories and the borders drawn between them are partly subjective and can change over time, e.g. because new technologies allow for a higher resolution view of cells, or because specific “sub-phenotypes” that were not considered biologically meaningful are found to have important biological implications (see e.g. <span id="id1">[<a class="reference internal" href="#id161" title="Preetish Kadur Lakshminarasimha Murthy, Vishwaraj Sontake, Aleksandra Tata, Yoshihiko Kobayashi, Lauren Macadlo, Kenichi Okuda, Ansley S. Conchola, Satoko Nakano, Simon Gregory, Lisa A. Miller, Jason R. Spence, John F. Engelhardt, Richard C. Boucher, Jason R. Rock, Scott H. Randell, and Purushothama Rao Tata. Human distal lung maps and lineage hierarchies reveal a bipotent progenitor. Nature, 604(7904):111-119, Apr 2022. URL: https://doi.org/10.1038/s41586-022-04541-3, doi:10.1038/s41586-022-04541-3.">Kadur Lakshminarasimha Murthy <em>et al.</em>, 2022</a>]</span>). Cell types are therefore often further classified into “subtypes” or “cell states” (e.g. activated versus resting) and some researchers use the term “cell identity” to avoid this sometimes arbitrary distinction of cell types, cell subtypes and cell states. For a more detailed discussion of this topic, we recommend the review by Wagner et al. <span id="id2">[<a class="reference internal" href="#id162" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145-1160, Nov 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span> and the recently published review by Zeng <span id="id3">[<a class="reference internal" href="#id171" title="Hongkui Zeng. What is a cell type and how to define it? Cell, 185(15):2739-2755, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0092867422007838, doi:https://doi.org/10.1016/j.cell.2022.06.031.">Zeng, 2022</a>]</span>.<br>
+However, like with any categorization the size of categories and the borders drawn between them are partly subjective and can change over time, e.g. because new technologies allow for a higher resolution view of cells, or because specific “sub-phenotypes” that were not considered biologically meaningful are found to have important biological implications (see e.g. <span id="id1">[<a class="reference internal" href="#id162" title="Preetish Kadur Lakshminarasimha Murthy, Vishwaraj Sontake, Aleksandra Tata, Yoshihiko Kobayashi, Lauren Macadlo, Kenichi Okuda, Ansley S. Conchola, Satoko Nakano, Simon Gregory, Lisa A. Miller, Jason R. Spence, John F. Engelhardt, Richard C. Boucher, Jason R. Rock, Scott H. Randell, and Purushothama Rao Tata. Human distal lung maps and lineage hierarchies reveal a bipotent progenitor. Nature, 604(7904):111-119, Apr 2022. URL: https://doi.org/10.1038/s41586-022-04541-3, doi:10.1038/s41586-022-04541-3.">Kadur Lakshminarasimha Murthy <em>et al.</em>, 2022</a>]</span>). Cell types are therefore often further classified into “subtypes” or “cell states” (e.g. activated versus resting) and some researchers use the term “cell identity” to avoid this sometimes arbitrary distinction of cell types, cell subtypes and cell states. For a more detailed discussion of this topic, we recommend the review by Wagner et al. <span id="id2">[<a class="reference internal" href="#id163" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145-1160, Nov 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span> and the recently published review by Zeng <span id="id3">[<a class="reference internal" href="#id172" title="Hongkui Zeng. What is a cell type and how to define it? Cell, 185(15):2739-2755, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0092867422007838, doi:https://doi.org/10.1016/j.cell.2022.06.031.">Zeng, 2022</a>]</span>.<br>
 Similarly, multiple cell types can be part of a single continuum, where one cell type might transition or differentiate into another. For example, in hematopoiesis cells differentiate from a stem cell into a specific immune cell type. Although hard borders between early and late stages of this differentiation are often drawn, the state of these cells can more accurately be described by the differentiation coordinate between the less and more differentiated cellular phenotypes. We will discuss differentiation and cellular trajectories in subsequent chapters.<br>
 So how do we go about annotating cells in single-cell data? There are multiple ways to do it and we will give an overview of different approaches below. As we are working with transcriptomic data, each of these methods is ultimately based on the expression of specific genes or gene sets, or general transcriptomic similarity between cells.</p>
 </section>
@@ -531,12 +517,11 @@ So how do we go about annotating cells in single-cell data? There are multiple w
 <p>We’ll filter out some deprecation and performance warnings that do not affect our code:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numba</span>
-<span class="kn">from</span> <span class="nn">numba.core.errors</span> <span class="kn">import</span> <span class="n">NumbaDeprecationWarning</span><span class="p">,</span> <span class="n">NumbaPendingDeprecationWarning</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">NumbaDeprecationWarning</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">NumbaDeprecationWarning</span><span class="p">)</span>
 </pre></div>
@@ -546,17 +531,18 @@ So how do we go about annotating cells in single-cell data? There are multiple w
 <p>Load the needed modules:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">celltypist</span>
-<span class="kn">from</span> <span class="nn">celltypist</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">import</span> <span class="nn">scarches</span> <span class="k">as</span> <span class="nn">sca</span>
-<span class="kn">import</span> <span class="nn">urllib.request</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">celltypist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scarches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sca</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">celltypist</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 </pre></div>
 </div>
 </div>
@@ -609,7 +595,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 <section id="manual-annotation">
 <h2><span class="section-number">11.4. </span>Manual annotation<a class="headerlink" href="#manual-annotation" title="Link to this heading">#</a></h2>
 <p>The classical or oldest way to perform cell type annotation is based on a single or small set of marker genes known to be associated with a particular cell type. This approach dates back to “pre-scRNA-seq times”, when single cell data was low dimensional (e.g. FACS data with gene panels consisting of no more than 30-40 genes). It is a fast and transparent way to annotate your data. However, when no unique markers exist for a specific cell type (which is often the case) this approach can get more complicated and even less objective, with combinations of markers or expression thresholds necessary for proper annotation. A robust set of marker genes and prior knowledge or annotation experience can help here, but the approach comes with the risk of unclear and subjective decision-making.</p>
-<p>In this setting the data is often clustered before annotation, so that we can annotate groups of cells instead of making a per-cell call. This is not only less laborious, but also more robust to noise: a single cell might not have a count for a specific marker even if it was expressed in that cell, simply due to the inherent sparsity of single cell data. Clustering enables the detection of cells highly similar in overall gene expression and can therefore account for drop-outs at single cell level.</p>
+<p>In this setting, the data is often clustered before annotation, so that we can annotate groups of cells instead of making a per-cell call. This is not only less laborious, but also more robust to noise: a single cell might not have a count for a specific marker even if it was expressed in that cell, simply due to the inherent sparsity of single cell data. Clustering enables the detection of cells highly similar in overall gene expression and can therefore account for drop-outs at single cell level.</p>
 <p>Finally, there are two angles from which to approach the marker-gene based annotation. One option is to work from a table of marker genes for all the cell types you expect in your data and check in which those clusters are expressed. The other option is to check which genes are highly expressed in the clusters you defined and then check if they are associated with known cell types or states. If necessary, one can move back and forth between those approaches. We will show examples of both below.</p>
 <section id="from-markers-to-cluster-annotation">
 <h3><span class="section-number">11.4.1. </span>From markers to cluster annotation<a class="headerlink" href="#from-markers-to-cluster-annotation" title="Link to this heading">#</a></h3>
@@ -703,9 +689,9 @@ multigrate is not installed. To use multigrate models, please install it first u
 <p>Subset to only the markers that were detected in our data. We will loop through all cell types and keep only the genes that we find in our adata object as markers for that cell type. This will prevent errors once we start plotting.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">marker_genes_in_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">marker_genes_in_data</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">ct</span><span class="p">,</span> <span class="n">markers</span> <span class="ow">in</span> <span class="n">marker_genes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">markers_found</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">markers_found</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">markers</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="n">markers_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
@@ -724,7 +710,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 </div>
 </div>
 </div>
-<p>We furthermore set our adata.var.highly_variable to the highly deviant genes. Scanpy uses this var column in downstream calculations, such as the PCA below</p>
+<p>We furthermore set our <code class="docutils literal notranslate"><span class="pre">adata.var.highly_variable</span></code> to the highly deviant genes. Scanpy uses this var column in downstream calculations, such as the PCA below</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_deviant&quot;</span><span class="p">]</span>
@@ -756,7 +742,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 </div>
 </div>
 </div>
-<p>Now show expression of the markers using the calculated UMAP. We’ll limit ourselves to B/plasma cell subtypes for this example. Note from the marker dictionary above that there are three negative markers in our list: IGHD and IGHM for B1 B, and PAX5 for plasmablasts, or meaning that this cell type is expected not to or to lowly express those markers.</p>
+<p>Now show expression of the markers using the calculated UMAP. We’ll limit ourselves to B/plasma cell subtypes for this example. Note from the marker dictionary above that there are three negative markers in our list: IGHD and IGHM for B1 B, and PAX5 for plasmablasts, meaning that this cell type is expected not to or to lowly express those markers.</p>
 <p>Let’s list the B cell subtypes we want to show the markers for:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -817,7 +803,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 </div>
 <p>As you can see, even markers for a single cell type are often expressed in different subsets of the data, i.e. individual markers are often not uniquely expressed in a single cell type. Rather, it is the intersection of those subsets that will tell you where your cell type of interest is.</p>
 <p>Another thing you might notice is that markers are often sparsely expressed, i.e. it is often only a subset of cells of a cell type in which a marker was detected. This is due to the nature of scRNA-seq data: we only sequence a small subset of the total amount of RNA molecules in the cell and due to this subsampling we will sometimes not sample transcripts from specific genes in a cell even if they were expressed in that cell. Therefore, we do not annotate single cells based on a minimum expression threshold of e.g. a set of markers. Instead, we first subdivide the data into groups of similar cells (i.e. “partition” the data) by clustering, thereby accounting for “missing transcripts” of single genes and rather grouping based on overall transcriptomic similarity. We can then annotate those clusters based on their overall marker expression patterns.</p>
-<p>Let us cluster our data now. We will use the Leiden algorithm <span id="id4">[<a class="reference internal" href="#id172" title="V. A. Traag, L. Waltman, and N. J. van Eck. From louvain to leiden: guaranteeing well-connected communities. Scientific Reports, 9(1):5233, Mar 2019. URL: https://doi.org/10.1038/s41598-019-41695-z, doi:10.1038/s41598-019-41695-z.">Traag <em>et al.</em>, 2019</a>]</span> as discussed in the Clustering chapter to define a grouping of our data into similar subsets of cells:</p>
+<p>Let us cluster our data now. We will use the Leiden algorithm <span id="id4">[<a class="reference internal" href="#id173" title="V. A. Traag, L. Waltman, and N. J. van Eck. From louvain to leiden: guaranteeing well-connected communities. Scientific Reports, 9(1):5233, Mar 2019. URL: https://doi.org/10.1038/s41598-019-41695-z, doi:10.1038/s41598-019-41695-z.">Traag <em>et al.</em>, 2019</a>]</span> as discussed in the Clustering chapter to define a grouping of our data into similar subsets of cells:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;leiden_1&quot;</span><span class="p">)</span>
@@ -930,7 +916,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 </section>
 <section id="from-cluster-differentially-expressed-genes-to-cluster-annotation">
 <h3><span class="section-number">11.4.2. </span>From cluster differentially expressed genes to cluster annotation<a class="headerlink" href="#from-cluster-differentially-expressed-genes-to-cluster-annotation" title="Link to this heading">#</a></h3>
-<p>Conversely, we can calculate marker genes per cluster and then look up whether we can link those marker genes to any known biology such as cell types and/or states. For marker gene calculation of clusters simple methods such as the Wilcoxon rank-sum test are thought to perform best <span id="id5">[<a class="reference internal" href="#id164" title="Jeffrey M. Pullin and Davis J. McCarthy. A comparison of marker gene selection methods for single-cell rna sequencing data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241, arXiv:https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241.full.pdf, doi:10.1101/2022.05.09.490241.">Pullin and McCarthy, 2022</a>]</span>. Importantly, as the definition of the clusters is based on the same data as used for these statistical tests, the p-values of these tests will be inflated as also described here <span id="id6">[<a class="reference internal" href="#id169" title="Jesse M. Zhang, Govinda M. Kamath, and David N. Tse. Valid post-clustering differential analysis for single-cell rna-seq. Cell Systems, 9(4):383-392.e6, 2019. URL: https://www.sciencedirect.com/science/article/pii/S2405471219302698, doi:https://doi.org/10.1016/j.cels.2019.07.012.">Zhang <em>et al.</em>, 2019</a>]</span>.</p>
+<p>Conversely, we can calculate marker genes per cluster and then look up whether we can link those marker genes to any known biology such as cell types and/or states. For marker gene calculation of clusters simple methods such as the Wilcoxon rank-sum test are thought to perform best <span id="id5">[<a class="reference internal" href="#id165" title="Jeffrey M. Pullin and Davis J. McCarthy. A comparison of marker gene selection methods for single-cell rna sequencing data. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241, arXiv:https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241.full.pdf, doi:10.1101/2022.05.09.490241.">Pullin and McCarthy, 2022</a>]</span>. Importantly, as the definition of the clusters is based on the same data as used for these statistical tests, the p-values of these tests will be inflated as also described here <span id="id6">[<a class="reference internal" href="#id170" title="Jesse M. Zhang, Govinda M. Kamath, and David N. Tse. Valid post-clustering differential analysis for single-cell rna-seq. Cell Systems, 9(4):383-392.e6, 2019. URL: https://www.sciencedirect.com/science/article/pii/S2405471219302698, doi:https://doi.org/10.1016/j.cels.2019.07.012.">Zhang <em>et al.</em>, 2019</a>]</span>.</p>
 <p>Let’s calculate the differentially expressed genes for every cluster, compared to the rest of the cells in our adata:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -988,7 +974,7 @@ multigrate is not installed. To use multigrate models, please install it first u
 <a class="reference internal image-reference" href="../_images/f03b208eac25c6272ccd7014aeab0686bef5b0732e1fce48ff2172d53918743c.png"><img alt="../_images/f03b208eac25c6272ccd7014aeab0686bef5b0732e1fce48ff2172d53918743c.png" src="../_images/f03b208eac25c6272ccd7014aeab0686bef5b0732e1fce48ff2172d53918743c.png" style="width: 2410px; height: 595px;" /></a>
 </div>
 </div>
-<p>Let’s take a look at cluster 12, which seems to have a set of relatively unique markers including CDK6, ETV6, NKAIN2, and GNAQ. Some googling tells us that NKAIN2 and ETV6 are hematopoietic stem cell markers <span id="id7">[<a class="reference internal" href="#id173" title="Kaibin Shi, Handong Li, Ting Chang, Wenyan He, Ying Kong, Caiyun Qi, Ran Li, Huachen Huang, Zhibao Zhu, Pei Zheng, Zhe Ruan, Jie Zhou, Fu-Dong Shi, and Qiang Liu. Bone marrow hematopoiesis drives multiple sclerosis progression. Cell, 185(13):2234-2247.e17, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0092867422006511, doi:https://doi.org/10.1016/j.cell.2022.05.020.">Shi <em>et al.</em>, 2022</a>]</span> <span id="id8">[<a class="reference internal" href="#id174" title="L C Wang, W Swat, Y Fujiwara, L Davidson, J Visvader, F Kuo, F W Alt, D G Gilliland, T R Golub, and S H Orkin. The TEL/ETV6 gene is required specifically for hematopoiesis in the bone marrow. Genes Dev., 12(15):2392–2402, August 1998.">Wang <em>et al.</em>, 1998</a>]</span> (NKAIN2 was also present in our list above). In the UMAP we can see that these genes are expressed throughout cluster 12:</p>
+<p>Let’s take a look at cluster 12, which seems to have a set of relatively unique markers including CDK6, ETV6, NKAIN2, and GNAQ. Some googling tells us that NKAIN2 and ETV6 are hematopoietic stem cell markers <span id="id7">[<a class="reference internal" href="#id174" title="Kaibin Shi, Handong Li, Ting Chang, Wenyan He, Ying Kong, Caiyun Qi, Ran Li, Huachen Huang, Zhibao Zhu, Pei Zheng, Zhe Ruan, Jie Zhou, Fu-Dong Shi, and Qiang Liu. Bone marrow hematopoiesis drives multiple sclerosis progression. Cell, 185(13):2234-2247.e17, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0092867422006511, doi:https://doi.org/10.1016/j.cell.2022.05.020.">Shi <em>et al.</em>, 2022</a>]</span> <span id="id8">[<a class="reference internal" href="#id175" title="L C Wang, W Swat, Y Fujiwara, L Davidson, J Visvader, F Kuo, F W Alt, D G Gilliland, T R Golub, and S H Orkin. The TEL/ETV6 gene is required specifically for hematopoiesis in the bone marrow. Genes Dev., 12(15):2392–2402, August 1998.">Wang <em>et al.</em>, 1998</a>]</span> (NKAIN2 was also present in our list above). In the UMAP we can see that these genes are expressed throughout cluster 12:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
@@ -1052,31 +1038,31 @@ multigrate is not installed. To use multigrate models, please install it first u
 <h2><span class="section-number">11.5. </span>Automated annotation<a class="headerlink" href="#automated-annotation" title="Link to this heading">#</a></h2>
 <section id="general-remarks">
 <h3><span class="section-number">11.5.1. </span>General remarks<a class="headerlink" href="#general-remarks" title="Link to this heading">#</a></h3>
-<p>The remainder of the discussed methods will be methods for automated, rather than manual annotation of your data. Unlike the method showcased above, each of these methods enables you to annotate your data in an automated way. They are based on different principles, sometimes requiring pre-defined sets of markers, other times trained on pre-existing full scRNA-seq datasets. As discussed below, the resulting annotations can be of varying quality. It is therefore important to regard these methods as a starting point rather than an end-point of the annotation process. See also several reviews <span id="id9">[<a class="reference internal" href="#id165" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id10">[<a class="reference internal" href="#id166" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span> for a more elaborate discussion of automated annotation methods.</p>
+<p>The remainder of the discussed methods will be methods for automated, rather than manual annotation of your data. Unlike the method showcased above, each of these methods enables you to annotate your data in an automated way. They are based on different principles, sometimes requiring pre-defined sets of markers, other times trained on pre-existing full scRNA-seq datasets. As discussed below, the resulting annotations can be of varying quality. It is therefore important to regard these methods as a starting point rather than an end-point of the annotation process. See also several reviews <span id="id9">[<a class="reference internal" href="#id166" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id10">[<a class="reference internal" href="#id167" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span> for a more elaborate discussion of automated annotation methods.</p>
 <p>As said, the quality of automatically generated annotations can vary. More specifically, the quality of the annotations depends on:</p>
 <ol class="arabic simple">
-<li><p>The type of classifier chosen: Previous benchmark studies have shown that different types of classifiers often perform comparably, with neural network-based methods generally not outperforming general-purpose models such as support vector machines or linear regression models<span id="id11">[<a class="reference internal" href="#id166" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span>, <span id="id12">[<a class="reference internal" href="#id165" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id13">[<a class="reference internal" href="#id168" title="Yixuan Huang and Peng Zhang. Evaluation of machine learning approaches for cell-type identification from single-cell transcriptomics data. Briefings in Bioinformatics, February 2021. URL: https://doi.org/10.1093/bib/bbab035, doi:10.1093/bib/bbab035.">Huang and Zhang, 2021</a>]</span>.<br></p></li>
+<li><p>The type of classifier chosen: Previous benchmark studies have shown that different types of classifiers often perform comparably, with neural network-based methods generally not outperforming general-purpose models such as support vector machines or linear regression models<span id="id11">[<a class="reference internal" href="#id167" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span>, <span id="id12">[<a class="reference internal" href="#id166" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id13">[<a class="reference internal" href="#id169" title="Yixuan Huang and Peng Zhang. Evaluation of machine learning approaches for cell-type identification from single-cell transcriptomics data. Briefings in Bioinformatics, February 2021. URL: https://doi.org/10.1093/bib/bbab035, doi:10.1093/bib/bbab035.">Huang and Zhang, 2021</a>]</span>.<br></p></li>
 <li><p>The quality of the data that the classifier was trained on. If the training data was not well annotated or annotated at low resolution, the classifier will do the same. Similarly, if the training data and/or its annotation was noisy, the classifier might not perform well.<br></p></li>
-<li><p>The similarity of your own data to the data that the classifier was trained on. For example, if the classifier was trained on a drop-seq single cell dataset and your data is 10X single nucleus rather than single cell drop-seq, this might worsen the quality of the annotation. Classifiers trained on cross-dataset atlases including a diversity of datasets might give more robust and better quality annotations than classifiers trained on a single dataset. An example is the CellTypist (an automated annotation method that will be discussed more extensively below) classifier trained on the Human Lung Cell Atlas <span id="id14">[<a class="reference internal" href="#id170" title="Lisa Sikkema, Ciro Ram\'ırez-Suástegui, Daniel C. Strobl, Tessa E. Gillett, Luke Zappia, Elo Madissoon, Nikolay S. Markov, Laure-Emmanuelle Zaragosi, Yuge Ji, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Martin Banchero, Christophe Bécavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-i Chung, Antoine Collin, Aurore C. A. Gay, Janine Gote-Schniering, Baharak Hooshiar Kashani, Kemal Inecik, Manu Jain, Theodore S. Kapellos, Tessa M. Kole, Sylvie Leroy, Christoph H. Mayr, Amanda J. Oliver, Michael von Papen, Lance Peter, Chase J. Taylor, Thomas Walzthoeni, Chuan Xu, Linh T. Bui, Carlo De Donno, Leander Dony, Alen Faiz, Minzhe Guo, Austin J. Gutierrez, Lukas Heumos, Ni Huang, Ignacio L. Ibarra, Nathan D. Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-López, Kyle J. Travaglini, Anna Wilbrey-Clark, Kaylee B. Worlock, Masahiro Yoshida, Yuexin Chen, James S. Hagood, Ahmed Agami, Peter Horvath, Joakim Lundeberg, Charles-Hugo Marquette, Gloria Pryhuber, Chistos Samakovlis, Xin Sun, Lorraine B. Ware, Kun Zhang, Maarten van den Berge, Yohan Bossé, Tushar J. Desai, Oliver Eickelberg, Naftali Kaminski, Mark A. Krasnow, Robert Lafyatis, Marko Z. Nikolic, Joseph E. Powell, Jayaraj Rajagopal, Mauricio Rojas, Orit Rozenblatt-Rosen, Max A. Seibold, Dean Sheppard, Douglas P. Shepherd, Don D. Sin, Wim Timens, Alexander M. Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E. Banovich, Pascal Barbry, Thu Elizabeth Duong, Christine S. Falk, Kerstin B. Meyer, Jonathan A. Kropski, Dana Pe'er, Herbert B. Schiller, Purushothama Rao Tata, Joachim L. Schultze, Sara A. Teichmann, Alexander V. Misharin, Martijn C. Nawijn, Malte D. Luecken, and Fabian J. Theis and. An integrated cell atlas of the lung in health and disease. Nature Medicine, June 2023. URL: https://doi.org/10.1038/s41591-023-02327-2, doi:10.1038/s41591-023-02327-2.">Sikkema <em>et al.</em>, 2023</a>]</span> which includes 14 different lung datasets. This model is likely to perform better on new lung data than a model that was trained on a single lung dataset.</p></li>
+<li><p>The similarity of your own data to the data that the classifier was trained on. For example, if the classifier was trained on a drop-seq single cell dataset and your data is 10X single nucleus rather than single cell drop-seq, this might worsen the quality of the annotation. Classifiers trained on cross-dataset atlases including a diversity of datasets might give more robust and better quality annotations than classifiers trained on a single dataset. An example is the CellTypist (an automated annotation method that will be discussed more extensively below) classifier trained on the Human Lung Cell Atlas <span id="id14">[<a class="reference internal" href="#id171" title="Lisa Sikkema, Ciro Ram\'ırez-Suástegui, Daniel C. Strobl, Tessa E. Gillett, Luke Zappia, Elo Madissoon, Nikolay S. Markov, Laure-Emmanuelle Zaragosi, Yuge Ji, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Martin Banchero, Christophe Bécavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-i Chung, Antoine Collin, Aurore C. A. Gay, Janine Gote-Schniering, Baharak Hooshiar Kashani, Kemal Inecik, Manu Jain, Theodore S. Kapellos, Tessa M. Kole, Sylvie Leroy, Christoph H. Mayr, Amanda J. Oliver, Michael von Papen, Lance Peter, Chase J. Taylor, Thomas Walzthoeni, Chuan Xu, Linh T. Bui, Carlo De Donno, Leander Dony, Alen Faiz, Minzhe Guo, Austin J. Gutierrez, Lukas Heumos, Ni Huang, Ignacio L. Ibarra, Nathan D. Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-López, Kyle J. Travaglini, Anna Wilbrey-Clark, Kaylee B. Worlock, Masahiro Yoshida, Yuexin Chen, James S. Hagood, Ahmed Agami, Peter Horvath, Joakim Lundeberg, Charles-Hugo Marquette, Gloria Pryhuber, Chistos Samakovlis, Xin Sun, Lorraine B. Ware, Kun Zhang, Maarten van den Berge, Yohan Bossé, Tushar J. Desai, Oliver Eickelberg, Naftali Kaminski, Mark A. Krasnow, Robert Lafyatis, Marko Z. Nikolic, Joseph E. Powell, Jayaraj Rajagopal, Mauricio Rojas, Orit Rozenblatt-Rosen, Max A. Seibold, Dean Sheppard, Douglas P. Shepherd, Don D. Sin, Wim Timens, Alexander M. Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E. Banovich, Pascal Barbry, Thu Elizabeth Duong, Christine S. Falk, Kerstin B. Meyer, Jonathan A. Kropski, Dana Pe'er, Herbert B. Schiller, Purushothama Rao Tata, Joachim L. Schultze, Sara A. Teichmann, Alexander V. Misharin, Martijn C. Nawijn, Malte D. Luecken, and Fabian J. Theis and. An integrated cell atlas of the lung in health and disease. Nature Medicine, June 2023. URL: https://doi.org/10.1038/s41591-023-02327-2, doi:10.1038/s41591-023-02327-2.">Sikkema <em>et al.</em>, 2023</a>]</span> which includes 14 different lung datasets. This model is likely to perform better on new lung data than a model that was trained on a single lung dataset.</p></li>
 </ol>
-<p>The aforementioned points highlight possible disadvantages of using classifiers, depending on the training data and model type. Nonetheless, there are several important advantages of using pre-trained classifiers to annotate your data. First, it is a fast and and easy way to annotate your data. The annotation does not require the downloading nor preprocessing of the training data and sometimes merely involves the upload of your data to an online webpage. Second, these methods don’t rely on a partitioning of your data into clusters, as the manual annotation does. Third, pre-trained classifiers enable you to directly leverage the knowledge and information from previous studies, such as a high quality annotation. And finally, using such classifiers can help with harmonizing cell-type definitions across a field, thereby clearing the path towards a field-wide consensus on these definitions.</p>
+<p>The aforementioned points highlight possible disadvantages of using classifiers, depending on the training data and model type. Nonetheless, there are several important advantages of using pre-trained classifiers to annotate your data. First, it is a fast and easy way to annotate your data. The annotation does not require the downloading nor preprocessing of the training data and sometimes merely involves the upload of your data to an online webpage. Second, these methods don’t rely on a partitioning of your data into clusters, as the manual annotation does. Third, pre-trained classifiers enable you to directly leverage the knowledge and information from previous studies, such as a high quality annotation. And finally, using such classifiers can help with harmonizing cell-type definitions across a field, thereby clearing the path towards a field-wide consensus on these definitions.</p>
 <p>Finally, as these classifiers are often less transparent than e.g. manual marker-based annotation, a good uncertainty measure quantifying annotation uncertainty will improve the quality and usability of the method. We will discuss this more extensively further down.</p>
 </section>
 <section id="marker-gene-based-classifiers">
 <h3><span class="section-number">11.5.2. </span>Marker gene-based classifiers<a class="headerlink" href="#marker-gene-based-classifiers" title="Link to this heading">#</a></h3>
-<p>One class of automated cell type annotation methods relies on a predefined set of marker genes. Cells are classified into cell types based on their expression levels of these marker genes. Examples of such methods are Garnett <span id="id15">[<a class="reference internal" href="#id178" title="Hannah A. Pliner, Jay Shendure, and Cole Trapnell. Supervised classification enables rapid annotation of cell atlases. Nature Methods, 16(10):983-986, Oct 2019. URL: https://doi.org/10.1038/s41592-019-0535-3, doi:10.1038/s41592-019-0535-3.">Pliner <em>et al.</em>, 2019</a>]</span> and CellAssign <span id="id16">[<a class="reference internal" href="#id179" title="Allen W. Zhang, Ciara O'Flanagan, Elizabeth A. Chavez, Jamie L. P. Lim, Nicholas Ceglia, Andrew McPherson, Matt Wiens, Pascale Walters, Tim Chan, Brittany Hewitson, Daniel Lai, Anja Mottok, Clementine Sarkozy, Lauren Chong, Tomohiro Aoki, Xuehai Wang, Andrew P. Weng, Jessica N. McAlpine, Samuel Aparicio, Christian Steidl, Kieran R. Campbell, and Sohrab P. Shah. Probabilistic cell-type assignment of single-cell rna-seq for tumor microenvironment profiling. Nature Methods, 16(10):1007-1015, Oct 2019. URL: https://doi.org/10.1038/s41592-019-0529-1, doi:10.1038/s41592-019-0529-1.">Zhang <em>et al.</em>, 2019</a>]</span>. The more robust and generalizable the set of marker genes these models are based on, the better the model will perform. However, like with other models they are likely to be affected by batch effect-related differences between the data the model was trained on and the data that needs to be labeled. One of the advantages of these methods compared to models based on larger gene sets (see below) is that they are more transparent: we know on the basis of which genes the classification is done.<br>
+<p>One class of automated cell type annotation methods relies on a predefined set of marker genes. Cells are classified into cell types based on their expression levels of these marker genes. Examples of such methods are Garnett <span id="id15">[<a class="reference internal" href="#id179" title="Hannah A. Pliner, Jay Shendure, and Cole Trapnell. Supervised classification enables rapid annotation of cell atlases. Nature Methods, 16(10):983-986, Oct 2019. URL: https://doi.org/10.1038/s41592-019-0535-3, doi:10.1038/s41592-019-0535-3.">Pliner <em>et al.</em>, 2019</a>]</span> and CellAssign <span id="id16">[<a class="reference internal" href="#id180" title="Allen W. Zhang, Ciara O'Flanagan, Elizabeth A. Chavez, Jamie L. P. Lim, Nicholas Ceglia, Andrew McPherson, Matt Wiens, Pascale Walters, Tim Chan, Brittany Hewitson, Daniel Lai, Anja Mottok, Clementine Sarkozy, Lauren Chong, Tomohiro Aoki, Xuehai Wang, Andrew P. Weng, Jessica N. McAlpine, Samuel Aparicio, Christian Steidl, Kieran R. Campbell, and Sohrab P. Shah. Probabilistic cell-type assignment of single-cell rna-seq for tumor microenvironment profiling. Nature Methods, 16(10):1007-1015, Oct 2019. URL: https://doi.org/10.1038/s41592-019-0529-1, doi:10.1038/s41592-019-0529-1.">Zhang <em>et al.</em>, 2019</a>]</span>. The more robust and generalizable the set of marker genes these models are based on, the better the model will perform. However, like with other models they are likely to be affected by batch effect-related differences between the data the model was trained on and the data that needs to be labeled. One of the advantages of these methods compared to models based on larger gene sets (see below) is that they are more transparent: we know on the basis of which genes the classification is done.<br>
 We will not show an example of marker-based classifiers in this notebook, but encourage you to explore these yourself if you are interested.</p>
 </section>
 <section id="classifiers-based-on-a-wider-set-of-genes">
 <h3><span class="section-number">11.5.3. </span>Classifiers based on a wider set of genes<a class="headerlink" href="#classifiers-based-on-a-wider-set-of-genes" title="Link to this heading">#</a></h3>
-<p>It is worth noting that the methods discussed so far use only a small subset of the genes detected in the data: often a set of only 1 to ~10 marker genes per cell type is used. An alternative approach is to use a classifier that takes as input a larger set of genes (several thousands or more), thereby making more use of the breadth of scRNA-seq data. Such classifiers are trained on previously annotated datasets or atlases. Examples of these are CellTypist <span id="id17">[<a class="reference internal" href="#id163" title="C. Domínguez Conde, C. Xu, L. B. Jarvis, D. B. Rainbow, S. B. Wells, T. Gomes, S. K. Howlett, O. Suchanek, K. Polanski, H. W. King, L. Mamanova, N. Huang, P. A. Szabo, L. Richardson, L. Bolt, E. S. Fasouli, K. T. Mahbubani, M. Prete, L. Tuck, N. Richoz, Z. K. Tuong, L. Campos, H. S. Mousa, E. J. Needham, S. Pritchard, T. Li, R. Elmentaite, J. Park, E. Rahmani, D. Chen, D. K. Menon, O. A. Bayraktar, L. K. James, K. B. Meyer, N. Yosef, M. R. Clatworthy, P. A. Sims, D. L. Farber, K. Saeb-Parsy, J. L. Jones, and S. A. Teichmann. Cross-tissue immune cell analysis reveals tissue-specific features in humans. Science, 376(6594):eabl5197, 2022. URL: https://www.science.org/doi/abs/10.1126/science.abl5197, arXiv:https://www.science.org/doi/pdf/10.1126/science.abl5197, doi:10.1126/science.abl5197.">Conde <em>et al.</em>, 2022</a>]</span> (see also <a class="reference external" href="https://www.celltypist.org">https://www.celltypist.org</a>, where data can be uploaded to a portal to get automated cell annotations) and Clustifyr <span id="id18">[<a class="reference internal" href="#id167" title="Rui Fu, Austin E. Gillen, Ryan M. Sheridan, Chengzhe Tian, Michelle Daya, Yue Hao, Jay R. Hesselberth, and Kent A. Riemondy. Clustifyr: an r package for automated single-cell RNA sequencing cluster classification. F1000Research, 9:223, July 2020. URL: https://doi.org/10.12688/f1000research.22969.2, doi:10.12688/f1000research.22969.2.">Fu <em>et al.</em>, 2020</a>]</span>.</p>
+<p>It is worth noting that the methods discussed so far use only a small subset of the genes detected in the data: often a set of only 1 to ~10 marker genes per cell type is used. An alternative approach is to use a classifier that takes as input a larger set of genes (several thousands or more), thereby making more use of the breadth of scRNA-seq data. Such classifiers are trained on previously annotated datasets or atlases. Examples of these are CellTypist <span id="id17">[<a class="reference internal" href="#id164" title="C. Domínguez Conde, C. Xu, L. B. Jarvis, D. B. Rainbow, S. B. Wells, T. Gomes, S. K. Howlett, O. Suchanek, K. Polanski, H. W. King, L. Mamanova, N. Huang, P. A. Szabo, L. Richardson, L. Bolt, E. S. Fasouli, K. T. Mahbubani, M. Prete, L. Tuck, N. Richoz, Z. K. Tuong, L. Campos, H. S. Mousa, E. J. Needham, S. Pritchard, T. Li, R. Elmentaite, J. Park, E. Rahmani, D. Chen, D. K. Menon, O. A. Bayraktar, L. K. James, K. B. Meyer, N. Yosef, M. R. Clatworthy, P. A. Sims, D. L. Farber, K. Saeb-Parsy, J. L. Jones, and S. A. Teichmann. Cross-tissue immune cell analysis reveals tissue-specific features in humans. Science, 376(6594):eabl5197, 2022. URL: https://www.science.org/doi/abs/10.1126/science.abl5197, arXiv:https://www.science.org/doi/pdf/10.1126/science.abl5197, doi:10.1126/science.abl5197.">Conde <em>et al.</em>, 2022</a>]</span> (see also <a class="reference external" href="https://www.celltypist.org">https://www.celltypist.org</a>, where data can be uploaded to a portal to get automated cell annotations) and Clustifyr <span id="id18">[<a class="reference internal" href="#id168" title="Rui Fu, Austin E. Gillen, Ryan M. Sheridan, Chengzhe Tian, Michelle Daya, Yue Hao, Jay R. Hesselberth, and Kent A. Riemondy. Clustifyr: an r package for automated single-cell RNA sequencing cluster classification. F1000Research, 9:223, July 2020. URL: https://doi.org/10.12688/f1000research.22969.2, doi:10.12688/f1000research.22969.2.">Fu <em>et al.</em>, 2020</a>]</span>.</p>
 <p>Let’s try out CellTypist on our data. Based on the CellTypist tutorial (<a class="reference external" href="https://www.celltypist.org/tutorials">https://www.celltypist.org/tutorials</a>) we know we need to prepare our data so that counts are normalized to 10,000 counts per cell, then log1p-transformed:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_celltypist</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># make a copy of our adata</span>
 <span class="n">adata_celltypist</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>  <span class="c1"># set adata.X to raw counts</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span>
-    <span class="n">adata_celltypist</span><span class="p">,</span> <span class="n">counts_per_cell_after</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">4</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span>
+    <span class="n">adata_celltypist</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">4</span>
 <span class="p">)</span>  <span class="c1"># normalize to 10,000 counts per cell</span>
 <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata_celltypist</span><span class="p">)</span>  <span class="c1"># log-transform</span>
 <span class="c1"># make .X dense instead of sparse, for compatibility with celltypist:</span>
@@ -1105,7 +1091,7 @@ We will not show an example of marker-based classifiers in this notebook, but en
 </div>
 </div>
 </div>
-<p>Let’s try out both the Immune_All_Low and Immune_All_High models (these annotate immune cell types finer annotation level (low) and coarser (high)):</p>
+<p>Let’s try out both the <code class="docutils literal notranslate"><span class="pre">Immune_All_Low</span></code> and <code class="docutils literal notranslate"><span class="pre">Immune_All_High</span></code> models (these annotate immune cell types finer annotation level (low) and coarser (high)):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_low</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;Immune_All_Low.pkl&quot;</span><span class="p">)</span>
@@ -1322,7 +1308,7 @@ We will not show an example of marker-based classifiers in this notebook, but en
 </div>
 </div>
 </div>
-<p>This dendrogram partly reflects prior knowledge on cell type relations (e.g. B cells largely clustering together), but we also observe some unexpected patterns: Tcm/Naive helper T cells cluster with erythroid cells and macrophages rather than with the other T cells. This is a red flag! Possibly, the Tcm/Naive helper T cell annotation are wrong.</p>
+<p>This dendrogram partly reflects prior knowledge on cell type relations (e.g. B cells largely clustering together), but we also observe some unexpected patterns: Tcm/Naive helper T cells cluster with erythroid cells and macrophages rather than with the other T cells. This is a red flag! Possibly, the Tcm/Naive helper T cell annotations are wrong.</p>
 <p>Now let’s take a look at our earlier manual annotations:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1412,7 +1398,7 @@ This underlines that automated annotation algorithms should be used with caution
 <section id="annotation-by-mapping-to-a-reference">
 <h3><span class="section-number">11.5.4. </span>Annotation by mapping to a reference<a class="headerlink" href="#annotation-by-mapping-to-a-reference" title="Link to this heading">#</a></h3>
 <p>A final way to annotate your data is based on mapping your data to an existing, annotated single-cell reference and then performing label transfer using the resulting joint embedding. This reference can for example be a single sample that you annotated manually before, after which you would like to transfer those annotations to the rest of your dataset. Alternatively, it can be a published and ideally well-curated existing reference. In this context we refer to the “new data”, i.e. the data to be mapped and annotated, as the “query”.<br>
-There are multiple existing methods that perform such “query-to-reference mapping”, including scArches <span id="id19">[<a class="reference internal" href="#id175" title="Mohammad Lotfollahi, Mohsen Naghipourfar, Malte D. Luecken, Matin Khajavi, Maren Büttner, Marco Wagenstetter, Žiga Avsec, Adam Gayoso, Nir Yosef, Marta Interlandi, Sergei Rybakov, Alexander V. Misharin, and Fabian J. Theis. Mapping single-cell data to reference atlases by transfer learning. Nature Biotechnology, 40(1):121-130, Jan 2022. URL: https://doi.org/10.1038/s41587-021-01001-7, doi:10.1038/s41587-021-01001-7.">Lotfollahi <em>et al.</em>, 2022</a>]</span>, Symphony <span id="id20">[<a class="reference internal" href="#id176" title="Joyce B. Kang, Aparna Nathan, Kathryn Weinand, Fan Zhang, Nghia Millard, Laurie Rumker, D. Branch Moody, Ilya Korsunsky, and Soumya Raychaudhuri. Efficient and precise single-cell reference atlas mapping with symphony. Nature Communications, 12(1):5890, Oct 2021. URL: https://doi.org/10.1038/s41467-021-25957-x, doi:10.1038/s41467-021-25957-x.">Kang <em>et al.</em>, 2021</a>]</span>, and Azimuth (Seurat) <span id="id21">[<a class="reference internal" href="#id177" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 184(13):3573-3587.e29, 2021. URL: https://www.sciencedirect.com/science/article/pii/S0092867421005833, doi:https://doi.org/10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span>. All of these methods enable you to map a new dataset to an existing reference without needing to reintegrate the data from the reference and without needing access to the full reference data.</p>
+There are multiple existing methods that perform such “query-to-reference mapping”, including scArches <span id="id19">[<a class="reference internal" href="#id176" title="Mohammad Lotfollahi, Mohsen Naghipourfar, Malte D. Luecken, Matin Khajavi, Maren Büttner, Marco Wagenstetter, Žiga Avsec, Adam Gayoso, Nir Yosef, Marta Interlandi, Sergei Rybakov, Alexander V. Misharin, and Fabian J. Theis. Mapping single-cell data to reference atlases by transfer learning. Nature Biotechnology, 40(1):121-130, Jan 2022. URL: https://doi.org/10.1038/s41587-021-01001-7, doi:10.1038/s41587-021-01001-7.">Lotfollahi <em>et al.</em>, 2022</a>]</span>, Symphony <span id="id20">[<a class="reference internal" href="#id177" title="Joyce B. Kang, Aparna Nathan, Kathryn Weinand, Fan Zhang, Nghia Millard, Laurie Rumker, D. Branch Moody, Ilya Korsunsky, and Soumya Raychaudhuri. Efficient and precise single-cell reference atlas mapping with symphony. Nature Communications, 12(1):5890, Oct 2021. URL: https://doi.org/10.1038/s41467-021-25957-x, doi:10.1038/s41467-021-25957-x.">Kang <em>et al.</em>, 2021</a>]</span>, and Azimuth (Seurat) <span id="id21">[<a class="reference internal" href="#id178" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 184(13):3573-3587.e29, 2021. URL: https://www.sciencedirect.com/science/article/pii/S0092867421005833, doi:https://doi.org/10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span>. All of these methods enable you to map a new dataset to an existing reference without needing to reintegrate the data from the reference and without needing access to the full reference data.</p>
 <p>As query-to-reference mapping involves embedding new data into an <strong>existing</strong> low-dimensional representation of the reference data, the dimensions and axes of that low-dimensional representation are largely pre-defined before learning from the query. Therefore, learning and incorporating unseen variation that might be present in the query (both new biological variation, e.g. unseen cell types or states and new technical variation, i.e. unseen batch effects that need to be removed) can be a challenge for these models. As a result, integration of the query data with the reference might not always be optimal and batch effects might not be fully removed from the joint query-reference embedding. However, as cell type label transfer does not necessarily require perfect integration but merely close proximity of identical cell types in the embedding, even an imperfect mapping can still be extremely helpful in annotating your data.</p>
 <p>scArches, which we will use as an example of reference-mapping-based label transfer, takes as its basis an existing (variational autoencoder-based) model that embeds the reference data in a low-dimensional, batch-corrected space. It then slightly extends that model to enable the mapping of an unseen dataset into the same “latent space” (i.e. the low-dimensional embedding). This model extension also enables the learning and removal of batch effects present in the mapped dataset.</p>
 <p>We will now show how to map data to a reference using scArches and use this mapping to perform label transfer from the reference to the new data (“query”).</p>
@@ -1442,7 +1428,7 @@ There are multiple existing methods that perform such “query-to-reference mapp
 </div>
 </div>
 </div>
-<p>The table has both gene names and gene ids. As gene ids are usually less subject to change over genome annotation versions, we will use those to subset our data. We will therefore set our row names for both our adata and the reference model features to gene_ids. Importantly, we have to make sure to also store the gene names for later use: these are much easier to understand than the gene ids.</p>
+<p>The table has both gene names and gene IDs. As gene IDs are usually less subject to change over genome annotation versions, we will use those to subset our data. We will therefore set our row names for both our adata and the reference model features to <code class="docutils literal notranslate"><span class="pre">gene_ids</span></code>. Importantly, we have to make sure to also store the gene names for later use: these are much easier to understand than the gene IDs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_to_map</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;gene_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_to_map</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span>
@@ -1565,7 +1551,7 @@ There are multiple existing methods that perform such “query-to-reference mapp
 </div>
 </div>
 </div>
-<p>Finally, this reference model used adata.obs[‘batch’] as our batch variable. We will therefore check that we have this set to one value for our entire sample:</p>
+<p>Finally, this reference model used <code class="docutils literal notranslate"><span class="pre">adata.obs['batch']</span></code> as our batch variable. We will therefore check that we have this set to one value for our entire sample:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_to_map_augmented</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
@@ -1579,14 +1565,14 @@ Categories (1, object): [&#39;12&#39;]
 </div>
 </div>
 </div>
-<p>Now let’s talk about our reference model. The better our reference model, the better our label transfer will perform. Using well-annotated reference that integrates many different datasets and that matches your data well (same organ, same single-cell technology etc.) is ideal: such models are trained on a variety of datasets and batches and are therefore expected to be more robust to batch effects. However, such references do not exist yet for all tissues. For this tutorial we will use a reference model trained on the bone marrow samples that we have been using throughout the book, excluding the sample that we will be mapping. The reference model is an scvi-model (used for data integration) that generates a low-dimensional, integrated embedding of the input data, see also the scvi-publication <span id="id22">[<a class="reference internal" href="#id180" title="Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. Nat. Methods, 15(12):1053–1058, December 2018.">Lopez <em>et al.</em>, 2018</a>]</span>. Note that this is a toy model generated for this tutorial and it should  not be used in other contexts.<br>
+<p>Now let’s talk about our reference model. The better our reference model, the better our label transfer will perform. Using well-annotated reference that integrates many different datasets and that matches your data well (same organ, same single-cell technology etc.) is ideal: such models are trained on a variety of datasets and batches and are therefore expected to be more robust to batch effects. However, such references do not exist yet for all tissues. For this tutorial we will use a reference model trained on the bone marrow samples that we have been using throughout the book, excluding the sample that we will be mapping. The reference model is an scvi-model (used for data integration) that generates a low-dimensional, integrated embedding of the input data, see also the scvi-publication <span id="id22">[<a class="reference internal" href="#id181" title="Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. Nat. Methods, 15(12):1053–1058, December 2018.">Lopez <em>et al.</em>, 2018</a>]</span>. Note that this is a toy model generated for this tutorial and it should  not be used in other contexts.<br>
 We will start by loading the model and passing it the adata which we want to map:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># loading model.pt from figshare</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./reference_model&quot;</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;./reference_model&quot;</span><span class="p">)</span>
-<span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./reference_model/model.pt&quot;</span><span class="p">):</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./reference_model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./reference_model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+<span class="k">elif</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./reference_model/model.pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span>
         <span class="s2">&quot;https://figshare.com/ndownloader/files/41436648&quot;</span><span class="p">,</span>
         <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;reference_model/model.pt&quot;</span><span class="p">,</span>
@@ -1621,7 +1607,7 @@ No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for
 <p>We will now update this reference model so that we can embed our own data (the “query”) in the same latent space as the reference. This requires training on our query data using scArches:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scarches_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">plan_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scarches_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">plan_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -1932,9 +1918,9 @@ Moreover, it has cell type labels in <code class="docutils literal notranslate">
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;transf_cell_type_certain&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">transf_cell_type</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">transf_cell_type_unc</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;transf_cell_type_certain&quot;</span>
-<span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">transf_cell_type_unc</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;transf_cell_type_certain&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Unknown&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2013,7 +1999,7 @@ Moreover, it has cell type labels in <code class="docutils literal notranslate">
 <a class="reference internal image-reference" href="../_images/df3934a9bb70154e260546b99315287412d034a31b5e6fca309f362f845b3dab.png"><img alt="../_images/df3934a9bb70154e260546b99315287412d034a31b5e6fca309f362f845b3dab.png" src="../_images/df3934a9bb70154e260546b99315287412d034a31b5e6fca309f362f845b3dab.png" style="width: 1039px; height: 352px;" /></a>
 </div>
 </div>
-<p>The uncertainty not only helps us identify regions where the algorithm is uncertain about which cell type a cell belongs to (e.g. because it falls in between two annotated phenotypes), but can also highlight unseen cell types or new cell states. For example, your reference might consist of healthy cells while your query could be from a diseased sample. The uncertainty score can then highlight disease-specific cell states, as they might not have neighbors from the reference that consistently come from a single cell type. Especially when your reference is based on a large set of datasets, the uncertainty score is useful to flag parts of the query data that could be interesting to look into. Reference-based label transfer thus not only helps you annotate your data, but can also speed up exploration and interpretation of your data. However, like any metric, these uncertainty scores are often not perfect and in some cases fail to highlight new cell types or states. For a more extensive discussion of uncertainty metrics, see e.g. <span id="id23">[<a class="reference internal" href="#id181" title="Jan Engelmann, Leon Hetzel, Giovanni Palla, Lisa Sikkema, Malte Luecken, and Fabian Theis. Uncertainty quantification for atlas-level cell type transfer. 2022. URL: https://arxiv.org/abs/2211.03793, doi:10.48550/ARXIV.2211.03793.">Engelmann <em>et al.</em>, 2022</a>]</span>.</p>
+<p>The uncertainty not only helps us identify regions where the algorithm is uncertain about which cell type a cell belongs to (e.g. because it falls in between two annotated phenotypes), but can also highlight unseen cell types or new cell states. For example, your reference might consist of healthy cells while your query could be from a diseased sample. The uncertainty score can then highlight disease-specific cell states, as they might not have neighbors from the reference that consistently come from a single cell type. Especially when your reference is based on a large set of datasets, the uncertainty score is useful to flag parts of the query data that could be interesting to look into. Reference-based label transfer thus not only helps you annotate your data, but can also speed up exploration and interpretation of your data. However, like any metric, these uncertainty scores are often not perfect and in some cases fail to highlight new cell types or states. For a more extensive discussion of uncertainty metrics, see e.g. <span id="id23">[<a class="reference internal" href="#id182" title="Jan Engelmann, Leon Hetzel, Giovanni Palla, Lisa Sikkema, Malte Luecken, and Fabian Theis. Uncertainty quantification for atlas-level cell type transfer. 2022. URL: https://arxiv.org/abs/2211.03793, doi:10.48550/ARXIV.2211.03793.">Engelmann <em>et al.</em>, 2022</a>]</span>.</p>
 <p>Like with any of the methods discussed in this notebook, the quality of the transferred annotations depends on the quality of the “training data” (in this case the reference) and its annotations, the quality of the model, and the match of your own data with the training data!</p>
 <p>The quality of the transferred annotations should therefore always be validated with manual inspection using marker gene expression and refinement of the initial annotations might be needed.</p>
 <p>Finally, store your adata object if wanted:</p>
@@ -2030,89 +2016,89 @@ Moreover, it has cell type labels in <code class="docutils literal notranslate">
 <h2><span class="section-number">11.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id24">
 <div role="list" class="citation-list">
-<div class="citation" id="id166" role="doc-biblioentry">
+<div class="citation" id="id167" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>annoAMC+19<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id10">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
 <p>Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. <em>Genome Biology</em>, 20(1):194, Sep 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-019-1795-z">https://doi.org/10.1186/s13059-019-1795-z</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-019-1795-z">doi:10.1186/s13059-019-1795-z</a>.</p>
 </div>
-<div class="citation" id="id163" role="doc-biblioentry">
+<div class="citation" id="id164" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">annoCXJ+22</a><span class="fn-bracket">]</span></span>
 <p>C. Domínguez Conde, C. Xu, L. B. Jarvis, D. B. Rainbow, S. B. Wells, T. Gomes, S. K. Howlett, O. Suchanek, K. Polanski, H. W. King, L. Mamanova, N. Huang, P. A. Szabo, L. Richardson, L. Bolt, E. S. Fasouli, K. T. Mahbubani, M. Prete, L. Tuck, N. Richoz, Z. K. Tuong, L. Campos, H. S. Mousa, E. J. Needham, S. Pritchard, T. Li, R. Elmentaite, J. Park, E. Rahmani, D. Chen, D. K. Menon, O. A. Bayraktar, L. K. James, K. B. Meyer, N. Yosef, M. R. Clatworthy, P. A. Sims, D. L. Farber, K. Saeb-Parsy, J. L. Jones, and S. A. Teichmann. Cross-tissue immune cell analysis reveals tissue-specific features in humans. <em>Science</em>, 376(6594):eabl5197, 2022. URL: <a class="reference external" href="https://www.science.org/doi/abs/10.1126/science.abl5197">https://www.science.org/doi/abs/10.1126/science.abl5197</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/science.abl5197">arXiv:https://www.science.org/doi/pdf/10.1126/science.abl5197</a>, <a class="reference external" href="https://doi.org/10.1126/science.abl5197">doi:10.1126/science.abl5197</a>.</p>
 </div>
-<div class="citation" id="id181" role="doc-biblioentry">
+<div class="citation" id="id182" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">annoEHP+22</a><span class="fn-bracket">]</span></span>
 <p>Jan Engelmann, Leon Hetzel, Giovanni Palla, Lisa Sikkema, Malte Luecken, and Fabian Theis. Uncertainty quantification for atlas-level cell type transfer. 2022. URL: <a class="reference external" href="https://arxiv.org/abs/2211.03793">https://arxiv.org/abs/2211.03793</a>, <a class="reference external" href="https://doi.org/10.48550/ARXIV.2211.03793">doi:10.48550/ARXIV.2211.03793</a>.</p>
 </div>
-<div class="citation" id="id167" role="doc-biblioentry">
+<div class="citation" id="id168" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">annoFGS+20</a><span class="fn-bracket">]</span></span>
 <p>Rui Fu, Austin E. Gillen, Ryan M. Sheridan, Chengzhe Tian, Michelle Daya, Yue Hao, Jay R. Hesselberth, and Kent A. Riemondy. Clustifyr: an r package for automated single-cell RNA sequencing cluster classification. <em>F1000Research</em>, 9:223, July 2020. URL: <a class="reference external" href="https://doi.org/10.12688/f1000research.22969.2">https://doi.org/10.12688/f1000research.22969.2</a>, <a class="reference external" href="https://doi.org/10.12688/f1000research.22969.2">doi:10.12688/f1000research.22969.2</a>.</p>
 </div>
-<div class="citation" id="id177" role="doc-biblioentry">
+<div class="citation" id="id178" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">annoHHAN+21</a><span class="fn-bracket">]</span></span>
 <p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 184(13):3573–3587.e29, 2021. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0092867421005833">https://www.sciencedirect.com/science/article/pii/S0092867421005833</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cell.2021.04.048">doi:https://doi.org/10.1016/j.cell.2021.04.048</a>.</p>
 </div>
-<div class="citation" id="id168" role="doc-biblioentry">
+<div class="citation" id="id169" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">annoHZ21</a><span class="fn-bracket">]</span></span>
 <p>Yixuan Huang and Peng Zhang. Evaluation of machine learning approaches for cell-type identification from single-cell transcriptomics data. <em>Briefings in Bioinformatics</em>, February 2021. URL: <a class="reference external" href="https://doi.org/10.1093/bib/bbab035">https://doi.org/10.1093/bib/bbab035</a>, <a class="reference external" href="https://doi.org/10.1093/bib/bbab035">doi:10.1093/bib/bbab035</a>.</p>
 </div>
-<div class="citation" id="id161" role="doc-biblioentry">
+<div class="citation" id="id162" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">annoKLMST+22</a><span class="fn-bracket">]</span></span>
 <p>Preetish Kadur Lakshminarasimha Murthy, Vishwaraj Sontake, Aleksandra Tata, Yoshihiko Kobayashi, Lauren Macadlo, Kenichi Okuda, Ansley S. Conchola, Satoko Nakano, Simon Gregory, Lisa A. Miller, Jason R. Spence, John F. Engelhardt, Richard C. Boucher, Jason R. Rock, Scott H. Randell, and Purushothama Rao Tata. Human distal lung maps and lineage hierarchies reveal a bipotent progenitor. <em>Nature</em>, 604(7904):111–119, Apr 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-022-04541-3">https://doi.org/10.1038/s41586-022-04541-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-022-04541-3">doi:10.1038/s41586-022-04541-3</a>.</p>
 </div>
-<div class="citation" id="id176" role="doc-biblioentry">
+<div class="citation" id="id177" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">annoKNW+21</a><span class="fn-bracket">]</span></span>
 <p>Joyce B. Kang, Aparna Nathan, Kathryn Weinand, Fan Zhang, Nghia Millard, Laurie Rumker, D. Branch Moody, Ilya Korsunsky, and Soumya Raychaudhuri. Efficient and precise single-cell reference atlas mapping with symphony. <em>Nature Communications</em>, 12(1):5890, Oct 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-25957-x">https://doi.org/10.1038/s41467-021-25957-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-25957-x">doi:10.1038/s41467-021-25957-x</a>.</p>
 </div>
-<div class="citation" id="id180" role="doc-biblioentry">
+<div class="citation" id="id181" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">annoLRC+18</a><span class="fn-bracket">]</span></span>
 <p>Romain Lopez, Jeffrey Regier, Michael B Cole, Michael I Jordan, and Nir Yosef. Deep generative modeling for single-cell transcriptomics. <em>Nat. Methods</em>, 15(12):1053–1058, December 2018.</p>
 </div>
-<div class="citation" id="id175" role="doc-biblioentry">
+<div class="citation" id="id176" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">annoLNL+22</a><span class="fn-bracket">]</span></span>
 <p>Mohammad Lotfollahi, Mohsen Naghipourfar, Malte D. Luecken, Matin Khajavi, Maren Büttner, Marco Wagenstetter, Žiga Avsec, Adam Gayoso, Nir Yosef, Marta Interlandi, Sergei Rybakov, Alexander V. Misharin, and Fabian J. Theis. Mapping single-cell data to reference atlases by transfer learning. <em>Nature Biotechnology</em>, 40(1):121–130, Jan 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-01001-7">https://doi.org/10.1038/s41587-021-01001-7</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-01001-7">doi:10.1038/s41587-021-01001-7</a>.</p>
 </div>
-<div class="citation" id="id165" role="doc-biblioentry">
+<div class="citation" id="id166" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>annoPRojoAriasSB21<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id12">2</a>)</span>
 <p>Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. <em>Computational and Structural Biotechnology Journal</em>, 19:961–969, 2021. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S2001037021000192">https://www.sciencedirect.com/science/article/pii/S2001037021000192</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.csbj.2021.01.015">doi:https://doi.org/10.1016/j.csbj.2021.01.015</a>.</p>
 </div>
-<div class="citation" id="id178" role="doc-biblioentry">
+<div class="citation" id="id179" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">annoPST19</a><span class="fn-bracket">]</span></span>
 <p>Hannah A. Pliner, Jay Shendure, and Cole Trapnell. Supervised classification enables rapid annotation of cell atlases. <em>Nature Methods</em>, 16(10):983–986, Oct 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-019-0535-3">https://doi.org/10.1038/s41592-019-0535-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-019-0535-3">doi:10.1038/s41592-019-0535-3</a>.</p>
 </div>
-<div class="citation" id="id164" role="doc-biblioentry">
+<div class="citation" id="id165" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">annoPM22</a><span class="fn-bracket">]</span></span>
 <p>Jeffrey M. Pullin and Davis J. McCarthy. A comparison of marker gene selection methods for single-cell rna sequencing data. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241">https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/10/2022.05.09.490241.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.05.09.490241">doi:10.1101/2022.05.09.490241</a>.</p>
 </div>
-<div class="citation" id="id173" role="doc-biblioentry">
+<div class="citation" id="id174" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">annoSLC+22</a><span class="fn-bracket">]</span></span>
 <p>Kaibin Shi, Handong Li, Ting Chang, Wenyan He, Ying Kong, Caiyun Qi, Ran Li, Huachen Huang, Zhibao Zhu, Pei Zheng, Zhe Ruan, Jie Zhou, Fu-Dong Shi, and Qiang Liu. Bone marrow hematopoiesis drives multiple sclerosis progression. <em>Cell</em>, 185(13):2234–2247.e17, 2022. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0092867422006511">https://www.sciencedirect.com/science/article/pii/S0092867422006511</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cell.2022.05.020">doi:https://doi.org/10.1016/j.cell.2022.05.020</a>.</p>
 </div>
-<div class="citation" id="id170" role="doc-biblioentry">
+<div class="citation" id="id171" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">annoSRamirezSuasteguiS+23</a><span class="fn-bracket">]</span></span>
 <p>Lisa Sikkema, Ciro Ram\'ırez-Suástegui, Daniel C. Strobl, Tessa E. Gillett, Luke Zappia, Elo Madissoon, Nikolay S. Markov, Laure-Emmanuelle Zaragosi, Yuge Ji, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Martin Banchero, Christophe Bécavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-i Chung, Antoine Collin, Aurore C. A. Gay, Janine Gote-Schniering, Baharak Hooshiar Kashani, Kemal Inecik, Manu Jain, Theodore S. Kapellos, Tessa M. Kole, Sylvie Leroy, Christoph H. Mayr, Amanda J. Oliver, Michael von Papen, Lance Peter, Chase J. Taylor, Thomas Walzthoeni, Chuan Xu, Linh T. Bui, Carlo De Donno, Leander Dony, Alen Faiz, Minzhe Guo, Austin J. Gutierrez, Lukas Heumos, Ni Huang, Ignacio L. Ibarra, Nathan D. Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-López, Kyle J. Travaglini, Anna Wilbrey-Clark, Kaylee B. Worlock, Masahiro Yoshida, Yuexin Chen, James S. Hagood, Ahmed Agami, Peter Horvath, Joakim Lundeberg, Charles-Hugo Marquette, Gloria Pryhuber, Chistos Samakovlis, Xin Sun, Lorraine B. Ware, Kun Zhang, Maarten van den Berge, Yohan Bossé, Tushar J. Desai, Oliver Eickelberg, Naftali Kaminski, Mark A. Krasnow, Robert Lafyatis, Marko Z. Nikolic, Joseph E. Powell, Jayaraj Rajagopal, Mauricio Rojas, Orit Rozenblatt-Rosen, Max A. Seibold, Dean Sheppard, Douglas P. Shepherd, Don D. Sin, Wim Timens, Alexander M. Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E. Banovich, Pascal Barbry, Thu Elizabeth Duong, Christine S. Falk, Kerstin B. Meyer, Jonathan A. Kropski, Dana Pe'er, Herbert B. Schiller, Purushothama Rao Tata, Joachim L. Schultze, Sara A. Teichmann, Alexander V. Misharin, Martijn C. Nawijn, Malte D. Luecken, and Fabian J. Theis and. An integrated cell atlas of the lung in health and disease. <em>Nature Medicine</em>, June 2023. URL: <a class="reference external" href="https://doi.org/10.1038/s41591-023-02327-2">https://doi.org/10.1038/s41591-023-02327-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41591-023-02327-2">doi:10.1038/s41591-023-02327-2</a>.</p>
 </div>
-<div class="citation" id="id172" role="doc-biblioentry">
+<div class="citation" id="id173" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">annoTWvE19</a><span class="fn-bracket">]</span></span>
 <p>V. A. Traag, L. Waltman, and N. J. van Eck. From louvain to leiden: guaranteeing well-connected communities. <em>Scientific Reports</em>, 9(1):5233, Mar 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">https://doi.org/10.1038/s41598-019-41695-z</a>, <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">doi:10.1038/s41598-019-41695-z</a>.</p>
 </div>
-<div class="citation" id="id162" role="doc-biblioentry">
+<div class="citation" id="id163" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">annoWRY16</a><span class="fn-bracket">]</span></span>
 <p>Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. <em>Nature Biotechnology</em>, 34(11):1145–1160, Nov 2016. URL: <a class="reference external" href="https://doi.org/10.1038/nbt.3711">https://doi.org/10.1038/nbt.3711</a>, <a class="reference external" href="https://doi.org/10.1038/nbt.3711">doi:10.1038/nbt.3711</a>.</p>
 </div>
-<div class="citation" id="id174" role="doc-biblioentry">
+<div class="citation" id="id175" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">annoWSF+98</a><span class="fn-bracket">]</span></span>
 <p>L C Wang, W Swat, Y Fujiwara, L Davidson, J Visvader, F Kuo, F W Alt, D G Gilliland, T R Golub, and S H Orkin. The TEL/ETV6 gene is required specifically for hematopoiesis in the bone marrow. <em>Genes Dev.</em>, 12(15):2392–2402, August 1998.</p>
 </div>
-<div class="citation" id="id171" role="doc-biblioentry">
+<div class="citation" id="id172" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">annoZen22</a><span class="fn-bracket">]</span></span>
 <p>Hongkui Zeng. What is a cell type and how to define it? <em>Cell</em>, 185(15):2739–2755, 2022. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0092867422007838">https://www.sciencedirect.com/science/article/pii/S0092867422007838</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cell.2022.06.031">doi:https://doi.org/10.1016/j.cell.2022.06.031</a>.</p>
 </div>
-<div class="citation" id="id179" role="doc-biblioentry">
+<div class="citation" id="id180" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">annoZOFlanaganC+19</a><span class="fn-bracket">]</span></span>
 <p>Allen W. Zhang, Ciara O'Flanagan, Elizabeth A. Chavez, Jamie L. P. Lim, Nicholas Ceglia, Andrew McPherson, Matt Wiens, Pascale Walters, Tim Chan, Brittany Hewitson, Daniel Lai, Anja Mottok, Clementine Sarkozy, Lauren Chong, Tomohiro Aoki, Xuehai Wang, Andrew P. Weng, Jessica N. McAlpine, Samuel Aparicio, Christian Steidl, Kieran R. Campbell, and Sohrab P. Shah. Probabilistic cell-type assignment of single-cell rna-seq for tumor microenvironment profiling. <em>Nature Methods</em>, 16(10):1007–1015, Oct 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-019-0529-1">https://doi.org/10.1038/s41592-019-0529-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-019-0529-1">doi:10.1038/s41592-019-0529-1</a>.</p>
 </div>
-<div class="citation" id="id169" role="doc-biblioentry">
+<div class="citation" id="id170" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">annoZKT19</a><span class="fn-bracket">]</span></span>
 <p>Jesse M. Zhang, Govinda M. Kamath, and David N. Tse. Valid post-clustering differential analysis for single-cell rna-seq. <em>Cell Systems</em>, 9(4):383–392.e6, 2019. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S2405471219302698">https://www.sciencedirect.com/science/article/pii/S2405471219302698</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cels.2019.07.012">doi:https://doi.org/10.1016/j.cels.2019.07.012</a>.</p>
 </div>
@@ -2193,7 +2179,8 @@ Moreover, it has cell type labels in <code class="docutils literal notranslate">
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2278,8 +2265,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

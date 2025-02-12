@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
@@ -69,6 +72,7 @@
     <link rel="next" title="1. Prior art" href="introduction/prior_art.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -84,19 +88,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -104,7 +97,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -112,8 +104,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -131,7 +123,8 @@
       
         
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -161,21 +154,17 @@
     
     
     <img src="_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -283,9 +272,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -446,24 +440,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -490,6 +476,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-book-covers">What this book covers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-book-does-not-cover">What this book does not cover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-should-read-this-book">Who should read this book</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-book">Structure of the book</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peer-review">Peer-review</a></li>
@@ -522,48 +509,88 @@ Interested in contributing? Please have a look at <a class="github reference ext
 </div>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
-<p>The human body is a complex machine that heavily relies on the basic units of life - cells. Cells can be separated into different types, which even undergo transitions during development, under disease or when regenerating. This cellular heterogeneity is reflected in their morphology, function, and gene expression profiles. Strong disruptions causing deregulations of the cell types influence the entire system causing potentially even serious diseases like cancer<span id="id1">[<a class="reference internal" href="#id3" title="Iain C. Macaulay, Chris P. Ponting, and Thierry Voet. Single-cell multiomics: multiple measurements from single cells. Trends in genetics : TIG, 33(2):155-168, Feb 2017. S0168-9525(16)30169-X[PII]. URL: https://doi.org/10.1016/j.tig.2016.12.003, doi:10.1016/j.tig.2016.12.003.">Macaulay <em>et al.</em>, 2017</a>]</span>. It is therefore vital to understand how cells behave in a normal state and under perturbations to improve our understanding of the entire cellular systems.</p>
-<p>This monumental task is approached in different ways of which the most promising one is to profile cells at the individual level. So far, each cells’ transcriptome was primarily examined in a process known as single-cell RNA sequencing. With recent advances in single-cell genomics, it is now possible to enrich the transcriptome information with spatial, chromatin accessibility or protein information. These advances generate not only insight into complex regulatory mechanisms, but also go along with additional complexity for data analysts.</p>
-<p>Nowadays, data analysts are facing a vast analysis tool landscape with a collection of more than 1000 computational single-cell analysis methods. It is becoming increasingly challenging to navigate this large range of different tools to generate sound results which are at the forefront of science.</p>
+<p>The human body is a complex machine that heavily relies on the basic units of life - cells.
+These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes.
+This cellular heterogeneity manifests in their structure, function, and gene expression profiles.
+Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer <span id="id1">[<a class="reference internal" href="#id4" title="Iain C. Macaulay, Chris P. Ponting, and Thierry Voet. Single-cell multiomics: multiple measurements from single cells. Trends in genetics : TIG, 33(2):155-168, Feb 2017. S0168-9525(16)30169-X[PII]. URL: https://doi.org/10.1016/j.tig.2016.12.003, doi:10.1016/j.tig.2016.12.003.">Macaulay <em>et al.</em>, 2017</a>]</span>.
+Therefore, understanding how cells behave under normal and perturbed states is critical for deepening our understanding of entire cellular systems.</p>
+<p>To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level.
+Traditionally, each cells’ transcriptome was primarily examined in a process known as single-cell RNA sequencing. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information.
+These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.</p>
+<p>Currently, analysts are faced with an overwhelming array of computational tools - over 1,700 methods dedicated to single-cell RNA-seq alone <span id="id2">[<a class="reference internal" href="#id5" title="Luke Zappia and Fabian J. Theis. Over 1000 tools reveal trends in the single-cell rna-seq analysis landscape. Genome Biology, 22(1):301, Oct 2021. URL: https://doi.org/10.1186/s13059-021-02519-4, doi:10.1186/s13059-021-02519-4.">Zappia and Theis, 2021</a>]</span>.
+Navigating this extensive landscape to produce reliable, cutting-edge results poses a significant challenge.</p>
 </section>
 <section id="what-this-book-covers">
 <h2>What this book covers<a class="headerlink" href="#what-this-book-covers" title="Link to this heading">#</a></h2>
-<p>The goal of this book is to teach newcomers and advanced professionals alike, the <strong>best practices</strong> of single-cell sequencing analysis.
-This book will teach you the most common analysis steps ranging from preprocessing to visualization to statistical evaluation and beyond. A read through the entire book will enable you to analyze unimodal and multimodal single-cell sequencing data on your own. The guidelines and recommendations in this book are not only tailored to teach you how to do single-cell analysis in general, but how to do them right. We base our suggestions on external benchmarks and reviews whenever possible. Finally, we consider this book to be a living resource for single-cell data analysts which can easily be updated when the recommendations change.</p>
+<p>This book aims to guide both beginners and experienced professionals in <strong>best practices</strong> of single-cell sequencing analysis.
+It provides a comprehensive overview of essential analytical steps, from preprocessing to visualization and statistical evaluation and beyond.
+By following this book, you will acquire the skills to independently analyze unimodal and multimodal single-cell sequencing data.</p>
+<p>The recommendations presented are grounded in external benchmarks and reviews wherever possible, ensuring the approaches taught are both effective and reliable.
+Additionally, this book is meant to be a living resource, constantly updating to keep up with new discoveries and the latest best practices.</p>
 </section>
 <section id="what-this-book-does-not-cover">
 <h2>What this book does not cover<a class="headerlink" href="#what-this-book-does-not-cover" title="Link to this heading">#</a></h2>
-<p>This book does not cover fundamental basics of biology or computer science, including programming. Furthermore, this book does not function as a complete collection of all analysis tools designed for a specific tasks. We especially highlight externally verified tools, which work best for the data at hand or methods which proved to be community-verified best practices. Whenever this is not possible, we only recommend workflows based on our extensive experience.</p>
+<p>This book does not cover fundamental concepts of biology or computer science, including basic programming skills.
+Nor does it serve as an exhaustive catalog of all available tools for specific tasks.
+Instead, it emphasizes well-validated methods that have been externally benchmarked or recognized as community standards.
+When such external validation is unavailable, our recommendations are only based on our extensive practical experience.</p>
+</section>
+<section id="who-should-read-this-book">
+<h2>Who should read this book<a class="headerlink" href="#who-should-read-this-book" title="Link to this heading">#</a></h2>
+<p>This book is designed for a diverse audience with an interest in single-cell data analysis, including <strong>biologists</strong> looking to gain practical data analysis skills, <strong>computer scientists</strong> seeking to explore the biological underpinnings and computational challenges of single-cell data, and <strong>bioinformaticians</strong> aiming to refine their knowledge or stay updated with best practices.
+Whether you’re a beginner looking to grasp the basics or an experienced analyst aiming to refine your skills and adopt efficient workflows, this book will guide you through the complexities of single-cell analysis.</p>
 </section>
 <section id="structure-of-the-book">
 <h2>Structure of the book<a class="headerlink" href="#structure-of-the-book" title="Link to this heading">#</a></h2>
-<p>Each chapter in this book corresponds to a different stage of a typical single-cell data analysis project. Generally, an analysis workflow would follow the order of the chapters with some flexibility concerning downstream analysis objectives. All of our chapters feature extensive lists of references, and we encourage readers to consult the primary sources for our statements. Our summaries cannot always capture the full reasoning for our recommendations, although we try to provide the required background whenever possible.</p>
+<p>Each chapter corresponds to a distinct phase of a typical single-cell data analysis project.
+While an analysis workflow should generally follow the order of the chapters, flexibility is encouraged depending on specific downstream analysis objectives.
+Each chapter is supplemented with extensive references, and readers are encouraged to consult these primary sources for a deeper understanding.
+Although we strive to provide comprehensive background information, our summaries and the <a class="reference internal" href="glossary.html"><span class="std std-doc">glossary</span></a> may not capture the full scope of reasoning behind every recommendation.</p>
 </section>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
-<p>Bioinformatics is a challenging research field for newcomers as it requires knowledge in both biology and computer science. Single-cell is even more demanding as it combines many subfields and datasets are often large. This book cannot cover all prerequisites for computational single-cell analysis, we therefore recommend a coarse overview of various topics below. The following links might increase your learning experience throughout the book:</p>
+<p>Bioinformatics is inherently multidisciplinary, requiring knowledge of both biology and computer science.
+Single-cell analysis is particularly demanding, as it integrates multiple subfields and often involves large datasets.
+While this book cannot cover all the necessary foundational knowledge for computational single-cell analysis, we recommend the following resources to enhance your learning experience:</p>
 <ul class="simple">
-<li><p>Basic Python programming. You should be familiar with control flow (loops, conditional statements, …), basic data structures (lists, dictionaries, sets) and core functionality of the most used libraries such as Pandas and Numpy. If you are new to programming and Python we can highly recommend the free <a class="reference external" href="https://automatetheboringstuff.com/">Automate the boring stuff with Python</a> book.</p></li>
-<li><p>Basics of the AnnData and scanpy packages are beneficial, but not absolutely required. This book covers AnnData in sufficient detail to follow along and introduces the workflow of working with scanpy. However, we are not able to introduce all of scanpy’s functionalities in the course of this book. If you are new to scanpy we strongly suggest to work through the <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/tutorials.html">scanpy tutorials</a> with the occasional glance to the <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/api.html">scanpy API reference</a>.</p></li>
-<li><p>If you are interested in multimodal data analysis, the basics of muon and MuData are recommended. This book covers MuData in greater detail, but only briefly introduces muon analogously to AnnData and scanpy. The excellent <a class="reference external" href="https://muon-tutorials.readthedocs.io/en/latest/">muon tutorials</a> serve as a great introduction to multimodal data analysis with muon.</p></li>
-<li><p>Basic R programming. Familiarity with control flow and basic data structures suffices. If you are new to programming and R we recommend the free <a class="reference external" href="https://r4ds.had.co.nz/">R for data science</a> book.</p></li>
-<li><p>Basics of biology. While we roughly introduce the generation of the data, we will not cover the fundamentals of <a class="reference internal" href="glossary.html#term-DNA"><span class="xref std std-term">DNA</span></a>, RNA and proteins. If you are completely new to molecular biology in general, it might be advisable to work through <em>Molecular Biology of the Cell</em> by Bruce Alberts et al.</p></li>
+<li><p><strong>Basic Python programming</strong>: Familiarity with control flow (e.g., loops, conditional statements), basic data structures (e.g., lists, dictionaries, sets), and key libraries such as Pandas and Numpy is essential.
+Newcomers can benefit from the free book <a class="reference external" href="https://automatetheboringstuff.com/">Automate the boring stuff with Python</a>.</p></li>
+<li><p><strong>AnnData and Scanpy</strong>: While prior experience with these tools is helpful, it is not strictly required.
+This book provides a detailed introduction to AnnData and outlines the workflow for working with Scanpy.
+However, it does not cover the full range of Scanpy’s functionalities. To deepen your understanding, we recommend exploring the <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/tutorials.html">scanpy tutorials</a> and referring to the <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/api.html">scanpy API reference</a> as needed.</p></li>
+<li><p><strong>Multimodal Data Analysis</strong>: For readers who have interest in multimodal data analysis, understanding tools like <a class="reference internal" href="glossary.html#term-muon"><span class="xref std std-term">muon</span></a> and MuData is beneficial.
+The <a class="reference external" href="https://muon-tutorials.readthedocs.io/en/latest/">muon tutorials</a> provide a solid introduction to this field.</p></li>
+<li><p><strong>Basic R Programming</strong>: Knowledge of control flow and basic data structures suffices.
+New learners can refer to <a class="reference external" href="https://r4ds.had.co.nz/">R for data science</a> for a comprehensive introduction.</p></li>
+<li><p><strong>Basic Biology</strong>: While this book offers a rough overview of data generation, it does not cover fundamental topics like <a class="reference internal" href="glossary.html#term-DNA"><span class="xref std std-term">DNA</span></a>, RNA, and proteins.
+<em>Molecular Biology of the Cell</em> by Bruce Alberts et al. is a recommended resource for those new to molecular biology.</p></li>
 </ul>
 </section>
 <section id="peer-review">
 <h2>Peer-review<a class="headerlink" href="#peer-review" title="Link to this heading">#</a></h2>
-<p>Although most of our chapters have been reviewed by multiple authors and the editors of this book and external experts, this book has not been officially peer-reviewed. We therefore strongly encourage readers to review our chapters and to kindly provide constructive feedback. We are more than happy to adapt, improve or overhaul the content if necessary.</p>
+<p>Although the content has been reviewed by multiple authors, editors, and external experts, this book has not undergone formal peer review.
+We kindly encourage you to provide constructive feedback to help refine and improve the material.
+To share your thoughts:</p>
+<ol class="arabic simple">
+<li><p><strong>Open an Issue</strong>: You can open an issue on <a class="reference external" href="https://github.com/theislab/single-cell-best-practices">our GitHub repository</a> for any suggestions, questions, or clarifications you have.</p></li>
+<li><p><strong>Be Specific</strong>: When providing feedback, please be as specific as possible.
+For example, if you have a suggestion for improving a section, point out the exact part and explain why you think it can be enhanced.</p></li>
+<li><p><strong>Provide Sources</strong>: If applicable, we encourage you to provide sources or references to support your feedback or suggestions.
+This helps ensure the material stays accurate and up to date.</p></li>
+<li><p><strong>Discuss with the Community</strong>: Feel free to comment on existing issues to join ongoing discussions.
+This can help us refine the content based on community input.</p></li>
+</ol>
 </section>
 <section id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Link to this heading">#</a></h2>
-<p>If you found our content helpful for your research article please cite it as:</p>
+<p>If you found our content helpful for your research, please cite it as:</p>
 <blockquote>
 <div><p>Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). <a class="reference external" href="https://doi.org/10.1038/s41576-023-00586-w">https://doi.org/10.1038/s41576-023-00586-w</a></p>
 </div></blockquote>
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
-<p>We would like to invite the community to further improve the tutorial and the teaching material.
+<p>We invite the community to contribute to the ongoing improvement of this tutorial and teaching material.
 Please read <a class="reference external" href="https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md">contributing</a> for further instructions.</p>
 <p>In case of questions or problems, please get in touch by posting an issue in this repository.</p>
 </section>
@@ -573,7 +600,12 @@ Please read <a class="reference external" href="https://github.com/theislab/sing
 </section>
 <section id="contact-us">
 <h2>Contact us<a class="headerlink" href="#contact-us" title="Link to this heading">#</a></h2>
-<p>You can report issues and requests in our <a class="reference external" href="https://github.com/theislab/single-cell-best-practices/issues">issue tracker</a>. For speaking engagements or collaborations, send an email at anna DOT schaar AT helmholtz-munich DOT de or lukas DOT heumos AT helmholtz-munich DOT de.</p>
+<p>You can report issues and requests in our <a class="reference external" href="https://github.com/theislab/single-cell-best-practices/issues">issue tracker</a>.</p>
+<p>For inquiries, speaking engagements, or collaboration opportunities, please email:</p>
+<ul class="simple">
+<li><p>Anna Schaar: <a class="reference external" href="mailto:anna&#46;schaar&#37;&#52;&#48;helmholtz-munich&#46;de">anna<span>&#46;</span>schaar<span>&#64;</span>helmholtz-munich<span>&#46;</span>de</a></p></li>
+<li><p>Lukas Heumos: <a class="reference external" href="mailto:lukas&#46;heumos&#37;&#52;&#48;helmholtz-munich&#46;de">lukas<span>&#46;</span>heumos<span>&#64;</span>helmholtz-munich<span>&#46;</span>de</a></p></li>
+</ul>
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
@@ -581,11 +613,15 @@ Please read <a class="reference external" href="https://github.com/theislab/sing
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<div class="docutils container" id="id2">
+<div class="docutils container" id="id3">
 <div role="list" class="citation-list">
-<div class="citation" id="id3" role="doc-biblioentry">
+<div class="citation" id="id4" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">MPV17</a><span class="fn-bracket">]</span></span>
 <p>Iain C. Macaulay, Chris P. Ponting, and Thierry Voet. Single-cell multiomics: multiple measurements from single cells. <em>Trends in genetics : TIG</em>, 33(2):155–168, Feb 2017. S0168-9525(16)30169-X[PII]. URL: <a class="reference external" href="https://doi.org/10.1016/j.tig.2016.12.003">https://doi.org/10.1016/j.tig.2016.12.003</a>, <a class="reference external" href="https://doi.org/10.1016/j.tig.2016.12.003">doi:10.1016/j.tig.2016.12.003</a>.</p>
+</div>
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">ZT21</a><span class="fn-bracket">]</span></span>
+<p>Luke Zappia and Fabian J. Theis. Over 1000 tools reveal trends in the single-cell rna-seq analysis landscape. <em>Genome Biology</em>, 22(1):301, Oct 2021. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-021-02519-4">https://doi.org/10.1186/s13059-021-02519-4</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02519-4">doi:10.1186/s13059-021-02519-4</a>.</p>
 </div>
 </div>
 </div>
@@ -670,7 +706,8 @@ Please read <a class="reference external" href="https://github.com/theislab/sing
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -682,6 +719,7 @@ Please read <a class="reference external" href="https://github.com/theislab/sing
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-book-covers">What this book covers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-book-does-not-cover">What this book does not cover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-should-read-this-book">Who should read this book</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-book">Structure of the book</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peer-review">Peer-review</a></li>
@@ -746,8 +784,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

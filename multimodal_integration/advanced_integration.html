@@ -16,19 +16,21 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -37,10 +39,11 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -68,6 +71,7 @@
     <link rel="prev" title="45. Paired integration" href="paired_integration.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,19 +87,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -103,7 +96,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -111,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -128,7 +120,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -158,21 +151,17 @@
     
     
     <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
@@ -280,9 +269,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -443,24 +437,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -532,25 +518,19 @@ document.write(`
 <h2><span class="section-number">46.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scglue</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">anndata</span>
-<span class="kn">import</span> <span class="nn">multigrate</span> <span class="k">as</span> <span class="nn">mtg</span>
-<span class="kn">import</span> <span class="nn">scvi</span>
-<span class="kn">from</span> <span class="nn">scvi.model</span> <span class="kn">import</span> <span class="n">TOTALVI</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">import</span> <span class="nn">rpy2.rinterface_lib.callbacks</span>
-<span class="kn">import</span> <span class="nn">anndata2ri</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
-<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">pandas2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multigrate</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mtg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rpy2.rinterface_lib.callbacks</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scglue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rpy2.robjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">pandas2ri</span><span class="p">,</span> <span class="n">r</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scvi.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOTALVI</span>
 
 <span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface_lib</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
@@ -559,7 +539,7 @@ document.write(`
 
 <span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 </pre></div>
@@ -603,7 +583,7 @@ set.seed(123)
 </section>
 <section id="prepare-data">
 <h2><span class="section-number">46.3. </span>Prepare data<a class="headerlink" href="#prepare-data" title="Link to this heading">#</a></h2>
-<p>We continue using Multiome and CITE-seq data from the NeurIPS 2021 single cell competition <span id="id1">[<a class="reference internal" href="#id527" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>.</p>
+<p>We continue using Multiome and CITE-seq data from the NeurIPS 2021 single cell competition <span id="id1">[<a class="reference internal" href="#id528" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>.</p>
 <p>We will need:</p>
 <ul class="simple">
 <li><p>RNA-seq part of the multiome and ADT from the CITE-seq data for unpaired integration with <a class="reference internal" href="#glue"><span class="xref myst">GLUE</span></a></p></li>
@@ -798,7 +778,7 @@ set.seed(123)
 <p>Because batch names are the same for different modalities and datasets, we will need to update a bunch of batch columns in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> so we create a helper function for this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update_obs_column</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">update_obs_column</span><span class="p">(</span>
     <span class="n">adata</span><span class="p">,</span> <span class="n">obs_column_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">new_obs_column_name</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="k">if</span> <span class="n">new_obs_column_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -861,7 +841,7 @@ set.seed(123)
 <section id="unpaired-integration-with-graph-linked-unified-embedding-glue">
 <h2><span class="section-number">46.4. </span>Unpaired integration with Graph Linked Unified Embedding (GLUE)<a class="headerlink" href="#unpaired-integration-with-graph-linked-unified-embedding-glue" title="Link to this heading">#</a></h2>
 <p>Opposed to paired integration that we demonstrated before, it is also possible to perform completely unpaired integration. In this case, there is no intersection of cell barcodes or features. Hence, we need some prior knowledge to connect different modalities.</p>
-<p>GLUE <span id="id2">[<a class="reference internal" href="#id528" title="Zhi-Jie Cao and Ge Gao. Multi-omics single-cell data integration and regulatory inference with graph-linked embedding. Nature Biotechnology, May 2022. URL: https://doi.org/10.1038/s41587-022-01284-4, doi:10.1038/s41587-022-01284-4.">Cao and Gao, 2022</a>]</span> is a deep learning model for unpaired integration which makes use of a regulatory graph helping connect features from different modalities. The model is based on conditional variational autoencoders, where the model learns to reconstruct while simultaneously allowing for batch correction. To guide the integration, GLUE learns an embedding for each modality for each feature by utilizing a prior knowledge graph. We demonstrate how to use GLUE to integrate unpaired RNA and ADT data using RNA part of Multiome data and ADT part of CITE-seq data from the NeurIPS competition (<a class="reference external" href="https://openproblems.bio/neurips_2021/">https://openproblems.bio/neurips_2021/</a>). To construct the graph, we connect nodes from RNA modality to nodes from ADT modality if and only if the RNA node is a protein encoding gene of a given protein from ADT modality. The output of the GLUE model is a representation of each cell in a shared latent space.</p>
+<p>GLUE <span id="id2">[<a class="reference internal" href="#id529" title="Zhi-Jie Cao and Ge Gao. Multi-omics single-cell data integration and regulatory inference with graph-linked embedding. Nature Biotechnology, May 2022. URL: https://doi.org/10.1038/s41587-022-01284-4, doi:10.1038/s41587-022-01284-4.">Cao and Gao, 2022</a>]</span> is a deep learning model for unpaired integration which makes use of a regulatory graph helping connect features from different modalities. The model is based on conditional variational autoencoders, where the model learns to reconstruct while simultaneously allowing for batch correction. To guide the integration, GLUE learns an embedding for each modality for each feature by utilizing a prior knowledge graph. We demonstrate how to use GLUE to integrate unpaired RNA and ADT data using RNA part of Multiome data and ADT part of CITE-seq data from the NeurIPS competition (<a class="reference external" href="https://openproblems.bio/neurips_2021/">https://openproblems.bio/neurips_2021/</a>). To construct the graph, we connect nodes from RNA modality to nodes from ADT modality if and only if the RNA node is a protein encoding gene of a given protein from ADT modality. The output of the GLUE model is a representation of each cell in a shared latent space.</p>
 <p>We refer the reader to GLUE tutorial to see how one can integrate unpaired RNA and ATAC with GLUE and for more details about the model <a class="reference external" href="https://scglue.readthedocs.io/en/latest/tutorials.html">https://scglue.readthedocs.io/en/latest/tutorials.html</a>.</p>
 <p>We follow the GLUE tutorial on how to preprocess RNA-seq. We log-normalize the raw counts, scale and calculate PCA.</p>
 <div class="cell docutils container">
@@ -970,7 +950,7 @@ set.seed(123)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adt_cite</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rna_multiome</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>  <span class="c1"># noqa F811</span>
 <span class="c1"># mask entries are set to 1 where protein name is the same as gene name</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">r</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
@@ -1193,7 +1173,7 @@ Epoch 00065: reducing learning rate of group 0 to 2.0000e-07.
 </section>
 <section id="integration-with-partially-overlapping-data-and-query-to-reference-mapping-with-totalvi">
 <h2><span class="section-number">46.5. </span>Integration with partially overlapping data and query-to-reference mapping with totalVI<a class="headerlink" href="#integration-with-partially-overlapping-data-and-query-to-reference-mapping-with-totalvi" title="Link to this heading">#</a></h2>
-<p>Another multimodal data integration scenario is when we have paired and unpaired data available at the same time, for instance, a CITE-seq and an RNA-seq datasets. This scenario is also known as mosaic integration. We might be interested in mapping the datasets into a shared latent space to make use of all the data available to us. Another use case would be to impute missing modalities (i.e. proteins abundance for RNA-seq dataset). We show how to perform these two tasks, partially overlapping integration and imputation, using totalVI <span id="id3">[<a class="reference internal" href="paired_integration.html#id521" title="Adam Gayoso, Zoë Steier, Romain Lopez, Jeffrey Regier, Kristopher L. Nazor, Aaron Streets, and Nir Yosef. Joint probabilistic modeling of single-cell multi-omic data with totalvi. Nature Methods, 18(3):272-282, Mar 2021. URL: https://doi.org/10.1038/s41592-020-01050-x, doi:10.1038/s41592-020-01050-x.">Gayoso <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Another multimodal data integration scenario is when we have paired and unpaired data available at the same time, for instance, a CITE-seq and an RNA-seq datasets. This scenario is also known as mosaic integration. We might be interested in mapping the datasets into a shared latent space to make use of all the data available to us. Another use case would be to impute missing modalities (i.e. proteins abundance for RNA-seq dataset). We show how to perform these two tasks, partially overlapping integration and imputation, using totalVI <span id="id3">[<a class="reference internal" href="paired_integration.html#id522" title="Adam Gayoso, Zoë Steier, Romain Lopez, Jeffrey Regier, Kristopher L. Nazor, Aaron Streets, and Nir Yosef. Joint probabilistic modeling of single-cell multi-omic data with totalvi. Nature Methods, 18(3):272-282, Mar 2021. URL: https://doi.org/10.1038/s41592-020-01050-x, doi:10.1038/s41592-020-01050-x.">Gayoso <em>et al.</em>, 2021</a>]</span>.</p>
 <p>We set the protein counts of one of the batches to zeros to model the missing proteins. This helps later with mapping of the new RNA-only queries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1239,12 +1219,12 @@ Epoch 00065: reducing learning rate of group 0 to 2.0000e-07.
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arches_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">use_layer_norm</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
-    <span class="n">use_batch_norm</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-    <span class="n">n_layers_decoder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">n_layers_encoder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arches_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;use_layer_norm&quot;</span><span class="p">:</span> <span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;use_batch_norm&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n_layers_decoder&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;n_layers_encoder&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
 
 <span class="n">vae</span> <span class="o">=</span> <span class="n">TOTALVI</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="o">**</span><span class="n">arches_params</span><span class="p">)</span>
 <span class="n">vae</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
@@ -1342,7 +1322,7 @@ Epoch 400/400: 100%|██████████| 400/400 [09:51&lt;00:00,  1.
     <span class="n">vae</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">vae_q</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-    <span class="n">plan_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale_adversarial_loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+    <span class="n">plan_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;scale_adversarial_loss&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1427,7 +1407,7 @@ Monitored metric elbo_validation did not improve in the last 45 records. Best sc
 </section>
 <section id="query-mapping-and-imputation-with-seurat-s-wnn">
 <h2><span class="section-number">46.6. </span>Query mapping and imputation with Seurat’s WNN<a class="headerlink" href="#query-mapping-and-imputation-with-seurat-s-wnn" title="Link to this heading">#</a></h2>
-<p>Seurat v4 allows mapping of new RNA-seq queries onto a multimodal reference integrated with weighted-nearest-neighbor (WNN) <span id="id4">[<a class="reference internal" href="paired_integration.html#id519" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 184(13):3573-3587.e29, 2021. URL: https://www.sciencedirect.com/science/article/pii/S0092867421005833, doi:https://doi.org/10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span>. We use the reference we built in the paired integration notebook.</p>
+<p>Seurat v4 allows mapping of new RNA-seq queries onto a multimodal reference integrated with weighted-nearest-neighbor (WNN) <span id="id4">[<a class="reference internal" href="paired_integration.html#id520" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 184(13):3573-3587.e29, 2021. URL: https://www.sciencedirect.com/science/article/pii/S0092867421005833, doi:https://doi.org/10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span>. We use the reference we built in the paired integration notebook.</p>
 <p>The mapping is based on finding anchors between the query and the reference. This approach also allows for missing information transfer from the reference to the query. Here we show how to predict cell types and how to impute missing modalities (protein abundance in this case).</p>
 <p>We note that since Seurat v4 in an R library we will need to work with <code class="docutils literal notranslate"><span class="pre">anndata2ri</span></code> package (<a class="github reference external" href="https://github.com/theislab/anndata2ri">theislab/anndata2ri</a>) to move all of our data from Python to R.</p>
 <p>First, let’s take a look at our reference and the query.</p>
@@ -1605,7 +1585,7 @@ DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;id&quot;, label
 </section>
 <section id="mapping-adt-onto-an-rna-atlas-with-bridge-integration">
 <h2><span class="section-number">46.7. </span>Mapping ADT onto an RNA atlas with bridge integration<a class="headerlink" href="#mapping-adt-onto-an-rna-atlas-with-bridge-integration" title="Link to this heading">#</a></h2>
-<p>Bridge <span id="id5">[<a class="reference internal" href="#id529" title="Yuhan Hao, Tim Stuart, Madeline Kowalski, Saket Choudhary, Paul Hoffman, Austin Hartman, Avi Srivastava, Gesmira Molla, Shaista Madad, Carlos Fernandez-Granda, and Rahul Satija. Dictionary learning for integrative, multimodal, and scalable single-cell analysis. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684, arXiv:https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684.full.pdf, doi:10.1101/2022.02.24.481684.">Hao <em>et al.</em>, 2022</a>]</span> is a method for mapping new modalities onto an RNA-seq reference. To do so we need a so-called “bridge” dataset that contains paired data (RNA-seq and the new modality we want to map).</p>
+<p>Bridge <span id="id5">[<a class="reference internal" href="#id530" title="Yuhan Hao, Tim Stuart, Madeline Kowalski, Saket Choudhary, Paul Hoffman, Austin Hartman, Avi Srivastava, Gesmira Molla, Shaista Madad, Carlos Fernandez-Granda, and Rahul Satija. Dictionary learning for integrative, multimodal, and scalable single-cell analysis. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684, arXiv:https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684.full.pdf, doi:10.1101/2022.02.24.481684.">Hao <em>et al.</em>, 2022</a>]</span> is a method for mapping new modalities onto an RNA-seq reference. To do so we need a so-called “bridge” dataset that contains paired data (RNA-seq and the new modality we want to map).</p>
 <p>Since we want to showcase the bridging functionality, we assume that our reference consist of only one batch. We refer the reader to the integration vignette if there is a need to integrate batches in the reference (<a class="reference external" href="https://satijalab.org/seurat/articles/integration_introduction.html">https://satijalab.org/seurat/articles/integration_introduction.html</a>). As the bridge dataset we use one batch of the CITE-seq query, and as the actual ADT query we use ADT modality of the second batch in the CITE-seq query.</p>
 <p>First, we subset the datasets to reference, bridge and query as described above.</p>
 <div class="cell docutils container">
@@ -2046,9 +2026,12 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 <span class="n">idx_mutiome_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor1_multiome&quot;</span>
 <span class="n">idx_cite_query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;Samplename&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;site2_donor4_cite&quot;</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_atac_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_scrna_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_mutiome_query</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-    <span class="n">idx_cite_query</span>
-<span class="p">),</span>
+<span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_atac_query</span><span class="p">),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_scrna_query</span><span class="p">),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_mutiome_query</span><span class="p">),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_cite_query</span><span class="p">),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2295,23 +2278,23 @@ loaded via a namespace (and not attached):
 <h2><span class="section-number">46.10. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id9">
 <div role="list" class="citation-list">
-<div class="citation" id="id528" role="doc-biblioentry">
+<div class="citation" id="id529" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">CG22</a><span class="fn-bracket">]</span></span>
 <p>Zhi-Jie Cao and Ge Gao. Multi-omics single-cell data integration and regulatory inference with graph-linked embedding. <em>Nature Biotechnology</em>, May 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-022-01284-4">https://doi.org/10.1038/s41587-022-01284-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-022-01284-4">doi:10.1038/s41587-022-01284-4</a>.</p>
 </div>
-<div class="citation" id="id520" role="doc-biblioentry">
+<div class="citation" id="id521" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">GSL+21</a><span class="fn-bracket">]</span></span>
 <p>Adam Gayoso, Zoë Steier, Romain Lopez, Jeffrey Regier, Kristopher L. Nazor, Aaron Streets, and Nir Yosef. Joint probabilistic modeling of single-cell multi-omic data with totalvi. <em>Nature Methods</em>, 18(3):272–282, Mar 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-020-01050-x">https://doi.org/10.1038/s41592-020-01050-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-020-01050-x">doi:10.1038/s41592-020-01050-x</a>.</p>
 </div>
-<div class="citation" id="id518" role="doc-biblioentry">
+<div class="citation" id="id519" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">HHAN+21</a><span class="fn-bracket">]</span></span>
 <p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 184(13):3573–3587.e29, 2021. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0092867421005833">https://www.sciencedirect.com/science/article/pii/S0092867421005833</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cell.2021.04.048">doi:https://doi.org/10.1016/j.cell.2021.04.048</a>.</p>
 </div>
-<div class="citation" id="id529" role="doc-biblioentry">
+<div class="citation" id="id530" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">HSK+22</a><span class="fn-bracket">]</span></span>
 <p>Yuhan Hao, Tim Stuart, Madeline Kowalski, Saket Choudhary, Paul Hoffman, Austin Hartman, Avi Srivastava, Gesmira Molla, Shaista Madad, Carlos Fernandez-Granda, and Rahul Satija. Dictionary learning for integrative, multimodal, and scalable single-cell analysis. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684">https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/02/26/2022.02.24.481684.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.02.24.481684">doi:10.1101/2022.02.24.481684</a>.</p>
 </div>
-<div class="citation" id="id527" role="doc-biblioentry">
+<div class="citation" id="id528" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">LBC+21</a><span class="fn-bracket">]</span></span>
 <p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. 2021. URL: <a class="reference external" href="https://openreview.net/forum?id=gN35BGa1Rt">https://openreview.net/forum?id=gN35BGa1Rt</a>.</p>
 </div>
@@ -2391,7 +2374,8 @@ loaded via a namespace (and not attached):
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2481,8 +2465,8 @@ By Lukas Heumos, Anna Schaar, single-cell best practices consortium
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
