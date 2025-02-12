@@ -17,10 +17,6 @@ If you found the expert recommendation or this book helpful for your research ar
 
 > Heumos, L., Schaar, A.C., Lance, C. et al. Best practices for single-cell analysis across modalities. Nat Rev Genet (2023). https://doi.org/10.1038/s41576-023-00586-w
 
-## Mission
-
-We are writing a book on the current single-cell analysis best-practices with extensive tutorials and code examples.
-
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
@@ -30,7 +26,8 @@ In case of questions or problems, please get in touch by posting an issue in thi
 
 ## Adapting the notebooks to other datasets
 
-All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/master/jupyter-book) together with minimal Conda environments. Alternatively, the notebooks can be downloaded directly from the rendered version.
+All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/master/jupyter-book) together with minimal Conda environments.
+Alternatively, the notebooks can be downloaded directly from the rendered version.
 
 ## Acknowledgements
 
