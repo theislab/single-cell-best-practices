@@ -11,6 +11,7 @@ This matrix represents the estimated number of distinct molecules derived from e
 An overview of the topics discussed in this chapter. In the plot, "txome" stands for transcriptome.
 :::
 
+The count matrix is the foundation for a wide range of scRNA-seq analyses {cite}`Zappia2021_raw`, including cell type identification or developmental trajectory inference.
 A robust and accurate count matrix is essential for reliable {term}`downstream analyses`.
 Errors at this stage can lead to invalid conclusions and discoveries based on missed insights, or distorted signals in the data.
 Despite the straightforward nature of the input (FASTQ files) and the desired output (count matrix), raw data processing presents several technical challenges.

@@ -193,7 +193,7 @@ scverse
 signal-to-noise ratio
     A measure of the clarity of a signal relative to background noise.
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
-    A high SNR indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
+    A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
     Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
 
 Spike-in RNA
