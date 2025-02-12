@@ -201,7 +201,8 @@ Spike-in RNA
 
 Splice Junctions
 splice junctions
-    Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing. These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
+    Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
+    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
 
 Trajectory inference
     Also known as pseudotemporal ordering.
