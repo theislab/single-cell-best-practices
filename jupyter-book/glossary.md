@@ -137,7 +137,7 @@ loci
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
 
 MuData
-    A Python package for multimodal annotated data matrices.
+    A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
     The primary data structure in the scverse ecosystem for multimodal data.
 
 Muon
