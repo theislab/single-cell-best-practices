@@ -2,19 +2,26 @@ name: Build book
 
 on: [push, pull_request]
 
+concurrency: preview-${{ github.ref }}
+
+env:
+  PREVIEW_BRANCH: gh-pages
+
 jobs:
   build-book:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Setup environment
-        run: pip install --upgrade jupyter-book jupytext beautifulsoup4
+        run: |
+          pip install uv
+          uv pip install --system jupyter-book jupytext beautifulsoup4
 
       - name: Cache jupyter-cache folder
         uses: actions/cache@v2
@@ -31,21 +38,41 @@ jobs:
       - name: Build the JupyterBook
         run: make
 
+      - name: Deploy PR preview
+        id: preview-step
+        uses: rossjrw/pr-preview-action@v1
+        if: github.event_name == 'pull_request' && github.event.action != 'closed'
+        with:
+          source-dir: ./jupyter-book/_build/html
+          preview-branch: ${{ env.PREVIEW_BRANCH }}
+          comment: false
+
+      - name: Add Sticky PR Comment for Preview
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request' && github.event.action != 'closed'
+        with:
+          header: pr-preview
+          message: |
+            [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
+            :---:
+            | <p></p> :dna: View preview of single-cell best practices at <br> ${{ steps.preview-step.outputs.preview-url }} <br><br>
+            | <h6>Built to branch [`${{ env.PREVIEW_BRANCH }}`](${{ github.server_url }}/${{ github.repository }}/tree/${{ env.PREVIEW_BRANCH }}) at ${{ steps.preview-step.outputs.action-start-time }}. <br> Preview will be ready when the [GitHub Pages deployment](${{ github.server_url }}/${{ github.repository }}/deployments) is complete. <br><br> </h6>
+
   pdfhtml:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install jupyter-book jupytext beautifulsoup4
+          python -m pip install --upgrade uv
+          uv pip install --system jupyter-book jupytext beautifulsoup4
 
       - name: Install Headless Chrome dependencies
         run: |
@@ -53,12 +80,12 @@ jobs:
           sudo apt-get install -yq $(cat .github/workflows/pyppeteer_requirements.txt)
 
       - name: Install Chromium
-        run: pip install pyppeteer
+        run: uv pip install --system pyppeteer
 
       - name: Build PDF from HTML (Docs)
         run: make pdf
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: PDF_HTML
           path: jupyter-book/_build/pdf/book.pdf

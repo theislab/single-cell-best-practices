@@ -4,6 +4,12 @@
 
 The most recent version of the book is rendered [here](https://sc-best-practices.org).
 
+## Looking for help and maintainers
+
+We are looking for help in maintaining the book.
+There are lots of open tasks for both newcomers and seasoned analysts.
+Please contact us if you are interested in helping out!
+
 ## Accompanying expert recommendation and citation
 
 This book builds upon our expert recommendation "Best practices for single-cell analysis across modalities": https://www.nature.com/articles/s41576-023-00586-w.
@@ -22,7 +28,7 @@ Please read [contributing](https://github.com/theislab/single-cell-best-practice
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
-## Adapting the notebooks to other datasets:
+## Adapting the notebooks to other datasets
 
 All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/master/jupyter-book) together with minimal Conda environments. Alternatively, the notebooks can be downloaded directly from the rendered version.
 
