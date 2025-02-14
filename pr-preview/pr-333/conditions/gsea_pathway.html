@@ -1,0 +1,2298 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>18. Gene set enrichment and pathway analysis &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'conditions/gsea_pathway';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="19. Perturbation modeling" href="perturbation_modeling.html" />
+    <link rel="prev" title="17. Compositional analysis" href="compositional.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/conditions/gsea_pathway.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fconditions/gsea_pathway.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/conditions/gsea_pathway.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gene set enrichment and pathway analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">18.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pathway-and-gene-set-collections">18.2. Pathway and gene set collections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#null-hypotheses-in-gene-set-enrichment-analysis">18.3. Null hypotheses in gene set enrichment analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-tests-and-pathway-analysis">18.4. Gene set tests and pathway analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-test-vs-pathway-activity-inference">18.4.1. Gene set test vs. pathway activity inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-considerations">18.5. Technical considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-out-the-gene-sets-with-low-number-of-genes">18.5.1. Filtering out the gene sets with low number of genes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-normalization">18.5.2. Data normalization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-pathway-enrichment-analysis-and-activity-level-scoring-in-human-pbmc-single-cells">18.6. Case study: Pathway enrichment analysis and activity level scoring in human PBMC single cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-and-explore-the-data">18.6.1. Prepare and explore the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-level-gene-set-enrichment-analysis-with-decoupler">18.6.2. Cluster-level gene set enrichment analysis with <code class="docutils literal notranslate"><span class="pre">decoupler</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieving-gene-sets">18.6.2.1. Retrieving gene sets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-gsea">18.6.2.2. Running GSEA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-level-pathway-activity-scoring-using-aucell">18.6.3. Cell-level pathway activity scoring using AUCell</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-enrichment-for-complex-experimental-designs-using-limma-fry-and-pseudo-bulks">18.6.4. Gene set enrichment for complex experimental designs using limma-fry and pseudo-bulks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-pseudo-bulk-samples-and-explore-the-data">18.6.4.1. Create pseudo-bulk samples and explore the data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-for-limma-and-fry">18.6.4.2. Setup for <code class="docutils literal notranslate"><span class="pre">limma</span></code> and <code class="docutils literal notranslate"><span class="pre">fry</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fry-test-for-stimulated-vs-control">18.6.4.3. fry test for Stimulated vs Control</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fry-test-for-the-comparison-between-two-stimulated-cell-types">18.6.4.4. fry test for the comparison between two stimulated cell types</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#on-the-effect-of-filtering-low-expression-genes">18.6.4.4.1. On the effect of  filtering low-expression genes</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-the-redundancy-between-gene-sets-and-the-performance-of-preranked-and-fry-gene-set-tests">18.6.4.4.2. A note on the redundancy between gene sets and the performance of preranked and fry gene set tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">18.7. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">18.8. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-info">18.9. Session info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">18.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">18.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">18.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">18.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="dropdown admonition">
+<p class="admonition-title">How do I set up an environment with the yml file used in this chapter?</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p>Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Create the environment</strong>:</p>
+<ul>
+<li><p>Open a terminal or command prompt.</p></li>
+<li><p>Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p>After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p>Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pathway</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::r-base=4.1.2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::python=3.9.15</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pip</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::rpy2=3.5.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scanpy=1.9.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::anndata=0.8.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::ipykernel</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::session-info</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::umap-learn</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scikit-misc</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::bioconductor-singlecellexperiment=1.16.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::bioconductor-edger=3.36.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::bioconductor-limma=3.50.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::anndata2ri==1.0.6</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::r-statmod</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::cffi</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decoupler</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="gene-set-enrichment-and-pathway-analysis">
+<span id="enrichment-analysis"></span><h1><span class="section-number">18. </span>Gene set enrichment and pathway analysis<a class="headerlink" href="#gene-set-enrichment-and-pathway-analysis" title="Link to this heading">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">18.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Single-cell RNA-seq provides unprecedented insights into variations in cell types between conditions, tissue types, species and individuals. Differential gene expression analysis of the single-cell data is almost always followed by <em>gene set enrichment analysis</em>, where the aim is to identify gene programs, such as biological processes, gene ontologies or regulatory pathways that are over-represented in an experimental condition compared to control or other conditions, on the basis of differentially expressed (DE) genes.</p>
+<p>To determine the pathways enriched in a cell type-specific manner between two conditions, first a relevant collection of gene set signatures is selected, where each gene set defines a biological process (e.g. epithelial to mesenchymal transition, metabolism etc) or pathway (e.g. MAPK signalling). For each gene set in the collection, DE genes present in the gene set are used to obtain a test statistic that is then used to assess the enrichment of the gene set. Depending on the type of the enrichment test chosen, gene expression measurements may or may not be used for the computation of the test statistic.</p>
+<p>In this chapter, we first provide an overview of different types of gene set enrichment tests, introduce some commonly used gene signature collections and discuss best practices for pathway enrichment and functional enrichment analysis in general.  We conclude the chapter by demonstrating three analytical approaches for gene set enrichment analysis. Note that we use the terms pathway analysis, pathway enrichment analysis, gene set enrichment analysis and functional analysis interchangeably in this chapter.</p>
+</section>
+<section id="pathway-and-gene-set-collections">
+<h2><span class="section-number">18.2. </span>Pathway and gene set collections<a class="headerlink" href="#pathway-and-gene-set-collections" title="Link to this heading">#</a></h2>
+<p>Gene sets are a curated list of gene names (or gene ids) that are known to be involved in a biological process through previous studies and/or experiments. The Molecular Signatures Database (MSigDB) <span id="id1">[<a class="reference internal" href="#id372" title="Arthur Liberzon, Aravind Subramanian, Reid Pinchback, Helga Thorvaldsdóttir, Pablo Tamayo, and Jill P Mesirov. Molecular signatures database (msigdb) 3.0. Bioinformatics, 27(12):1739–1740, 2011.">Liberzon <em>et al.</em>, 2011</a>, <a class="reference internal" href="#id371" title="Aravind Subramanian, Pablo Tamayo, Vamsi K Mootha, Sayan Mukherjee, Benjamin L Ebert, Michael A Gillette, Amanda Paulovich, Scott L Pomeroy, Todd R Golub, Eric S Lander, and others. Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles. Proceedings of the National Academy of Sciences, 102(43):15545–15550, 2005.">Subramanian <em>et al.</em>, 2005</a>]</span> is the most comprehensive database consisting of 9 collections of gene sets. Some commonly used collections are C5, which is the gene ontology (GO) collection, C2 collection of curated gene signatures from published studies that are typically context (e.g. tissue, condition) specific, but also include KEGG and REACTOME gene signatures. For cancer studies, the Hallmark collection is commonly used, and for immunologic studies the C7 collection is a common choice. Note that these signatures are mainly derived from Bulk-seq measurements and measure continuous phenotypes. Recently and with the wide-spread availability of scRNA-seq datasets, databases have evolved that provide curated marker lists derived from published single cell studies that define cell types in various tissues and species. These include CellMarker <span id="id2">[<a class="reference internal" href="#id373" title="Xinxin Zhang, Yujia Lan, Jinyuan Xu, Fei Quan, Erjie Zhao, Chunyu Deng, Tao Luo, Liwen Xu, Gaoming Liao, Min Yan, and others. Cellmarker: a manually curated resource of cell markers in human and mouse. Nucleic acids research, 47(D1):D721–D728, 2019.">Zhang <em>et al.</em>, 2019</a>]</span> and PanglaoDB <span id="id3">[<a class="reference internal" href="#id374" title="Oscar Franzén, Li-Ming Gan, and Johan LM Björkegren. Panglaodb: a web server for exploration of mouse and human single-cell rna sequencing data. Database, 2019.">Franzén <em>et al.</em>, 2019</a>]</span>. Curated marker lists are not limited to those made available in databases, and can be curated by oneself.</p>
+</section>
+<section id="null-hypotheses-in-gene-set-enrichment-analysis">
+<h2><span class="section-number">18.3. </span>Null hypotheses in gene set enrichment analysis<a class="headerlink" href="#null-hypotheses-in-gene-set-enrichment-analysis" title="Link to this heading">#</a></h2>
+<p>Gene set tests can be <em>competitive</em> or <em>self-contained</em> as defined by Goeman and Buhlmann (2007) <span id="id4">[<a class="reference internal" href="#id365" title="Jelle J Goeman and Peter Bühlmann. Analyzing gene expression data in terms of gene sets: methodological issues. Bioinformatics, 23(8):980–987, 2007.">Goeman and Bühlmann, 2007</a>]</span>. Competitive gene set testing tests whether the genes in the set are highly ranked in terms of differential expression relative to the genes not in the set. The sampling unit here is genes, so the test can be done with a single sample (i.e. single-sample GSEA). The test requires genes that are not in the set (i.e background genes). In self-contained gene set testing, the sampling unit is the subject, so multiple samples per group are required, but it is not required to have genes that are not present in the set. A self-contained gene set test tests whether genes in the test set are differentially expressed without regard to any other gene measured in the dataset. These distinctions between the two null hypotheses make differences to the interpretation of gene set enrichment results. Note that in biological data there exist inter-gene correlations, that is the expression of genes in the same pathways are correlated. There are only a few tests that accommodate inter-gene correlations. We will discuss these methods later. Detailed explanations on various gene set tests can be found in <a class="reference external" href="https://bioconductor.org/packages/release/bioc/manuals/limma/man/limma.pdf"><em>limma</em> user manual</a>.</p>
+</section>
+<section id="gene-set-tests-and-pathway-analysis">
+<h2><span class="section-number">18.4. </span>Gene set tests and pathway analysis<a class="headerlink" href="#gene-set-tests-and-pathway-analysis" title="Link to this heading">#</a></h2>
+<p>In scRNA-seq data analysis, gene set enrichment is generally carried out on clusters of cells or cell types, one-at-a-time. Genes differentially expressed in a cluster or cell type are used to identify over-represented gene sets from the selected collection, using simple hypergeometric tests or Fisher’s exact test (as in <em>Enrichr</em> <span id="id5">[<a class="reference internal" href="#id367" title="Edward Y Chen, Christopher M Tan, Yan Kou, Qiaonan Duan, Zichen Wang, Gabriela Vaz Meirelles, Neil R Clark, and Avi Ma’ayan. Enrichr: interactive and collaborative html5 gene list enrichment analysis tool. BMC bioinformatics, 14(1):1–14, 2013.">Chen <em>et al.</em>, 2013</a>]</span>), for example. Such tests do not require the actual gene expression measurements and read counts to compute enrichment statistics, as they rely on testing how significant it is that an <span class="math notranslate nohighlight">\(X\)</span> number of genes in a gene set are differentially expressed in the experiment compared to the number of non-DE genes in the set.</p>
+<p><em>fgsea</em> <span id="id6">[<a class="reference internal" href="#id361" title="Gennady Korotkevich, Vladimir Sukhov, Nikolay Budin, Boris Shpak, Maxim N Artyomov, and Alexey Sergushichev. Fast gene set enrichment analysis. BioRxiv, pages 060012, 2021.">Korotkevich <em>et al.</em>, 2021</a>]</span> is a more common tool for gene set enrichment test. <em>fgsae</em> is a computationally faster implementation of the well established <em>Gene Set Enrichment Analysis (GSEA)</em> algorithm <span id="id7">[<a class="reference internal" href="#id371" title="Aravind Subramanian, Pablo Tamayo, Vamsi K Mootha, Sayan Mukherjee, Benjamin L Ebert, Michael A Gillette, Amanda Paulovich, Scott L Pomeroy, Todd R Golub, Eric S Lander, and others. Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles. Proceedings of the National Academy of Sciences, 102(43):15545–15550, 2005.">Subramanian <em>et al.</em>, 2005</a>]</span>, which computes enrichment statistics on the basis of some preranked gene-level test statistics. <em>fgsea</em> computes an enrichment score using some signed statistics of the genes in the gene set, such as  the t-statistics, log fold-changes (logFC) or p-values from the differential expression test. An empirical (estimated from the data) null distribution is computed for the enrichment score using some random gene sets of the same size, and a p-value is computed to determine the significance of the enrichment score. The p-values are then adjusted for multiple hypothesis testing. GSVA <span id="id8">[<a class="reference internal" href="#id380" title="Sonja Hänzelmann, Robert Castelo, and Justin Guinney. Gsva: gene set variation analysis for microarray and rna-seq data. BMC bioinformatics, 14(1):1–15, 2013.">Hänzelmann <em>et al.</em>, 2013</a>]</span> is another example of preranked gene set enrichment approaches. We should note that the pre-ranked gene set tests are not specific to single cell datasets and apply to Bulk-seq assays as well.</p>
+<p>An alternative approach to test for gene set enrichment in a group of cells, that is clusters or cells of identical types, is to create pseudo-bulk samples from single cells and use gene set enrichment methods developed for Bulk RNA-seq. Several self-contained and competitive gene set enrichment tests, namely <em>fry</em> and <em>camera</em> are implemented in <em>limma</em> <span id="id9">[<a class="reference internal" href="#id370" title="Matthew E Ritchie, Belinda Phipson, DI Wu, Yifang Hu, Charity W Law, Wei Shi, and Gordon K Smyth. Limma powers differential expression analyses for rna-sequencing and microarray studies. Nucleic acids research, 43(7):e47–e47, 2015.">Ritchie <em>et al.</em>, 2015</a>]</span>, which are compatible with the differential gene expression analysis framework through linear models and Empirical Bayes moderation of test statistics <span id="id10">[<a class="reference internal" href="#id382" title="Gordon K Smyth. Limma: linear models for microarray data. In Bioinformatics and computational biology solutions using R and Bioconductor, pages 397–420. Springer, 2005.">Smyth, 2005</a>]</span>. Linear models can accomodate complex experimental designs (e.g. subjects, perturbations, batches, nested contrasts, interactions etc) through the design matrix. In addition, the <code class="docutils literal notranslate"><span class="pre">camera</span></code> and <code class="docutils literal notranslate"><span class="pre">roast</span></code> gene set tests implemented in limma account for inter-gene correlations. Gene set tests in <em>limma</em> can also be applied to (properly transformed and normalised) single cell measurements without pseudo-bulk generation. However, there are currently no benchmarks that had assessed the accuracy of gene set test results when these methods are applied directly to single cells.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Test</p></th>
+<th class="head text-center"><p>Bulk or SC</p></th>
+<th class="head text-center"><p>Type of Null Hypothesis</p></th>
+<th class="head text-left"><p>Input</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Hypergeometric</p></td>
+<td class="text-center"><p>both</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>gene counts</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Fisher’s Exact</p></td>
+<td class="text-center"><p>both</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>gene counts</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>GSEA<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td class="text-center"><p>bulk</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>gene ranks</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>GSVA<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td class="text-center"><p>bulk</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>gene ranks</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>fgsea</p></td>
+<td class="text-center"><p>both</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>gene ranks</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>fry<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td class="text-center"><p>bulk</p></td>
+<td class="text-center"><p>self-contained</p></td>
+<td class="text-left"><p>expression matrix</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>camera<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td class="text-center"><p>bulk</p></td>
+<td class="text-center"><p>competitive</p></td>
+<td class="text-left"><p>expression matrix</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>roast<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td class="text-center"><p>bulk</p></td>
+<td class="text-center"><p>self-contained</p></td>
+<td class="text-left"><p>expression matrix</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Table: Gene set tests, type of the applicable assays and Null Hypothesis they test</p>
+<p><span class="math notranslate nohighlight">\(^*\)</span> These tests are practically applicable to single cell datasets, although their application to single cell may not be a common practice.</p>
+<section id="gene-set-test-vs-pathway-activity-inference">
+<h3><span class="section-number">18.4.1. </span>Gene set test vs. pathway activity inference<a class="headerlink" href="#gene-set-test-vs-pathway-activity-inference" title="Link to this heading">#</a></h3>
+<p>Gene set tests test whether a pathway is enriched, in other words over-represented, in one condition compared to others, say, in healthy donors compared to severe COVID-19 patients in the monocyte population. An alternative approach is to simply score the activity of a pathway or gene signature, in absolute sense, in individual cells, rather than testing for a differential activity between conditions. Some of the widely used tools for inference of gene set activity in general (including pathway activity) in individual cells include <em>VISION</em> <span id="id11">[<a class="reference internal" href="#id360" title="David DeTomaso, Matthew G Jones, Meena Subramaniam, Tal Ashuach, Chun J Ye, and Nir Yosef. Functional interpretation of single cell similarity maps. Nature communications, 10(1):1–11, 2019.">DeTomaso <em>et al.</em>, 2019</a>]</span>, <em>AUCell</em> <span id="id12">[<a class="reference internal" href="#id366" title="Sara Aibar, Carmen Bravo González-Blas, Thomas Moerman, Vân Anh Huynh-Thu, Hana Imrichova, Gert Hulselmans, Florian Rambow, Jean-Christophe Marine, Pierre Geurts, Jan Aerts, and others. Scenic: single-cell regulatory network inference and clustering. Nature methods, 14(11):1083–1086, 2017.">Aibar <em>et al.</em>, 2017</a>]</span>, pathway overdispersion analysis using <em>Pagoda2</em> <span id="id13">[<a class="reference internal" href="#id362" title="Jean Fan, Neeraj Salathia, Rui Liu, Gwendolyn E Kaeser, Yun C Yung, Joseph L Herman, Fiona Kaper, Jian-Bing Fan, Kun Zhang, Jerold Chun, and others. Characterizing transcriptional heterogeneity through pathway and gene set overdispersion analysis. Nature methods, 13(3):241–244, 2016.">Fan <em>et al.</em>, 2016</a>, <a class="reference internal" href="#id377" title="Blue B Lake, Song Chen, Brandon C Sos, Jean Fan, Gwendolyn E Kaeser, Yun C Yung, Thu E Duong, Derek Gao, Jerold Chun, Peter V Kharchenko, and others. Integrative single-cell analysis of transcriptional and epigenetic states in the human adult brain. Nature biotechnology, 36(1):70–80, 2018.">Lake <em>et al.</em>, 2018</a>]</span> and simple combined z-score <span id="id14">[<a class="reference internal" href="#id376" title="Eunjung Lee, Han-Yu Chuang, Jong-Won Kim, Trey Ideker, and Doheon Lee. Inferring pathway activity toward precise disease classification. PLoS computational biology, 4(11):e1000217, 2008.">Lee <em>et al.</em>, 2008</a>]</span>.</p>
+<p><em>DoRothEA</em> <span id="id15">[<a class="reference internal" href="#id369" title="Luz Garcia-Alonso, Christian H Holland, Mahmoud M Ibrahim, Denes Turei, and Julio Saez-Rodriguez. Benchmark and integration of resources for the estimation of human transcription factor activities. Genome research, 29(8):1363–1375, 2019.">Garcia-Alonso <em>et al.</em>, 2019</a>]</span> and <em>PROGENy</em> <span id="id16">[<a class="reference internal" href="#id368" title="Michael Schubert, Bertram Klinger, Martina Klünemann, Anja Sieber, Florian Uhlitz, Sascha Sauer, Mathew J Garnett, Nils Blüthgen, and Julio Saez-Rodriguez. Perturbation-response genes reveal signaling footprints in cancer gene expression. Nature communications, 9(1):1–11, 2018.">Schubert <em>et al.</em>, 2018</a>]</span> are among functional analysis tools developed to infer transcription factor (TF) - target activities originally in Bulk RNA data. Holland et al. <span id="id17">[<a class="reference internal" href="#id375" title="Christian H Holland, Jovan Tanevski, Javier Perales-Patón, Jan Gleixner, Manu P Kumar, Elisabetta Mereu, Brian A Joughin, Oliver Stegle, Douglas A Lauffenburger, Holger Heyn, and others. Robustness and applicability of transcription factor and pathway analysis tools on single-cell rna-seq data. Genome biology, 21(1):1–19, 2020.">Holland <em>et al.</em>, 2020</a>]</span> found that Bulk RNA-seq methods <em>DoRothEA</em> and <em>PROGENy</em> have optimal performance in simulated scRNA-seq data, and even partially outperform tools specifically designed for scRNA-seq analysis despite the drop-out events and low library sizes in single cell data. Holland et al. also concluded that pathway and TF activity inference is more sensitive to the choice of gene sets rather than the statistical methods. This observation though can be specific to functional enrichment analyses and be explained by the fact that TF-target relations are context-specific; that is TF-target associations in one cell type may actually differ from another cell type or tissue.</p>
+<p>In contrast to Holland et al., Zhang et al. <span id="id18">[<a class="reference internal" href="#id364" title="Yaru Zhang, Yunlong Ma, Yukuan Huang, Yan Zhang, Qi Jiang, Meng Zhou, and Jianzhong Su. Benchmarking algorithms for pathway activity transformation of single-cell rna-seq data. Computational and structural biotechnology journal, 18:2953–2961, 2020.">Zhang <em>et al.</em>, 2020</a>]</span> found that single-cell-based tools, specifically Pagoda2, outperform bulk-base methods from three different aspects of accuracy, stability and scalability. It should be noted that pathway and gene set activity inference tools inherently do not account for batch effects or biological variations other than the biological variation of interest. Therefore, it is up to the data analyst to ensure that the differential gene expression analysis step has worked properly.</p>
+<p>Furthermore, while the tools mentioned here score every gene set in individual cells, they are not able to select for the most biologically relevant gene sets among all scored gene sets. scDECAF (<a class="github reference external" href="https://github.com/DavisLaboratory/scDECAF">DavisLaboratory/scDECAF</a>) is a gene set activity inference tool that allows data-driven selection of the most informative gene sets, thereby aids in dissecting meaningful cellular heterogeneity.</p>
+</section>
+</section>
+<section id="technical-considerations">
+<h2><span class="section-number">18.5. </span>Technical considerations<a class="headerlink" href="#technical-considerations" title="Link to this heading">#</a></h2>
+<section id="filtering-out-the-gene-sets-with-low-number-of-genes">
+<h3><span class="section-number">18.5.1. </span>Filtering out the gene sets with low number of genes<a class="headerlink" href="#filtering-out-the-gene-sets-with-low-number-of-genes" title="Link to this heading">#</a></h3>
+<p>A common practice is to exclude any gene sets with a few genes overlapping the data or Highly Variable Genes (HVG) in the pre-processing step. Zhang et al. <span id="id19">[<a class="reference internal" href="#id364" title="Yaru Zhang, Yunlong Ma, Yukuan Huang, Yan Zhang, Qi Jiang, Meng Zhou, and Jianzhong Su. Benchmarking algorithms for pathway activity transformation of single-cell rna-seq data. Computational and structural biotechnology journal, 18:2953–2961, 2020.">Zhang <em>et al.</em>, 2020</a>]</span> found that the performance of both single-cell-based and bulk-based methods drops as gene coverage, that is the number of genes in pathways/gene sets, decreases. Holland et al <span id="id20">[<a class="reference internal" href="#id375" title="Christian H Holland, Jovan Tanevski, Javier Perales-Patón, Jan Gleixner, Manu P Kumar, Elisabetta Mereu, Brian A Joughin, Oliver Stegle, Douglas A Lauffenburger, Holger Heyn, and others. Robustness and applicability of transcription factor and pathway analysis tools on single-cell rna-seq data. Genome biology, 21(1):1–19, 2020.">Holland <em>et al.</em>, 2020</a>]</span> also found that gene sets of smaller size adversely impacts the performance of Bulk-seq <em>DoRothEA</em> and <em>PROGENy</em> on single cell data. These report collectively support that filtering gene sets with low gene counts, say less than 10 or 15 genes in the set, is beneficial in pathway analysis. Damian &amp; Gorfine (2004) <span id="id21">[<a class="reference internal" href="#id383" title="Doris Damian and Malka Gorfine. Statistical concerns about the gsea procedure. Nature genetics, 36(7):663–663, 2004.">Damian and Gorfine, 2004</a>]</span> attributed this to the fact gene variances in gene sets with a smaller number of genes are more likely to be large, whereas gene variances in larger gene sets tend to be smaller. This impacts the accuracy of the test statistics computed to test for enrichment. Zhang et al. additionally found that pathway analysis was susceptible to normalization procedures applied to gene expression measurements.</p>
+</section>
+<section id="data-normalization">
+<h3><span class="section-number">18.5.2. </span>Data normalization<a class="headerlink" href="#data-normalization" title="Link to this heading">#</a></h3>
+<p>Read counts in single cell experiments are typically normalised early on in the pre-processing pipeline to ensure that measurements are comparable across cells of various library sizes. Zhang et al. <span id="id22">[<a class="reference internal" href="#id364" title="Yaru Zhang, Yunlong Ma, Yukuan Huang, Yan Zhang, Qi Jiang, Meng Zhou, and Jianzhong Su. Benchmarking algorithms for pathway activity transformation of single-cell rna-seq data. Computational and structural biotechnology journal, 18:2953–2961, 2020.">Zhang <em>et al.</em>, 2020</a>]</span> found that normalisation by <em>SCTransform</em> <span id="id23">[<a class="reference internal" href="#id378" title="Christoph Hafemeister and Rahul Satija. Normalization and variance stabilization of single-cell rna-seq data using regularized negative binomial regression. Genome biology, 20(1):1–15, 2019.">Hafemeister and Satija, 2019</a>]</span> and <em>scran</em> <span id="id24">[<a class="reference internal" href="#id379" title="Aaron TL Lun, Davis J McCarthy, and John C Marioni. A step-by-step workflow for low-level analysis of single-cell rna-seq data with bioconductor. F1000Research, 2016.">Lun <em>et al.</em>, 2016</a>]</span> generally improves the performance of both single-cell- and bulk-based pathway scoring tools. They found that the performance of <em>AUCell</em> (a rank-base method) and <em>z-score</em> (transformation to zero mean, unit standard deviation) is particularly affected by normalization with distinct methods.</p>
+</section>
+</section>
+<section id="case-study-pathway-enrichment-analysis-and-activity-level-scoring-in-human-pbmc-single-cells">
+<h2><span class="section-number">18.6. </span>Case study: Pathway enrichment analysis and activity level scoring in human PBMC single cells<a class="headerlink" href="#case-study-pathway-enrichment-analysis-and-activity-level-scoring-in-human-pbmc-single-cells" title="Link to this heading">#</a></h2>
+<section id="prepare-and-explore-the-data">
+<h3><span class="section-number">18.6.1. </span>Prepare and explore the data<a class="headerlink" href="#prepare-and-explore-the-data" title="Link to this heading">#</a></h3>
+<p>We first download the 25K PBMC data and follow the standard <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> workflow for normalisation of read counts and subsetting on the highly variable genes. The dataset contains untreated and IFN-<span class="math notranslate nohighlight">\(\beta\)</span> stimulated human PBMC cells <span id="id25">[<a class="reference internal" href="#id381" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>. We explore patterns of variation in the data with UMAP representation of 4000 highly variable genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">decoupler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn.objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">so</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">session_info</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filtering warnings from current version of matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*Parameters &#39;cmap&#39; will be ignored.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Tight layout not applied.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting up R dependencies</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+suppressPackageStartupMessages({
+    library(SingleCellExperiment)
+})
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;kang_counts_25k.h5ad&quot;</span><span class="p">,</span> <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/34464122&quot;</span>
+<span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 24673 × 15706
+    obs: &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;tsne1&#39;, &#39;tsne2&#39;, &#39;label&#39;, &#39;cluster&#39;, &#39;cell_type&#39;, &#39;replicate&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;integrated_snn_res.0.4&#39;, &#39;seurat_clusters&#39;
+    var: &#39;name&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Storing the counts for later use</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># Renaming label to condition</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Normalizing</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Finding highly variable genes using count data</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;seurat_v3&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 24673 × 15706
+    obs: &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;tsne1&#39;, &#39;tsne2&#39;, &#39;condition&#39;, &#39;cluster&#39;, &#39;cell_type&#39;, &#39;replicate&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;integrated_snn_res.0.4&#39;, &#39;seurat_clusters&#39;
+    var: &#39;name&#39;, &#39;highly_variable&#39;, &#39;highly_variable_rank&#39;, &#39;means&#39;, &#39;variances&#39;, &#39;variances_norm&#39;
+    uns: &#39;log1p&#39;, &#39;hvg&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>While the current object comes with UMAP and PCA embeddings, these have been corrected for stimulation condition, which we don’t want for this analysis. Instead we will recompute these.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/isaac/miniconda3/envs/pathway/lib/python3.9/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">],</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/cd127bfd690e8d720b33fe2989fcd3351aa0214b2d06d4c79e948988ae78efb9.png"><img alt="../_images/cd127bfd690e8d720b33fe2989fcd3351aa0214b2d06d4c79e948988ae78efb9.png" src="../_images/cd127bfd690e8d720b33fe2989fcd3351aa0214b2d06d4c79e948988ae78efb9.png" style="width: 776px; height: 280px;" /></a>
+</div>
+</div>
+<p>We generally recommend determining the differentially expressed genes as outlined in the <code class="docutils literal notranslate"><span class="pre">Differential</span> <span class="pre">gene</span> <span class="pre">expression</span></code> chapter. For simplicity, here we run a t-test using <code class="docutils literal notranslate"><span class="pre">rank_genes_groups</span></code> in <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> to rank genes according to their test statistics for differential expression:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># find DE genes by t-test</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s extract the ranks for genes differentially expressed in response to IFN stimulation in the CD16 Monocyte (FCGR3A+ Monocytes) cluster. We use these ranks and the gene sets from REACTOME to find gene sets enriched in this cell population compared to all other populations using <code class="docutils literal notranslate"><span class="pre">GSEA</span></code> as implemented in decoupler.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">celltype_condition</span> <span class="o">=</span> <span class="s2">&quot;stim_FCGR3A+ Monocytes&quot;</span>  <span class="c1"># &#39;stimulated_B&#39;,  &#39;stimulated_CD8 T&#39;, &#39;stimulated_CD14 Mono&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extract scores</span>
+<span class="n">t_stats</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1"># Get dataframe of DE results for condition vs. rest</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">rank_genes_groups_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">celltype_condition</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;t-test&quot;</span><span class="p">)</span>
+    <span class="c1"># Subset to highly variable genes</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span>
+    <span class="c1"># Sort by absolute score</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span>
+        <span class="c1"># Format for decoupler</span>
+        <span class="p">[</span><span class="s2">&quot;scores&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">([</span><span class="s2">&quot;stim_FCGR3A+ Monocytes&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">t_stats</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>stim_FCGR3A+ Monocytes</th>
+      <th>scores</th>
+    </tr>
+    <tr>
+      <th>names</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>IFITM3</th>
+      <td>123.019180</td>
+    </tr>
+    <tr>
+      <th>ISG15</th>
+      <td>119.732079</td>
+    </tr>
+    <tr>
+      <th>TYROBP</th>
+      <td>91.894241</td>
+    </tr>
+    <tr>
+      <th>TNFSF10</th>
+      <td>87.408890</td>
+    </tr>
+    <tr>
+      <th>S100A11</th>
+      <td>85.721817</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>NR1D1</th>
+      <td>-0.005578</td>
+    </tr>
+    <tr>
+      <th>PIK3R5</th>
+      <td>0.004145</td>
+    </tr>
+    <tr>
+      <th>FHL2</th>
+      <td>0.002915</td>
+    </tr>
+    <tr>
+      <th>CLECL1</th>
+      <td>-0.000262</td>
+    </tr>
+    <tr>
+      <th>ADCK4</th>
+      <td>0.000002</td>
+    </tr>
+  </tbody>
+</table>
+<p>4000 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="cluster-level-gene-set-enrichment-analysis-with-decoupler">
+<h3><span class="section-number">18.6.2. </span>Cluster-level gene set enrichment analysis with <code class="docutils literal notranslate"><span class="pre">decoupler</span></code><a class="headerlink" href="#cluster-level-gene-set-enrichment-analysis-with-decoupler" title="Link to this heading">#</a></h3>
+<p>Now we will use the python package <a class="reference external" href="https://decoupler-py.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">decoupler</span></code></a> <span id="id26">[<a class="reference internal" href="#id363" title="Pau Badia-i-Mompel, Jesús Vélez Santiago, Jana Braunger, Celina Geiss, Daniel Dimitrov, Sophia Müller-Dott, Petr Taus, Aurelien Dugourd, Christian H Holland, Ricardo O Ramirez Flores, and others. Decoupler: ensemble of computational methods to infer biological activities from omics data. Bioinformatics Advances, 2(1):vbac016, 2022.">Badia-i-Mompel <em>et al.</em>, 2022</a>]</span> to perform GSEA enrichment tests on our data.</p>
+<section id="retrieving-gene-sets">
+<h4><span class="section-number">18.6.2.1. </span>Retrieving gene sets<a class="headerlink" href="#retrieving-gene-sets" title="Link to this heading">#</a></h4>
+<p>Download and read the <code class="docutils literal notranslate"><span class="pre">gmt</span></code> file for the REACTOME pathways annotated in the C2 collection of MSigDB.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Downloading reactome pathways</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+    <span class="o">!</span>wget<span class="w"> </span>-O<span class="w"> </span><span class="s1">&#39;c2.cp.reactome.v7.5.1.symbols.gmt&#39;</span><span class="w"> </span>https://figshare.com/ndownloader/files/35233771
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gmt_to_decoupler</span><span class="p">(</span><span class="n">pth</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a gmt file to a decoupler pathway dataframe.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">repeat</span>
+
+    <span class="n">pathways</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">genes</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">pathways</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">genes</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">repeat</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pathways</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span> <span class="s2">&quot;genesymbol&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reactome</span> <span class="o">=</span> <span class="n">gmt_to_decoupler</span><span class="p">(</span><span class="s2">&quot;c2.cp.reactome.v7.5.1.symbols.gmt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively, we could just query for these resources from omnipath.</p>
+<p>However, for stability of this tutorial we are using a fixed version of the gene set collection.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Retrieving via python</span>
+<span class="n">msigdb</span> <span class="o">=</span> <span class="n">decoupler</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;MSigDB&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get reactome pathways</span>
+<span class="n">reactome</span> <span class="o">=</span> <span class="n">msigdb</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;collection == &#39;reactome_pathways&#39;&quot;</span><span class="p">)</span>
+<span class="c1"># Filter duplicates</span>
+<span class="n">reactome</span> <span class="o">=</span> <span class="n">reactome</span><span class="p">[</span><span class="o">~</span><span class="n">reactome</span><span class="o">.</span><span class="n">duplicated</span><span class="p">((</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span> <span class="s2">&quot;genesymbol&quot;</span><span class="p">))]</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reactome</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>geneset</th>
+      <th>genesymbol</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>REACTOME_INTERLEUKIN_6_SIGNALING</td>
+      <td>JAK2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>REACTOME_INTERLEUKIN_6_SIGNALING</td>
+      <td>TYK2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>REACTOME_INTERLEUKIN_6_SIGNALING</td>
+      <td>CBL</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>REACTOME_INTERLEUKIN_6_SIGNALING</td>
+      <td>STAT1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>REACTOME_INTERLEUKIN_6_SIGNALING</td>
+      <td>IL6ST</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>89471</th>
+      <td>REACTOME_ION_CHANNEL_TRANSPORT</td>
+      <td>FXYD7</td>
+    </tr>
+    <tr>
+      <th>89472</th>
+      <td>REACTOME_ION_CHANNEL_TRANSPORT</td>
+      <td>UBA52</td>
+    </tr>
+    <tr>
+      <th>89473</th>
+      <td>REACTOME_ION_CHANNEL_TRANSPORT</td>
+      <td>ATP6V1E2</td>
+    </tr>
+    <tr>
+      <th>89474</th>
+      <td>REACTOME_ION_CHANNEL_TRANSPORT</td>
+      <td>ASIC5</td>
+    </tr>
+    <tr>
+      <th>89475</th>
+      <td>REACTOME_ION_CHANNEL_TRANSPORT</td>
+      <td>FXYD1</td>
+    </tr>
+  </tbody>
+</table>
+<p>89476 rows × 2 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="running-gsea">
+<h4><span class="section-number">18.6.2.2. </span>Running GSEA<a class="headerlink" href="#running-gsea" title="Link to this heading">#</a></h4>
+<p>First we’ll prepare our gene sets. By default <code class="docutils literal notranslate"><span class="pre">decoupler</span></code> will not filter gene sets by maximum size, which packages like <code class="docutils literal notranslate"><span class="pre">fgsea</span></code> do. Instead we will simply manually filter gene sets to have a minimum of 15 genes and a maximum of 500 genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filtering genesets to match behaviour of fgsea</span>
+<span class="n">geneset_size</span> <span class="o">=</span> <span class="n">reactome</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;geneset&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">gsea_genesets</span> <span class="o">=</span> <span class="n">geneset_size</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">geneset_size</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geneset_size</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll use the t-statistics from the t-test to rank the genes for the CD16 Monocyte phenotype upon IFN stimulation and computes p-values for each of the pathways.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">pvals</span> <span class="o">=</span> <span class="n">decoupler</span><span class="o">.</span><span class="n">run_gsea</span><span class="p">(</span>
+    <span class="n">t_stats</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">reactome</span><span class="p">[</span><span class="n">reactome</span><span class="p">[</span><span class="s2">&quot;geneset&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">gsea_genesets</span><span class="p">)],</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;genesymbol&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">gsea_results</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">({</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">scores</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="n">norm</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;pval&quot;</span><span class="p">:</span> <span class="n">pvals</span><span class="o">.</span><span class="n">T</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;pval&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We make a bar plot of top 20 pathways significantly enriched in stimulated CD16 Monocytes compared to all other cell types.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">gsea_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+                <span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(pval)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;pval&quot;</span><span class="p">])}</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(pval)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/4cd6c7ac906b9f94846d58eb5ffef65b6ea9d58d40079d4c60a9bd1fd4403537.png"><img alt="../_images/4cd6c7ac906b9f94846d58eb5ffef65b6ea9d58d40079d4c60a9bd1fd4403537.png" src="../_images/4cd6c7ac906b9f94846d58eb5ffef65b6ea9d58d40079d4c60a9bd1fd4403537.png" style="width: 1219.325px; height: 357.425px;" /></a>
+</div>
+</div>
+<p>In the plot above, pathway names are given in the y-axis. The x-axis describes the <span class="math notranslate nohighlight">\(-\log_{10}\)</span>adjusted p-values. Therefore, the longer the height of the bar, the more significant the pathway is. Pathways are ordered by significance. The majority of interferon-related pathways are indeed ranked among the top 20 most significantly enriched pathways. Some IFN-related pathways include, REACTOME_INTERFERON_SIGNALING (ranked 2nd), REACTOME_INTERFERON_GAMMA_SIGNALING (ranked 3rd), and REACTOME_INTERFERON_ALPHA_BETA_SIGNALING (ranked 4th). Overall, <code class="docutils literal notranslate"><span class="pre">GSEA</span></code> did a decent job in identifying the pathways known to be associated with interferon signalling, given that we know a priori that IFN-related pathways should be the top-ranked terms.</p>
+<p>Let’s look at the raw output of <code class="docutils literal notranslate"><span class="pre">decoupler.run_gsea</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gsea_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>score</th>
+      <th>norm</th>
+      <th>pval</th>
+    </tr>
+    <tr>
+      <th>source</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>REACTOME_NEUTROPHIL_DEGRANULATION</th>
+      <td>0.624770</td>
+      <td>5.587953</td>
+      <td>2.297617e-08</td>
+    </tr>
+    <tr>
+      <th>REACTOME_INTERFERON_SIGNALING</th>
+      <td>0.844158</td>
+      <td>5.155074</td>
+      <td>2.535313e-07</td>
+    </tr>
+    <tr>
+      <th>REACTOME_INTERFERON_GAMMA_SIGNALING</th>
+      <td>0.831962</td>
+      <td>4.137064</td>
+      <td>3.517788e-05</td>
+    </tr>
+    <tr>
+      <th>REACTOME_INTERFERON_ALPHA_BETA_SIGNALING</th>
+      <td>0.893431</td>
+      <td>4.107962</td>
+      <td>3.991655e-05</td>
+    </tr>
+    <tr>
+      <th>REACTOME_SIGNALING_BY_INTERLEUKINS</th>
+      <td>0.376129</td>
+      <td>3.535838</td>
+      <td>4.064833e-04</td>
+    </tr>
+    <tr>
+      <th>REACTOME_MHC_CLASS_II_ANTIGEN_PRESENTATION</th>
+      <td>0.701555</td>
+      <td>3.378736</td>
+      <td>7.282002e-04</td>
+    </tr>
+    <tr>
+      <th>REACTOME_TRANSLATION</th>
+      <td>-0.628266</td>
+      <td>-3.277846</td>
+      <td>1.046026e-03</td>
+    </tr>
+    <tr>
+      <th>REACTOME_RRNA_PROCESSING</th>
+      <td>-0.703607</td>
+      <td>-3.205217</td>
+      <td>1.349605e-03</td>
+    </tr>
+    <tr>
+      <th>REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION</th>
+      <td>0.475259</td>
+      <td>3.162945</td>
+      <td>1.561817e-03</td>
+    </tr>
+    <tr>
+      <th>REACTOME_LEISHMANIA_INFECTION</th>
+      <td>0.531540</td>
+      <td>2.964611</td>
+      <td>3.030663e-03</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>In above, <code class="docutils literal notranslate"><span class="pre">pval</span></code> is the p-value for the enrichment test, while <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">norm</span></code> are enrichment scores and normalized enrichment scores respectively. Note that enrichment scores are signed. Therefore, a negative scores suggests the pathway is down-regulated and a positive score is indicative of up-regulation of genes in the pathway or gene set.</p>
+</section>
+</section>
+<section id="cell-level-pathway-activity-scoring-using-aucell">
+<h3><span class="section-number">18.6.3. </span>Cell-level pathway activity scoring using AUCell<a class="headerlink" href="#cell-level-pathway-activity-scoring-using-aucell" title="Link to this heading">#</a></h3>
+<p>Unlike the previous approach where we assessed gene set <em>enrichment</em> per <em>cluster</em> (or rather cell type), one can <em>score</em> the activity level of pathways and gene sets in each individual cell, that is based on absolute gene expression in the cell, regardless of expression of genes in the other cells. This we can achieve by activity scoring tools such as <code class="docutils literal notranslate"><span class="pre">AUCell</span></code>.</p>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">GSEA</span></code>, we will be using the <code class="docutils literal notranslate"><span class="pre">decoupler</span></code> implementation of <code class="docutils literal notranslate"><span class="pre">AUCell</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">decoupler</span><span class="o">.</span><span class="n">run_aucell</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">reactome</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;geneset&quot;</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;genesymbol&quot;</span><span class="p">,</span>
+    <span class="n">use_raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 16min 42s, sys: 5.09 s, total: 16min 47s
+Wall time: 1min 9s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 24673 × 15706
+    obs: &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;tsne1&#39;, &#39;tsne2&#39;, &#39;condition&#39;, &#39;cluster&#39;, &#39;cell_type&#39;, &#39;replicate&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;integrated_snn_res.0.4&#39;, &#39;seurat_clusters&#39;, &#39;group&#39;
+    var: &#39;name&#39;, &#39;highly_variable&#39;, &#39;highly_variable_rank&#39;, &#39;means&#39;, &#39;variances&#39;, &#39;variances_norm&#39;
+    uns: &#39;log1p&#39;, &#39;hvg&#39;, &#39;pca&#39;, &#39;neighbors&#39;, &#39;umap&#39;, &#39;condition_colors&#39;, &#39;cell_type_colors&#39;, &#39;t-test&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;aucell_estimate&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;distances&#39;, &#39;connectivities&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now add the scores for the interferon-related REACTOME pathways to the <code class="docutils literal notranslate"><span class="pre">obs</span></code> field of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object and annotate the activity level of these pathways in each of the cells on the UMAP:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ifn_pathways</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_SIGNALING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_ALPHA_BETA_SIGNALING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REACTOME_INTERFERON_GAMMA_SIGNALING&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">ifn_pathways</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;aucell_estimate&quot;</span><span class="p">][</span><span class="n">ifn_pathways</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot the scores on the umap</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">ifn_pathways</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">wspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/e632e516de1761722c87c8d95ceb47cd3ffe2b306a352f1eac73b4f5a2c8c99a.png"><img alt="../_images/e632e516de1761722c87c8d95ceb47cd3ffe2b306a352f1eac73b4f5a2c8c99a.png" src="../_images/e632e516de1761722c87c8d95ceb47cd3ffe2b306a352f1eac73b4f5a2c8c99a.png" style="width: 870px; height: 837px;" /></a>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">AUCell</span></code> scores the pathways well-known to be implicated in interferon signalling high in IFN-stimulated cells, while cells in the control condition generally have low scores for these pathways, demonstrating that gene set scoring with <code class="docutils literal notranslate"><span class="pre">AUCell</span></code> has been successful. Also note that the scores are generally larger for terms that are ranked higher in the gene set enrichment test results by <code class="docutils literal notranslate"><span class="pre">GSEA</span></code>. The concordance between pathway activity scores by <code class="docutils literal notranslate"><span class="pre">AUCell</span></code> and gene set enrichment test by <code class="docutils literal notranslate"><span class="pre">GSEA</span></code> is promising, given that we know a priori that IFN-related pathways should be the top-ranked terms. In addition, the effect of IFN stimulation is very large in this dataset and this contributes to the performance of the methods here.</p>
+</section>
+<section id="gene-set-enrichment-for-complex-experimental-designs-using-limma-fry-and-pseudo-bulks">
+<h3><span class="section-number">18.6.4. </span>Gene set enrichment for complex experimental designs using limma-fry and pseudo-bulks<a class="headerlink" href="#gene-set-enrichment-for-complex-experimental-designs-using-limma-fry-and-pseudo-bulks" title="Link to this heading">#</a></h3>
+<p>In cluster-level t-test approach, differentially expressed genes are found by comparing a cluster to all other clusters, which in this case includes both control and stimulated cells. Linear models allow us to compare cells in the stimulated condition only to those in the control group, resulting in more accurate identification of genes responding to the stimulus. Indeed, linear models can accommodate for complex experimental designs, for example, identification of gene sets enriched in <code class="docutils literal notranslate"><span class="pre">Cell</span> <span class="pre">type</span> <span class="pre">A</span> <span class="pre">in</span> <span class="pre">treatment</span> <span class="pre">1</span></code> compared to <code class="docutils literal notranslate"><span class="pre">Cell</span> <span class="pre">type</span> <span class="pre">A</span> <span class="pre">in</span> <span class="pre">treatment</span> <span class="pre">2</span></code>; that is, across perturbation and across cell types effects, while adjusting for batch effects, between-individual variations, gender and strain differences in mouse models etc.</p>
+<p>In the next section, we demonstrate a limma-fry workflow that generalize to realistic data analysis routines, say, for single-cell case control studies. We first create pseudo-bulk replicates per cell type and condition (3 replicates per condition - cell type combination). We then find gene sets enriched in stimulated compared to control cells in a cell type. We also assess gene set enrichment between two stimulated cell type populations to find differences in signalling pathways.</p>
+<section id="create-pseudo-bulk-samples-and-explore-the-data">
+<h4><span class="section-number">18.6.4.1. </span>Create pseudo-bulk samples and explore the data<a class="headerlink" href="#create-pseudo-bulk-samples-and-explore-the-data" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">subsampled_summation</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">:</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_samples_per_group</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_cells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">layer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum sample of X per condition.</span>
+
+<span class="sd">    Drops conditions which don&#39;t have enough samples.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        AnnData to sum expression of</span>
+<span class="sd">    groupby</span>
+<span class="sd">        Keys in obs to groupby</span>
+<span class="sd">    n_samples_per_group</span>
+<span class="sd">        Number of samples to take per group</span>
+<span class="sd">    n_cells</span>
+<span class="sd">        Number of cells to take per sample</span>
+<span class="sd">    random_state</span>
+<span class="sd">        Random state to use when sampling cells</span>
+<span class="sd">    layer</span>
+<span class="sd">        Which layer of adata to use</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -------</span>
+<span class="sd">    AnnData with same var as original, obs with columns from groupby, and X.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_random_state</span>
+
+    <span class="c1"># Checks</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">groupby</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">groupby</span> <span class="o">=</span> <span class="p">[</span><span class="n">groupby</span><span class="p">]</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupby</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inds</span> <span class="ow">in</span> <span class="n">grouped</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Check size of group</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inds</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">n_cells</span> <span class="o">*</span> <span class="n">n_samples_per_group</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Sample from group</span>
+        <span class="n">condition_inds</span> <span class="o">=</span> <span class="n">random_state</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="n">inds</span><span class="p">,</span> <span class="n">n_cells</span> <span class="o">*</span> <span class="n">n_samples_per_group</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample_condition_inds</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">condition_inds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># only grouping by one variable</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_condition_inds</span><span class="p">)</span>
+
+    <span class="c1"># obs of output AnnData</span>
+    <span class="n">new_obs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="n">labels</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">groupby</span><span class="p">,</span> <span class="s2">&quot;sample&quot;</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">n_out</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="c1"># Make indicator matrix</span>
+    <span class="n">indptr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_out</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">)</span>
+    <span class="n">indicator</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_out</span> <span class="o">*</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span>
+            <span class="n">indptr</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">indicator</span> <span class="o">@</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">_get_obs_rep</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">),</span>
+        <span class="n">obs</span><span class="o">=</span><span class="n">new_obs</span><span class="p">,</span>
+        <span class="n">var</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span> <span class="o">=</span> <span class="n">subsampled_summation</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">],</span> <span class="n">n_cells</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">n_samples_per_group</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span>
+<span class="p">)</span>
+<span class="n">pb_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 42 × 15706
+    obs: &#39;cell_type&#39;, &#39;condition&#39;, &#39;sample&#39;
+    var: &#39;name&#39;, &#39;highly_variable&#39;, &#39;highly_variable_rank&#39;, &#39;means&#39;, &#39;variances&#39;, &#39;variances_norm&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Does PC1 captures a meaningful biological or technical fact?</span>
+<span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;lib_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s normalize this data and take a quick look at it. We won’t use a neighbor embedding here since the sample size is significantly reduced.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">pb_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">pb_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;lib_size&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6246eb2c37189b747fbd10feced47ad07baa5f99545aef18d1be029eaf88e2e8.png"><img alt="../_images/6246eb2c37189b747fbd10feced47ad07baa5f99545aef18d1be029eaf88e2e8.png" src="../_images/6246eb2c37189b747fbd10feced47ad07baa5f99545aef18d1be029eaf88e2e8.png" style="width: 487px; height: 860px;" /></a>
+</div>
+</div>
+<p>PC1 now captures difference between lymphoid (T, NK, B) and myeloid (Mono, DC) populations, while the second PC captures variation due to administration of stimulus (i.e. difference between control and stimulated pseudo-replicates). Ideally, the variation of interest has to be detectable in top few PCs of the pseudo-bulk data.</p>
+<p>In this case, since we are indeed interested in stimulation effect per cell type, we proceed to gene set testing. We re-iterate that the purpose of plotting PCs is to explore various axes of variability in the data and to spot unwanted variabilities that can substantial influence the test results. Users may proceed with the rest of the analyses should they be satisfied with the the variations in their data.</p>
+</section>
+<section id="setup-for-limma-and-fry">
+<h4><span class="section-number">18.6.4.2. </span>Setup for <code class="docutils literal notranslate"><span class="pre">limma</span></code> and <code class="docutils literal notranslate"><span class="pre">fry</span></code><a class="headerlink" href="#setup-for-limma-and-fry" title="Link to this heading">#</a></h4>
+<p>For this next part of the analysis we will be using Bioconductor packages <code class="docutils literal notranslate"><span class="pre">limma</span></code> and it’s method <code class="docutils literal notranslate"><span class="pre">fry</span></code>.</p>
+<p>We first set up the design and contrast matrices. Let’s remind ourselves that a design matrix is a mathematical representation of group membership (i.e. the group or condition to which a sample belongs), and contrast matrices are mathematical representations of comparisons of interest for the differential test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groups</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i groups
+group &lt;-  as.factor(gsub(&quot; |\\+&quot;,&quot;_&quot;, groups))
+design &lt;- model.matrix(~ 0 + group)
+head(design)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+[1,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0
+[2,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0
+[3,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0
+[4,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0
+[5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0
+[6,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+colnames(design)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [1] &quot;groupctrl_B_cells&quot;           &quot;groupctrl_CD14__Monocytes&quot;  
+ [3] &quot;groupctrl_CD4_T_cells&quot;       &quot;groupctrl_CD8_T_cells&quot;      
+ [5] &quot;groupctrl_Dendritic_cells&quot;   &quot;groupctrl_FCGR3A__Monocytes&quot;
+ [7] &quot;groupctrl_NK_cells&quot;          &quot;groupstim_B_cells&quot;          
+ [9] &quot;groupstim_CD14__Monocytes&quot;   &quot;groupstim_CD4_T_cells&quot;      
+[11] &quot;groupstim_CD8_T_cells&quot;       &quot;groupstim_Dendritic_cells&quot;  
+[13] &quot;groupstim_FCGR3A__Monocytes&quot; &quot;groupstim_NK_cells&quot;         
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> 
+kang_pbmc_con &lt;- limma::makeContrasts(
+    
+    # the effect if stimulus in CD16 Monocyte cells
+    groupstim_FCGR3A__Monocytes - groupctrl_FCGR3A__Monocytes,
+    
+    # the effect of stimulus in CD16 Monocytes compared to CD8 T Cells
+    (groupstim_FCGR3A__Monocytes - groupctrl_FCGR3A__Monocytes) - (groupstim_CD8_T_cells - groupctrl_CD8_T_cells), 
+    levels = design
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Index the genes annotated in each pathway in our data as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log_norm_X</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i log_norm_X -i reactome
+# Move pathway info from python to R
+pathways = split(reactome$genesymbol, reactome$geneset)
+# Map gene names to indices
+idx = limma::ids2indices(pathways, rownames(log_norm_X))
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/isaac/miniconda3/envs/pathway/lib/python3.9/site-packages/rpy2/robjects/pandas2ri.py:54: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+  for name, values in obj.iteritems():
+/Users/isaac/miniconda3/envs/pathway/lib/python3.9/site-packages/rpy2/robjects/pandas2ri.py:54: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+  for name, values in obj.iteritems():
+</pre></div>
+</div>
+</div>
+</div>
+<p>As done in the <code class="docutils literal notranslate"><span class="pre">gsea</span></code> method, let’s remove gene sets with less than 15 genes</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+keep_gs &lt;- lapply(idx, FUN=function(x) length(x) &gt;= 15)
+idx &lt;- idx[unlist(keep_gs)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have set up the design and contrast matrices, and have indexed the genes in each pathway in our data, we can call <code class="docutils literal notranslate"><span class="pre">fry()</span></code> to test for enriched pathways in each of the contrasts we set above:</p>
+</section>
+<section id="fry-test-for-stimulated-vs-control">
+<h4><span class="section-number">18.6.4.3. </span>fry test for Stimulated vs Control<a class="headerlink" href="#fry-test-for-stimulated-vs-control" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o fry_results
+fry_results &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast = kang_pbmc_con[,1])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Taking a look at the top ranked pathways we’ll see some familiar names:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fry_results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NGenes</th>
+      <th>Direction</th>
+      <th>PValue</th>
+      <th>FDR</th>
+      <th>PValue.Mixed</th>
+      <th>FDR.Mixed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>REACTOME_INTERFERON_ALPHA_BETA_SIGNALING</th>
+      <td>57</td>
+      <td>Up</td>
+      <td>3.836198e-24</td>
+      <td>3.410380e-21</td>
+      <td>8.018820e-39</td>
+      <td>9.504975e-38</td>
+    </tr>
+    <tr>
+      <th>REACTOME_INTERFERON_SIGNALING</th>
+      <td>177</td>
+      <td>Up</td>
+      <td>5.651011e-18</td>
+      <td>2.511875e-15</td>
+      <td>3.888212e-51</td>
+      <td>1.047461e-49</td>
+    </tr>
+    <tr>
+      <th>REACTOME_INTERFERON_GAMMA_SIGNALING</th>
+      <td>84</td>
+      <td>Up</td>
+      <td>6.080234e-13</td>
+      <td>1.801776e-10</td>
+      <td>4.268886e-61</td>
+      <td>2.710743e-59</td>
+    </tr>
+    <tr>
+      <th>REACTOME_MRNA_SPLICING_MINOR_PATHWAY</th>
+      <td>50</td>
+      <td>Down</td>
+      <td>8.311795e-11</td>
+      <td>1.847296e-08</td>
+      <td>5.137952e-20</td>
+      <td>2.003351e-19</td>
+    </tr>
+    <tr>
+      <th>REACTOME_DDX58_IFIH1_MEDIATED_INDUCTION_OF_INTERFERON_ALPHA_BETA</th>
+      <td>67</td>
+      <td>Up</td>
+      <td>1.555236e-09</td>
+      <td>2.765210e-07</td>
+      <td>9.966640e-53</td>
+      <td>3.055291e-51</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">fry_results</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;FDR&quot;</span><span class="p">])})</span>
+            <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/a3a56907350e7d028f2b5e8829a12481a24049acc3c496c67b87b69ff9e89e6d.png"><img alt="../_images/a3a56907350e7d028f2b5e8829a12481a24049acc3c496c67b87b69ff9e89e6d.png" src="../_images/a3a56907350e7d028f2b5e8829a12481a24049acc3c496c67b87b69ff9e89e6d.png" style="width: 1003px; height: 357.425px;" /></a>
+</div>
+</div>
+</section>
+<section id="fry-test-for-the-comparison-between-two-stimulated-cell-types">
+<h4><span class="section-number">18.6.4.4. </span>fry test for the comparison between two stimulated cell types<a class="headerlink" href="#fry-test-for-the-comparison-between-two-stimulated-cell-types" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o fry_results_negative_ctrl
+fry_results_negative_ctrl &lt;- limma::fry(log_norm_X, index = idx, design = design, contrast = kang_pbmc_con[,2])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">so</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">(</span>
+            <span class="n">fry_results_negative_ctrl</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;FDR&quot;</span><span class="p">])})</span>
+            <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;-log10(FDR)&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pathway&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">Bar</span><span class="p">())</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/3c9c4844997122cb9783c56b97a3f3c469491b2787d7f702032c35bbb8d01a2e.png"><img alt="../_images/3c9c4844997122cb9783c56b97a3f3c469491b2787d7f702032c35bbb8d01a2e.png" src="../_images/3c9c4844997122cb9783c56b97a3f3c469491b2787d7f702032c35bbb8d01a2e.png" style="width: 1188.3px; height: 357.425px;" /></a>
+</div>
+</div>
+<p>As demonstrated above, limma-fry can accomodate gene set enrichment tests for datasets and research problems with complex experimental designs. Both <code class="docutils literal notranslate"><span class="pre">gsea</span></code> and <code class="docutils literal notranslate"><span class="pre">fry</span></code> provide insights into the direction of enrichment (positive or negative score in <code class="docutils literal notranslate"><span class="pre">gsea</span></code> and Direction field in <code class="docutils literal notranslate"><span class="pre">fry</span></code>). They both can be applied to clusters of cells or pseudo-bulk samples. However,  Unlike <code class="docutils literal notranslate"><span class="pre">gsea</span></code>, more flexible tests can be carried out with <code class="docutils literal notranslate"><span class="pre">fry</span></code>. In addition, <code class="docutils literal notranslate"><span class="pre">fry</span></code> can reveal if genes in a pathway are changing between the experimental conditions but in consistent or inconsistent directions. Pathways in which the genes change in consistent direction are identified with <code class="docutils literal notranslate"><span class="pre">FDR</span></code> &lt; 0.05. Pathways in which the genes are DE between the conditions but they change in different, inconsistent directions can be identified where <code class="docutils literal notranslate"><span class="pre">FDR</span></code> &gt; 0.05, but <code class="docutils literal notranslate"><span class="pre">FDR.Mixed</span></code> &lt; 0.05 (assuming 0.05 is the desired significance level). <code class="docutils literal notranslate"><span class="pre">fry</span></code> is bidirectional, applicable to arbitrary designs and works well with small number of samples (although this may not be an issue in single cell). Therefore, the results by <code class="docutils literal notranslate"><span class="pre">fry</span></code> might be of more interest biologically.</p>
+<section id="on-the-effect-of-filtering-low-expression-genes">
+<h5><span class="section-number">18.6.4.4.1. </span>On the effect of  filtering low-expression genes<a class="headerlink" href="#on-the-effect-of-filtering-low-expression-genes" title="Link to this heading">#</a></h5>
+<p>As mentioned before, Ideally, the variation of interest has to be detectable in top few PCs of the pseudo-bulk data.
+Let’s remove genes with low expression in the data, apply <span class="math notranslate nohighlight">\(\log_2\)</span>CPM transformation and repeat the PCA plots:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_df</span> <span class="o">=</span> <span class="n">pb_data</span><span class="o">.</span><span class="n">to_df</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i counts_df
+keep &lt;- edgeR::filterByExpr(counts_df) # in real analysis, supply the desig matrix to the function to retain as more genes as possible
+counts_df &lt;- counts_df[keep,]
+logCPM &lt;- edgeR::cpm(counts_df, log=TRUE, prior.count = 2)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/isaac/miniconda3/envs/pathway/lib/python3.9/site-packages/rpy2/robjects/pandas2ri.py:54: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+  for name, values in obj.iteritems():
+R[write to console]: No group or design set. Assuming all samples belong to one group.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o logCPM
+logCPM = data.frame(logCPM)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;logCPM_FLE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logCPM</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># FLE for filter low exprs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pb_data</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;logCPM_FLE_pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">logCPM</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">return_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">pb_data</span><span class="p">,</span> <span class="s2">&quot;logCPM_FLE_pca&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pb_data</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/0f0ef462849186c5198746d9e5974c8564652e3e16359e7cdc1259dad0470d8a.png"><img alt="../_images/0f0ef462849186c5198746d9e5974c8564652e3e16359e7cdc1259dad0470d8a.png" src="../_images/0f0ef462849186c5198746d9e5974c8564652e3e16359e7cdc1259dad0470d8a.png" style="width: 487px; height: 1138px;" /></a>
+</div>
+</div>
+<p>Here, “logCPM_FLE” denotes filtering for low expressed genes followed by <span class="math notranslate nohighlight">\(\log_2\)</span>CPM transformation. We can now clearly observe that PC1 captures cell type effect and PC2 captures the treatment effect, when low-expressed genes are removed and differences between library sizes are adjusted by <span class="math notranslate nohighlight">\(\log_2\)</span>CPM transformation.</p>
+<p>Since in this case study we are indeed interested in stimulation effect per cell type, and this variation is better preserved before gene filtering, we presented the enrichment test results on unfiltered data.
+In practice, filtering low abundance genes and computation of normalisation factors by <code class="docutils literal notranslate"><span class="pre">edgeR::calcNormFactors</span></code> are standard part of bulk RNA-seq analysis workflow. Should we have been interested in global effects of IFN stimulation, we should have used the filtered data. Additionally, one can note that <code class="docutils literal notranslate"><span class="pre">design</span> <span class="pre">&lt;-</span> <span class="pre">model.matrix(~</span> <span class="pre">0</span> <span class="pre">+</span> <span class="pre">lineage</span> <span class="pre">+</span> <span class="pre">group)</span></code> would take into account differences (that is baseline expression differences) between myeloid and lymphoid lineages, improving the separation of pseudo-bulk samples by IFN stimulation, possibly along PC1.  In this case study, we were interested in cell type-specific effects, hence we stayed with a model of data whereby the variability along PC1 is by cell type. The choice of design matrix has to be carefully considered to align with the biological question of interest.</p>
+</section>
+<section id="a-note-on-the-redundancy-between-gene-sets-and-the-performance-of-preranked-and-fry-gene-set-tests">
+<h5><span class="section-number">18.6.4.4.2. </span>A note on the redundancy between gene sets and the performance of preranked and fry gene set tests<a class="headerlink" href="#a-note-on-the-redundancy-between-gene-sets-and-the-performance-of-preranked-and-fry-gene-set-tests" title="Link to this heading">#</a></h5>
+<p>Generally, there can be a large overlap between closely related gene sets. This overlap impacts the rank of the gene sets in the enrichment results and can compromise the final interpretation. For example, the cells in Kang et al. are treated with IFN-<span class="math notranslate nohighlight">\(\beta\)</span>. Therefore, one would expect to see the term REACTOME_INTERFERON_ALPHA_BETA_SIGNALING as the top ranked term. While this term is indeed the top rank term in the output of <code class="docutils literal notranslate"><span class="pre">fry</span></code>, in the output of <code class="docutils literal notranslate"><span class="pre">GSEA</span></code>  REACTOME_INTERFERON_SIGNALING is the top rank term. This term has a larger number of genes (52) compared to REACTOME_INTERFERON_ALPHA_BETA_SIGNALING (24 genes), and most of those genes are shared between the two terms. This illustrates another difference between preranked gene set tests such as <code class="docutils literal notranslate"><span class="pre">GSEA</span></code> and <code class="docutils literal notranslate"><span class="pre">fry</span></code>, in preventing the larger gene sets from dominating the enrichment results. The better performance of <code class="docutils literal notranslate"><span class="pre">fry</span></code> is due to more accurate estimation of gene expression variances, hence more sensitive DE gene results.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">18.7. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Normalise your data using standard scRNA-seq normalisation methods and filter gene sets with low gene coverage in your data prior to pathway analysis.</p></li>
+<li><p>Be aware of different types of gene set testing tests (i.e. competitive vs self-contained) and use one that suits your application.</p></li>
+<li><p>Be aware of differences between gene set enrichment and gene set activity inference. <em>GSEA</em> is the widely used gene set test in single-cell studies; Pagoda 2 is found to outperform other pathway activity scoring tools. If your datasets has complex experimental design, consider pseudo-bulk analysis with gene set tests implemented in <em>limma</em>, as they are compatible with the linear model framework can additionally account for inter-gene correlations.</p></li>
+</ul>
+</section>
+<section id="quiz">
+<h2><span class="section-number">18.8. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>What is the difference between gene set enrichment tests and activity scoring?</p></li>
+<li><p>Describe examples of settings where gene set tests should be used? Can you outline examples of settings where pathway activity scoring methods are applicable?</p></li>
+<li><p>What are the two types of Null Hypotheses in gene set enrichment tests. Explain the difference between the two types.</p></li>
+<li><p>What is the most important preprocessing step in pathway analysis? What are the consequences if it is not conducted properly?</p></li>
+<li><p>Name one gene set testing and one gene set activity scoring algorithm and explain it briefly.</p></li>
+</ol>
+</section>
+<section id="session-info">
+<h2><span class="section-number">18.9. </span>Session info<a class="headerlink" href="#session-info" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+sessionInfo()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: macOS Big Sur 11.6.8
+
+Matrix products: default
+LAPACK: /Users/isaac/miniconda3/envs/pathway/lib/libopenblasp-r0.3.21.dylib
+
+locale:
+[1] C/UTF-8/C/C/C/C
+
+attached base packages:
+[1] stats4    tools     stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] SingleCellExperiment_1.16.0 SummarizedExperiment_1.24.0
+ [3] Biobase_2.54.0              GenomicRanges_1.46.1       
+ [5] GenomeInfoDb_1.30.1         IRanges_2.28.0             
+ [7] S4Vectors_0.32.4            BiocGenerics_0.40.0        
+ [9] MatrixGenerics_1.6.0        matrixStats_0.63.0         
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.9             locfit_1.5-9.6         edgeR_3.36.0          
+ [4] lattice_0.20-45        bitops_1.0-7           grid_4.1.2            
+ [7] zlibbioc_1.40.0        XVector_0.34.0         limma_3.50.1          
+[10] Matrix_1.5-3           statmod_1.4.37         RCurl_1.98-1.9        
+[13] DelayedArray_0.20.0    compiler_4.1.2         GenomeInfoDbData_1.2.7
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">session_info</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><details>
+<summary>Click to view session information</summary>
+<pre>
+-----
+anndata             0.8.0
+anndata2ri          0.0.0
+decoupler           1.3.1
+numpy               1.23.5
+pandas              1.5.2
+rpy2                3.5.1
+scanpy              1.9.1
+seaborn             0.12.1
+session_info        1.0.0
+-----
+</pre>
+<details>
+<summary>Click to view modules imported as dependencies</summary>
+<pre>
+PIL                         9.2.0
+appnope                     0.1.3
+asttokens                   NA
+backcall                    0.2.0
+beta_ufunc                  NA
+binom_ufunc                 NA
+cffi                        1.15.1
+colorama                    0.4.6
+cycler                      0.10.0
+cython_runtime              NA
+dateutil                    2.8.2
+debugpy                     1.6.4
+decorator                   5.1.1
+dunamai                     1.15.0
+entrypoints                 0.4
+executing                   1.2.0
+get_version                 3.5.4
+h5py                        3.7.0
+hypergeom_ufunc             NA
+importlib_metadata          NA
+ipykernel                   6.17.1
+jedi                        0.18.2
+jinja2                      3.1.2
+joblib                      1.2.0
+kiwisolver                  1.4.4
+llvmlite                    0.39.1
+markupsafe                  2.1.1
+matplotlib                  3.6.2
+matplotlib_inline           0.1.6
+mpl_toolkits                NA
+natsort                     8.2.0
+nbinom_ufunc                NA
+ncf_ufunc                   NA
+numba                       0.56.4
+packaging                   21.3
+parso                       0.8.3
+pexpect                     4.8.0
+pickleshare                 0.7.5
+pkg_resources               NA
+platformdirs                2.5.2
+prompt_toolkit              3.0.33
+psutil                      5.9.4
+ptyprocess                  0.7.0
+pure_eval                   0.2.2
+pycparser                   2.21
+pydev_ipython               NA
+pydevconsole                NA
+pydevd                      2.9.1
+pydevd_file_utils           NA
+pydevd_plugins              NA
+pydevd_tracing              NA
+pygments                    2.13.0
+pynndescent                 0.5.8
+pyparsing                   3.0.9
+pytz                        2022.6
+pytz_deprecation_shim       NA
+scipy                       1.9.3
+setuptools                  65.5.1
+six                         1.16.0
+sklearn                     1.1.3
+skmisc                      0.1.4
+stack_data                  0.6.2
+statsmodels                 0.13.5
+threadpoolctl               3.1.0
+tornado                     6.2
+tqdm                        4.64.1
+traitlets                   5.6.0
+typing_extensions           NA
+tzlocal                     NA
+umap                        0.5.3
+wcwidth                     0.2.5
+zipp                        NA
+zmq                         24.0.1
+zoneinfo                    NA
+</pre>
+</details> <!-- seems like this ends pre, so might as well be explicit -->
+<pre>
+-----
+IPython             8.7.0
+jupyter_client      7.4.8
+jupyter_core        5.1.0
+-----
+Python 3.9.15 | packaged by conda-forge | (main, Nov 22 2022, 08:55:37) [Clang 14.0.6 ]
+macOS-11.6.8-x86_64-i386-64bit
+-----
+Session information updated at 2022-12-11 20:31
+</pre>
+</details></div></div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">18.10. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id27">
+<div role="list" class="citation-list">
+<div class="citation" id="id366" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">gspaAGonzalezBM+17</a><span class="fn-bracket">]</span></span>
+<p>Sara Aibar, Carmen Bravo González-Blas, Thomas Moerman, Vân Anh Huynh-Thu, Hana Imrichova, Gert Hulselmans, Florian Rambow, Jean-Christophe Marine, Pierre Geurts, Jan Aerts, and others. Scenic: single-cell regulatory network inference and clustering. <em>Nature methods</em>, 14(11):1083–1086, 2017.</p>
+</div>
+<div class="citation" id="id363" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id26">gspaBiMVelezSB+22</a><span class="fn-bracket">]</span></span>
+<p>Pau Badia-i-Mompel, Jesús Vélez Santiago, Jana Braunger, Celina Geiss, Daniel Dimitrov, Sophia Müller-Dott, Petr Taus, Aurelien Dugourd, Christian H Holland, Ricardo O Ramirez Flores, and others. Decoupler: ensemble of computational methods to infer biological activities from omics data. <em>Bioinformatics Advances</em>, 2(1):vbac016, 2022.</p>
+</div>
+<div class="citation" id="id367" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">gspaCTK+13</a><span class="fn-bracket">]</span></span>
+<p>Edward Y Chen, Christopher M Tan, Yan Kou, Qiaonan Duan, Zichen Wang, Gabriela Vaz Meirelles, Neil R Clark, and Avi Ma’ayan. Enrichr: interactive and collaborative html5 gene list enrichment analysis tool. <em>BMC bioinformatics</em>, 14(1):1–14, 2013.</p>
+</div>
+<div class="citation" id="id383" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">gspaDG04</a><span class="fn-bracket">]</span></span>
+<p>Doris Damian and Malka Gorfine. Statistical concerns about the gsea procedure. <em>Nature genetics</em>, 36(7):663–663, 2004.</p>
+</div>
+<div class="citation" id="id360" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">gspaDJS+19</a><span class="fn-bracket">]</span></span>
+<p>David DeTomaso, Matthew G Jones, Meena Subramaniam, Tal Ashuach, Chun J Ye, and Nir Yosef. Functional interpretation of single cell similarity maps. <em>Nature communications</em>, 10(1):1–11, 2019.</p>
+</div>
+<div class="citation" id="id362" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">gspaFSL+16</a><span class="fn-bracket">]</span></span>
+<p>Jean Fan, Neeraj Salathia, Rui Liu, Gwendolyn E Kaeser, Yun C Yung, Joseph L Herman, Fiona Kaper, Jian-Bing Fan, Kun Zhang, Jerold Chun, and others. Characterizing transcriptional heterogeneity through pathway and gene set overdispersion analysis. <em>Nature methods</em>, 13(3):241–244, 2016.</p>
+</div>
+<div class="citation" id="id374" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">gspaFranzenGBjorkegren19</a><span class="fn-bracket">]</span></span>
+<p>Oscar Franzén, Li-Ming Gan, and Johan LM Björkegren. Panglaodb: a web server for exploration of mouse and human single-cell rna sequencing data. <em>Database</em>, 2019.</p>
+</div>
+<div class="citation" id="id369" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">gspaGAHI+19</a><span class="fn-bracket">]</span></span>
+<p>Luz Garcia-Alonso, Christian H Holland, Mahmoud M Ibrahim, Denes Turei, and Julio Saez-Rodriguez. Benchmark and integration of resources for the estimation of human transcription factor activities. <em>Genome research</em>, 29(8):1363–1375, 2019.</p>
+</div>
+<div class="citation" id="id365" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">gspaGBuhlmann07</a><span class="fn-bracket">]</span></span>
+<p>Jelle J Goeman and Peter Bühlmann. Analyzing gene expression data in terms of gene sets: methodological issues. <em>Bioinformatics</em>, 23(8):980–987, 2007.</p>
+</div>
+<div class="citation" id="id378" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">gspaHS19</a><span class="fn-bracket">]</span></span>
+<p>Christoph Hafemeister and Rahul Satija. Normalization and variance stabilization of single-cell rna-seq data using regularized negative binomial regression. <em>Genome biology</em>, 20(1):1–15, 2019.</p>
+</div>
+<div class="citation" id="id375" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>gspaHTPPaton+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id17">1</a>,<a role="doc-backlink" href="#id20">2</a>)</span>
+<p>Christian H Holland, Jovan Tanevski, Javier Perales-Patón, Jan Gleixner, Manu P Kumar, Elisabetta Mereu, Brian A Joughin, Oliver Stegle, Douglas A Lauffenburger, Holger Heyn, and others. Robustness and applicability of transcription factor and pathway analysis tools on single-cell rna-seq data. <em>Genome biology</em>, 21(1):1–19, 2020.</p>
+</div>
+<div class="citation" id="id380" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">gspaHanzelmannCG13</a><span class="fn-bracket">]</span></span>
+<p>Sonja Hänzelmann, Robert Castelo, and Justin Guinney. Gsva: gene set variation analysis for microarray and rna-seq data. <em>BMC bioinformatics</em>, 14(1):1–15, 2013.</p>
+</div>
+<div class="citation" id="id381" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id25">gspaKST+18</a><span class="fn-bracket">]</span></span>
+<p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell rna-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
+</div>
+<div class="citation" id="id361" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">gspaKSB+21</a><span class="fn-bracket">]</span></span>
+<p>Gennady Korotkevich, Vladimir Sukhov, Nikolay Budin, Boris Shpak, Maxim N Artyomov, and Alexey Sergushichev. Fast gene set enrichment analysis. <em>BioRxiv</em>, pages 060012, 2021.</p>
+</div>
+<div class="citation" id="id377" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">gspaLCS+18</a><span class="fn-bracket">]</span></span>
+<p>Blue B Lake, Song Chen, Brandon C Sos, Jean Fan, Gwendolyn E Kaeser, Yun C Yung, Thu E Duong, Derek Gao, Jerold Chun, Peter V Kharchenko, and others. Integrative single-cell analysis of transcriptional and epigenetic states in the human adult brain. <em>Nature biotechnology</em>, 36(1):70–80, 2018.</p>
+</div>
+<div class="citation" id="id376" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">gspaLCK+08</a><span class="fn-bracket">]</span></span>
+<p>Eunjung Lee, Han-Yu Chuang, Jong-Won Kim, Trey Ideker, and Doheon Lee. Inferring pathway activity toward precise disease classification. <em>PLoS computational biology</em>, 4(11):e1000217, 2008.</p>
+</div>
+<div class="citation" id="id372" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">gspaLSP+11</a><span class="fn-bracket">]</span></span>
+<p>Arthur Liberzon, Aravind Subramanian, Reid Pinchback, Helga Thorvaldsdóttir, Pablo Tamayo, and Jill P Mesirov. Molecular signatures database (msigdb) 3.0. <em>Bioinformatics</em>, 27(12):1739–1740, 2011.</p>
+</div>
+<div class="citation" id="id379" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">gspaLMM16</a><span class="fn-bracket">]</span></span>
+<p>Aaron TL Lun, Davis J McCarthy, and John C Marioni. A step-by-step workflow for low-level analysis of single-cell rna-seq data with bioconductor. <em>F1000Research</em>, 2016.</p>
+</div>
+<div class="citation" id="id370" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">gspaRPW+15</a><span class="fn-bracket">]</span></span>
+<p>Matthew E Ritchie, Belinda Phipson, DI Wu, Yifang Hu, Charity W Law, Wei Shi, and Gordon K Smyth. Limma powers differential expression analyses for rna-sequencing and microarray studies. <em>Nucleic acids research</em>, 43(7):e47–e47, 2015.</p>
+</div>
+<div class="citation" id="id368" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">gspaSKKlunemann+18</a><span class="fn-bracket">]</span></span>
+<p>Michael Schubert, Bertram Klinger, Martina Klünemann, Anja Sieber, Florian Uhlitz, Sascha Sauer, Mathew J Garnett, Nils Blüthgen, and Julio Saez-Rodriguez. Perturbation-response genes reveal signaling footprints in cancer gene expression. <em>Nature communications</em>, 9(1):1–11, 2018.</p>
+</div>
+<div class="citation" id="id382" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">gspaSmy05</a><span class="fn-bracket">]</span></span>
+<p>Gordon K Smyth. Limma: linear models for microarray data. In <em>Bioinformatics and computational biology solutions using R and Bioconductor</em>, pages 397–420. Springer, 2005.</p>
+</div>
+<div class="citation" id="id371" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>gspaSTM+05<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>Aravind Subramanian, Pablo Tamayo, Vamsi K Mootha, Sayan Mukherjee, Benjamin L Ebert, Michael A Gillette, Amanda Paulovich, Scott L Pomeroy, Todd R Golub, Eric S Lander, and others. Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles. <em>Proceedings of the National Academy of Sciences</em>, 102(43):15545–15550, 2005.</p>
+</div>
+<div class="citation" id="id373" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">gspaZLX+19</a><span class="fn-bracket">]</span></span>
+<p>Xinxin Zhang, Yujia Lan, Jinyuan Xu, Fei Quan, Erjie Zhao, Chunyu Deng, Tao Luo, Liwen Xu, Gaoming Liao, Min Yan, and others. Cellmarker: a manually curated resource of cell markers in human and mouse. <em>Nucleic acids research</em>, 47(D1):D721–D728, 2019.</p>
+</div>
+<div class="citation" id="id364" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>gspaZMH+20<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id18">1</a>,<a role="doc-backlink" href="#id19">2</a>,<a role="doc-backlink" href="#id22">3</a>)</span>
+<p>Yaru Zhang, Yunlong Ma, Yukuan Huang, Yan Zhang, Qi Jiang, Meng Zhou, and Jianzhong Su. Benchmarking algorithms for pathway activity transformation of single-cell rna-seq data. <em>Computational and structural biotechnology journal</em>, 18:2953–2961, 2020.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">18.11. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">18.11.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+<li><p>Anastasia Litinetskaya</p></li>
+<li><p>Soroor Hediyeh-Zadeh</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">18.11.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./conditions"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="compositional.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">17. </span>Compositional analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="perturbation_modeling.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">19. </span>Perturbation modeling</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">18.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pathway-and-gene-set-collections">18.2. Pathway and gene set collections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#null-hypotheses-in-gene-set-enrichment-analysis">18.3. Null hypotheses in gene set enrichment analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-tests-and-pathway-analysis">18.4. Gene set tests and pathway analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-test-vs-pathway-activity-inference">18.4.1. Gene set test vs. pathway activity inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-considerations">18.5. Technical considerations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-out-the-gene-sets-with-low-number-of-genes">18.5.1. Filtering out the gene sets with low number of genes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-normalization">18.5.2. Data normalization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study-pathway-enrichment-analysis-and-activity-level-scoring-in-human-pbmc-single-cells">18.6. Case study: Pathway enrichment analysis and activity level scoring in human PBMC single cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-and-explore-the-data">18.6.1. Prepare and explore the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-level-gene-set-enrichment-analysis-with-decoupler">18.6.2. Cluster-level gene set enrichment analysis with <code class="docutils literal notranslate"><span class="pre">decoupler</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieving-gene-sets">18.6.2.1. Retrieving gene sets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-gsea">18.6.2.2. Running GSEA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-level-pathway-activity-scoring-using-aucell">18.6.3. Cell-level pathway activity scoring using AUCell</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-set-enrichment-for-complex-experimental-designs-using-limma-fry-and-pseudo-bulks">18.6.4. Gene set enrichment for complex experimental designs using limma-fry and pseudo-bulks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-pseudo-bulk-samples-and-explore-the-data">18.6.4.1. Create pseudo-bulk samples and explore the data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-for-limma-and-fry">18.6.4.2. Setup for <code class="docutils literal notranslate"><span class="pre">limma</span></code> and <code class="docutils literal notranslate"><span class="pre">fry</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fry-test-for-stimulated-vs-control">18.6.4.3. fry test for Stimulated vs Control</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fry-test-for-the-comparison-between-two-stimulated-cell-types">18.6.4.4. fry test for the comparison between two stimulated cell types</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#on-the-effect-of-filtering-low-expression-genes">18.6.4.4.1. On the effect of  filtering low-expression genes</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-the-redundancy-between-gene-sets-and-the-performance-of-preranked-and-fry-gene-set-tests">18.6.4.4.2. A note on the redundancy between gene sets and the performance of preranked and fry gene set tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">18.7. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">18.8. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-info">18.9. Session info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">18.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">18.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">18.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">18.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
