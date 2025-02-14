@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>14. Pseudotemporal ordering &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'trajectories/pseudotemporal';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="15. RNA velocity" href="rna_velocity.html" />
+    <link rel="prev" title="13. Data integration" href="../cellular_structure/integration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">8. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">9. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">10. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">11. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">12. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">13. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">14. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rna_velocity.html">15. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lineage_tracing.html">16. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">17. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">18. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">19. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">20. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">21. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">22. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">23. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">24. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">25. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">26. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">27. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">28. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">29. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">30. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">31. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">32. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">33. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">34. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">35. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">36. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">37. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">38. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">39. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">40. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">44. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">45. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">46. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">47. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">48. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">49. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">50. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">51. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/trajectories/pseudotemporal.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Ftrajectories/pseudotemporal.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/trajectories/pseudotemporal.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Pseudotemporal ordering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">14.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudotime-construction">14.2. Pseudotime construction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#down-stream-tasks-and-outlook">14.3. Down-stream tasks and outlook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inferring-pseudotime-for-adult-human-bone-marrow">14.4. Inferring pseudotime for adult human bone marrow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">14.4.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">14.4.2. General settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">14.4.3. Data loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">14.4.4. Pseudotime construction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">14.5. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">14.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">14.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">14.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">14.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pseudotemporal-ordering">
+<h1><span class="section-number">14. </span>Pseudotemporal ordering<a class="headerlink" href="#pseudotemporal-ordering" title="Link to this heading">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">14.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Single-cell sequencing assays provide high resolution measurements of biological tissues <span id="id1">[<a class="reference internal" href="#id293" title="Saiful Islam, Una Kjällquist, Annalena Moliner, Pawel Zajac, Jian-Bing Fan, Peter Lönnerberg, and Sten Linnarsson. Characterization of the single-cell transcriptional landscape by highly multiplex RNA-seq. Genome Research, 21(7):1160–1167, May 2011. URL: https://doi.org/10.1101/gr.110882.110, doi:10.1101/gr.110882.110.">Islam <em>et al.</em>, 2011</a>]</span>, <span id="id2">[<a class="reference internal" href="#id292" title="Byungjin Hwang, Ji Hyun Lee, and Duhee Bang. Single-cell RNA sequencing technologies and bioinformatics pipelines. Experimental &amp;amp$\mathsemicolon $ Molecular Medicine, 50(8):1–14, August 2018. URL: https://doi.org/10.1038/s12276-018-0071-8, doi:10.1038/s12276-018-0071-8.">Hwang <em>et al.</em>, 2018</a>]</span>.
+Consequently, such technologies can help decipher and understand cellular heterogeneity <span id="id3">[<a class="reference internal" href="#id284" title="James A. Briggs, Caleb Weinreb, Daniel E. Wagner, Sean Megason, Leonid Peshkin, Marc W. Kirschner, and Allon M. Klein. The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution. Science, June 2018. URL: https://doi.org/10.1126/science.aar5780, doi:10.1126/science.aar5780.">Briggs <em>et al.</em>, 2018</a>]</span>, <span id="id4">[<a class="reference internal" href="#id303" title="Lisa Sikkema, Daniel C Strobl, Luke Zappia, Elo Madissoon, Nikolay S Markov, Laure-Emmanuelle Zaragosi, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Christophe Becavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-I Chung, Antoine Collin, Aurore C A Gay, Baharak Hooshiar Kashani, Manu Jain, Theodore Kapellos, Tessa M Kole, Christoph H Mayr, Von Michael Papen, Lance Peter, Ciro Ramirez-Suastegui, Janine Schniering, Chase J Taylor, Thomas Walzthoeni, Chuan Xu, Linh T Bui, Carlo de Donno, Leander Dony, Minzhe Guo, Austin J Gutierrez, Lukas Heumos, Ni Huang, Ignacio L Ibarra, Nathan D Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-Lopez, Kyle J Travaglini, Anna Wilbrey-Clark, Kaylee B Worlock, Masahiro Yoshida, Tushar J Desai, Oliver Eickelberg, Christine Falk, Naftali Kaminski, Mark A Krasnow, Robert Lafyatis, Marko Z Nikoli, Joseph E Powell, Jayaraj Rajagopal, Orit Rozenblatt-Rosen, Max A Seibold, Dean Sheppard, Douglas P Shepherd, Sarah A Teichmann, Alexander M Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E Banovich, Pascal Barbry, Thu E Duong, Kerstin B Meyer, Jonathan A Kropski, Dana Pe'er, Herbert B Schiller, Purushothama Rao Tata, Joachim L Schultze, Alexander V Misharin, Martijn C Nawijn, Malte D Luecken, and Fabian J Theis. An integrated cell atlas of the human lung in health and disease. bioRxiv, pages 2022.03.10.483747, March 2022. doi:10.1101/2022.03.10.483747.">Sikkema <em>et al.</em>, 2022</a>]</span> and the dynamics of a biological process <span id="id5">[<a class="reference internal" href="#id294" title="Laura Jardine, Simone Webb, Issac Goh, Mariana Quiroga Londoño, Gary Reynolds, Michael Mather, Bayanne Olabi, Emily Stephenson, Rachel A. Botting, Dave Horsfall, Justin Engelbert, Daniel Maunder, Nicole Mende, Caitlin Murnane, Emma Dann, Jim McGrath, Hamish King, Iwo Kucinski, Rachel Queen, Christopher D. Carey, Caroline Shrubsole, Elizabeth Poyner, Meghan Acres, Claire Jones, Thomas Ness, Rowen Coulthard, Natalina Elliott, Sorcha O'Byrne, Myriam L. R. Haltalli, John E. Lawrence, Steven Lisgo, Petra Balogh, Kerstin B. Meyer, Elena Prigmore, Kirsty Ambridge, Mika Sarkin Jain, Mirjana Efremova, Keir Pickard, Thomas Creasey, Jaume Bacardit, Deborah Henderson, Jonathan Coxhead, Andrew Filby, Rafiqul Hussain, David Dixon, David McDonald, Dorin-Mirel Popescu, Monika S. Kowalczyk, Bo Li, Orr Ashenberg, Marcin Tabaka, Danielle Dionne, Timothy L. Tickle, Michal Slyper, Orit Rozenblatt-Rosen, Aviv Regev, Sam Behjati, Elisa Laurenti, Nicola K. Wilson, Anindita Roy, Berthold Göttgens, Irene Roberts, Sarah A. Teichmann, and Muzlifah Haniffa. Blood and immune development in human fetal bone marrow and down syndrome. Nature, 598(7880):327–331, September 2021. URL: https://doi.org/10.1038/s41586-021-03929-x, doi:10.1038/s41586-021-03929-x.">Jardine <em>et al.</em>, 2021</a>]</span>, <span id="id6">[<a class="reference internal" href="#id291" title="Peng He, Kyungtae Lim, Dawei Sun, Jan Patrick Pett, Quitz Jeng, Krzysztof Polanski, Ziqi Dong, Liam Bolt, Laura Richardson, Lira Mamanova, Monika Dabrowska, Anna Wilbrey-Clark, Elo Madissoon, Zewen Kelvin Tuong, Emma Dann, Chenqu Suo, Isaac Goh, Masahiro Yoshida, Marko Z Nikolić, Sam M Janes, Xiaoling He, Roger A Barker, Sarah A Teichmann, John C. Marioni, Kerstin B Meyer, and Emma L Rawlins. A human fetal lung cell atlas uncovers proximal-distal gradients of differentiation and key regulators of epithelial fates. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933, arXiv:https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933.full.pdf, doi:10.1101/2022.01.11.474933.">He <em>et al.</em>, 2022</a>]</span>.<br />
+Corresponding studies include quantifying cellular fates as well as identifying genes driving the process.
+However, as cells are destroyed when sequenced in classical single-cell RNA sequencing (scRNA-seq) protocols, it is impossible to track their development and, for example, gene expression profile over time.
+Although recent technological advances allow recording the transcriptome sequentially <span id="id7">[<a class="reference internal" href="#id286" title="Wanze Chen, Orane Guillaume-Gentil, Pernille Yde Rainer, Christoph G. Gäbelein, Wouter Saelens, Vincent Gardeux, Amanda Klaeger, Riccardo Dainese, Magda Zachara, Tomaso Zambelli, Julia A. Vorholt, and Bart Deplancke. Live-seq enables temporal transcriptomic recording of single cells. Nature, 608(7924):733–740, August 2022. URL: https://doi.org/10.1038/s41586-022-05046-9, doi:10.1038/s41586-022-05046-9.">Chen <em>et al.</em>, 2022</a>]</span>, they are experimentally challenging and currently fail to scale to larger dataset.
+Consequently, the underlying dynamic process needs to be estimated from the measured snapshot data, instead.</p>
+<p>Even though samples are, traditionally, taken from a single experimental time point, a multitude of cell types can be observed. This diversity stems from the asynchronous nature of biological processes. As such, a range of the developmental process can be observed. Reconstructing the developmental landscape is the goal of the field coined trajectory inference (TI). This task is achieved by ordering the observed cellular states according to the developmental process. States are aligned along the developmental direction by mapping discrete annotations to a continuous domain - the so-called <em>pseudotime</em>.</p>
+<p>Pseudotimes rank cells relative to each other according to their respective stage in the developmental process. Less mature cells are assigned small, mature cells large values. Studying a bone marrow sample for example, hematopoietic stem cells are assigned a low, and erythroid cells a high pseudotime. The assignment is, in case of single-cell RNA sequencing data, based on the transcriptomic profile of a cell. Additionally, the construction usually requires the specification of an initial, or, equivalently, root cell where the overall process starts.</p>
+</section>
+<section id="pseudotime-construction">
+<h2><span class="section-number">14.2. </span>Pseudotime construction<a class="headerlink" href="#pseudotime-construction" title="Link to this heading">#</a></h2>
+<p>Pseudotime construction generally follows a common workflow: As a first step, the ultra high-dimensional single-cell data is projected onto a lower dimensional representation. This procedure is justified by the observation that dynamical processes progress on a low-dimensional manifold <span id="id8">[<a class="reference internal" href="#id307" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145–1160, November 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span>. In practice, pseudotime methods may rely on principal components (for example Palantir <span id="id9">[<a class="reference internal" href="#id302" title="Manu Setty, Vaidotas Kiseliovas, Jacob Levine, Adam Gayoso, Linas Mazutis, and Dana Pe'er. Characterization of cell fate probabilities in single-cell data with palantir. Nature Biotechnology, 37(4):451–460, March 2019. URL: https://doi.org/10.1038/s41587-019-0068-4, doi:10.1038/s41587-019-0068-4.">Setty <em>et al.</em>, 2019</a>]</span>) or diffusion components (for example diffusion pseudotime (DPT) <span id="id10">[<a class="reference internal" href="#id290" title="Laleh Haghverdi, Maren Büttner, F Alexander Wolf, Florian Buettner, and Fabian J Theis. Diffusion pseudotime robustly reconstructs lineage branching. Nature Methods, 13(10):845–848, August 2016. URL: https://doi.org/10.1038/nmeth.3971, doi:10.1038/nmeth.3971.">Haghverdi <em>et al.</em>, 2016</a>]</span>). Following, pseudotimes are constructed based on one of the following principles.</p>
+<ol class="arabic simple">
+<li><p>Observations are first clustered and, following, connections between these clusters identified. The clusters can be ordered and, thereby, a pseudotime constructed. Henceforth, we will refer to this approach as the <em>cluster approach</em>. Classical cluster algorithms include <span class="math notranslate nohighlight">\(k\)</span>-means <span id="id11">[<a class="reference internal" href="#id296" title="S. Lloyd. Least squares quantization in PCM. IEEE Transactions on Information Theory, 28(2):129–137, March 1982. URL: https://doi.org/10.1109/tit.1982.1056489, doi:10.1109/tit.1982.1056489.">Lloyd, 1982</a>]</span>, <span id="id12">[<a class="reference internal" href="#id297" title="J. B. MacQueen. Some methods for classification and analysis of multivariate observations. In L. M. Le Cam and J. Neyman, editors, Proc. of the fifth Berkeley Symposium on Mathematical Statistics and Probability, volume 1, 281-297. University of California Press, 1967.">MacQueen, 1967</a>]</span>, Leiden <span id="id13">[<a class="reference internal" href="#id306" title="V. A. Traag, L. Waltman, and N. J. van Eck. From louvain to leiden: guaranteeing well-connected communities. Scientific Reports, March 2019. URL: https://doi.org/10.1038/s41598-019-41695-z, doi:10.1038/s41598-019-41695-z.">Traag <em>et al.</em>, 2019</a>]</span>, or hierarchical clustering <span id="id14">[<a class="reference internal" href="#id298" title="Daniel Müllner. Modern hierarchical, agglomerative clustering algorithms. 2011. URL: https://arxiv.org/abs/1109.2378, doi:10.48550/ARXIV.1109.2378.">Müllner, 2011</a>]</span>. Clusters may be connected based on similarity, or by constructing a minimum spanning tree (MST) <span id="id15">[<a class="reference internal" href="#id300" title="Seth Pettie and Vijaya Ramachandran. An optimal minimum spanning tree algorithm. Journal of the ACM, 49(1):16–34, January 2002. URL: https://doi.org/10.1145/505241.505243, doi:10.1145/505241.505243.">Pettie and Ramachandran, 2002</a>]</span>.</p></li>
+<li><p>The <em>graph approach</em> first finds connections between the lower dimensional representation of the observations. This procedure defines a graph based on which clusters, and thus an ordering, are defined. <em>PAGA</em> <span id="id16">[<a class="reference internal" href="#id137" title="F. Alexander Wolf, Fiona K. Hamey, Mireya Plass, Jordi Solana, Joakim S. Dahlin, Berthold Göttgens, Nikolaus Rajewsky, Lukas Simon, and Fabian J. Theis. Paga: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. Genome Biology, 20(1):59, Mar 2019. URL: https://doi.org/10.1186/s13059-019-1663-x, doi:10.1186/s13059-019-1663-x.">Wolf <em>et al.</em>, 2019</a>]</span>, for example, partitions the graph into Leiden clusters and estimates connections between them. Intuitively, this approach preserves the global topology of the data while analyzing it at a lower resolution. Consequently, the computational efficiency is increased.</p></li>
+<li><p><em>Manifold-learning based approaches</em> proceed similar to the <em>cluster approach</em>. However, connections between clusters are defined by using principal curves or graphs to estimate the underlying trajectories. Principal curves find a one-dimensional curve that connects cellular observations in the higher dimensional space. A notable representation of this approach is Slingshot <span id="id17">[<a class="reference internal" href="#id305" title="Kelly Street, Davide Risso, Russell B. Fletcher, Diya Das, John Ngai, Nir Yosef, Elizabeth Purdom, and Sandrine Dudoit. Slingshot: cell lineage and pseudotime inference for single-cell transcriptomics. BMC Genomics, June 2018. URL: https://doi.org/10.1186/s12864-018-4772-0, doi:10.1186/s12864-018-4772-0.">Street <em>et al.</em>, 2018</a>]</span>.</p></li>
+<li><p>Probabilistic frameworks assign transition probabilities to ordered cell-cell pairs. Each transition probability quantifies how likely the reference cell is the ancestor of the other cell. These probabilities define random processes that are used to define a pseudotime. DPT, for example, is defined as the difference between consecutive states of a random walk. Contrastingly, Palantir <span id="id18">[<a class="reference internal" href="#id302" title="Manu Setty, Vaidotas Kiseliovas, Jacob Levine, Adam Gayoso, Linas Mazutis, and Dana Pe'er. Characterization of cell fate probabilities in single-cell data with palantir. Nature Biotechnology, 37(4):451–460, March 2019. URL: https://doi.org/10.1038/s41587-019-0068-4, doi:10.1038/s41587-019-0068-4.">Setty <em>et al.</em>, 2019</a>]</span> models trajectories themselves as Markov chains. While both approaches rely on a probabilistic framework, they require a root cell to be specified. The pseudotime itself is computed with respect to this cell.</p></li>
+</ol>
+<p>TI is a well-studied field providing a rich set of methods. To apply the appropriate method to analyze a single-cell dataset, the biological process itself needs to be understood first. This understanding especially includes the nature of the process, <em>i.e.</em>, if it, for example, is linear, cyclic, or branching. Similarly, orthogonal processes within one and the same dataset limits the TI methods applicable. To help identifying appropriate tools, dynguidelines <span id="id19">[<a class="reference internal" href="#id287" title="Louise Deconinck, Robrecht Cannoodt, Wouter Saelens, Bart Deplancke, and Yvan Saeys. Recent advances in trajectory inference from single-cell omics data. Current Opinion in Systems Biology, 27:100344, September 2021. URL: https://doi.org/10.1016/j.coisb.2021.05.005, doi:10.1016/j.coisb.2021.05.005.">Deconinck <em>et al.</em>, 2021</a>]</span> provides an exhaustive overview of algorithms and their characteristics.</p>
+</section>
+<section id="down-stream-tasks-and-outlook">
+<h2><span class="section-number">14.3. </span>Down-stream tasks and outlook<a class="headerlink" href="#down-stream-tasks-and-outlook" title="Link to this heading">#</a></h2>
+<p>Even though TI and pseudotime can already provide valuable insight, they usually act as a stepping stone for more fine grained analysis. Identifying terminal states, for example, is a classical biological question that can be studied. Similarly, lineage bifurcation and genes driving fate decisions can be identified based on TI and pseudotime. Which question can answer and how the answer is found is usually method specific. Palantir, for example, identifies terminal states as absorbing states of its constructed Markov chain.</p>
+<p>The success of trajectory inference is well documented and, consequently, many methods have been proposed. However, with the advances of sequencing technologies, new sources of information become available. ATAC-seq <span id="id20">[<a class="reference internal" href="#id285" title="Jason D. Buenrostro, Beijing Wu, Ulrike M. Litzenburger, Dave Ruff, Michael L. Gonzales, Michael P. Snyder, Howard Y. Chang, and William J. Greenleaf. Single-cell chromatin accessibility reveals principles of regulatory variation. Nature, 523(7561):486–490, June 2015. URL: https://doi.org/10.1038/nature14590, doi:10.1038/nature14590.">Buenrostro <em>et al.</em>, 2015</a>]</span>, CITE-seq <span id="id21">[<a class="reference internal" href="#id304" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865–868, July 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>, and DOGMA-seq <span id="id22">[<a class="reference internal" href="#id299" title="Eleni P. Mimitou, Caleb A. Lareau, Kelvin Y. Chen, Andre L. Zorzetto-Fernandes, Yuhan Hao, Yusuke Takeshima, Wendy Luo, Tse-Shun Huang, Bertrand Z. Yeung, Efthymia Papalexi, Pratiksha I. Thakore, Tatsuya Kibayashi, James Badger Wing, Mayu Hata, Rahul Satija, Kristopher L. Nazor, Shimon Sakaguchi, Leif S. Ludwig, Vijay G. Sankaran, Aviv Regev, and Peter Smibert. Scalable, multimodal profiling of chromatin accessibility, gene expression and protein levels in single cells. Nature Biotechnology, 39(10):1246–1258, June 2021. URL: https://doi.org/10.1038/s41587-021-00927-2, doi:10.1038/s41587-021-00927-2.">Mimitou <em>et al.</em>, 2021</a>]</span>, for example, measure additional modalities beyond the transcriptome. Lineage tracing <span id="id23">[]</span> and metabolic labeling <span id="id24">[<a class="reference internal" href="#id288" title="Florian Erhard, Marisa A. P. Baptista, Tobias Krammer, Thomas Hennig, Marius Lange, Panagiota Arampatzi, Christopher S. Jürges, Fabian J. Theis, Antoine-Emmanuel Saliba, and Lars Dölken. scSLAM-seq reveals core features of transcription dynamics in single cells. Nature, 571(7765):419–423, July 2019. URL: https://doi.org/10.1038/s41586-019-1369-y, doi:10.1038/s41586-019-1369-y.">Erhard <em>et al.</em>, 2019</a>]</span>, <span id="id25">[<a class="reference internal" href="#id281" title="Nico Battich, Joep Beumer, Buys de Barbanson, Lenno Krenning, Chloé S. Baron, Marvin E. Tanenbaum, Hans Clevers, and Alexander van Oudenaarden. Sequencing metabolically labeled transcripts in single cells reveals mRNA turnover strategies. Science, 367(6482):1151–1156, March 2020. URL: https://doi.org/10.1126/science.aax3072, doi:10.1126/science.aax3072.">Battich <em>et al.</em>, 2020</a>]</span>, <span id="id26">[<a class="reference internal" href="#id301" title="Qi Qiu, Peng Hu, Xiaojie Qiu, Kiya W. Govek, Pablo G. Cámara, and Hao Wu. Massively parallel and time-resolved RNA sequencing in single cells with scNT-seq. Nature Methods, 17(10):991–1001, August 2020. URL: https://doi.org/10.1038/s41592-020-0935-4, doi:10.1038/s41592-020-0935-4.">Qiu <em>et al.</em>, 2020</a>]</span>, <span id="id27">[<a class="reference internal" href="#id289" title="Florian Erhard, Antoine-Emmanuel Saliba, Alexandra Lusser, Christophe Toussaint, Thomas Hennig, Bhupesh K. Prusty, Daniel Kirschenbaum, Kathleen Abadie, Eric A. Miska, Caroline C. Friedel, Ido Amit, Ronald Micura, and Lars Dölken. Time-resolved single-cell RNA-seq using metabolic RNA labelling. Nature Reviews Methods Primers, September 2022. URL: https://doi.org/10.1038/s43586-022-00157-z, doi:10.1038/s43586-022-00157-z.">Erhard <em>et al.</em>, 2022</a>]</span> even provide the (likely) future state of a given cell. Consequently, future TI tools will be able to include more information to estimate trajectories and pseudotime more accurately and robustly, and allow answering novel questions. For example, RNA velocity <span id="id28">[<a class="reference internal" href="#id295" title="Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. Nature, 560(7719):494–498, August 2018. URL: https://doi.org/10.1038/s41586-018-0414-6, doi:10.1038/s41586-018-0414-6.">Manno <em>et al.</em>, 2018</a>]</span>, <span id="id29">[<a class="reference internal" href="#id282" title="Volker Bergen, Marius Lange, Stefan Peidli, F. Alexander Wolf, and Fabian J. Theis. Generalizing RNA velocity to transient cell states through dynamical modeling. Nature Biotechnology, 38(12):1408–1414, August 2020. URL: https://doi.org/10.1038/s41587-020-0591-3, doi:10.1038/s41587-020-0591-3.">Bergen <em>et al.</em>, 2020</a>]</span>, <span id="id30">[<a class="reference internal" href="#id283" title="Volker Bergen, Ruslan A Soldatov, Peter V Kharchenko, and Fabian J Theis. RNA velocity—current challenges and future perspectives. Molecular Systems Biology, August 2021. URL: https://doi.org/10.15252/msb.202110282, doi:10.15252/msb.202110282.">Bergen <em>et al.</em>, 2021</a>]</span> is one technique that uses unspliced and spliced mRNA to infer directed, dynamic information beyond classical, static snapshot data.</p>
+</section>
+<section id="inferring-pseudotime-for-adult-human-bone-marrow">
+<h2><span class="section-number">14.4. </span>Inferring pseudotime for adult human bone marrow<a class="headerlink" href="#inferring-pseudotime-for-adult-human-bone-marrow" title="Link to this heading">#</a></h2>
+<p>To show how a pseudotime can be constructed and different pseudotimes compared, we study a dataset of adult human bone marrow <span id="id31">[<a class="reference internal" href="#id302" title="Manu Setty, Vaidotas Kiseliovas, Jacob Levine, Adam Gayoso, Linas Mazutis, and Dana Pe'er. Characterization of cell fate probabilities in single-cell data with palantir. Nature Biotechnology, 37(4):451–460, March 2019. URL: https://doi.org/10.1038/s41587-019-0068-4, doi:10.1038/s41587-019-0068-4.">Setty <em>et al.</em>, 2019</a>]</span>.</p>
+<section id="environment-setup">
+<h3><span class="section-number">14.4.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="general-settings">
+<h3><span class="section-number">14.4.2. </span>General settings<a class="headerlink" href="#general-settings" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../data/&quot;</span><span class="p">)</span>
+<span class="n">DATA_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">FILE_NAME</span> <span class="o">=</span> <span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow.h5ad&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-loading">
+<h3><span class="section-number">14.4.3. </span>Data loading<a class="headerlink" href="#data-loading" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_NAME</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/35826944&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 5780 × 27876
+    obs: &#39;clusters&#39;, &#39;palantir_pseudotime&#39;, &#39;palantir_diff_potential&#39;
+    var: &#39;palantir&#39;
+    uns: &#39;clusters_colors&#39;, &#39;palantir_branch_probs_cell_types&#39;
+    obsm: &#39;MAGIC_imputed_data&#39;, &#39;X_tsne&#39;, &#39;palantir_branch_probs&#39;
+    layers: &#39;spliced&#39;, &#39;unspliced&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>To construct pseudotimes, the data must be preprocessed. Here, we filter out genes expressed in only a few number of cells (here, at least 20). Notably, the construction of the pseudotime later on is robust to the exact choice of the threshold. Following to this first gene filtering, the cell size is normalized, and counts log1p transformed to reduce the effect of outliers. As usual, we also identify and annotate highly variable genes. Finally, a nearest neighbor graph is constructed based on which we will define the pseudotime. The number of principle components is chosen based on the explained variance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_counts</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The two-dimensional t-SNE representation colored by cell type annotations shows that the cell types cluster together well. Additionally, the developmental hierarchy is visible.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;tsne&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a9ae3fe7a64ad679e918b25e70a926ea410c20d23b5e1226ffe50baf68cdb80d.png" src="../_images/a9ae3fe7a64ad679e918b25e70a926ea410c20d23b5e1226ffe50baf68cdb80d.png" />
+</div>
+</div>
+</section>
+<section id="id32">
+<h3><span class="section-number">14.4.4. </span>Pseudotime construction<a class="headerlink" href="#id32" title="Link to this heading">#</a></h3>
+<p>To calculate diffusion pseudotime (DPT), first, the corresponding diffusion maps need to be calculated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">diffmap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The differentiation hierarchy in bone marrow is well understood. However, it is only know that the developmental process starts in the form of hematopoietic stem cells but not at which cell exactly in the corresponding cluster in our dataset. To identify a putative initial cell, we study the individual diffusion components. We identify the stem cell with the most extreme diffusion component in one dimension (in our case dimension 3).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting root cell as described above</span>
+<span class="n">root_ixs</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_diffmap&quot;</span><span class="p">][:,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;diffmap&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;clusters&quot;</span><span class="p">],</span>
+    <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;iroot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_ixs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4658852d65f7ec925f904fb20211fefaeaac8278af2ce97ab4da19bb0cc98b25.png" src="../_images/4658852d65f7ec925f904fb20211fefaeaac8278af2ce97ab4da19bb0cc98b25.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">dpt</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Different pseudotime methods give different results. Sometimes, one pseudotime captures the underlying developmental processes more accurately. Here, we compare the just computed DPT with the pre-computed Palantir pseudotime (see <a class="reference external" href="https://github.com/dpeerlab/Palantir/blob/master/notebooks/Palantir_sample_notebook.ipynb">here</a> for the corresponding tutorial). One option to compare different pseudotimes is by coloring the low dimensional embedding of the data (here, t-SNE). Here, DPT is extremely high in the cluster of CLPs compared to all other cell types. Contrastingly, the Palantir pseudotime increases continuously with developmental maturity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;tsne&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dpt_pseudotime&quot;</span><span class="p">,</span> <span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">],</span>
+    <span class="n">color_map</span><span class="o">=</span><span class="s2">&quot;gnuplot2&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5b69c9a89782dd9a0131cee40b915138667a8a384997521b16622d3915518dd4.png" src="../_images/5b69c9a89782dd9a0131cee40b915138667a8a384997521b16622d3915518dd4.png" />
+</div>
+</div>
+<p>Instead of coloring the lower dimensional representation of the data, we can study the distribution of pseudotime values assigned to each cell type cluster. This representation again shows that the CLP cluster forms an outlier in case of DPT. Additionally, clusters such as <em>HSC_1</em> and <em>HSC_2</em> include several cells with increased pseudotime. These inflated values contrast our prior biological knowledge that these clusters form the beginning of the developmental process.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dpt_pseudotime&quot;</span><span class="p">,</span> <span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">],</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;HSC_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HSC_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Precursors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ery_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ery_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mono_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mono_2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CLP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DCs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mega&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/03e18dd1bae2d6983dd55c8de4a76b0a25fd088fefe93bcb3705b2d195c7b30d.png" src="../_images/03e18dd1bae2d6983dd55c8de4a76b0a25fd088fefe93bcb3705b2d195c7b30d.png" />
+</div>
+</div>
+<p>Considering these observations and prior knowledge about the development in bone marrow, we would conclude to continue working with the Palantir pseudotime.</p>
+</section>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">14.5. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Trajectory inference methods require the start of the biological process to be known (approximately).</p></li>
+<li><p>The nature of the biological process defines which TI algorithms can be used. <code class="docutils literal notranslate"><span class="pre">dynguidelines</span></code> helps selecting the appropriate TI method.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">14.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id33">
+<div role="list" class="citation-list">
+<div class="citation" id="id281" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id25">ptBBdB+20</a><span class="fn-bracket">]</span></span>
+<p>Nico Battich, Joep Beumer, Buys de Barbanson, Lenno Krenning, Chloé S. Baron, Marvin E. Tanenbaum, Hans Clevers, and Alexander van Oudenaarden. Sequencing metabolically labeled transcripts in single cells reveals mRNA turnover strategies. <em>Science</em>, 367(6482):1151–1156, March 2020. URL: <a class="reference external" href="https://doi.org/10.1126/science.aax3072">https://doi.org/10.1126/science.aax3072</a>, <a class="reference external" href="https://doi.org/10.1126/science.aax3072">doi:10.1126/science.aax3072</a>.</p>
+</div>
+<div class="citation" id="id282" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id29">ptBLP+20</a><span class="fn-bracket">]</span></span>
+<p>Volker Bergen, Marius Lange, Stefan Peidli, F. Alexander Wolf, and Fabian J. Theis. Generalizing RNA velocity to transient cell states through dynamical modeling. <em>Nature Biotechnology</em>, 38(12):1408–1414, August 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-020-0591-3">https://doi.org/10.1038/s41587-020-0591-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-020-0591-3">doi:10.1038/s41587-020-0591-3</a>.</p>
+</div>
+<div class="citation" id="id283" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id30">ptBSKT21</a><span class="fn-bracket">]</span></span>
+<p>Volker Bergen, Ruslan A Soldatov, Peter V Kharchenko, and Fabian J Theis. RNA velocity—current challenges and future perspectives. <em>Molecular Systems Biology</em>, August 2021. URL: <a class="reference external" href="https://doi.org/10.15252/msb.202110282">https://doi.org/10.15252/msb.202110282</a>, <a class="reference external" href="https://doi.org/10.15252/msb.202110282">doi:10.15252/msb.202110282</a>.</p>
+</div>
+<div class="citation" id="id284" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">ptBWW+18</a><span class="fn-bracket">]</span></span>
+<p>James A. Briggs, Caleb Weinreb, Daniel E. Wagner, Sean Megason, Leonid Peshkin, Marc W. Kirschner, and Allon M. Klein. The dynamics of gene expression in vertebrate embryogenesis at single-cell resolution. <em>Science</em>, June 2018. URL: <a class="reference external" href="https://doi.org/10.1126/science.aar5780">https://doi.org/10.1126/science.aar5780</a>, <a class="reference external" href="https://doi.org/10.1126/science.aar5780">doi:10.1126/science.aar5780</a>.</p>
+</div>
+<div class="citation" id="id285" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">ptBWL+15</a><span class="fn-bracket">]</span></span>
+<p>Jason D. Buenrostro, Beijing Wu, Ulrike M. Litzenburger, Dave Ruff, Michael L. Gonzales, Michael P. Snyder, Howard Y. Chang, and William J. Greenleaf. Single-cell chromatin accessibility reveals principles of regulatory variation. <em>Nature</em>, 523(7561):486–490, June 2015. URL: <a class="reference external" href="https://doi.org/10.1038/nature14590">https://doi.org/10.1038/nature14590</a>, <a class="reference external" href="https://doi.org/10.1038/nature14590">doi:10.1038/nature14590</a>.</p>
+</div>
+<div class="citation" id="id286" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">ptCGGR+22</a><span class="fn-bracket">]</span></span>
+<p>Wanze Chen, Orane Guillaume-Gentil, Pernille Yde Rainer, Christoph G. Gäbelein, Wouter Saelens, Vincent Gardeux, Amanda Klaeger, Riccardo Dainese, Magda Zachara, Tomaso Zambelli, Julia A. Vorholt, and Bart Deplancke. Live-seq enables temporal transcriptomic recording of single cells. <em>Nature</em>, 608(7924):733–740, August 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-022-05046-9">https://doi.org/10.1038/s41586-022-05046-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-022-05046-9">doi:10.1038/s41586-022-05046-9</a>.</p>
+</div>
+<div class="citation" id="id287" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">ptDCS+21</a><span class="fn-bracket">]</span></span>
+<p>Louise Deconinck, Robrecht Cannoodt, Wouter Saelens, Bart Deplancke, and Yvan Saeys. Recent advances in trajectory inference from single-cell omics data. <em>Current Opinion in Systems Biology</em>, 27:100344, September 2021. URL: <a class="reference external" href="https://doi.org/10.1016/j.coisb.2021.05.005">https://doi.org/10.1016/j.coisb.2021.05.005</a>, <a class="reference external" href="https://doi.org/10.1016/j.coisb.2021.05.005">doi:10.1016/j.coisb.2021.05.005</a>.</p>
+</div>
+<div class="citation" id="id288" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">ptEBK+19</a><span class="fn-bracket">]</span></span>
+<p>Florian Erhard, Marisa A. P. Baptista, Tobias Krammer, Thomas Hennig, Marius Lange, Panagiota Arampatzi, Christopher S. Jürges, Fabian J. Theis, Antoine-Emmanuel Saliba, and Lars Dölken. scSLAM-seq reveals core features of transcription dynamics in single cells. <em>Nature</em>, 571(7765):419–423, July 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-019-1369-y">https://doi.org/10.1038/s41586-019-1369-y</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-019-1369-y">doi:10.1038/s41586-019-1369-y</a>.</p>
+</div>
+<div class="citation" id="id289" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id27">ptESL+22</a><span class="fn-bracket">]</span></span>
+<p>Florian Erhard, Antoine-Emmanuel Saliba, Alexandra Lusser, Christophe Toussaint, Thomas Hennig, Bhupesh K. Prusty, Daniel Kirschenbaum, Kathleen Abadie, Eric A. Miska, Caroline C. Friedel, Ido Amit, Ronald Micura, and Lars Dölken. Time-resolved single-cell RNA-seq using metabolic RNA labelling. <em>Nature Reviews Methods Primers</em>, September 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s43586-022-00157-z">https://doi.org/10.1038/s43586-022-00157-z</a>, <a class="reference external" href="https://doi.org/10.1038/s43586-022-00157-z">doi:10.1038/s43586-022-00157-z</a>.</p>
+</div>
+<div class="citation" id="id290" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">ptHButtnerW+16</a><span class="fn-bracket">]</span></span>
+<p>Laleh Haghverdi, Maren Büttner, F Alexander Wolf, Florian Buettner, and Fabian J Theis. Diffusion pseudotime robustly reconstructs lineage branching. <em>Nature Methods</em>, 13(10):845–848, August 2016. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.3971">https://doi.org/10.1038/nmeth.3971</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.3971">doi:10.1038/nmeth.3971</a>.</p>
+</div>
+<div class="citation" id="id291" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">ptHLS+22</a><span class="fn-bracket">]</span></span>
+<p>Peng He, Kyungtae Lim, Dawei Sun, Jan Patrick Pett, Quitz Jeng, Krzysztof Polanski, Ziqi Dong, Liam Bolt, Laura Richardson, Lira Mamanova, Monika Dabrowska, Anna Wilbrey-Clark, Elo Madissoon, Zewen Kelvin Tuong, Emma Dann, Chenqu Suo, Isaac Goh, Masahiro Yoshida, Marko Z Nikolić, Sam M Janes, Xiaoling He, Roger A Barker, Sarah A Teichmann, John C. Marioni, Kerstin B Meyer, and Emma L Rawlins. A human fetal lung cell atlas uncovers proximal-distal gradients of differentiation and key regulators of epithelial fates. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933">https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/09/30/2022.01.11.474933.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.01.11.474933">doi:10.1101/2022.01.11.474933</a>.</p>
+</div>
+<div class="citation" id="id292" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">ptHLB18</a><span class="fn-bracket">]</span></span>
+<p>Byungjin Hwang, Ji Hyun Lee, and Duhee Bang. Single-cell RNA sequencing technologies and bioinformatics pipelines. <em>Experimental &amp;amp$\mathsemicolon $ Molecular Medicine</em>, 50(8):1–14, August 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s12276-018-0071-8">https://doi.org/10.1038/s12276-018-0071-8</a>, <a class="reference external" href="https://doi.org/10.1038/s12276-018-0071-8">doi:10.1038/s12276-018-0071-8</a>.</p>
+</div>
+<div class="citation" id="id293" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ptIKjallquistM+11</a><span class="fn-bracket">]</span></span>
+<p>Saiful Islam, Una Kjällquist, Annalena Moliner, Pawel Zajac, Jian-Bing Fan, Peter Lönnerberg, and Sten Linnarsson. Characterization of the single-cell transcriptional landscape by highly multiplex RNA-seq. <em>Genome Research</em>, 21(7):1160–1167, May 2011. URL: <a class="reference external" href="https://doi.org/10.1101/gr.110882.110">https://doi.org/10.1101/gr.110882.110</a>, <a class="reference external" href="https://doi.org/10.1101/gr.110882.110">doi:10.1101/gr.110882.110</a>.</p>
+</div>
+<div class="citation" id="id294" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">ptJWG+21</a><span class="fn-bracket">]</span></span>
+<p>Laura Jardine, Simone Webb, Issac Goh, Mariana Quiroga Londoño, Gary Reynolds, Michael Mather, Bayanne Olabi, Emily Stephenson, Rachel A. Botting, Dave Horsfall, Justin Engelbert, Daniel Maunder, Nicole Mende, Caitlin Murnane, Emma Dann, Jim McGrath, Hamish King, Iwo Kucinski, Rachel Queen, Christopher D. Carey, Caroline Shrubsole, Elizabeth Poyner, Meghan Acres, Claire Jones, Thomas Ness, Rowen Coulthard, Natalina Elliott, Sorcha O'Byrne, Myriam L. R. Haltalli, John E. Lawrence, Steven Lisgo, Petra Balogh, Kerstin B. Meyer, Elena Prigmore, Kirsty Ambridge, Mika Sarkin Jain, Mirjana Efremova, Keir Pickard, Thomas Creasey, Jaume Bacardit, Deborah Henderson, Jonathan Coxhead, Andrew Filby, Rafiqul Hussain, David Dixon, David McDonald, Dorin-Mirel Popescu, Monika S. Kowalczyk, Bo Li, Orr Ashenberg, Marcin Tabaka, Danielle Dionne, Timothy L. Tickle, Michal Slyper, Orit Rozenblatt-Rosen, Aviv Regev, Sam Behjati, Elisa Laurenti, Nicola K. Wilson, Anindita Roy, Berthold Göttgens, Irene Roberts, Sarah A. Teichmann, and Muzlifah Haniffa. Blood and immune development in human fetal bone marrow and down syndrome. <em>Nature</em>, 598(7880):327–331, September 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-021-03929-x">https://doi.org/10.1038/s41586-021-03929-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-021-03929-x">doi:10.1038/s41586-021-03929-x</a>.</p>
+</div>
+<div class="citation" id="id296" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">ptLlo82</a><span class="fn-bracket">]</span></span>
+<p>S. Lloyd. Least squares quantization in PCM. <em>IEEE Transactions on Information Theory</em>, 28(2):129–137, March 1982. URL: <a class="reference external" href="https://doi.org/10.1109/tit.1982.1056489">https://doi.org/10.1109/tit.1982.1056489</a>, <a class="reference external" href="https://doi.org/10.1109/tit.1982.1056489">doi:10.1109/tit.1982.1056489</a>.</p>
+</div>
+<div class="citation" id="id298" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">ptMullner11</a><span class="fn-bracket">]</span></span>
+<p>Daniel Müllner. Modern hierarchical, agglomerative clustering algorithms. 2011. URL: <a class="reference external" href="https://arxiv.org/abs/1109.2378">https://arxiv.org/abs/1109.2378</a>, <a class="reference external" href="https://doi.org/10.48550/ARXIV.1109.2378">doi:10.48550/ARXIV.1109.2378</a>.</p>
+</div>
+<div class="citation" id="id297" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">ptMac67</a><span class="fn-bracket">]</span></span>
+<p>J. B. MacQueen. Some methods for classification and analysis of multivariate observations. In L. M. Le Cam and J. Neyman, editors, <em>Proc. of the fifth Berkeley Symposium on Mathematical Statistics and Probability</em>, volume 1, 281–297. University of California Press, 1967.</p>
+</div>
+<div class="citation" id="id295" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id28">ptMSZ+18</a><span class="fn-bracket">]</span></span>
+<p>Gioele La Manno, Ruslan Soldatov, Amit Zeisel, Emelie Braun, Hannah Hochgerner, Viktor Petukhov, Katja Lidschreiber, Maria E. Kastriti, Peter Lönnerberg, Alessandro Furlan, Jean Fan, Lars E. Borm, Zehua Liu, David van Bruggen, Jimin Guo, Xiaoling He, Roger Barker, Erik Sundström, Gonçalo Castelo-Branco, Patrick Cramer, Igor Adameyko, Sten Linnarsson, and Peter V. Kharchenko. RNA velocity of single cells. <em>Nature</em>, 560(7719):494–498, August 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s41586-018-0414-6">https://doi.org/10.1038/s41586-018-0414-6</a>, <a class="reference external" href="https://doi.org/10.1038/s41586-018-0414-6">doi:10.1038/s41586-018-0414-6</a>.</p>
+</div>
+<div class="citation" id="id299" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">ptMLC+21</a><span class="fn-bracket">]</span></span>
+<p>Eleni P. Mimitou, Caleb A. Lareau, Kelvin Y. Chen, Andre L. Zorzetto-Fernandes, Yuhan Hao, Yusuke Takeshima, Wendy Luo, Tse-Shun Huang, Bertrand Z. Yeung, Efthymia Papalexi, Pratiksha I. Thakore, Tatsuya Kibayashi, James Badger Wing, Mayu Hata, Rahul Satija, Kristopher L. Nazor, Shimon Sakaguchi, Leif S. Ludwig, Vijay G. Sankaran, Aviv Regev, and Peter Smibert. Scalable, multimodal profiling of chromatin accessibility, gene expression and protein levels in single cells. <em>Nature Biotechnology</em>, 39(10):1246–1258, June 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-021-00927-2">https://doi.org/10.1038/s41587-021-00927-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-021-00927-2">doi:10.1038/s41587-021-00927-2</a>.</p>
+</div>
+<div class="citation" id="id300" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">ptPR02</a><span class="fn-bracket">]</span></span>
+<p>Seth Pettie and Vijaya Ramachandran. An optimal minimum spanning tree algorithm. <em>Journal of the ACM</em>, 49(1):16–34, January 2002. URL: <a class="reference external" href="https://doi.org/10.1145/505241.505243">https://doi.org/10.1145/505241.505243</a>, <a class="reference external" href="https://doi.org/10.1145/505241.505243">doi:10.1145/505241.505243</a>.</p>
+</div>
+<div class="citation" id="id301" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id26">ptQHQ+20</a><span class="fn-bracket">]</span></span>
+<p>Qi Qiu, Peng Hu, Xiaojie Qiu, Kiya W. Govek, Pablo G. Cámara, and Hao Wu. Massively parallel and time-resolved RNA sequencing in single cells with scNT-seq. <em>Nature Methods</em>, 17(10):991–1001, August 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-020-0935-4">https://doi.org/10.1038/s41592-020-0935-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-020-0935-4">doi:10.1038/s41592-020-0935-4</a>.</p>
+</div>
+<div class="citation" id="id302" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>ptSKL+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id18">2</a>,<a role="doc-backlink" href="#id31">3</a>)</span>
+<p>Manu Setty, Vaidotas Kiseliovas, Jacob Levine, Adam Gayoso, Linas Mazutis, and Dana Pe'er. Characterization of cell fate probabilities in single-cell data with palantir. <em>Nature Biotechnology</em>, 37(4):451–460, March 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-019-0068-4">https://doi.org/10.1038/s41587-019-0068-4</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-019-0068-4">doi:10.1038/s41587-019-0068-4</a>.</p>
+</div>
+<div class="citation" id="id303" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">ptSSZ+22</a><span class="fn-bracket">]</span></span>
+<p>Lisa Sikkema, Daniel C Strobl, Luke Zappia, Elo Madissoon, Nikolay S Markov, Laure-Emmanuelle Zaragosi, Meshal Ansari, Marie-Jeanne Arguel, Leonie Apperloo, Christophe Becavin, Marijn Berg, Evgeny Chichelnitskiy, Mei-I Chung, Antoine Collin, Aurore C A Gay, Baharak Hooshiar Kashani, Manu Jain, Theodore Kapellos, Tessa M Kole, Christoph H Mayr, Von Michael Papen, Lance Peter, Ciro Ramirez-Suastegui, Janine Schniering, Chase J Taylor, Thomas Walzthoeni, Chuan Xu, Linh T Bui, Carlo de Donno, Leander Dony, Minzhe Guo, Austin J Gutierrez, Lukas Heumos, Ni Huang, Ignacio L Ibarra, Nathan D Jackson, Preetish Kadur Lakshminarasimha Murthy, Mohammad Lotfollahi, Tracy Tabib, Carlos Talavera-Lopez, Kyle J Travaglini, Anna Wilbrey-Clark, Kaylee B Worlock, Masahiro Yoshida, Tushar J Desai, Oliver Eickelberg, Christine Falk, Naftali Kaminski, Mark A Krasnow, Robert Lafyatis, Marko Z Nikoli, Joseph E Powell, Jayaraj Rajagopal, Orit Rozenblatt-Rosen, Max A Seibold, Dean Sheppard, Douglas P Shepherd, Sarah A Teichmann, Alexander M Tsankov, Jeffrey Whitsett, Yan Xu, Nicholas E Banovich, Pascal Barbry, Thu E Duong, Kerstin B Meyer, Jonathan A Kropski, Dana Pe'er, Herbert B Schiller, Purushothama Rao Tata, Joachim L Schultze, Alexander V Misharin, Martijn C Nawijn, Malte D Luecken, and Fabian J Theis. An integrated cell atlas of the human lung in health and disease. <em>bioRxiv</em>, pages 2022.03.10.483747, March 2022. <a class="reference external" href="https://doi.org/10.1101/2022.03.10.483747">doi:10.1101/2022.03.10.483747</a>.</p>
+</div>
+<div class="citation" id="id304" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">ptSHS+17</a><span class="fn-bracket">]</span></span>
+<p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, July 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
+</div>
+<div class="citation" id="id305" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">ptSRF+18</a><span class="fn-bracket">]</span></span>
+<p>Kelly Street, Davide Risso, Russell B. Fletcher, Diya Das, John Ngai, Nir Yosef, Elizabeth Purdom, and Sandrine Dudoit. Slingshot: cell lineage and pseudotime inference for single-cell transcriptomics. <em>BMC Genomics</em>, June 2018. URL: <a class="reference external" href="https://doi.org/10.1186/s12864-018-4772-0">https://doi.org/10.1186/s12864-018-4772-0</a>, <a class="reference external" href="https://doi.org/10.1186/s12864-018-4772-0">doi:10.1186/s12864-018-4772-0</a>.</p>
+</div>
+<div class="citation" id="id306" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">ptTWvE19</a><span class="fn-bracket">]</span></span>
+<p>V. A. Traag, L. Waltman, and N. J. van Eck. From louvain to leiden: guaranteeing well-connected communities. <em>Scientific Reports</em>, March 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">https://doi.org/10.1038/s41598-019-41695-z</a>, <a class="reference external" href="https://doi.org/10.1038/s41598-019-41695-z">doi:10.1038/s41598-019-41695-z</a>.</p>
+</div>
+<div class="citation" id="id307" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">ptWRY16</a><span class="fn-bracket">]</span></span>
+<p>Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. <em>Nature Biotechnology</em>, 34(11):1145–1160, November 2016. URL: <a class="reference external" href="https://doi.org/10.1038/nbt.3711">https://doi.org/10.1038/nbt.3711</a>, <a class="reference external" href="https://doi.org/10.1038/nbt.3711">doi:10.1038/nbt.3711</a>.</p>
+</div>
+<div class="citation" id="id137" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">ptWHP+19</a><span class="fn-bracket">]</span></span>
+<p>F. Alexander Wolf, Fiona K. Hamey, Mireya Plass, Jordi Solana, Joakim S. Dahlin, Berthold Göttgens, Nikolaus Rajewsky, Lukas Simon, and Fabian J. Theis. Paga: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. <em>Genome Biology</em>, 20(1):59, Mar 2019. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-019-1663-x">https://doi.org/10.1186/s13059-019-1663-x</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-019-1663-x">doi:10.1186/s13059-019-1663-x</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">14.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">14.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Philipp Weiler</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">14.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "pseudotemporal-py39"
+        },
+        kernelOptions: {
+            name: "pseudotemporal-py39",
+            path: "./trajectories"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'pseudotemporal-py39'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../cellular_structure/integration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">13. </span>Data integration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="rna_velocity.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">15. </span>RNA velocity</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">14.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudotime-construction">14.2. Pseudotime construction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#down-stream-tasks-and-outlook">14.3. Down-stream tasks and outlook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inferring-pseudotime-for-adult-human-bone-marrow">14.4. Inferring pseudotime for adult human bone marrow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">14.4.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">14.4.2. General settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">14.4.3. Data loading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">14.4.4. Pseudotime construction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">14.5. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">14.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">14.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">14.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">14.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

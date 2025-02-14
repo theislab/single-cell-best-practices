@@ -1,0 +1,1201 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>32. Imputation &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'spatial/imputation';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="33. Quality control" href="../surface_protein/quality_control.html" />
+    <link rel="prev" title="31. Spatial deconvolution" href="deconvolution.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">8. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">9. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">10. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">11. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">12. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">13. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">14. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">15. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">16. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">17. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">18. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">19. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">20. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">21. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">22. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">23. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">24. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">25. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">26. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">27. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neighborhood.html">28. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">29. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatially_variable_genes.html">30. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deconvolution.html">31. Spatial deconvolution</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">32. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">33. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">34. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">35. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">36. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">37. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">38. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">39. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">40. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">44. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">45. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">46. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">47. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">48. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">49. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">50. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">51. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/spatial/imputation.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fspatial/imputation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/spatial/imputation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Imputation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">32.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-a-map-between-technologies">32.2. Constructing a map between technologies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-tangram-in-practise">32.3. Using Tangram in practise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-gene-set-between-reference-and-spatial-dataset">32.3.1. Common gene set between reference and spatial dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-map-from-single-cells-to-spatial-voxels">32.3.2. Computing the map from single-cells to spatial voxels</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imputing-genes-and-mapping-cell-types-to-space">32.3.3. Imputing genes and mapping cell-types to space</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-genes-that-were-not-part-of-the-training-data">32.3.3.1. Plotting genes that were not part of the training data</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-on-expression-level">32.3.4. Validation on expression level</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">32.4. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">32.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">32.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">32.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">32.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="imputation">
+<h1><span class="section-number">32. </span>Imputation<a class="headerlink" href="#imputation" title="Link to this heading">#</a></h1>
+<section id="motivation">
+<h2><span class="section-number">32.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Unlike spot-based spatial transcriptomics, targeted in-situ technologies (such as MERFISH, smFISH, or seqFISH+) are not limited in their spatial resolution but gene throughput, typically limited to a few hundreds of preselected genes. As a consequence, we face the orthogonal problem of increasing resolution with respect to genes instead of increasing spatial resolution and identifying cellular features. Hence, we would like to impute genes that are measured in scRNA-seq but not in FISH-based technologies.</p>
+</section>
+<section id="constructing-a-map-between-technologies">
+<h2><span class="section-number">32.2. </span>Constructing a map between technologies<a class="headerlink" href="#constructing-a-map-between-technologies" title="Link to this heading">#</a></h2>
+<p>A method that is widely applicable in the context of aligning spatial profiling measurements with common sc/snRNA-seq profiles is Tangram<span id="id1">[<a class="reference internal" href="#id535" title="Tommaso Biancalani, Gabriele Scalia, Lorenzo Buffoni, Raghav Avasthi, Ziqing Lu, Aman Sanger, Neriman Tokcan, Charles R. Vanderburg, Åsa Segerstolpe, Meng Zhang, Inbal Avraham-Davidi, Sanja Vickovic, Mor Nitzan, Sai Ma, Ayshwarya Subramanian, Michal Lipinski, Jason Buenrostro, Nik Bear Brown, Duccio Fanelli, Xiaowei Zhuang, Evan Z. Macosko, and Aviv Regev. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. Nature Methods, 18(11):1352–1362, November 2021. URL: https://doi.org/10.1038/s41592-021-01264-7, doi:10.1038/s41592-021-01264-7.">Biancalani <em>et al.</em>, 2021</a>]</span>. An independent benchmark<span id="id2">[<a class="reference internal" href="#id536" title="Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. Nature Methods, 19(6):662–670, June 2022. URL: https://doi.org/10.1038/s41592-022-01480-9, doi:10.1038/s41592-022-01480-9.">Li <em>et al.</em>, 2022</a>]</span> showed that Tangram outperformed other imputation methods like gimVI<span id="id3">[<a class="reference internal" href="#id537" title="Romain Lopez, Achille Nazaret, Maxime Langevin, Jules Samaran, Jeffrey Regier, Michael I. Jordan, and Nir Yosef. A joint model of unpaired data from scrna-seq and spatial transcriptomics for imputing missing gene expression measurements. CoRR, 2019. URL: http://arxiv.org/abs/1905.02269, arXiv:1905.02269.">Lopez <em>et al.</em>, 2019</a>]</span> and SpaGE<span id="id4">[<a class="reference internal" href="#id538" title="Tamim Abdelaal, Soufiane Mourragui, Ahmed Mahfouz, and Marcel J T Reinders. SpaGE: Spatial Gene Enhancement using scRNA-seq. Nucleic Acids Research, 48(18):e107-e107, 09 2020. URL: https://doi.org/10.1093/nar/gkaa740, arXiv:https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf, doi:10.1093/nar/gkaa740.">Abdelaal <em>et al.</em>, 2020</a>]</span> in terms of different accuracy metrics and scalability. While Tangram can also be applied in the previously described deconvolution context, we focus on its ability to map MERFISH data to whole genome expression profiles. The underlying idea of Tangram is the probabilistic alignment of two different technologies by means of a single shared modality, typically RNA-seq data. This way, limitations with respect to the number of genes that are measured or spatial resolution can be overcome.</p>
+<p>The mapping algorithm of Tangram builds on count matrices from the two technologies at hand. For sc/snRNa-seq data, this means to compute the matrix <span class="math notranslate nohighlight">\(S\)</span> whose entry <span class="math notranslate nohighlight">\(S_{ik}\)</span> indicates the expression level for cell <span class="math notranslate nohighlight">\(i\)</span> and gene <span class="math notranslate nohighlight">\(k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[S \in \mathbb{R}_+^{n_{\text{cells}}\times n_{\text{genes}}} \ \ \text{ with } \ \ S_{ik}&gt;0 \quad . \]</div>
+<p>The same procedure applies to spatial data. We build the matrix <span class="math notranslate nohighlight">\(G\)</span> according to:</p>
+<div class="math notranslate nohighlight">
+\[ G \in \mathbb{R}_+^{n_{\text{voxels}}\times n_{\text{genes}}} \ \ \text{ with } \ \ G_{jk}&gt;0 \]</div>
+<p>For MERFISH data, a voxel means the aggregation of single gene measurements to individual cells while a voxels refers to the individual spots for Visium. Note that the specific order in the voxel dimension is arbitrary and that <span class="math notranslate nohighlight">\(n_{genes}\)</span> corresponds to the shared subset of genes present in both technologies.</p>
+<!-- I am not sure what the density for MERFISH would look like, all ones maybe? -->
+<p>Tangram makes further use of a voxel density vector <span class="math notranslate nohighlight">\(\textbf d\)</span>. This density corresponds to estimated cell densities which, for example, can be deduced from an image segmentation in the case of Visium data. Formally, we write:</p>
+<div class="math notranslate nohighlight">
+\[ \textbf{d} \in \mathbb{R}^{n_\text{voxels}} \ \ \text{ with } \ \ d_j \in [0,1]  \ \ \text{ and } \ \ \sum_j d_j = 1 \quad . \]</div>
+<p>Given the matrices <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(G\)</span> as well as the density <span class="math notranslate nohighlight">\(\textbf d\)</span>, Tangram aims to learn a third matrix <span class="math notranslate nohighlight">\(M\)</span> that expresses the probability <span class="math notranslate nohighlight">\(M_{ij} \in [0,1]\)</span> that cell <span class="math notranslate nohighlight">\(i\)</span> belongs to voxel <span class="math notranslate nohighlight">\(j\)</span>. Being probabilistic, every cell has to be mapped exactly once, that is the rows of <span class="math notranslate nohighlight">\(M\)</span> have to be normalised:</p>
+<div class="math notranslate nohighlight">
+\[ M \in \mathbb{R}^{n_{\text{cells}}\times n_{\text{voxels}}}_+ \ \ \text{ with } \ \ \sum_{j}^{n_\text{voxel}} M_{ij}=1 \quad . \]</div>
+<p>Note that the sum across cells indicates the number of cells that are assigned to a voxel <span class="math notranslate nohighlight">\(j\)</span>. Knowing about the number of cells in <span class="math notranslate nohighlight">\(S\)</span>, we can estimate the voxel density as</p>
+<div class="math notranslate nohighlight">
+\[ m_j = \sum_{i}^{n_\text{cells}} \frac{M_{ij}}{n_\text{cells}} \quad . \]</div>
+<p>Putting all parts together, we arrive at the objective function of Tangram:</p>
+<div class="math notranslate nohighlight">
+\[ L = \mathbb{KL}[\mathbf m, \mathbf d] - \sum_{k}^{n_\text{genes}} d_{\cos}(M^TS_{:k}, G_{:k}) - \sum_{j}^{n_\text{voxels}} d_{\cos}(M^TS_{j:}, G_{j:}) \quad , \]</div>
+<p>where <span class="math notranslate nohighlight">\(M^TS\)</span> is the predicted spatial gene expression, <span class="math notranslate nohighlight">\(\mathbb{KL}\)</span> the Kullback-Leibler divergence and <span class="math notranslate nohighlight">\(d_{\cos}\)</span> the cosine similarity. The first term matches the predicted voxel density <span class="math notranslate nohighlight">\(\textbf m\)</span> with the estimated one <span class="math notranslate nohighlight">\(\textbf d\)</span>. The second term ensures that for each gene <span class="math notranslate nohighlight">\(k\)</span> the predicted profile matches the expected profile from <span class="math notranslate nohighlight">\(G\)</span>. The third term serves the same purpose for each individual voxel: the predicted voxel expression should be close to the expected one from <span class="math notranslate nohighlight">\(G\)</span>.</p>
+<!-- For MERFISH we have to use the filtered approach, maybe to cumbersome to introduce it? -->
+<p>In order to infer genome-scale expression maps for MERFISH data, we first identify the shared gene set which should result in about <span class="math notranslate nohighlight">\(\sim 200\)</span> genes. Second, we compute the <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(G\)</span> matrices from the sc/scRNA-seq reference and the spatial assay, respectively. For MERFISH, the voxel density has uniform entries <span class="math notranslate nohighlight">\(1/n_{\text{voxels}}\)</span> as the voxels correspond to cells themselves. Given this, we only have to optimise the objective <span class="math notranslate nohighlight">\(L\)</span> and obtain the probabilistic mapping <span class="math notranslate nohighlight">\(M\)</span>.</p>
+<p>To infer the spatial expression for the whole genome <span class="math notranslate nohighlight">\(f_j\)</span> for voxel <span class="math notranslate nohighlight">\(j\)</span>, one can either compute a weighted sum using the probabilistic cell assignments <span class="math notranslate nohighlight">\(f_j = \sum_i M_{ij} c_i\)</span>, where <span class="math notranslate nohighlight">\(c_i \in \mathbb{R}_+^{n'_\text{genes}}\)</span> is the genome-wide expression profile from sc/snRNA-seq, or first compute a deterministic mapping via <span class="math notranslate nohighlight">\(i^*(j) = \arg\max_i M_{ij}\)</span> and then build the genome-scale profile as <span class="math notranslate nohighlight">\(f_j = c_{i^*(j)}\)</span> .</p>
+</section>
+<section id="using-tangram-in-practise">
+<h2><span class="section-number">32.3. </span>Using Tangram in practise<a class="headerlink" href="#using-tangram-in-practise" title="Link to this heading">#</a></h2>
+<figure class="align-default" id="id5">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/imputation_2.jpeg"><img alt="Imputation Overview" class="bg-primary mb-1" src="../_images/imputation_2.jpeg" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 32.1 </span><span class="caption-text">Imputation methods leverage a whole transcriptome reference dataset to map cells onto space. Tangram learns a mapping matrix between the reference and the spatial dataset on the common gene set.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Before we enter this notebook’s analysis, let’s set up our environment.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tangram</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The dataset used in this tutorial was measured by multiplexed error robust fluorescence in situ hybridization (MERFISH) and investigates the spatial organization and transcriptional profile of wild type hematopoietic stem cell (HSC) niches in fetal liver<span id="id6">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>. The dataset contains 140 images across four fetal livers at E14.5 with 132 genes observed in 40,864 cells. Lu et al.<span id="id7">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span> additionally performed single-cell RNA sequencing of E14.5 whole fetal liver cells by 10x Genomics platform, which we will use as a whole transcriptome reference for this tutorial.</p>
+<p>We will first load the reference dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_sc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;lu_scRNA_mouse_fetal_liver_2021.h5ad&quot;</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/39360860&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata_sc</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 9448 × 28692
+    var: &#39;chozen_isoform&#39;, &#39;code&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The single-cell RNA-seq reference we are using to showcase the usage of Tangram is not annotated. We therefore apply a basic processing to obtain leiden clusters which we can later project onto the spatial dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing neighbors
+WARNING: You’re trying to run this on 28692 dimensions of `.X`, if you really want this, set `use_rep=&#39;X&#39;`.
+         Falling back to preprocessing with `sc.pp.pca` and default params.
+computing PCA
+    with n_comps=50
+    finished (0:00:19)
+    finished: added to `.uns[&#39;neighbors&#39;]`
+    `.obsp[&#39;distances&#39;]`, distances for each pair of neighbors
+    `.obsp[&#39;connectivities&#39;]`, weighted adjacency matrix (0:00:35)
+running Leiden clustering
+    finished: found 12 clusters and added
+    &#39;leiden&#39;, the cluster labels (adata.obs, categorical) (0:00:00)
+computing UMAP
+    finished: added
+    &#39;X_umap&#39;, UMAP coordinates (adata.obsm) (0:00:18)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/95bb7273294c1bea11a9475bcc83c92a81d05d922ae4f04c3a3e68d6a9e09e61.png"><img alt="../_images/95bb7273294c1bea11a9475bcc83c92a81d05d922ae4f04c3a3e68d6a9e09e61.png" src="../_images/95bb7273294c1bea11a9475bcc83c92a81d05d922ae4f04c3a3e68d6a9e09e61.png" style="width: 338px; height: 300px;" /></a>
+</div>
+</div>
+<p>Next, we load the spatial transcriptomics dataset. The MERFISH dataset contains data from X different field of views (FOV).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_st</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;lu_merfish_mouse_fetal_liver_2021.h5ad&quot;</span><span class="p">,</span>
+    <span class="n">backup_url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/39360836&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata_st</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 40864 × 132
+    obs: &#39;CellID&#39;, &#39;FOV&#39;, &#39;CellTypeID_new&#39;, &#39;cell_type&#39;
+    obsm: &#39;spatial&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial</span><span class="p">(</span>
+    <span class="n">adata_st</span><span class="p">[</span><span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="n">spot_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/16811ca6a5ac36554efb791583d2020bacdec0ad94ae3093b91b89d72a7e0594.png"><img alt="../_images/16811ca6a5ac36554efb791583d2020bacdec0ad94ae3093b91b89d72a7e0594.png" src="../_images/16811ca6a5ac36554efb791583d2020bacdec0ad94ae3093b91b89d72a7e0594.png" style="width: 439px; height: 277px;" /></a>
+</div>
+</div>
+<section id="common-gene-set-between-reference-and-spatial-dataset">
+<h3><span class="section-number">32.3.1. </span>Common gene set between reference and spatial dataset<a class="headerlink" href="#common-gene-set-between-reference-and-spatial-dataset" title="Link to this heading">#</a></h3>
+<p>We want to select our training genes. These genes are shared between the two datasets and should capture the biological variance between cell types. For this, we first compute marker genes on the single-cell data and then use Tangram’s preprocessing function to subset to those genes that are also present in the spatial data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adata_sc</span><span class="o">.</span><span class="n">var_names</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">adata_st</span><span class="o">.</span><span class="n">var_names</span><span class="p">)))</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">markers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>132
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">tg.pp_adatas</span></code> does the following:</p>
+<ul class="simple">
+<li><p>Computes the overlap between single-cell data and spatial data on the list of genes provided in the <code class="docutils literal notranslate"><span class="pre">genes</span></code> argument</p></li>
+<li><p>Stores the resulting gene set under <code class="docutils literal notranslate"><span class="pre">'training_genes'</span></code> in both adata objects under the <code class="docutils literal notranslate"><span class="pre">.uns</span></code> key</p></li>
+<li><p>Enforces consistent ordering of the genes</p></li>
+<li><p>To reduce potential naming errors gene names are converted to lower case. To prevent this behaviour set <code class="docutils literal notranslate"> <span class="pre">gene_to_lowercase</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tg</span><span class="o">.</span><span class="n">pp_adatas</span><span class="p">(</span><span class="n">adata_sc</span><span class="p">,</span> <span class="n">adata_st</span><span class="p">,</span> <span class="n">genes</span><span class="o">=</span><span class="n">markers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filtered out 10726 genes that are detected in less than 1 cells
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:132 training genes are saved in `uns``training_genes` of both single cell and spatial Anndatas.
+INFO:root:132 overlapped genes are saved in `uns``overlap_genes` of both single cell and spatial Anndatas.
+INFO:root:uniform based density prior is calculated and saved in `obs``uniform_density` of the spatial Anndata.
+INFO:root:rna count based density prior is calculated and saved in `obs``rna_count_based_density` of the spatial Anndata.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let us check that the function performs as we expect:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="s2">&quot;training_genes&quot;</span> <span class="ow">in</span> <span class="n">adata_sc</span><span class="o">.</span><span class="n">uns</span>
+<span class="k">assert</span> <span class="s2">&quot;training_genes&quot;</span> <span class="ow">in</span> <span class="n">adata_st</span><span class="o">.</span><span class="n">uns</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of training_genes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_sc</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;training_genes&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of training_genes: 132
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="computing-the-map-from-single-cells-to-spatial-voxels">
+<h3><span class="section-number">32.3.2. </span>Computing the map from single-cells to spatial voxels<a class="headerlink" href="#computing-the-map-from-single-cells-to-spatial-voxels" title="Link to this heading">#</a></h3>
+<p>Having specified the training genes, we can now create the map from dissociated single-cell measurements to the spatial locations. For this, we are going to use the <code class="docutils literal notranslate"><span class="pre">map_cells_to_space</span></code> function from tangram. This function has two different modes, <code class="docutils literal notranslate"><span class="pre">mode='cells'</span></code> and <code class="docutils literal notranslate"><span class="pre">mode='clusters'</span></code>. The latter only maps averaged single-cells which makes the mapping computationally faster and more robust when mapping between specimen. However, as we are interested in imputing our spatial data, we will rely on the cell mode which might require access to a GPU for reasonable runtime.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ad_map</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">map_cells_to_space</span><span class="p">(</span>
+    <span class="n">adata_sc</span><span class="p">,</span>
+    <span class="n">adata_st</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;cells&quot;</span><span class="p">,</span>
+    <span class="n">density_prior</span><span class="o">=</span><span class="s2">&quot;rna_count_based&quot;</span><span class="p">,</span>
+    <span class="n">num_epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>  <span class="c1"># or: cpu</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:Allocate tensors for mapping.
+INFO:root:Begin training with 132 genes and rna_count_based density_prior in cells mode...
+INFO:root:Printing scores every 100 epochs.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Score: 0.271, KL reg: 0.346
+Score: 0.911, KL reg: 0.005
+Score: 0.931, KL reg: 0.002
+Score: 0.937, KL reg: 0.002
+Score: 0.941, KL reg: 0.001
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:Saving results..
+</pre></div>
+</div>
+</div>
+</div>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">ad_map</span></code> is itself an AnnData object. Let us inspect it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ad_map</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 9448 × 40864
+    obs: &#39;leiden&#39;
+    var: &#39;CellID&#39;, &#39;FOV&#39;, &#39;CellTypeID_new&#39;, &#39;cell_type&#39;, &#39;uniform_density&#39;, &#39;rna_count_based_density&#39;
+    uns: &#39;train_genes_df&#39;, &#39;training_history&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We observe that Tangram’s mapping from cell i to spatial voxels j is stored in the <code class="docutils literal notranslate"><span class="pre">.X</span></code> property of <code class="docutils literal notranslate"><span class="pre">ad_map</span></code>.</p>
+<p>Hence, the meaning of the <code class="docutils literal notranslate"><span class="pre">.var</span></code> and <code class="docutils literal notranslate"><span class="pre">.obs</span></code> also changes:</p>
+<ul class="simple">
+<li><p>in <code class="docutils literal notranslate"><span class="pre">.var</span></code> we have the available metadata of the spatial data, <code class="docutils literal notranslate"><span class="pre">adata_st</span></code></p></li>
+<li><p>in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> we have the available metadata of the single-cell data, <code class="docutils literal notranslate"><span class="pre">adata_sc</span></code></p></li>
+</ul>
+<p>In addition, the information about the training run is stored in the <code class="docutils literal notranslate"><span class="pre">.uns</span></code> key, see <code class="docutils literal notranslate"><span class="pre">.uns['training_genes_df']</span></code> and <code class="docutils literal notranslate"><span class="pre">.uns[training_history]</span></code>.</p>
+</section>
+<section id="imputing-genes-and-mapping-cell-types-to-space">
+<h3><span class="section-number">32.3.3. </span>Imputing genes and mapping cell-types to space<a class="headerlink" href="#imputing-genes-and-mapping-cell-types-to-space" title="Link to this heading">#</a></h3>
+<p>We can use this result in two ways. First, we can map the cell type information that was originally only present in the single-cell data to space. This an easy way to check that your results are biologically consistent by looking for known cell type patterns. Second, we can investigate the spatial gene-expression of those genes that have not been measured with the in-situ method in the first place, effectively imputing all the missing genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Project the cell annotation to spatial locations</span>
+<span class="n">tg</span><span class="o">.</span><span class="n">project_cell_annotations</span><span class="p">(</span><span class="n">ad_map</span><span class="p">,</span> <span class="n">adata_st</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">)</span>
+<span class="n">annotation_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">adata_sc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">]))</span>
+
+<span class="c1"># Plot the spatial annotation</span>
+<span class="c1"># The `perc` argument steers the range of the colourmap and can help with removing outliers.</span>
+<span class="n">tg</span><span class="o">.</span><span class="n">plot_cell_annotation_sc</span><span class="p">(</span>
+    <span class="n">adata_st</span><span class="p">[</span><span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">annotation_list</span><span class="p">,</span> <span class="n">perc</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">spot_size</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:spatial prediction dataframe is saved in `obsm` `tangram_ct_pred` of the spatial AnnData.
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/de4b9bfd5098a976973f482d458592551e5d4e189eb52523c5d4535a94223cc2.png"><img alt="../_images/de4b9bfd5098a976973f482d458592551e5d4e189eb52523c5d4535a94223cc2.png" src="../_images/de4b9bfd5098a976973f482d458592551e5d4e189eb52523c5d4535a94223cc2.png" style="width: 1257px; height: 846px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  To get a deeper sense, Tangram also computes several scores, which are readily plotted</span>
+<span class="n">tg</span><span class="o">.</span><span class="n">plot_training_scores</span><span class="p">(</span><span class="n">ad_map</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1484545026e2ad63f630b629c6bcba8a87bc71c1c30ab8f79dabfae3a0a44441.png"><img alt="../_images/1484545026e2ad63f630b629c6bcba8a87bc71c1c30ab8f79dabfae3a0a44441.png" src="../_images/1484545026e2ad63f630b629c6bcba8a87bc71c1c30ab8f79dabfae3a0a44441.png" style="width: 951px; height: 220px;" /></a>
+</div>
+</div>
+<p>The score generally measures the similarity between original measurement (by the spatial technology) and the inferred mapping by single-cell data. The middle panels both relate the sparsity of the respective data, single-cell and spatial, of a training genes (each dot is a training gene) with the achieved score. As you can see, the performance is much more correlated with the spatial data which is often more sparse and therefore responsible for low-quality mappings. The last panel sets both technologies in context. Genes that have similar sparsity levels in both spatial and single-cell data usually achieve better scores than those that are inconsistent across technologies.</p>
+<p>Minor remark: The similarity that Tangram builds on is cosine similarity.</p>
+<p>Even more detailed information can be found in the <code class="docutils literal notranslate"><span class="pre">.uns[&quot;train_genes_df&quot;]</span></code>.</p>
+<p>Now, we can project the genes present in the single-cell data to the spatial locations. This is easily achieved by multiplying the mapping matrix stored in <code class="docutils literal notranslate"><span class="pre">ad_map</span></code> with the original single-cell data stored in <code class="docutils literal notranslate"><span class="pre">adata_sc</span></code>. Tangram already provides a convenience function which takes in a mapping and the corresponding single-cell data. The result is a spatial voxel by genes matrix which technically is identical to the original spatial data <code class="docutils literal notranslate"><span class="pre">adata_st</span></code> but contains expression values for all genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ad_ge</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">project_genes</span><span class="p">(</span><span class="n">adata_map</span><span class="o">=</span><span class="n">ad_map</span><span class="p">,</span> <span class="n">adata_sc</span><span class="o">=</span><span class="n">adata_sc</span><span class="p">)</span>
+<span class="n">ad_ge</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 40864 × 17966
+    obs: &#39;CellID&#39;, &#39;FOV&#39;, &#39;CellTypeID_new&#39;, &#39;cell_type&#39;, &#39;uniform_density&#39;, &#39;rna_count_based_density&#39;
+    var: &#39;chozen_isoform&#39;, &#39;code&#39;, &#39;n_cells&#39;, &#39;sparsity&#39;, &#39;is_training&#39;
+    uns: &#39;neighbors&#39;, &#39;leiden&#39;, &#39;umap&#39;, &#39;leiden_colors&#39;, &#39;training_genes&#39;, &#39;overlap_genes&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we will compare the new spatial data with the original measurements. This will provide us with a better feeling why some training scores might be bad. Note that this explicit mapping of Tangram relies on entirely different premises than those in probabilistic models. Here, we are inclined to trust the predicted gene expression patterns based on the good mapping performance of most training genes. The fact the some genes show a very sparse and dispersed spatial signal can be understood a result of technical dropout of the spatial technology rather than a shortcoming of the mapping method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;tek&quot;</span><span class="p">,</span> <span class="s2">&quot;stab2&quot;</span><span class="p">,</span> <span class="s2">&quot;hc&quot;</span><span class="p">]</span>
+<span class="n">ad_map</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;train_genes_df&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">genes</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>train_score</th>
+      <th>sparsity_sc</th>
+      <th>sparsity_sp</th>
+      <th>sparsity_diff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>tek</th>
+      <td>0.966242</td>
+      <td>0.988357</td>
+      <td>0.918486</td>
+      <td>-0.069872</td>
+    </tr>
+    <tr>
+      <th>stab2</th>
+      <td>0.931371</td>
+      <td>0.977985</td>
+      <td>0.573561</td>
+      <td>-0.404424</td>
+    </tr>
+    <tr>
+      <th>hc</th>
+      <td>0.929809</td>
+      <td>0.938400</td>
+      <td>0.694572</td>
+      <td>-0.243827</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ad_ge</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 40864 × 17966
+    obs: &#39;CellID&#39;, &#39;FOV&#39;, &#39;CellTypeID_new&#39;, &#39;cell_type&#39;, &#39;uniform_density&#39;, &#39;rna_count_based_density&#39;
+    var: &#39;chozen_isoform&#39;, &#39;code&#39;, &#39;n_cells&#39;, &#39;sparsity&#39;, &#39;is_training&#39;
+    uns: &#39;neighbors&#39;, &#39;leiden&#39;, &#39;umap&#39;, &#39;leiden_colors&#39;, &#39;training_genes&#39;, &#39;overlap_genes&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The comparison between original measurements on predicted ones is easily done with tangram</span>
+<span class="n">tg</span><span class="o">.</span><span class="n">plot_genes_sc</span><span class="p">(</span>
+    <span class="n">genes</span><span class="p">,</span>
+    <span class="n">adata_measured</span><span class="o">=</span><span class="n">adata_st</span><span class="p">[</span><span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">adata_predicted</span><span class="o">=</span><span class="n">ad_ge</span><span class="p">[</span><span class="n">ad_ge</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">perc</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">spot_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1b08543ed592eb64709d63a2ef4944f5a76f97d1f8e3e2171189b9952581f6ff.png"><img alt="../_images/1b08543ed592eb64709d63a2ef4944f5a76f97d1f8e3e2171189b9952581f6ff.png" src="../_images/1b08543ed592eb64709d63a2ef4944f5a76f97d1f8e3e2171189b9952581f6ff.png" style="width: 475px; height: 676px;" /></a>
+</div>
+</div>
+<section id="plotting-genes-that-were-not-part-of-the-training-data">
+<h4><span class="section-number">32.3.3.1. </span>Plotting genes that were not part of the training data<a class="headerlink" href="#plotting-genes-that-were-not-part-of-the-training-data" title="Link to this heading">#</a></h4>
+<p>We can also inspect genes there were part of the training genes but not detected in the spatial data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rp1&quot;</span><span class="p">,</span> <span class="s2">&quot;sox17&quot;</span><span class="p">,</span> <span class="s2">&quot;mrpl15&quot;</span><span class="p">]</span>
+<span class="n">tg</span><span class="o">.</span><span class="n">plot_genes_sc</span><span class="p">(</span>
+    <span class="n">genes</span><span class="p">,</span>
+    <span class="n">adata_measured</span><span class="o">=</span><span class="n">adata_st</span><span class="p">[</span><span class="n">adata_st</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">adata_predicted</span><span class="o">=</span><span class="n">ad_ge</span><span class="p">[</span><span class="n">ad_ge</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">FOV</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">perc</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">spot_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/68378bf17beae315e49d334db24bae962d816591af349ec463c78a22dc48fe56.png"><img alt="../_images/68378bf17beae315e49d334db24bae962d816591af349ec463c78a22dc48fe56.png" src="../_images/68378bf17beae315e49d334db24bae962d816591af349ec463c78a22dc48fe56.png" style="width: 475px; height: 676px;" /></a>
+</div>
+</div>
+<p>As we can see, Tangram projected the additional features onto space and we have now access to all additional genes and their estimated value at each spatial coordinate.</p>
+</section>
+</section>
+<section id="validation-on-expression-level">
+<h3><span class="section-number">32.3.4. </span>Validation on expression level<a class="headerlink" href="#validation-on-expression-level" title="Link to this heading">#</a></h3>
+<p>An additional step for the task of imputation might be to validate if the cell-type specific expression levels can still be recovered with the predicted counts. For this purpose, one selects a few highly expressed markers per cluster and compares the normalized expression levels. For convenience, we use the markers as described by Lu et al.<span id="id8">[<a class="reference internal" href="#id539" title="Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. Cell Discovery, 7(1):47, June 2021. URL: https://doi.org/10.1038/s41421-021-00266-1, doi:10.1038/s41421-021-00266-1.">Lu <em>et al.</em>, 2021</a>]</span>, but one could also run a simple differential expression test between clusters to identify marker genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">control_markers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;tfrc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;e2f2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;abcb4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;myh10&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;podxl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cd34&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sdc3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pzp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mrvi1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gnaz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vwf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kdr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;stab2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;flt4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;col4a1&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_markers</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mf">6.8</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">control_markers</span><span class="p">):</span>
+    <span class="c1"># Retrieving measured counts</span>
+    <span class="n">measured</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">adata_st</span><span class="p">,</span> <span class="p">[</span><span class="n">marker</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">])</span>
+    <span class="c1"># Calculating measured expression levels</span>
+    <span class="n">measured</span><span class="p">[</span><span class="s2">&quot;expression_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">measured</span><span class="p">[[</span><span class="n">marker</span><span class="p">]])</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">measured</span><span class="p">[[</span><span class="n">marker</span><span class="p">]])</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Retrieving measured counts</span>
+    <span class="n">predicted</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">ad_ge</span><span class="p">,</span> <span class="p">[</span><span class="n">marker</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">])</span>
+    <span class="c1"># Calculating predicted expression levels</span>
+    <span class="n">predicted</span><span class="p">[</span><span class="s2">&quot;expression_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">predicted</span><span class="p">[[</span><span class="n">marker</span><span class="p">]])</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">predicted</span><span class="p">[[</span><span class="n">marker</span><span class="p">]])</span>
+    <span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">measured</span><span class="p">,</span> <span class="n">predicted</span><span class="p">],</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;measured&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted&quot;</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sample&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;expression_level&quot;</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+        <span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/ca29bf08a693e19589530bbdff267720f79c02edf344a0b6f807bc70605a5083.png"><img alt="../_images/ca29bf08a693e19589530bbdff267720f79c02edf344a0b6f807bc70605a5083.png" src="../_images/ca29bf08a693e19589530bbdff267720f79c02edf344a0b6f807bc70605a5083.png" style="width: 1983px; height: 525px;" /></a>
+</div>
+</div>
+<p>The returned plot gives us on subplot per selected marker and it’s expression level (normalized to [0,1]) for each cell type present in the dataset. As we can inspect, the cluster-wise expression levels of marker genes can still be recovered and the expression levels seem to align well within clusters. This is a good indicator that the imputation worked well and we can use the whole transcriptome spatially resolved dataset for other analysis tasks.</p>
+</section>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">32.4. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>targeted in-situ technologies (such as MERFISH, smFISH, or seqFISH+) are limited in their gene throughput and typically only capture a few hundreds of preselected genes</p></li>
+<li><p>imputation methods aim to increase the resolution with respect to genes and generating whole transcriptome resolved spatially resolved data at single-cell resolution</p></li>
+<li><p>Tangram outperformed other imputation methods in in terms of different accuracy metrics and scalability</p></li>
+<li><p>Running a validation step on the shared features and their expression levels can help to assess whether the imputation algorithm worked well</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">32.5. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id9">
+<div role="list" class="citation-list">
+<div class="citation" id="id538" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">spatialAMMR20</a><span class="fn-bracket">]</span></span>
+<p>Tamim Abdelaal, Soufiane Mourragui, Ahmed Mahfouz, and Marcel J T Reinders. SpaGE: Spatial Gene Enhancement using scRNA-seq. <em>Nucleic Acids Research</em>, 48(18):e107–e107, 09 2020. URL: <a class="reference external" href="https://doi.org/10.1093/nar/gkaa740">https://doi.org/10.1093/nar/gkaa740</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf">arXiv:https://academic.oup.com/nar/article-pdf/48/18/e107/33856246/gkaa740\_supplemental\_file.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/nar/gkaa740">doi:10.1093/nar/gkaa740</a>.</p>
+</div>
+<div class="citation" id="id535" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">spatialBSB+21</a><span class="fn-bracket">]</span></span>
+<p>Tommaso Biancalani, Gabriele Scalia, Lorenzo Buffoni, Raghav Avasthi, Ziqing Lu, Aman Sanger, Neriman Tokcan, Charles R. Vanderburg, Åsa Segerstolpe, Meng Zhang, Inbal Avraham-Davidi, Sanja Vickovic, Mor Nitzan, Sai Ma, Ayshwarya Subramanian, Michal Lipinski, Jason Buenrostro, Nik Bear Brown, Duccio Fanelli, Xiaowei Zhuang, Evan Z. Macosko, and Aviv Regev. Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram. <em>Nature Methods</em>, 18(11):1352–1362, November 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01264-7">https://doi.org/10.1038/s41592-021-01264-7</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01264-7">doi:10.1038/s41592-021-01264-7</a>.</p>
+</div>
+<div class="citation" id="id536" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">spatialLZG+22</a><span class="fn-bracket">]</span></span>
+<p>Bin Li, Wen Zhang, Chuang Guo, Hao Xu, Longfei Li, Minghao Fang, Yinlei Hu, Xinye Zhang, Xinfeng Yao, Meifang Tang, Ke Liu, Xuetong Zhao, Jun Lin, Linzhao Cheng, Falai Chen, Tian Xue, and Kun Qu. Benchmarking spatial and single-cell transcriptomics integration methods for transcript distribution prediction and cell type deconvolution. <em>Nature Methods</em>, 19(6):662–670, June 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">https://doi.org/10.1038/s41592-022-01480-9</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-022-01480-9">doi:10.1038/s41592-022-01480-9</a>.</p>
+</div>
+<div class="citation" id="id537" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">spatialLNL+19</a><span class="fn-bracket">]</span></span>
+<p>Romain Lopez, Achille Nazaret, Maxime Langevin, Jules Samaran, Jeffrey Regier, Michael I. Jordan, and Nir Yosef. A joint model of unpaired data from scrna-seq and spatial transcriptomics for imputing missing gene expression measurements. <em>CoRR</em>, 2019. URL: <a class="reference external" href="http://arxiv.org/abs/1905.02269">http://arxiv.org/abs/1905.02269</a>, <a class="reference external" href="https://arxiv.org/abs/1905.02269">arXiv:1905.02269</a>.</p>
+</div>
+<div class="citation" id="id539" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>spatialLLY+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
+<p>Yanfang Lu, Miao Liu, Jennifer Yang, Sherman M. Weissman, Xinghua Pan, Samuel G. Katz, and Siyuan Wang. Spatial transcriptome profiling by MERFISH reveals fetal liver hematopoietic stem cell niche architecture. <em>Cell Discovery</em>, 7(1):47, June 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41421-021-00266-1">https://doi.org/10.1038/s41421-021-00266-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41421-021-00266-1">doi:10.1038/s41421-021-00266-1</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">32.6. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<section id="authors">
+<h3><span class="section-number">32.6.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Leon Hetzel</p></li>
+<li><p>Anna Schaar</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">32.6.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "imputation_book"
+        },
+        kernelOptions: {
+            name: "imputation_book",
+            path: "./spatial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'imputation_book'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="deconvolution.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">31. </span>Spatial deconvolution</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../surface_protein/quality_control.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">33. </span>Quality control</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">32.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-a-map-between-technologies">32.2. Constructing a map between technologies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-tangram-in-practise">32.3. Using Tangram in practise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-gene-set-between-reference-and-spatial-dataset">32.3.1. Common gene set between reference and spatial dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-map-from-single-cells-to-spatial-voxels">32.3.2. Computing the map from single-cells to spatial voxels</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imputing-genes-and-mapping-cell-types-to-space">32.3.3. Imputing genes and mapping cell-types to space</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-genes-that-were-not-part-of-the-training-data">32.3.3.1. Plotting genes that were not part of the training data</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-on-expression-level">32.3.4. Validation on expression level</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">32.4. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">32.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">32.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">32.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">32.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
