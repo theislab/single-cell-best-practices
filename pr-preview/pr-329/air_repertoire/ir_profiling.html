@@ -1,0 +1,2933 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>38. Immune Receptor Profiling &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'air_repertoire/ir_profiling';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=dcd3d8bf"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="39. Clonotype analysis" href="clonotype.html" />
+    <link rel="prev" title="37. Annotation" href="../surface_protein/annotation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reproducibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility/introduction.html">47. Reproducibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">48. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">49. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">50. Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/air_repertoire/ir_profiling.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fair_repertoire/ir_profiling.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/air_repertoire/ir_profiling.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Immune Receptor Profiling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#role-ir-in-cells">38.1. Role IR in cells</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#irs-of-the-adaptive-immune-system">38.2. IRs of the adaptive immune system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formation-of-adaptive-immune-receptors-by-v-d-j-recombination">38.3. Formation of adaptive immune receptors by V(D)J recombination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vdj-sequencing">38.4. VDJ-sequencing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-isolation">38.4.1. Cell isolation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immune-receptor-sequencing">38.4.2. Immune receptor sequencing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#air-repertoire-analysis">38.5. AIR repertoire analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">38.6. Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data">38.7. Load data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raw-data">38.7.1. Raw data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#productive-airs">38.7.2. Productive AIRs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-aligned-data">38.8. Cell-Aligned Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-control">38.9. Quality Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assigning-air-state">38.9.1. Assigning AIR State</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">38.9.2. Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering">38.9.3. Filtering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">38.10. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">38.11. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">38.12. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="immune-receptor-profiling">
+<h1><span class="section-number">38. </span>Immune Receptor Profiling<a class="headerlink" href="#immune-receptor-profiling" title="Link to this heading">#</a></h1>
+<section id="role-ir-in-cells">
+<h2><span class="section-number">38.1. </span>Role IR in cells<a class="headerlink" href="#role-ir-in-cells" title="Link to this heading">#</a></h2>
+<p>Immune Receptors (IR) are the key for the recognition of potential hazardous antigens and toxins invading the body. Those receptors are usually located in the membrane of specialized cells, which recognize harmful content and initiate protective mechanisms. There are different kinds of IRs specialized in the recognition of specific structures of foreign agents:</p>
+<ul class="simple">
+<li><p><strong>Pattern recognition receptors (PRRs)</strong>: Pathogen-associated molecular patterns (PAMPS)</p></li>
+<li><p><strong>Killer activator/inhibitor receptors (KARs/KIRs)</strong>: Host cells abnormalities</p></li>
+<li><p><strong>Complement receptors</strong>: Complement proteins</p></li>
+<li><p><strong>Fc receptors</strong>: Epitope-antibody complex</p></li>
+<li><p><strong>Cytokine receptors</strong>: Cytokines</p></li>
+<li><p><strong>B-cell receptor (BCRs)</strong>: Epitopes</p></li>
+<li><p><strong>T-cell receptors (TCRs)</strong>: Linear epitopes bound to the Major Histocompatibility Complex (MHC)</p></li>
+</ul>
+</section>
+<section id="irs-of-the-adaptive-immune-system">
+<h2><span class="section-number">38.2. </span>IRs of the adaptive immune system<a class="headerlink" href="#irs-of-the-adaptive-immune-system" title="Link to this heading">#</a></h2>
+<p>In the adaptive immune system, there are two major lineages of lymphocytes with IRs, which are produced in the Thymus and Bone-marrow called T- and B-cells <span id="id1">[<a class="reference internal" href="#id477" title="Max D Cooper and Matthew N Alder. The evolution of adaptive immune systems. Cell, 124(4):815–822, 2006.">Cooper and Alder, 2006</a>]</span>. These adaptive immune receptors (AIRs) of both cell lines detect antigens derived from different pathogens and tumor cells. However, they interact with the antigens in different ways: While the B-cell receptor (BCR) directly recognizes soluble or membrane-bound epitopes, the T-cell receptor interacts with linear peptides bound to the surface protein MHC (pMHC), which enables to view inside cells by presenting its content on the cell’s surface. After activation by antigens, B- and T-cells perform various functions such as fighting the pathogen, regulation of the immune response, or forming memory by proliferation.</p>
+<figure class="align-default" id="air-types">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/AIR_types.png"><img alt="AIR types" class="bg-primary mb-1" src="../_images/AIR_types.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 38.1 </span><span class="caption-text">Schematic drawing of the two AIR types. Created with <a class="reference external" href="http://BioRender.com">BioRender.com</a>.</span><a class="headerlink" href="#air-types" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="formation-of-adaptive-immune-receptors-by-v-d-j-recombination">
+<h2><span class="section-number">38.3. </span>Formation of adaptive immune receptors by V(D)J recombination<a class="headerlink" href="#formation-of-adaptive-immune-receptors-by-v-d-j-recombination" title="Link to this heading">#</a></h2>
+<p>The AIR is a protein complex consisting of two chains. Depending on the T cell type, these chains are either called α- and β- or γ- and δ-chain. Similarly, the BCR chains are called heavy and light chain (subtypes: κ and λ). While the α-, γ-, κ-, and λ-chains are formed by their respective V- and J-genes, the remaining chains additionally include their D-gene. For simplicity, we will therefore refer to VJ and VDJ chains throughout this book.</p>
+<p>Adaptive IRs lines are highly polymorphic in order to capture the immense space of antigens, i.e., there exists an immense variety of different TCR and BCR sequences. The amount of different TCRs have been estimated at 10<sup>20</sup> in total, while a human individual harbors 10<sup>7</sup> different sequences <span id="id2">[<a class="reference internal" href="#id486" title="Veronika Zarnitsyna, Brian Evavold, Louie Schoettle, Joseph Blattman, and Rustom Antia. Estimating the diversity, completeness, and cross-reactivity of the t cell repertoire. Frontiers in immunology, 4:485, 2013.">Zarnitsyna <em>et al.</em>, 2013</a>]</span>. Similarly, there naturally occur up to 10<sup>18</sup> different BCRs <span id="id3">[<a class="reference internal" href="#id487" title="Bryan Briney, Anne Inderbitzin, Collin Joyce, and Dennis R Burton. Commonality despite exceptional diversity in the baseline human antibody repertoire. Nature, 566(7744):393–397, 2019.">Briney <em>et al.</em>, 2019</a>]</span>. The collection of all receptors forms the AIR repertoire of an individual.</p>
+<p>The sequence diversity is introduced by the V(D)J recombination mechanism:</p>
+<ul class="simple">
+<li><p><strong>Combinatorial diversity</strong> is introduced by the combination of different V-, (D-,) and J-genes in addition to the combination of different VJ and VDJ chains.</p></li>
+<li><p><strong>Junctional diversity</strong> is achieved by insertion of nucleotides at the gene interfaces.</p></li>
+</ul>
+<figure class="align-default" id="vdj-recombination">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/VDJ_recombination.png"><img alt="VDJ recombination" class="bg-primary mb-1" src="../_images/VDJ_recombination.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 38.2 </span><span class="caption-text">VDJ recombination at the example of an αβ-TCR. Created with <a class="reference external" href="http://BioRender.com">BioRender.com</a>.</span><a class="headerlink" href="#vdj-recombination" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Additionally, mutations occur at the BCR binding sites in a process called Somatic Hypermutation for affinity maturation during rapid cell proliferation.</p>
+<p>In the resulting AIRs, three regions of high variability - the Complementary Determining Regions (CDRs) 1-3 - were detected per chain, where the AIR interacts with its target. The CDR1 and CDR2 are encoded by the V-gene. However, the CDR3 spans over the intersection of V-, (D-,) and J-genes and is therefore the most diverse element of the AIR. Therefore, it is often assumed that the specificity of an AIR is determined mainly by its CDR3 region of the more diverse VDJ chain.</p>
+</section>
+<section id="vdj-sequencing">
+<h2><span class="section-number">38.4. </span>VDJ-sequencing<a class="headerlink" href="#vdj-sequencing" title="Link to this heading">#</a></h2>
+<section id="cell-isolation">
+<h3><span class="section-number">38.4.1. </span>Cell isolation<a class="headerlink" href="#cell-isolation" title="Link to this heading">#</a></h3>
+<p>Before quantifying the single-cell data, the cells of interest should be targeted and isolated. Common options include:</p>
+<ul class="simple">
+<li><p><strong>Fluorescence Activated Cell Sorting (FACS)</strong> is a method based on flow cytometry with the power to label the cells of interest based on fluorescent probes over the raw cell suspension. A cell suspension is carried by a rapidly flowing stream of liquid. This stream of cells is broken up into individual droplets through a vibrating mechanism. Just before the stream breaks into droplets, the flow passes through a fluorescence measuring station where the fluorescence signal of every cell is measured. The droplets can be further charged for further separations.</p></li>
+<li><p><strong>Magnetic-Activated Cell Sorting (MACS)</strong> can use antibodies, enzymes, lectins, or streptavidins attached to a magnetic bead to label the target cells. Once the cells are labeled from the raw suspension, a magnetic field is applied to attract the magnetic beads and discard the remaining cells from the suspensions. The targeted cells are collected once the magnetic field is turned off. One advantage of this method is the capacity to collect targeted cells with no specific markers to be labeled, in that case, a cocktail of markers is used to label the untargeted cells, and the cells of interests are collected by washing them out once the magnetic field captures the untargeted cells conjugated to a magnetic bead.</p></li>
+<li><p><strong>Laser Capture Microdissection (LCM)</strong> has the power to extract cell populations or single cells from microscope preparations without detriment of the surrounding tissue. The components to perform LCM includes a reverse microscope, a laser control unit, a microscope joy stick to plate stabilization, a CCD camera, and a color monitor. The idea behind LCM consists on labelling cells by visual detection of morphological characteristics of target cells, the plate is immobilized and the laser pulse melts the thin thermoplastic film removing the cells or cells of interest without any damage to the surrounding tissue.</p></li>
+<li><p><strong>Microfluidics</strong> is a versatile method able to work with small quantities of raw suspension even at the order of nanoliters. There are different kinds of microfluidic approaches including cell-affinity chromatography based microfluidics, physical characteristics of cell based microfluidics, immunomagnetics beads based microfluidics, and separation by dielectric properties of some cell-types based microfluifdics. The most used microfluidics based method is the chromatographic separation using a chip assay as stationary phase which is modified to include the necessary antibodies to capture the target cells in the mobile phase. After the buffer flows off from the chip, a solution is used to separate the cells attached to the antibodies to collect them for further analysis <span id="id4">[<a class="reference internal" href="#id494" title="Ping Hu, Wenhua Zhang, Hongbo Xin, and Glenn Deng. Single cell isolation and analysis. Frontiers in cell and developmental biology, 4:116, 2016.">Hu <em>et al.</em>, 2016</a>]</span>.</p></li>
+</ul>
+</section>
+<section id="immune-receptor-sequencing">
+<h3><span class="section-number">38.4.2. </span>Immune receptor sequencing<a class="headerlink" href="#immune-receptor-sequencing" title="Link to this heading">#</a></h3>
+<p>A common approach to discern V(D)J chains from single-cell isolations consist on computational reconstructions of different chains sequences based on full-length single-cell RNA sequencing, being Smart-seq2, a 5’-end RNA template based protocol, one of the widest implemented. Regarding computational methods, TRAPeS, TraCer, and VDJPuzzle are usually used to reconstruct TCR sequences based on scRNA-seq data, whereas BALDR <span id="id5">[<a class="reference internal" href="#id521" title="Amit A. Upadhyay, Robert C. Kauffman, Amber N. Wolabaugh, Alice Cho, Nirav B. Patel, Samantha M. Reiss, Colin Havenar-Daughton, Reem A. Dawoud, Gregory K. Tharp, Iñaki Sanz, Bali Pulendran, Shane Crotty, F. Eun-Hyung Lee, Jens Wrammert, and Steven E. Bosinger. Baldr: a computational pipeline for paired heavy and light chain immunoglobulin reconstruction in single-cell rna-seq data. Genome Medicine, 10(1):20, Mar 2018. URL: https://doi.org/10.1186/s13073-018-0528-3, doi:10.1186/s13073-018-0528-3.">Upadhyay <em>et al.</em>, 2018</a>]</span>, BASIC <span id="id6">[<a class="reference internal" href="#id522" title="Stefan Canzar, Karlynn E Neu, Qingming Tang, Patrick C Wilson, and Aly A Khan. BASIC: BCR assembly from single cells. Bioinformatics, 33(3):425-427, 10 2016. URL: https://doi.org/10.1093/bioinformatics/btw631, arXiv:https://academic.oup.com/bioinformatics/article-pdf/33/3/425/25145999/btw631.pdf, doi:10.1093/bioinformatics/btw631.">Canzar <em>et al.</em>, 2016</a>]</span> and BraCer <span id="id7">[<a class="reference internal" href="#id523" title="Ida Lindeman, Guy Emerton, Lira Mamanova, Omri Snir, Krzysztof Polanski, Shuo-Wang Qiao, Ludvig M. Sollid, Sarah A. Teichmann, and Michael J. T. Stubbington. Bracer: b-cell-receptor reconstruction and clonality inference from single-cell rna-seq. Nature Methods, 15(8):563-565, Aug 2018. URL: https://doi.org/10.1038/s41592-018-0082-3, doi:10.1038/s41592-018-0082-3.">Lindeman <em>et al.</em>, 2018</a>]</span> were shown to robustly recover BCR sequences. However, they are prone to ignore the whole landscape of recombinatorial products and alternative splicing products in V(D)J region. Some alternatives have rise to deal with this problematic, RAGE-seq for example was developed to capture specific TCR and BCR fragments based on PCR templates designed for immune receptor sequencing and use long-read Oxford Nanopore to capture the whole sequence, whereas the rest of the cDNA is processed based on short-reads protocols provided by, for example, Illumina <span id="id8">[<a class="reference internal" href="#id496" title="Mandeep Singh, Ghamdan Al-Eryani, Shaun Carswell, James M Ferguson, James Blackburn, Kirston Barton, Daniel Roden, Fabio Luciani, Tri Giang Phan, Simon Junankar, and others. High-throughput targeted long-read single cell sequencing reveals the clonal and transcriptional landscape of lymphocytes. Nature communications, 10(1):1–13, 2019.">Singh <em>et al.</em>, 2019</a>]</span>.</p>
+</section>
+</section>
+<section id="air-repertoire-analysis">
+<h2><span class="section-number">38.5. </span>AIR repertoire analysis<a class="headerlink" href="#air-repertoire-analysis" title="Link to this heading">#</a></h2>
+<p>VDJ-sequencing provides us with the nucleotide and thereby also the protein sequence of the AIR paired for both chains, from which the V-, (D-,) J-, and C-gene is determined in addition to the CDR3 sequence. Overall, the AIR sequence determines the specificity of the individual B- and T-cell. Therefore, the information obtained by VDJ-sequencing provides us with an indicator of the cells’ functionality, which is directly coupled to the AIRs target antigen. This enables us to use the AIR information in three major ways:</p>
+<ul class="simple">
+<li><p><strong>Phenotyping</strong>: We can group immune cells by identifying cells with the same or similar AIR, which share the same specificity. Having these groups, we can now observe, how disease-specific cells react under different conditions (e.g. transcriptomic change upon stimulation), whether immune cells have proliferated, or how the diversity of an immune repertoire changes upon after an immune response.</p></li>
+<li><p><strong>Sequence Analysis</strong>: Having identified groups of AIRs (e.g. a reactive cluster detected in other modalities), we can extract properties of their sequence, such as V-, D-, and J-, gene usage or enriched sequence motifs, that are related to specific diseases or therapies.</p></li>
+<li><p><strong>Specificity-Inference</strong>: Last, we can use the sequence to match AIRs to their target antigen via database queries, sequence distances, or predictors. This directly identifies cells reactive to specific infectious diseases, tumors, or self-antigens.</p></li>
+</ul>
+</section>
+<section id="dataset">
+<h2><span class="section-number">38.6. </span>Dataset<a class="headerlink" href="#dataset" title="Link to this heading">#</a></h2>
+<p>To showcase different approaches for preprocessing and analysis of IRs, we will use the dataset published by the Haniffa Lab <span id="id9">[<a class="reference internal" href="#id479" title="Emily Stephenson, Gary Reynolds, Rachel A Botting, Fernando J Calero-Nieto, Michael D Morgan, Zewen Kelvin Tuong, Karsten Bach, Waradon Sungnak, Kaylee B Worlock, Masahiro Yoshida, and others. Single-cell multi-omics analysis of the immune response in covid-19. Nature medicine, 27(5):904–916, 2021.">Stephenson <em>et al.</em>, 2021</a>]</span>, which contains transcriptome sequencing for over 750,000 Peripheral Blood Mononuclear Cells (PBMC) from 130 patients in the context of Severe Acute Respiratory Syndrome Coronavirus 2 (SARS-CoV-2).</p>
+<p>It consists of patients from three sources (Newcastle, Cambridge, and London) with different degrees of severity (asymptomatic, mild, moderate, severe, and critical) as well as negative controls (healthy, other severe respiratory illnesses, and healthy with Intravenous Liposaccharide to mimic systemic inflammatory response). Additional, patient-level information such as age, gender, and smoker status are provided.</p>
+<p>The dataset was chosen as an example of a large-scale single cell dataset including VDJ-Sequencing, that is well known to the community. It contains over 150,000 B-Cells and 200,000 T-Cells with IR annotation, that we will regard in this analysis tutorial.</p>
+<p>To download the data please run the following commands:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;data/&quot;</span>
+<span class="n">path_bcr_input</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_00_read_aligned.csv&quot;</span>
+<span class="n">path_tcr_input</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_read_aligned.tsv&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>wget<span class="w"> </span>-O<span class="w"> </span><span class="nv">$path_bcr_input</span><span class="w"> </span>-nc<span class="w"> </span>https://figshare.com/ndownloader/files/35574338
+<span class="o">!</span><span class="w"> </span>wget<span class="w"> </span>-O<span class="w"> </span><span class="nv">$path_tcr_input</span><span class="w"> </span>-nc<span class="w"> </span>https://figshare.com/ndownloader/files/35574539
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2022-06-07 18:30:52--  https://figshare.com/ndownloader/files/35574338
+Resolving figshare.com (figshare.com)... 54.72.163.193, 52.50.42.102, 2a05:d018:1f4:d000:7421:2135:71b2:6a10, ...
+Connecting to figshare.com (figshare.com)|54.72.163.193|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/35574338/bcr_cellranger.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20220607/eu-west-1/s3/aws4_request&amp;X-Amz-Date=20220607T163052Z&amp;X-Amz-Expires=10&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=b18cb63ca03820e07cb8b3d9375466ca6405e655822269f5ae36d7449a28b810 [following]
+--2022-06-07 18:30:52--  https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/35574338/bcr_cellranger.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20220607/eu-west-1/s3/aws4_request&amp;X-Amz-Date=20220607T163052Z&amp;X-Amz-Expires=10&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=b18cb63ca03820e07cb8b3d9375466ca6405e655822269f5ae36d7449a28b810
+Resolving s3-eu-west-1.amazonaws.com (s3-eu-west-1.amazonaws.com)... 52.218.62.171
+Connecting to s3-eu-west-1.amazonaws.com (s3-eu-west-1.amazonaws.com)|52.218.62.171|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 84451806 (81M) [text/csv]
+Saving to: ‘data//BCR_00_read_aligned.csv’
+
+100%[======================================&gt;] 84,451,806  39.1MB/s   in 2.1s   
+
+2022-06-07 18:30:54 (39.1 MB/s) - ‘data//BCR_00_read_aligned.csv’ saved [84451806/84451806]
+
+--2022-06-07 18:30:55--  https://figshare.com/ndownloader/files/35574539
+Resolving figshare.com (figshare.com)... 54.72.163.193, 52.50.42.102, 2a05:d018:1f4:d000:7421:2135:71b2:6a10, ...
+Connecting to figshare.com (figshare.com)|54.72.163.193|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/35574539/TCR_mergedUpdated.tsv?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20220607/eu-west-1/s3/aws4_request&amp;X-Amz-Date=20220607T163055Z&amp;X-Amz-Expires=10&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=141ab989ae794394fb6c441d50c0ea6771f96a8d048a8a4c400c10dba267b97c [following]
+--2022-06-07 18:30:55--  https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/35574539/TCR_mergedUpdated.tsv?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20220607/eu-west-1/s3/aws4_request&amp;X-Amz-Date=20220607T163055Z&amp;X-Amz-Expires=10&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=141ab989ae794394fb6c441d50c0ea6771f96a8d048a8a4c400c10dba267b97c
+Resolving s3-eu-west-1.amazonaws.com (s3-eu-west-1.amazonaws.com)... 52.218.62.171
+Connecting to s3-eu-west-1.amazonaws.com (s3-eu-west-1.amazonaws.com)|52.218.62.171|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 247085830 (236M) [text/tab-separated-values]
+Saving to: ‘data//TCR_00_read_aligned.tsv’
+
+100%[======================================&gt;] 247,085,830 42.4MB/s   in 5.8s   
+
+2022-06-07 18:31:01 (40.9 MB/s) - ‘data//TCR_00_read_aligned.tsv’ saved [247085830/247085830]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-data">
+<h2><span class="section-number">38.7. </span>Load data<a class="headerlink" href="#load-data" title="Link to this heading">#</a></h2>
+<p>In this tutorial we will mainly use two python packages for loading, cell-level ordering, and visualization:</p>
+<ul class="simple">
+<li><p><strong>Scanpy</strong>: general package for single cell analysis (<a class="github reference external" href="https://github.com/theislab/scanpy">theislab/scanpy</a>, <span id="id10">[<a class="reference internal" href="#id480" title="F Alexander Wolf, Philipp Angerer, and Fabian J Theis. Scanpy: large-scale single-cell gene expression data analysis. Genome biology, 19(1):1–5, 2018.">Wolf <em>et al.</em>, 2018</a>]</span>)</p></li>
+<li><p><strong>Scirpy</strong>: scanpy extension for immune receptor analysis (<a class="github reference external" href="https://github.com/scverse/scirpy">scverse/scirpy</a>, <span id="id11">[<a class="reference internal" href="#id481" title="Gregor Sturm, Tamas Szabo, Georgios Fotakis, Marlene Haider, Dietmar Rieder, Zlatko Trajanoski, and Francesca Finotello. Scirpy: a scanpy extension for analyzing single-cell t-cell receptor-sequencing data. Bioinformatics, 36(18):4817–4818, 2020.">Sturm <em>et al.</em>, 2020</a>]</span>)</p></li>
+</ul>
+<p>Here, we only showcase IR analysis with Scirpy. However, there exist several tools with similar functionality such as immunarch(R, <span id="id12">[<a class="reference internal" href="#id482" title="ImmunoMind Team. immunarch: An R Package for Painless Bioinformatics Analysis of T-Cell and B-Cell Immune Repertoires. August 2019. URL: https://doi.org/10.5281/zenodo.3367200, doi:10.5281/zenodo.3367200.">ImmunoMind Team, 2019</a>]</span>), scRepertoire (R, <span id="id13">[<a class="reference internal" href="#id483" title="Nicholas Borcherding, Nicholas L Bormann, and Gloria Kraus. Screpertoire: an r-based toolkit for single-cell immune receptor analysis. F1000Research, 2020.">Borcherding <em>et al.</em>, 2020</a>]</span>), and dandelion (R, <span id="id14">[<a class="reference internal" href="#id479" title="Emily Stephenson, Gary Reynolds, Rachel A Botting, Fernando J Calero-Nieto, Michael D Morgan, Zewen Kelvin Tuong, Karsten Bach, Waradon Sungnak, Kaylee B Worlock, Masahiro Yoshida, and others. Single-cell multi-omics analysis of the immune response in covid-19. Nature medicine, 27(5):904–916, 2021.">Stephenson <em>et al.</em>, 2021</a>]</span>), and Platypus (R, <span id="id15">[<a class="reference internal" href="#id485" title="Alexander Yermanos, Andreas Agrafiotis, Raphael Kuhn, Damiano Robbiani, Josephine Yates, Chrysa Papadopoulou, Jiami Han, Ioana Sandu, Cédric Weber, Florian Bieberich, and others. Platypus: an open-access software for integrating lymphocyte single-cell immune repertoires with transcriptomes. NAR genomics and bioinformatics, 3(2):lqab023, 2021.">Yermanos <em>et al.</em>, 2021</a>]</span>) reviewed in <span id="id16">[<a class="reference internal" href="#id484" title="Sebastiaan Valkiers, Nicky de Vrij, Sofie Gielis, Sara Verbandt, Benson Ogunjimi, Kris Laukens, and Pieter Meysman. Recent advances in t-cell receptor repertoire analysis: bridging the gap with multimodal single-cell rna sequencing. ImmunoInformatics, pages 100009, 2022.">Valkiers <em>et al.</em>, 2022</a>]</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Scirpy changed the format of <a class="reference external" href="https://scirpy.scverse.org/en/latest/data-structure.html#storing-airr-rearrangement-data-in-anndata">its datastructure</a>
+with v0.13. While the overall analysis workflow has not changed, some outputs shown in this chapter might not be accurate anymore.</p>
+<p>See <a class="reference external" href="https://scirpy.scverse.org/en/latest/changelog.html#v0-13-0-new-data-structure-based-on-awkward-arrays">the scirpy release notes</a> for more details about this change.
+Until we update this chapter, please also refer to the <a class="reference external" href="https://scirpy.scverse.org">official scirpy documentation</a>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scirpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ir</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s set the input and output paths of our data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_bcr_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_01_preprocessed.h5ad&quot;</span>
+
+<span class="n">path_tcr_csv</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_read_aligned.csv&quot;</span>
+<span class="n">path_tcr_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_01_preprocessed.h5ad&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="raw-data">
+<h3><span class="section-number">38.7.1. </span>Raw data<a class="headerlink" href="#raw-data" title="Link to this heading">#</a></h3>
+<p>We begin by with viewing the raw output of the cell ranger pipeline for a better understanding of the data we are working with.
+We will load the <code class="docutils literal notranslate"><span class="pre">filtered_contig_annotations.csv&quot;</span></code> file to view its content. Each row will represent one measurement of a sequence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_bcr_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_bcr_input</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># The column &#39;productive&#39; contains mixed data types which are not compatible with downstream tools.</span>
+<span class="c1"># We correct them by casting them to strings.</span>
+<span class="n">df_bcr_raw</span><span class="p">[</span><span class="s2">&quot;productive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_bcr_raw</span><span class="p">[</span><span class="s2">&quot;productive&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total measurements: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_bcr_raw</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">df_bcr_raw</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total measurements: 373670
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>barcode</th>
+      <th>is_cell</th>
+      <th>contig_id</th>
+      <th>high_confidence</th>
+      <th>length</th>
+      <th>chain</th>
+      <th>v_gene</th>
+      <th>d_gene</th>
+      <th>j_gene</th>
+      <th>c_gene</th>
+      <th>full_length</th>
+      <th>productive</th>
+      <th>cdr3</th>
+      <th>cdr3_nt</th>
+      <th>reads</th>
+      <th>umis</th>
+      <th>raw_clonotype_id</th>
+      <th>raw_consensus_id</th>
+      <th>patient_id</th>
+      <th>newBarcode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAACCTGAGCGATATA-MH9143270</td>
+      <td>True</td>
+      <td>AAACCTGAGCGATATA-MH9143270_contig_1</td>
+      <td>True</td>
+      <td>646</td>
+      <td>IGL</td>
+      <td>IGLV1-44</td>
+      <td>None</td>
+      <td>IGLJ1</td>
+      <td>IGLC2</td>
+      <td>True</td>
+      <td>True</td>
+      <td>CAAWDDSLSASYVF</td>
+      <td>TGTGCAGCATGGGATGACAGCCTGAGTGCCTCTTATGTCTTC</td>
+      <td>154</td>
+      <td>14</td>
+      <td>clonotype9</td>
+      <td>clonotype9_consensus_2</td>
+      <td>COVID-002</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAACCTGAGCGATATA-MH9143270</td>
+      <td>True</td>
+      <td>AAACCTGAGCGATATA-MH9143270_contig_2</td>
+      <td>True</td>
+      <td>579</td>
+      <td>IGH</td>
+      <td>IGHV3-33</td>
+      <td>IGHD3-3</td>
+      <td>IGHJ4</td>
+      <td>IGHM</td>
+      <td>True</td>
+      <td>True</td>
+      <td>CARDNRVYYDFWSGYPDYW</td>
+      <td>TGTGCGAGAGACAACCGAGTCTATTACGATTTTTGGAGTGGTTATC...</td>
+      <td>144</td>
+      <td>13</td>
+      <td>clonotype9</td>
+      <td>clonotype9_consensus_1</td>
+      <td>COVID-002</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AAACCTGTCTACCAGA-MH9143270</td>
+      <td>True</td>
+      <td>AAACCTGTCTACCAGA-MH9143270_contig_1</td>
+      <td>True</td>
+      <td>574</td>
+      <td>IGH</td>
+      <td>IGHV1-69D</td>
+      <td>IGHD2-15</td>
+      <td>IGHJ5</td>
+      <td>IGHM</td>
+      <td>True</td>
+      <td>True</td>
+      <td>CARDRRSAYCSGGSCWGGDWFDPW</td>
+      <td>TGTGCGAGAGATCGTCGTTCAGCTTATTGTAGTGGTGGTAGCTGCT...</td>
+      <td>564</td>
+      <td>42</td>
+      <td>clonotype10</td>
+      <td>clonotype10_consensus_1</td>
+      <td>COVID-002</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AAACCTGTCTACCAGA-MH9143270</td>
+      <td>True</td>
+      <td>AAACCTGTCTACCAGA-MH9143270_contig_2</td>
+      <td>True</td>
+      <td>744</td>
+      <td>IGL</td>
+      <td>IGLV1-51</td>
+      <td>None</td>
+      <td>IGLJ3</td>
+      <td>IGLC3</td>
+      <td>True</td>
+      <td>False</td>
+      <td>CGTWDSSLSAWVF</td>
+      <td>TGCGGAACATGGGATAGCAGCCTGAGTGCTTGGGTGTTC</td>
+      <td>188</td>
+      <td>21</td>
+      <td>clonotype10</td>
+      <td>None</td>
+      <td>COVID-002</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAACGGGCATTTGCTT-MH9143270</td>
+      <td>True</td>
+      <td>AAACGGGCATTTGCTT-MH9143270_contig_1</td>
+      <td>True</td>
+      <td>565</td>
+      <td>IGH</td>
+      <td>IGHV3-33</td>
+      <td>None</td>
+      <td>IGHJ4</td>
+      <td>IGHM</td>
+      <td>True</td>
+      <td>True</td>
+      <td>CANPTRPYSSSWWYFDYW</td>
+      <td>TGTGCGAACCCCACCCGTCCATATAGCAGCAGCTGGTGGTACTTTG...</td>
+      <td>234</td>
+      <td>20</td>
+      <td>clonotype11</td>
+      <td>clonotype11_consensus_1</td>
+      <td>COVID-002</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The Table contains the following entries, that will be relevant for our preprocessing or analysis. A more detailed explanation of Cell Ranger specific entries can be found here (<a class="reference external" href="https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/output/annotation">https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/output/annotation</a>). In other data formats entries (e.g. AIRR) will have similar, deviating names, however the underlying information remains similar.</p>
+<ul class="simple">
+<li><p><strong>barcode</strong>: tag of the cell the contig was measured from</p></li>
+<li><p><strong>is_cell</strong>: indicates whether the barcode is associated with a cell</p></li>
+<li><p><strong>high_confidence</strong>: confidence of the measurement being a IR</p></li>
+<li><p><strong>chain</strong>: chain of the IR (e.g. TRA: T Cell Receptor α-chain, IGH: Immunoglobulin Heavy chain)</p></li>
+<li><p><strong>{v,d,j,c}_gene</strong>: gene used to form the specific segment of the IR</p></li>
+<li><p><strong>full_length</strong>: whether the full IR was captured (see below)</p></li>
+<li><p><strong>productive</strong>: whether the IR is productive (see below)</p></li>
+<li><p><strong>cdr3{_nt}</strong>: {Nucleotide} sequence of the CDR3 of the IR chain</p></li>
+<li><p><strong>patient_id</strong>: ID indicating the different patients</p></li>
+</ul>
+</section>
+<section id="productive-airs">
+<h3><span class="section-number">38.7.2. </span>Productive AIRs<a class="headerlink" href="#productive-airs" title="Link to this heading">#</a></h3>
+<p>Even though we can detect the AIR sequence, it might not be productive, i.e., it might not form a valid AIR. Sequences, which do not result in functional AIRs, are therefore flagged as non-productive. These are usually ignored, when loading data by tools such as Scirpy, and not used for any downstream analysis.
+Productive Immune receptors are defined by 10x Genomics <a class="reference external" href="https://kb.10xgenomics.com/hc/en-us/articles/115003248383-What-are-productive-contigs-">here</a> as:</p>
+<ul class="simple">
+<li><p>Sequences spanning over from a V gene to a J-gene</p></li>
+<li><p>Having a start <a class="reference internal" href="../glossary.html#term-Codon"><span class="xref std std-term">codon</span></a> in the leading region</p></li>
+<li><p>Containing a CDR3 in the frame of the start codon.</p></li>
+<li><p>Do not contain a stop codon within the V-J span</p></li>
+</ul>
+<p>Example 1: Sequences not spanning over a full IR (V to J gene) as indicated by the <code class="docutils literal notranslate"><span class="pre">full_length</span></code> column. You can find missing gene annotation here especially for V and J genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;barcode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;v_gene&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;d_gene&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;c_gene&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;j_gene&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;productive&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;full_length&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">df_bcr_raw</span><span class="p">[</span><span class="o">~</span><span class="n">df_bcr_raw</span><span class="p">[</span><span class="s2">&quot;full_length&quot;</span><span class="p">]][</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>barcode</th>
+      <th>v_gene</th>
+      <th>d_gene</th>
+      <th>c_gene</th>
+      <th>j_gene</th>
+      <th>productive</th>
+      <th>full_length</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>34</th>
+      <td>AACTCCCCAAGTACCT-MH9143270</td>
+      <td>None</td>
+      <td>None</td>
+      <td>IGLC3</td>
+      <td>IGLJ5</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>AACTCTTCAGATCGGA-MH9143270</td>
+      <td>IGKV1-39</td>
+      <td>None</td>
+      <td>IGKC</td>
+      <td>None</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>AACTGGTCAGGGAGAG-MH9143270</td>
+      <td>IGLV4-3</td>
+      <td>None</td>
+      <td>IGLC2</td>
+      <td>None</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>ACACCAAGTCGATTGT-MH9143270</td>
+      <td>None</td>
+      <td>IGHD5-12</td>
+      <td>IGHD</td>
+      <td>IGHJ4</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>ACATCAGCATACTACG-MH9143270</td>
+      <td>None</td>
+      <td>IGHD3-3</td>
+      <td>IGHD</td>
+      <td>IGHJ6</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Example 2: Contigs express full length but there is not identifiable CDR3.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">,</span> <span class="s2">&quot;cdr3_nt&quot;</span><span class="p">]</span>
+<span class="n">df_bcr_raw</span><span class="p">[(</span><span class="n">df_bcr_raw</span><span class="p">[</span><span class="s2">&quot;productive&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_bcr_raw</span><span class="p">[</span><span class="s2">&quot;full_length&quot;</span><span class="p">])][</span>
+    <span class="n">columns</span>
+<span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>barcode</th>
+      <th>v_gene</th>
+      <th>d_gene</th>
+      <th>c_gene</th>
+      <th>j_gene</th>
+      <th>productive</th>
+      <th>full_length</th>
+      <th>cdr3</th>
+      <th>cdr3_nt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>AAACCTGTCTACCAGA-MH9143270</td>
+      <td>IGLV1-51</td>
+      <td>None</td>
+      <td>IGLC3</td>
+      <td>IGLJ3</td>
+      <td>False</td>
+      <td>True</td>
+      <td>CGTWDSSLSAWVF</td>
+      <td>TGCGGAACATGGGATAGCAGCCTGAGTGCTTGGGTGTTC</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>AAAGCAAGTCGAAAGC-MH9143270</td>
+      <td>IGHV5-51</td>
+      <td>IGHD2-15</td>
+      <td>IGHD</td>
+      <td>IGHJ4</td>
+      <td>False</td>
+      <td>True</td>
+      <td>None</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>AACGTTGAGCTGCGAA-MH9143270</td>
+      <td>IGHV3-30</td>
+      <td>None</td>
+      <td>IGHM</td>
+      <td>IGHJ4</td>
+      <td>False</td>
+      <td>True</td>
+      <td>CESGRATITMIVVTDLDYW</td>
+      <td>TGCGAAAGCGGGCGGGCTACGATTACTATGATAGTAGTGACTGACC...</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>AACTCAGTCAAAGTAG-MH9143270</td>
+      <td>IGHV3-23</td>
+      <td>IGHD3-16</td>
+      <td>IGHD</td>
+      <td>IGHJ4</td>
+      <td>False</td>
+      <td>True</td>
+      <td>CAKAWIGLDSEIYYDYIWGSYRIDFDYW</td>
+      <td>TGTGCGAAAGCTTGGATCGGACTCGACTCCGAGATTTATTATGATT...</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>AACTCCCAGGTGCACA-MH9143270</td>
+      <td>IGKV6-21</td>
+      <td>None</td>
+      <td>IGKC</td>
+      <td>IGKJ3</td>
+      <td>False</td>
+      <td>True</td>
+      <td>None</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We will now load the TCR data and convert it from tab-separated format to comma-separated format for later use. Since barcodes overlap between multiple samples within the dataset, we further copy the unique <code class="docutils literal notranslate"><span class="pre">CellID</span></code> as <code class="docutils literal notranslate"><span class="pre">barcode</span></code> annotation. This data also contains annotation on patient-level (e.g. age, outcome, …) and cell-level annotation (cell type) in addition to the contig annotations previously discussed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_tcr_input</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">df_tcr_raw</span><span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_tcr_raw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;CellID&quot;</span><span class="p">)</span>
+<span class="n">df_tcr_raw</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_tcr_csv</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total measurements: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_tcr_raw</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">df_tcr_raw</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total measurements: 547630
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Centre</th>
+      <th>barcode</th>
+      <th>is_cell</th>
+      <th>contig_id</th>
+      <th>high_confidence</th>
+      <th>length</th>
+      <th>chain</th>
+      <th>v_gene</th>
+      <th>d_gene</th>
+      <th>j_gene</th>
+      <th>...</th>
+      <th>Days_from_onset</th>
+      <th>time_after_LPS</th>
+      <th>Worst_Clinical_Status</th>
+      <th>Outcome</th>
+      <th>leiden</th>
+      <th>consensus</th>
+      <th>initial_clustering</th>
+      <th>study_id</th>
+      <th>AgeRange</th>
+      <th>Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Newcastle</td>
+      <td>AAACCTGAGAAACCTA-MH9179824</td>
+      <td>True</td>
+      <td>AAACCTGAGAAACCTA-1_contig_2</td>
+      <td>True</td>
+      <td>512</td>
+      <td>TRB</td>
+      <td>TRBV5-1</td>
+      <td>None</td>
+      <td>TRBJ2-3</td>
+      <td>...</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>26</td>
+      <td>CD8</td>
+      <td>CD8</td>
+      <td>COVID-014</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Newcastle</td>
+      <td>AAACCTGAGAAACCTA-MH9179824</td>
+      <td>True</td>
+      <td>AAACCTGAGAAACCTA-1_contig_1</td>
+      <td>True</td>
+      <td>573</td>
+      <td>TRA</td>
+      <td>TRAV8-4</td>
+      <td>None</td>
+      <td>TRAJ31</td>
+      <td>...</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>26</td>
+      <td>CD8</td>
+      <td>CD8</td>
+      <td>COVID-014</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Newcastle</td>
+      <td>AAACCTGAGAACAATC-MH9143324</td>
+      <td>True</td>
+      <td>AAACCTGAGAACAATC-1_contig_1</td>
+      <td>True</td>
+      <td>635</td>
+      <td>TRB</td>
+      <td>TRBV19</td>
+      <td>None</td>
+      <td>TRBJ1-5</td>
+      <td>...</td>
+      <td>16</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>25</td>
+      <td>gdT</td>
+      <td>gdT</td>
+      <td>COVID-029</td>
+      <td>(20, 29]</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Newcastle</td>
+      <td>AAACCTGAGAACTCGG-MH8919329</td>
+      <td>True</td>
+      <td>AAACCTGAGAACTCGG-1_contig_1</td>
+      <td>True</td>
+      <td>499</td>
+      <td>TRA</td>
+      <td>TRAV34</td>
+      <td>None</td>
+      <td>TRAJ30</td>
+      <td>...</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>Death</td>
+      <td>Death</td>
+      <td>23</td>
+      <td>Treg</td>
+      <td>Treg</td>
+      <td>COVID-045</td>
+      <td>(70, 79]</td>
+      <td>77</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Newcastle</td>
+      <td>AAACCTGAGAACTCGG-MH8919329</td>
+      <td>True</td>
+      <td>AAACCTGAGAACTCGG-1_contig_2</td>
+      <td>True</td>
+      <td>496</td>
+      <td>TRB</td>
+      <td>TRBV5-1</td>
+      <td>None</td>
+      <td>TRBJ2-5</td>
+      <td>...</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>Death</td>
+      <td>Death</td>
+      <td>23</td>
+      <td>Treg</td>
+      <td>Treg</td>
+      <td>COVID-045</td>
+      <td>(70, 79]</td>
+      <td>77</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 47 columns</p>
+</div></div></div>
+</div>
+<p>We will find that this data already has been processed: All contigs are of full length and represent a productive IR.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr_raw</span><span class="p">[</span><span class="s2">&quot;full_length&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True    547630
+Name: full_length, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr_raw</span><span class="p">[</span><span class="s2">&quot;productive&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True    547630
+Name: productive, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cell-aligned-data">
+<h2><span class="section-number">38.8. </span>Cell-Aligned Data<a class="headerlink" href="#cell-aligned-data" title="Link to this heading">#</a></h2>
+<p>In order to perform analysis on cell level, we next need to align IR information previously sorted by contig to a cell based format via the cell barcode. Note that usually many contigs map to the same cell, since every IR consists of VJ and VDJ chain. Also, it has been shown, that a cell can express multiple IRs <span id="id17">[<a class="reference internal" href="#id488" title="Nathaniel J Schuldt and Bryce A Binstadt. Dual tcr t cells: identity crisis or multitaskers? The Journal of Immunology, 202(3):637–644, 2019.">Schuldt and Binstadt, 2019</a>]</span>.</p>
+<p>We will utilize the Python package Scirpy, that performs the cell-alignment automatically, when reading various TCR information from various formats:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_10x_vdj</span><span class="p">(</span><span class="n">path_tcr_csv</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount cells: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Non-standard locus name ignored: Multi 
+Amount cells: 280045
+</pre></div>
+</div>
+</div>
+</div>
+<p>The IR information will be stored sorted in <code class="docutils literal notranslate"><span class="pre">adata_tcr.obs</span></code> as a Pandas DataFrame with the index representing an individual cell. The DataFrame contains the following columns:</p>
+<ul class="simple">
+<li><p><strong>has_ir</strong>: indicates whether an IR was detected</p></li>
+<li><p><strong>multi_chain</strong>: indicates whether more than 2 IRs were detected</p></li>
+<li><p><strong>extra_chains</strong>: list of additional chains if multi_chain is true</p></li>
+</ul>
+<p>The contig data we observed in the raw data is stored as well. It is stored as separate columns for the two chains (VJ and VDJ) with up to 2 contigs per chain for each cell:</p>
+<ul class="simple">
+<li><p>IR_V{D}J_{1,2}_locus</p></li>
+<li><p>IR_V{D}J_{1,2}_productive</p></li>
+<li><p>IR_V{D}J_{1,2}_{v,d,j,c}_call</p></li>
+<li><p>IR_V{D}J_{1,2}_junction{_aa}</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_cell</th>
+      <th>high_confidence</th>
+      <th>multi_chain</th>
+      <th>extra_chains</th>
+      <th>IR_VJ_1_c_call</th>
+      <th>IR_VJ_2_c_call</th>
+      <th>IR_VDJ_1_c_call</th>
+      <th>IR_VDJ_2_c_call</th>
+      <th>IR_VJ_1_consensus_count</th>
+      <th>IR_VJ_2_consensus_count</th>
+      <th>...</th>
+      <th>IR_VDJ_2_locus</th>
+      <th>IR_VJ_1_productive</th>
+      <th>IR_VJ_2_productive</th>
+      <th>IR_VDJ_1_productive</th>
+      <th>IR_VDJ_2_productive</th>
+      <th>IR_VJ_1_v_call</th>
+      <th>IR_VJ_2_v_call</th>
+      <th>IR_VDJ_1_v_call</th>
+      <th>IR_VDJ_2_v_call</th>
+      <th>has_ir</th>
+    </tr>
+    <tr>
+      <th>cell_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAAACCTA-MH9179824</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>960.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>TRAV8-4</td>
+      <td>NaN</td>
+      <td>TRBV5-1</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACAATC-MH9143324</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TRBC1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>None</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TRBV19</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACTCGG-MH8919329</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>5122.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>TRAV34</td>
+      <td>NaN</td>
+      <td>TRBV5-1</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGCCCA-MH9143373</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>25914.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>TRAV16</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGGACA-MH9143274</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>3212.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>TRAV8-1</td>
+      <td>NaN</td>
+      <td>TRBV7-6</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 45 columns</p>
+</div></div></div>
+</div>
+<p>Notice, that the patient-level information is not automatically added here. Let’s add them by loading the raw data, aligning them on a cell level and indexing them by their barcode.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patient_information</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;barcode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Centre&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sample&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;patient_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Collection_Day&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sex&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Swab_result&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Status&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Smoker&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Status_on_day_collection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Status_on_day_collection_summary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Days_from_onset&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;time_after_LPS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Worst_Clinical_Status&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Outcome&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;initial_clustering&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;study_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AgeRange&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Age&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">df_patient</span> <span class="o">=</span> <span class="n">df_tcr_raw</span><span class="p">[</span><span class="n">patient_information</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_patient</span><span class="p">[</span><span class="s2">&quot;Days_from_onset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_patient</span><span class="p">[</span><span class="s2">&quot;Days_from_onset&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+    <span class="nb">str</span>
+<span class="p">)</span>  <span class="c1"># mixed type (str, int)</span>
+<span class="n">df_patient</span> <span class="o">=</span> <span class="n">df_patient</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Assigning barcode as index</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df_patient</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;barcode&quot;</span><span class="p">)</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Centre</th>
+      <th>Sample</th>
+      <th>patient_id</th>
+      <th>Collection_Day</th>
+      <th>Sex</th>
+      <th>Swab_result</th>
+      <th>Status</th>
+      <th>Smoker</th>
+      <th>Status_on_day_collection</th>
+      <th>Status_on_day_collection_summary</th>
+      <th>Days_from_onset</th>
+      <th>time_after_LPS</th>
+      <th>Worst_Clinical_Status</th>
+      <th>Outcome</th>
+      <th>initial_clustering</th>
+      <th>study_id</th>
+      <th>AgeRange</th>
+      <th>Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAAACCTA-MH9179824</th>
+      <td>Newcastle</td>
+      <td>MH9179824</td>
+      <td>COVID-014</td>
+      <td>D0</td>
+      <td>Female</td>
+      <td>Positive</td>
+      <td>Covid</td>
+      <td>Non-smoker</td>
+      <td>Ward_O2</td>
+      <td>Moderate</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>CD8</td>
+      <td>COVID-014</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACAATC-MH9143324</th>
+      <td>Newcastle</td>
+      <td>MH9143324</td>
+      <td>COVID-029</td>
+      <td>D0</td>
+      <td>Male</td>
+      <td>Positive</td>
+      <td>Covid</td>
+      <td>Non-smoker</td>
+      <td>Ward_O2</td>
+      <td>Moderate</td>
+      <td>16</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>gdT</td>
+      <td>COVID-029</td>
+      <td>(20, 29]</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACTCGG-MH8919329</th>
+      <td>Newcastle</td>
+      <td>MH8919329</td>
+      <td>COVID-045</td>
+      <td>D0</td>
+      <td>Female</td>
+      <td>Positive</td>
+      <td>Covid</td>
+      <td>Non-smoker</td>
+      <td>ITU_intubated</td>
+      <td>Critical</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>Death</td>
+      <td>Death</td>
+      <td>Treg</td>
+      <td>COVID-045</td>
+      <td>(70, 79]</td>
+      <td>77</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGCCCA-MH9143373</th>
+      <td>Newcastle</td>
+      <td>MH9143373</td>
+      <td>COVID-060</td>
+      <td>D0</td>
+      <td>Male</td>
+      <td>Negative</td>
+      <td>Non_covid</td>
+      <td>Smoker</td>
+      <td>Ward_O2</td>
+      <td>Non_covid</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>Non-covid</td>
+      <td>Home</td>
+      <td>CD4</td>
+      <td>COVID-060</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGGACA-MH9143274</th>
+      <td>Newcastle</td>
+      <td>MH9143274</td>
+      <td>COVID-037</td>
+      <td>D0</td>
+      <td>Female</td>
+      <td>Positive</td>
+      <td>Covid</td>
+      <td>Non-smoker</td>
+      <td>ITU_O2</td>
+      <td>Severe</td>
+      <td>21</td>
+      <td>NaN</td>
+      <td>Severe</td>
+      <td>Home</td>
+      <td>CD4</td>
+      <td>COVID-037</td>
+      <td>(50, 59]</td>
+      <td>59</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We can now add this information to the adata object and check, whether the annotation is added as observation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">df_patient</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_patient</span>
+<span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_cell</th>
+      <th>high_confidence</th>
+      <th>multi_chain</th>
+      <th>extra_chains</th>
+      <th>IR_VJ_1_c_call</th>
+      <th>IR_VJ_2_c_call</th>
+      <th>IR_VDJ_1_c_call</th>
+      <th>IR_VDJ_2_c_call</th>
+      <th>IR_VJ_1_consensus_count</th>
+      <th>IR_VJ_2_consensus_count</th>
+      <th>...</th>
+      <th>Status_on_day_collection</th>
+      <th>Status_on_day_collection_summary</th>
+      <th>Days_from_onset</th>
+      <th>time_after_LPS</th>
+      <th>Worst_Clinical_Status</th>
+      <th>Outcome</th>
+      <th>initial_clustering</th>
+      <th>study_id</th>
+      <th>AgeRange</th>
+      <th>Age</th>
+    </tr>
+    <tr>
+      <th>cell_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAAACCTA-MH9179824</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>960.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Ward_O2</td>
+      <td>Moderate</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>CD8</td>
+      <td>COVID-014</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACAATC-MH9143324</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TRBC1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Ward_O2</td>
+      <td>Moderate</td>
+      <td>16</td>
+      <td>NaN</td>
+      <td>Moderate</td>
+      <td>Home</td>
+      <td>gdT</td>
+      <td>COVID-029</td>
+      <td>(20, 29]</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAACTCGG-MH8919329</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>5122.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>ITU_intubated</td>
+      <td>Critical</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>Death</td>
+      <td>Death</td>
+      <td>Treg</td>
+      <td>COVID-045</td>
+      <td>(70, 79]</td>
+      <td>77</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGCCCA-MH9143373</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>25914.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Ward_O2</td>
+      <td>Non_covid</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>Non-covid</td>
+      <td>Home</td>
+      <td>CD4</td>
+      <td>COVID-060</td>
+      <td>(50, 59]</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAAGGACA-MH9143274</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>TRAC</td>
+      <td>NaN</td>
+      <td>TRBC2</td>
+      <td>NaN</td>
+      <td>3212.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>ITU_O2</td>
+      <td>Severe</td>
+      <td>21</td>
+      <td>NaN</td>
+      <td>Severe</td>
+      <td>Home</td>
+      <td>CD4</td>
+      <td>COVID-037</td>
+      <td>(50, 59]</td>
+      <td>59</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 63 columns</p>
+</div></div></div>
+</div>
+<p>In the same manner we can load the BCR data and check the IR annotation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bcr</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_10x_vdj</span><span class="p">(</span><span class="n">path_bcr_input</span><span class="p">)</span>
+<span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Non-standard locus name ignored: Multi 
+WARNING: Non-standard locus name ignored: None 
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_cell</th>
+      <th>high_confidence</th>
+      <th>multi_chain</th>
+      <th>extra_chains</th>
+      <th>IR_VJ_1_c_call</th>
+      <th>IR_VJ_2_c_call</th>
+      <th>IR_VDJ_1_c_call</th>
+      <th>IR_VDJ_2_c_call</th>
+      <th>IR_VJ_1_consensus_count</th>
+      <th>IR_VJ_2_consensus_count</th>
+      <th>...</th>
+      <th>IR_VDJ_2_locus</th>
+      <th>IR_VJ_1_productive</th>
+      <th>IR_VJ_2_productive</th>
+      <th>IR_VDJ_1_productive</th>
+      <th>IR_VDJ_2_productive</th>
+      <th>IR_VJ_1_v_call</th>
+      <th>IR_VJ_2_v_call</th>
+      <th>IR_VDJ_1_v_call</th>
+      <th>IR_VDJ_2_v_call</th>
+      <th>has_ir</th>
+    </tr>
+    <tr>
+      <th>cell_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAACTCGG-MH9143420</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHM</td>
+      <td>NaN</td>
+      <td>6982.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-11</td>
+      <td>NaN</td>
+      <td>IGHV3-23</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATAGGG-MH8919227</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHA1</td>
+      <td>NaN</td>
+      <td>626.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-15</td>
+      <td>NaN</td>
+      <td>IGHV1-24</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATGTGT-MH8919326</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[{"c_call": "IGLC1", "consensus_count": 748, "...</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHM</td>
+      <td>NaN</td>
+      <td>1028.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV1-33</td>
+      <td>NaN</td>
+      <td>IGHV1-2</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATGTGT-MH9143424</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGLC2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>736.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>IGLV3-21</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGACACTAA-MH9143423</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHG1</td>
+      <td>NaN</td>
+      <td>66.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-20</td>
+      <td>NaN</td>
+      <td>IGHV3-23</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 45 columns</p>
+</div></div></div>
+</div>
+<p>As before, we can add extract additional information annotated for each contig.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patient_information</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">,</span> <span class="s2">&quot;patient_id&quot;</span><span class="p">]</span>
+<span class="n">df_patient</span> <span class="o">=</span> <span class="n">df_bcr_raw</span><span class="p">[</span><span class="n">patient_information</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_patient</span> <span class="o">=</span> <span class="n">df_patient</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Assigning barcode as index</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df_patient</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;barcode&quot;</span><span class="p">)</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">df_patient</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>patient_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGCGATATA-MH9143270</th>
+      <td>COVID-002</td>
+    </tr>
+    <tr>
+      <th>AAACCTGTCTACCAGA-MH9143270</th>
+      <td>COVID-002</td>
+    </tr>
+    <tr>
+      <th>AAACGGGCATTTGCTT-MH9143270</th>
+      <td>COVID-002</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTAGCACGA-MH9143270</th>
+      <td>COVID-002</td>
+    </tr>
+    <tr>
+      <th>AAACGGGTCGTACCGG-MH9143270</th>
+      <td>COVID-002</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>And add them to the cell annotations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">df_patient</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_patient</span>
+<span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_cell</th>
+      <th>high_confidence</th>
+      <th>multi_chain</th>
+      <th>extra_chains</th>
+      <th>IR_VJ_1_c_call</th>
+      <th>IR_VJ_2_c_call</th>
+      <th>IR_VDJ_1_c_call</th>
+      <th>IR_VDJ_2_c_call</th>
+      <th>IR_VJ_1_consensus_count</th>
+      <th>IR_VJ_2_consensus_count</th>
+      <th>...</th>
+      <th>IR_VJ_1_productive</th>
+      <th>IR_VJ_2_productive</th>
+      <th>IR_VDJ_1_productive</th>
+      <th>IR_VDJ_2_productive</th>
+      <th>IR_VJ_1_v_call</th>
+      <th>IR_VJ_2_v_call</th>
+      <th>IR_VDJ_1_v_call</th>
+      <th>IR_VDJ_2_v_call</th>
+      <th>has_ir</th>
+      <th>patient_id</th>
+    </tr>
+    <tr>
+      <th>cell_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAACTCGG-MH9143420</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHM</td>
+      <td>NaN</td>
+      <td>6982.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-11</td>
+      <td>NaN</td>
+      <td>IGHV3-23</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>COVID-011</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATAGGG-MH8919227</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHA1</td>
+      <td>NaN</td>
+      <td>626.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-15</td>
+      <td>NaN</td>
+      <td>IGHV1-24</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>COVID-075</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATGTGT-MH8919326</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[{"c_call": "IGLC1", "consensus_count": 748, "...</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHM</td>
+      <td>NaN</td>
+      <td>1028.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV1-33</td>
+      <td>NaN</td>
+      <td>IGHV1-2</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>COVID-003</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGAATGTGT-MH9143424</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGLC2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>736.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>True</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>IGLV3-21</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>COVID-039</td>
+    </tr>
+    <tr>
+      <th>AAACCTGAGACACTAA-MH9143423</th>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>[]</td>
+      <td>IGKC</td>
+      <td>NaN</td>
+      <td>IGHG1</td>
+      <td>NaN</td>
+      <td>66.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>True</td>
+      <td>None</td>
+      <td>True</td>
+      <td>None</td>
+      <td>IGKV3-20</td>
+      <td>NaN</td>
+      <td>IGHV3-23</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>COVID-036</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 46 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="quality-control">
+<h2><span class="section-number">38.9. </span>Quality Control<a class="headerlink" href="#quality-control" title="Link to this heading">#</a></h2>
+<p>For analysis, we rely on high quality input data. It is therefore of great importance, to identify cells with incorrect or incomplete AIR information:</p>
+<ul class="simple">
+<li><p><strong>Incomplete AIRs</strong>: A cell is assigned only either a VJ and or a VDJ chain, because the other chain is missed during sequencing. While these are still valid cells, we cannot utilize them for downstream analysis, when full AIR sequence information is required.</p></li>
+<li><p><strong>Multiple AIRs</strong>: It is also possible that a cell gets assigned multiple AIRs. While it has been observed that T- / B-cells can express dual AIR <span id="id18">[<a class="reference internal" href="#id488" title="Nathaniel J Schuldt and Bryce A Binstadt. Dual tcr t cells: identity crisis or multitaskers? The Journal of Immunology, 202(3):637–644, 2019.">Schuldt and Binstadt, 2019</a>]</span>, cells with more than two IRs are indicative as doublets, which should not be used for downstream analysis.</p></li>
+</ul>
+<p>We can easily assign this state of the AIR by accumulating the data of the AIR chains. This will enable us later to filter cells, where the AIR cannot be used for our analysis. Here, it heavily depends on your downstream analysis which AIR information is required.</p>
+<section id="assigning-air-state">
+<h3><span class="section-number">38.9.1. </span>Assigning AIR State<a class="headerlink" href="#assigning-air-state" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">chain_qc</span><span class="p">(</span><span class="n">adata_tcr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">chain_qc</span><span class="p">(</span><span class="n">adata_bcr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following provides the resulting column with an explanation of its possible options:</p>
+<ul class="simple">
+<li><p>chain_pairing</p>
+<ul>
+<li><p><strong>orphan {VJ}/{VDJ}</strong>: cells with only one of VJ or VDJ chain</p></li>
+<li><p><strong>single pair</strong>: cells with a full paired (VJ and VDJ) AIR</p></li>
+<li><p><strong>extra {VJ}/{VDJ}</strong>: cells with full paired AIR and an additional VJ or VDJ chain</p></li>
+<li><p><strong>two full chains</strong>: cells with two paired AIRs</p></li>
+<li><p><strong>multichain</strong>: cells with more than two VJ or VDJ chains (likely doublets)</p></li>
+</ul>
+</li>
+<li><p>receptor_type: BCR, TCR, no IR, or ambiguous (mixed chains of TCR and BCR)</p></li>
+<li><p>receptor_subtype: α/β, ɣ/δ, IG-λ, and IG-κ chain configurations</p></li>
+</ul>
+</section>
+<section id="visualization">
+<h3><span class="section-number">38.9.2. </span>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h3>
+<p>Depending on the data, the quality of the chain pairing might be different. You should visualize the results over different conditions (e.g. samples, data sources, …), that could introduce varying quality within your dataset. Let’s visualize the data quality collected over the different centers of data collection.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span><span class="n">adata_tcr</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;Centre&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4003437e907a712d0e5be6aa5e1e657ee6e7325f93746281cec2fc5b299cfa52.png" src="../_images/4003437e907a712d0e5be6aa5e1e657ee6e7325f93746281cec2fc5b299cfa52.png" />
+</div>
+</div>
+<p>The data from all three centers contains mainly cells with a single pair of TCRs, which is a sign of good data quality. Often, we can compare different conditions better, when we view the fractions of cells in each condition instead of the absolute amount of cells:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_tcr</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;Centre&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9d5bcfacdbe50ff2d74ab083dc0ff4d59a60b113c3ca8ee2cdb2e0c9ae298f5e.png" src="../_images/9d5bcfacdbe50ff2d74ab083dc0ff4d59a60b113c3ca8ee2cdb2e0c9ae298f5e.png" />
+</div>
+</div>
+<p>Here, we can see that all centers offer data of overall comparable data quality. The majority of T cells express a single TCR, followed by orphan VDJ, and VJ chains, which is typical when sequencing TCRs.
+Typical values of a good quality sample may be greater 60% single AIRs, 10-20% orphan chains, and ~10% extra chains.
+Note, that the percentage of cells without AIRs is naturally depending on the amount of non-AIR cells in the study, when sequencing multiple-modalities jointly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_tcr</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;Centre&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;receptor_type&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_tcr</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;Centre&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;receptor_subtype&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/eeafb682260eb57d5573fef4bcf7f67941b7ea516d3ded734baa42bec15f41d1.png" src="../_images/eeafb682260eb57d5573fef4bcf7f67941b7ea516d3ded734baa42bec15f41d1.png" />
+<img alt="../_images/6f560cbaba29c6a52ac91d0719ccc5aa7fd2c1d69372e6c616ee752b3d635af4.png" src="../_images/6f560cbaba29c6a52ac91d0719ccc5aa7fd2c1d69372e6c616ee752b3d635af4.png" />
+</div>
+</div>
+<p>We can see, that the dataset consists only of TCRs (first plot), which is not surprising, since we have separated DataFrames of T - and B-cells. Additionally, the dataset only contains α/β-T cells. Since the amount of cells without IR cannot be recognized in the plot, we will look at the absolute numbers, and observe that only 22 cells have no AIR information. This fraction will be larger in most datasets, when sequencing multiple modalities depending on the amount of AIR cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single pair        196957
+orphan VDJ          45266
+extra VJ            19034
+orphan VJ            7937
+extra VDJ            7473
+two full chains      3356
+no IR                  22
+Name: chain_pairing, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>For the BCR, we will have a look at the patient-level. For visualization, we downsample to two patients (todo: later in line with rest downsampling):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bcr_tmp</span> <span class="o">=</span> <span class="n">adata_bcr</span><span class="p">[</span>
+    <span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;patient_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;COVID-003&quot;</span><span class="p">,</span> <span class="s2">&quot;AP11&quot;</span><span class="p">])</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_bcr_tmp</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span>
+<span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_bcr_tmp</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f22bb13695dfca89ecb9d74d18087d67af596321cc39c85f6ca23c56bc79b89f.png" src="../_images/f22bb13695dfca89ecb9d74d18087d67af596321cc39c85f6ca23c56bc79b89f.png" />
+<img alt="../_images/9090cc0fd9304be2548295340f927a32c0308d1ba6ac2c0fe9876b1e25a45251.png" src="../_images/9090cc0fd9304be2548295340f927a32c0308d1ba6ac2c0fe9876b1e25a45251.png" />
+</div>
+</div>
+<p>While we observe an considerable difference in the amount of B Cells between the patients, the quality of the chain pairings is comparable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_bcr_tmp</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;receptor_type&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">group_abundance</span><span class="p">(</span>
+    <span class="n">adata_bcr_tmp</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;patient_id&quot;</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s2">&quot;receptor_subtype&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/32bc79868464cc9bce425b6c8157d6a95ac294cadf66d9b62c145aed859bd6ec.png" src="../_images/32bc79868464cc9bce425b6c8157d6a95ac294cadf66d9b62c145aed859bd6ec.png" />
+<img alt="../_images/3597d7ba3c9b2370d76b96bd029252d9bf66655cddb90f9fc67de63877bc5c5e.png" src="../_images/3597d7ba3c9b2370d76b96bd029252d9bf66655cddb90f9fc67de63877bc5c5e.png" />
+</div>
+</div>
+<p>Again, we have only one type of AIR in the dataset (BCRs), but this time a mixture of κ- and λ-chains for the light chain.</p>
+</section>
+<section id="filtering">
+<h3><span class="section-number">38.9.3. </span>Filtering<a class="headerlink" href="#filtering" title="Link to this heading">#</a></h3>
+<p>You might want to filter cells with different AIR states. Depending on your study, you have to decide the trade-off between the amount of data available and the quality of the data, when deciding for filtering. Often, all cells are kept within the dataset with their AIR state flagged. For different downstream analysis, only cells with correct information are then used. E.g. if you perform a database query based on CDR3-VDJ chain (see chapter X), it is possible to use orphan VDJ chains, while this is not possible when searching for the full AIR. In the following, we will show how the filtering is performed. It is up to the reader to decide, whether they want to perform the filtering at this point, or before the different analysis parts.</p>
+<p>The filtering can be performed with various degrees of strictness and different combinations such as:</p>
+<ul class="simple">
+<li><p><strong>has IR</strong>: keep only cells with expressed IRs, since we cannot perform sequence level analysis on them</p></li>
+<li><p><strong>no multi chains</strong>: filter out cells with &gt;2 AIRs to avoid doublets</p></li>
+<li><p><strong>only one AIR</strong>: filter out cells with two AIRs or additional chains since specificity can not be attributed to a certain sequence</p></li>
+<li><p><strong>no single chains</strong>: filter out cells with only VJ or VDJ chains, which cannot be used for all downstream analysis due to missing information</p></li>
+</ul>
+<p>Since we will use the full data throughout this book, we will filter the data to a temporary AnnData object for each step described above. From the absolute cell numbers, you can see how many cells will be lost in each step.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single pair        1489
+orphan VJ           312
+extra VJ             46
+ambiguous            31
+orphan VDJ           25
+two full chains       6
+extra VDJ             4
+no IR                 1
+Name: chain_pairing, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of all B cells:</span><span class="se">\t\t\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_bcr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">adata_bcr_tmp</span> <span class="o">=</span> <span class="n">adata_bcr</span><span class="p">[</span><span class="n">adata_bcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;no IR&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of B cells with AIR:</span><span class="se">\t\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_bcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_bcr_tmp</span> <span class="o">=</span> <span class="n">adata_bcr_tmp</span><span class="p">[</span><span class="n">adata_bcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;multi_chain&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of B cells without dublets:</span><span class="se">\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_bcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_bcr_tmp</span> <span class="o">=</span> <span class="n">adata_bcr_tmp</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">adata_bcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;two full chains&quot;</span><span class="p">,</span> <span class="s2">&quot;extra VJ&quot;</span><span class="p">,</span> <span class="s2">&quot;extra VDJ&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of B cells with unique AIR per cell:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_bcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_bcr_tmp</span> <span class="o">=</span> <span class="n">adata_bcr_tmp</span><span class="p">[</span><span class="n">adata_bcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;single pair&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of B cells with sinlge complete AIR:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_bcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Amount of all B cells:				159446
+Amount of B cells with AIR:			159185
+Amount of B cells without dublets:		159185
+Amount of B cells with unique AIR per cell:	153936
+Amount of B cells with sinlge complete AIR:	108395
+</pre></div>
+</div>
+</div>
+</div>
+<p>Eventually, we obtain an AnnData object with only single paired BCRs. However, the amount of data can be considerably smaller limiting downstream analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single pair    108395
+Name: chain_pairing, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Similarly, we can perform this filtering for the TCR data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single pair        196957
+orphan VDJ          45266
+extra VJ            19034
+orphan VJ            7937
+extra VDJ            7473
+two full chains      3356
+no IR                  22
+Name: chain_pairing, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of all T cells:</span><span class="se">\t\t\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">adata_tcr_tmp</span> <span class="o">=</span> <span class="n">adata_tcr</span><span class="p">[</span><span class="n">adata_tcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;no IR&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of T cells with AIR:</span><span class="se">\t\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_tcr_tmp</span> <span class="o">=</span> <span class="n">adata_tcr_tmp</span><span class="p">[</span><span class="n">adata_tcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;multi_chain&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of T cells without dublets:</span><span class="se">\t\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_tcr_tmp</span> <span class="o">=</span> <span class="n">adata_tcr_tmp</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">adata_tcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;two full chains&quot;</span><span class="p">,</span> <span class="s2">&quot;extra VJ&quot;</span><span class="p">,</span> <span class="s2">&quot;extra VDJ&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of T cells with unique AIR per cell:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">adata_tcr_tmp</span> <span class="o">=</span> <span class="n">adata_tcr_tmp</span><span class="p">[</span><span class="n">adata_tcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;single pair&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of T cells with sinlge complete AIR:</span><span class="se">\t</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_tcr_tmp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Amount of all T cells:				280045
+Amount of T cells with AIR:			280023
+Amount of T cells without dublets:		280023
+Amount of T cells with unique AIR per cell:	250160
+Amount of T cells with sinlge complete AIR:	196957
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tcr_tmp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;chain_pairing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>single pair    196957
+Name: chain_pairing, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we save the annotated data for later analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata_tcr</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">path_tcr_out</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata_bcr</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">path_bcr_out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="key-takeaways">
+<h2><span class="section-number">38.10. </span>Key Takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>VDJ-sequencing measures the sequence information of AIRs, which provides us insights into the function of B- and T-cells.</p></li>
+<li><p>To detect doublets, cells with multiple AIRs should be identified or filtered.</p></li>
+<li><p>Depending on the analysis, we additional filter cells with incomplete AIR information.</p></li>
+</ul>
+</section>
+<section id="quiz">
+<h2><span class="section-number">38.11. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<p>Where does the high variability of AIRs stem from?</p>
+<ul class="simple">
+<li><p>+ Junctional diversity adds random nucleotides.</p></li>
+<li><p>Peripheral diversity motivates rapid amino acid switches specific to the host organ.</p></li>
+<li><p>+ Combinatorial diversity of different gene segments.</p></li>
+<li><p>Inherited diversity genetically encodes multiple AIRs.</p></li>
+</ul>
+<p>What properties does a productive AIR have?</p>
+<ul class="simple">
+<li><p>+ It spans over the V- to the J-gene with an CDR3 regions contained.</p></li>
+<li><p>It contains a stop codon in the D-gene.</p></li>
+<li><p>There exist multiple different sequences for the same AIR chains.</p></li>
+<li><p>+ It contains a start codon in the leading region.</p></li>
+</ul>
+<p>What cells should be identified for potential filtering?</p>
+<ul class="simple">
+<li><p>Cells with a high count of AIR sequence reads.</p></li>
+<li><p>+ Cells with incomplete AIR information.</p></li>
+<li><p>+ Cells with multiple AIRs indicating doublets.</p></li>
+<li><p>Cells with specific motifs in the CDR3 region.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2><span class="section-number">38.12. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id19">
+<div role="list" class="citation-list">
+<div class="citation" id="id483" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">BBK20</a><span class="fn-bracket">]</span></span>
+<p>Nicholas Borcherding, Nicholas L Bormann, and Gloria Kraus. Screpertoire: an r-based toolkit for single-cell immune receptor analysis. <em>F1000Research</em>, 2020.</p>
+</div>
+<div class="citation" id="id487" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">BIJB19</a><span class="fn-bracket">]</span></span>
+<p>Bryan Briney, Anne Inderbitzin, Collin Joyce, and Dennis R Burton. Commonality despite exceptional diversity in the baseline human antibody repertoire. <em>Nature</em>, 566(7744):393–397, 2019.</p>
+</div>
+<div class="citation" id="id522" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">CNT+16</a><span class="fn-bracket">]</span></span>
+<p>Stefan Canzar, Karlynn E Neu, Qingming Tang, Patrick C Wilson, and Aly A Khan. BASIC: BCR assembly from single cells. <em>Bioinformatics</em>, 33(3):425–427, 10 2016. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btw631">https://doi.org/10.1093/bioinformatics/btw631</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bioinformatics/article-pdf/33/3/425/25145999/btw631.pdf">arXiv:https://academic.oup.com/bioinformatics/article-pdf/33/3/425/25145999/btw631.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btw631">doi:10.1093/bioinformatics/btw631</a>.</p>
+</div>
+<div class="citation" id="id477" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">CA06</a><span class="fn-bracket">]</span></span>
+<p>Max D Cooper and Matthew N Alder. The evolution of adaptive immune systems. <em>Cell</em>, 124(4):815–822, 2006.</p>
+</div>
+<div class="citation" id="id494" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">HZXD16</a><span class="fn-bracket">]</span></span>
+<p>Ping Hu, Wenhua Zhang, Hongbo Xin, and Glenn Deng. Single cell isolation and analysis. <em>Frontiers in cell and developmental biology</em>, 4:116, 2016.</p>
+</div>
+<div class="citation" id="id523" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">LEM+18</a><span class="fn-bracket">]</span></span>
+<p>Ida Lindeman, Guy Emerton, Lira Mamanova, Omri Snir, Krzysztof Polanski, Shuo-Wang Qiao, Ludvig M. Sollid, Sarah A. Teichmann, and Michael J. T. Stubbington. Bracer: b-cell-receptor reconstruction and clonality inference from single-cell rna-seq. <em>Nature Methods</em>, 15(8):563–565, Aug 2018. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-018-0082-3">https://doi.org/10.1038/s41592-018-0082-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-018-0082-3">doi:10.1038/s41592-018-0082-3</a>.</p>
+</div>
+<div class="citation" id="id488" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>SB19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id17">1</a>,<a role="doc-backlink" href="#id18">2</a>)</span>
+<p>Nathaniel J Schuldt and Bryce A Binstadt. Dual tcr t cells: identity crisis or multitaskers? <em>The Journal of Immunology</em>, 202(3):637–644, 2019.</p>
+</div>
+<div class="citation" id="id496" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">SAEC+19</a><span class="fn-bracket">]</span></span>
+<p>Mandeep Singh, Ghamdan Al-Eryani, Shaun Carswell, James M Ferguson, James Blackburn, Kirston Barton, Daniel Roden, Fabio Luciani, Tri Giang Phan, Simon Junankar, and others. High-throughput targeted long-read single cell sequencing reveals the clonal and transcriptional landscape of lymphocytes. <em>Nature communications</em>, 10(1):1–13, 2019.</p>
+</div>
+<div class="citation" id="id479" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>SRB+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id14">2</a>)</span>
+<p>Emily Stephenson, Gary Reynolds, Rachel A Botting, Fernando J Calero-Nieto, Michael D Morgan, Zewen Kelvin Tuong, Karsten Bach, Waradon Sungnak, Kaylee B Worlock, Masahiro Yoshida, and others. Single-cell multi-omics analysis of the immune response in covid-19. <em>Nature medicine</em>, 27(5):904–916, 2021.</p>
+</div>
+<div class="citation" id="id481" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">SSF+20</a><span class="fn-bracket">]</span></span>
+<p>Gregor Sturm, Tamas Szabo, Georgios Fotakis, Marlene Haider, Dietmar Rieder, Zlatko Trajanoski, and Francesca Finotello. Scirpy: a scanpy extension for analyzing single-cell t-cell receptor-sequencing data. <em>Bioinformatics</em>, 36(18):4817–4818, 2020.</p>
+</div>
+<div class="citation" id="id521" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">UKW+18</a><span class="fn-bracket">]</span></span>
+<p>Amit A. Upadhyay, Robert C. Kauffman, Amber N. Wolabaugh, Alice Cho, Nirav B. Patel, Samantha M. Reiss, Colin Havenar-Daughton, Reem A. Dawoud, Gregory K. Tharp, Iñaki Sanz, Bali Pulendran, Shane Crotty, F. Eun-Hyung Lee, Jens Wrammert, and Steven E. Bosinger. Baldr: a computational pipeline for paired heavy and light chain immunoglobulin reconstruction in single-cell rna-seq data. <em>Genome Medicine</em>, 10(1):20, Mar 2018. URL: <a class="reference external" href="https://doi.org/10.1186/s13073-018-0528-3">https://doi.org/10.1186/s13073-018-0528-3</a>, <a class="reference external" href="https://doi.org/10.1186/s13073-018-0528-3">doi:10.1186/s13073-018-0528-3</a>.</p>
+</div>
+<div class="citation" id="id484" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">VdVG+22</a><span class="fn-bracket">]</span></span>
+<p>Sebastiaan Valkiers, Nicky de Vrij, Sofie Gielis, Sara Verbandt, Benson Ogunjimi, Kris Laukens, and Pieter Meysman. Recent advances in t-cell receptor repertoire analysis: bridging the gap with multimodal single-cell rna sequencing. <em>ImmunoInformatics</em>, pages 100009, 2022.</p>
+</div>
+<div class="citation" id="id480" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">WAT18</a><span class="fn-bracket">]</span></span>
+<p>F Alexander Wolf, Philipp Angerer, and Fabian J Theis. Scanpy: large-scale single-cell gene expression data analysis. <em>Genome biology</em>, 19(1):1–5, 2018.</p>
+</div>
+<div class="citation" id="id485" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">YAK+21</a><span class="fn-bracket">]</span></span>
+<p>Alexander Yermanos, Andreas Agrafiotis, Raphael Kuhn, Damiano Robbiani, Josephine Yates, Chrysa Papadopoulou, Jiami Han, Ioana Sandu, Cédric Weber, Florian Bieberich, and others. Platypus: an open-access software for integrating lymphocyte single-cell immune repertoires with transcriptomes. <em>NAR genomics and bioinformatics</em>, 3(2):lqab023, 2021.</p>
+</div>
+<div class="citation" id="id486" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">ZES+13</a><span class="fn-bracket">]</span></span>
+<p>Veronika Zarnitsyna, Brian Evavold, Louie Schoettle, Joseph Blattman, and Rustom Antia. Estimating the diversity, completeness, and cross-reactivity of the t cell repertoire. <em>Frontiers in immunology</em>, 4:485, 2013.</p>
+</div>
+<div class="citation" id="id482" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">ImmunoMindTeam19</a><span class="fn-bracket">]</span></span>
+<p>ImmunoMind Team. immunarch: An R Package for Painless Bioinformatics Analysis of T-Cell and B-Cell Immune Repertoires. August 2019. URL: <a class="reference external" href="https://doi.org/10.5281/zenodo.3367200">https://doi.org/10.5281/zenodo.3367200</a>, <a class="reference external" href="https://doi.org/10.5281/zenodo.3367200">doi:10.5281/zenodo.3367200</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./air_repertoire"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../surface_protein/annotation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">37. </span>Annotation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="clonotype.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">39. </span>Clonotype analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#role-ir-in-cells">38.1. Role IR in cells</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#irs-of-the-adaptive-immune-system">38.2. IRs of the adaptive immune system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formation-of-adaptive-immune-receptors-by-v-d-j-recombination">38.3. Formation of adaptive immune receptors by V(D)J recombination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vdj-sequencing">38.4. VDJ-sequencing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-isolation">38.4.1. Cell isolation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immune-receptor-sequencing">38.4.2. Immune receptor sequencing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#air-repertoire-analysis">38.5. AIR repertoire analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">38.6. Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data">38.7. Load data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raw-data">38.7.1. Raw data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#productive-airs">38.7.2. Productive AIRs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cell-aligned-data">38.8. Cell-Aligned Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-control">38.9. Quality Control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assigning-air-state">38.9.1. Assigning AIR State</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">38.9.2. Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering">38.9.3. Filtering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">38.10. Key Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">38.11. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">38.12. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
