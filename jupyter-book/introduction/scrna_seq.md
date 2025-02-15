@@ -59,8 +59,7 @@ He named these tiny units 'cells'.
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
-In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory.
-It describes that all living organisms are made up of cells.
+In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, stating that all living organisms are made up of cells.
 Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
 
 Since the early definition of cell theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
