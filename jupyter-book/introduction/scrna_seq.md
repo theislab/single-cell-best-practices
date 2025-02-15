@@ -309,7 +309,8 @@ The material of the used beads differs between the protocols. Drop-seq uses brit
 Therefore, the beads are encapsulated with a Poisson distribution, whereas the InDrop and 10X Genomics beads are deformable resulting in bead occupancies of over 80% {cite}`Zhang2019`.
 
 Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
-This disparity also affects the location of the reverse transcription process. In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols {cite}`Zhang2019`.
+This disparity also affects the location of the reverse transcription process.
+In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols {cite}`Zhang2019`.
 
 A comparison from Zhang et al. in 2019 uncovered that inDrop and Drop-seq are outperformed by 10X Genomics with respect to bead quality, as the cell barcodes in the former two systems contained obvious mismatches.
 Moreover, the proportion of reads originating from valid barcodes was 75% for 10X Genomics, compared to only 25% for InDrop and 30% for Drop-seq.
