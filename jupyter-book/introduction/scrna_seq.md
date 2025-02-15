@@ -4,6 +4,46 @@ This chapter briefly introduces the most widely used single-cell ribonucleic aci
 {term}`Multimodal` or spatial assays are not covered here but are introduced in the respective advanced chapters.
 All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
+## Key takeaways
+
+:::{card}
+:link: brief-history-sequencing
+:link-type: ref
+Sequencing evolved from **Sanger sequencing** (first generation: accurate but slow, costly, and limited to short DNA fragments) to **high-throughput NGS** (second generation: short reads, high sensitivity, lower costs, but expensive machines) to **long-read real-time sequencing** (third generation: long reads, real-time analysis, portable for fieldwork, but higher error rates and costly reagents).
+:::
+
+:::{card}
+:link: single-cell-rna-sequencing
+:link-type: ref
+ScRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq.
+However, it is more complex and expensive, requiring careful experimental design and data analysis to avoid biases and false conclusions.
+:::
+
+:::{card}
+:link: exp-data:transcript-quantification
+:link-type: ref
+In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.
+**Full-length protocols** capture entire transcripts, enabling the detection of splice variants.
+**Tag-based protocols** sequence either the transcripts’ 3’ or 5’ ends, often using UMIs to correct for amplification biases and improve quantification accuracy.
+:::
+
+:::{card}
+:link: single-cell-sequencing-protocols
+:link-type: ref
+Single-cell sequencing protocols vary in their approach to cell isolation and transcript recovery.
+**Droplet-based methods** (e.g., 10x Genomics, Drop-seq, inDrop) are cost-effective for large-scale studies but recover fewer transcripts per cell.
+**Plate-based methods** (e.g., SMART-seq2, MARS-seq, QUARTZ-seq) allow for deeper transcriptome profiling but are limited in throughput.
+**Fluidigm C1** offers full-length transcript coverage but is more expensive and less scalable.
+:::
+
+:::{card}
+:link: single-cell-vs-single-nuclei
+:link-type: ref
+**Single-nuclei RNA sequencing (snRNA-Seq)** is an alternative to scRNA-Seq, particularly useful for tissues where cell dissociation is challenging (e.g., brain tissue).
+Nuclei are more resistant to mechanical stress and can be isolated from frozen samples, making snRNA-Seq suitable for biobank studies.
+However, the choice between single-cell and single-nuclei sequencing depends on the tissue type and research question.
+:::
+
 ## The building block of life
 
 Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities.
@@ -23,7 +63,7 @@ In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theor
 It describes that all living organisms are made up of cells.
 Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
 
-Since the early definition of cell theory, researchers discovered that there exists an energy flow within cells, that heredity information is passed from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`), and that all cells have almost the same chemical composition.
+Since the early definition of cell theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
 Two general types of cells exist: eukaryotes and prokaryotes.
 Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region but no nucleus.
 The nucleus hosts the cells' genomic DNA, which is why they are called eukaryotes: _Nucleus_ is Latin for kernel or seed.
@@ -36,16 +76,18 @@ The eukaryotic DNA is divided into several linear bundles called chromosomes, wh
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
 _Sequencing_ is the process of deciphering the order of DNA nucleotides.
 It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome and uncovers genetic features such as open reading frames (ORFs) or CpG islands, which indicate promotor regions.
+DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome and uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate promotor regions.
 Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
 DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
 
 A very popular example is sickle cell disease, a group of blood disorders resulting from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
 This leads to serious health issues, including pain, anemia, swelling in the hands and feet, bacterial infections, and strokes.
 The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
-The gene defect is caused by a single nucleotide mutation where a GAG codon changes to a GTG codon of the β-globin gene.
+The gene defect is caused by a single nucleotide mutation where a GAG {term}`codon` changes to a GTG codon of the β-globin gene.
 This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and, henceforth, the disease mentioned above.
 Unfortunately, it is not always possible to find such "simple" associations between single nucleotide mutations and diseases because most diseases are caused by, for example, complex regulatory processes.
+
+(brief-history-sequencing)=
 
 ## A brief history of sequencing
 
@@ -180,6 +222,8 @@ The obtained gene expression profiles further enable the detection of gene isofo
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
 
+(single-cell-rna-sequencing)=
+
 ## Single-cell RNA sequencing
 
 ### Overview
@@ -195,10 +239,11 @@ Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct.
 Second, the downstream analysis becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
-A single-cell experiment generally follows similar steps to a bulk RNA-Seq experiment (see above) but requires several adaptations.
+A single-cell experiment generally follows similar steps as a bulk RNA-Seq experiment (see above) but requires several adaptations.
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
-Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine. Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
+Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
+Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
 
 (exp-data:transcript-quantification)=
 
@@ -216,23 +261,25 @@ A major advantage of full-length protocols is that they allow for the detection 
 
 Tag-based protocols only sequence either the transcripts' 3' or 5' end.
 This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms {cite}`Archer2016`.
-However, it allows for the usage of unique molecular identifiers (UMIs), which are useful to resolve biases in the transcript amplification process.
+However, it allows for the usage of unique molecular identifiers ({term}`UMI`s), which are useful to resolve biases in the transcript amplification process.
 
 The transcript amplification process is a critical step in any RNA-seq sequencing run to ensure that the transcripts are abundant enough for quality control and sequencing.
 During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule.
 Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging.
 UMIs are a common solution for quantifying original, non-duplicated molecules.
 
-UMIs serve as molecular barcodes and are sometimes called random barcodes.
+UMIs serve as molecular {term}`barcode`s and are sometimes called random barcodes.
 These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag.
 UMIs must be added during library generation before the amplification step.
-Accurately identifying PCR duplicates is important for downstream analysis to rule out - or be aware of amplification biases {cite}`Aird2011`.
+Accurately identifying PCR duplicates is important for downstream analysis to rule out - or be aware of {term}`amplification bias`es {cite}`Aird2011`.
 
 Amplification bias is a term for the RNA/cDNA sequences that are preferentially amplified and will therefore be sequenced more often, resulting in higher counts.
 It can harm any gene expression analysis because the not-very-active genes may suddenly appear to be highly expressed.
 This is especially true for sequences that are amplified at a later stage of the PCR step, where the error rate may already be comparably higher than earlier PCR stages.
 Although it is computationally possible to detect and remove such sequences by filtering out reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 Using UMIs further allows for normalizing gene counts without a loss of accuracy {cite}`Kivioja2012`.
+
+(single-cell-sequencing-protocols)=
 
 ### Single-cell sequencing protocols
 
@@ -364,6 +411,8 @@ Moreover, if the budget is a limiting factor, the protocol of choice should be m
 When analyzing the data, be aware of the sequencing assay-specific biases.
 For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
 
+(single-cell-vs-single-nuclei)=
+
 ### Single-cell vs single-nuclei
 
 So far, we have only been discussing single-cell assays, but it is also possible to sequence only the nuclei of the cells.
@@ -378,14 +427,6 @@ It has been shown already that nuclei accurately reflect all transcriptional pat
 The choice of single-cell versus single-nuclei in the experimental design is mostly driven by the type of tissue sample.
 Data analysis, however, should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types.
 Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
-
-## Key takeaways
-
-- Sequencing evolved from **Sanger sequencing** (first generation: accurate but slow, costly, and limited to short DNA fragments) to **high-throughput NGS** (second generation: short reads, high sensitivity, lower costs, but expensive machines) to **long-read real-time sequencing** (third generation: long reads, real-time analysis, portable for fieldwork, but higher error rates and costly reagents).
-- scRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq. However, it is more complex and expensive, requiring careful experimental design and data analysis to avoid biases and false conclusions.
-- In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.**Full-length protocols** capture entire transcripts, enabling the detection of splice variants. **Tag-based protocols** sequence either the transcripts’ 3’ or 5’ ends, often using UMIs to correct for amplification biases and improve quantification accuracy.
-- Single-cell sequencing protocols vary in their approach to cell isolation and transcript recovery. **Droplet-based methods** (e.g., 10x Genomics, Drop-seq, inDrop) are cost-effective for large-scale studies but recover fewer transcripts per cell. **Plate-based methods** (e.g., SMART-seq2, MARS-seq, QUARTZ-seq) allow for deeper transcriptome profiling but are limited in throughput. Fluidigm C1 offers full-length transcript coverage but is more expensive and less scalable.
-- **Single-nuclei RNA sequencing (snRNA-Seq)** is an alternative to scRNA-Seq, particularly useful for tissues where cell dissociation is challenging (e.g., brain tissue). Nuclei are more resistant to mechanical stress and can be isolated from frozen samples, making snRNA-Seq suitable for biobank studies. However, the choice between single-cell and single-nuclei sequencing depends on the tissue type and research question.
 
 ## Recommended reading
 

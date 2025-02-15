@@ -9,6 +9,10 @@ AnnData
 AnnDatas
     A Python package for annotated data matrices. The primary data structure used in the scverse ecosystem.
 
+Amplification bias
+    A distortion that occurs during DNA or RNA amplification (e.g., PCR), where certain sequences are copied more efficiently than others. This can lead to uneven or inaccurate representation of the original genetic material, affecting results in experiments like sequencing or gene expression analysis.
+
+
 Barcode
 Barcodes
 Bar code
@@ -49,6 +53,15 @@ Cell state
 Chromatin
     The complex of DNA and proteins efficiently packaging the DNA inside the nucleus and involved in regulating gene expression.
 
+Codon
+    A sequence of three nucleotides corresponding to a specific amino acid or a start/stop signal in protein synthesis.
+    Codons are the basic units of the genetic code, determining how genetic information is translated into proteins.
+
+CpG
+    A DNA sequence in which a cytosine (C) is followed by a guanine (G) along the 5' &rarr; 3' direction, linked by a phosphodiester bond.
+    CpG sites are often found in clusters called CpG islands near gene promoters.
+    Unmethylated CpG sites are associated with gene activation, while methylated CpG sites can lead to gene inhibition.
+
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes`.
 
@@ -81,7 +94,9 @@ Library
 
 Modalities
 Multimodal
-    Different types of biological information measured at the single-cell level. These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization. Combining these modalities provides a more complete understanding of cell identity, function, and interactions.
+    Different types of biological information measured at the single-cell level.
+    These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization.
+    Combining these modalities provides a more complete understanding of cell identity, function, and interactions.
 
 MuData
     A Python package for multimodal annotated data matrices. The primary data structure in the scverse ecosystem for multimodal data.
@@ -125,6 +140,8 @@ Spike-in RNA
 Trajectory inference
     Also known as pseudotemporal ordering. The computational recovery of dynamic processes by ordering cells by similarity or other means.
 
+UMI
 Unique Molecular Identifier (UMI)
-    Specific type of molecular barcodes aiding with error correction and increased accuracy during sequencing. UMIs unique tag molecules in sample libraries enabling estimation of PCR duplication rates.
+    A unique molecular identifier (UMI) is a special type of molecular barcode that uniquely tags each molecule in a sample library.
+    This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias`), which leads to error correction and increases accuracy.
 ```
