@@ -11,6 +11,13 @@ Algorithm
 Algorithms
     A pre-defined set of instructions to solve a problem.
 
+Annotation
+    Adding labels to raw data to provide context and make it interpretable.
+    Cell annotation, for example, labels genes with information like function, location, and associated proteins.
+    Cell annotation classifies cells based on type, state, or function.
+    These are just a few examples.
+    There are many more ways to annotate biological data (e.g., based on batch, disease, sex, etc.).
+
 AnnData
 AnnDatas
     A Python package for handling annotated data matrices, commonly used in single-cell and other omics analyses.
@@ -156,6 +163,7 @@ Pipeline
     A pre-specified selection of steps that are commonly executed in order.
 
 Poisson distribution
+Poisson distributed
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
 
 Promoter
@@ -195,6 +203,16 @@ signal-to-noise ratio
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
     Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
+
+Sparse
+    Refers to data that is mostly "empty" or filled with zeros.
+    For example, in a dataset, if most of the values are zeros, the data is considered sparse.
+    This is common in gene expression data, where many genes are not expressed in most cells.
+
+Sparse matrix
+    A way to store data that has lots of zeros (see {term}`sparse`).
+    Instead of keeping all the zeros, it only saves the non-zero values and their positions, saving space and making calculations faster.
+    Useful for large datasets with mostly empty values, like gene expression data.
 
 Spike-in RNA
     RNA transcripts of known sequence and quantity to calibrate measurements in RNA hybridization steps for RNA-seq.
