@@ -1,48 +1,47 @@
 # Single-cell RNA sequencing
 
-This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
-{term}`Multimodal` or spatial assays are not covered here but are introduced in the respective advanced chapters.
-All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
-
-## Key takeaways
+```{dropdown} <i class="fas fa-brain"></i> Key takeaways
 
 :::{card}
 :link: brief-history-sequencing
 :link-type: ref
-Sequencing evolved from **Sanger sequencing** (first generation: accurate but slow, costly, and limited to short DNA fragments) to **high-throughput NGS** (second generation: short reads, high sensitivity, lower costs, but expensive machines) to **long-read real-time sequencing** (third generation: long reads, real-time analysis, portable for fieldwork, but higher error rates and costly reagents).
+Sequencing evolved from **Sanger sequencing** to **high-throughput NGS** to **long-read real-time sequencing**, which is also called first-, second-, and third-generation sequencing.
 :::
 
 :::{card}
 :link: single-cell-rna-sequencing
 :link-type: ref
 ScRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq.
-However, it is more complex and expensive, requiring careful experimental design and data analysis to avoid biases and false conclusions.
 :::
 
 :::{card}
 :link: exp-data:transcript-quantification
 :link-type: ref
 In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.
-**Full-length protocols** capture entire transcripts, enabling the detection of splice variants.
-**Tag-based protocols** sequence either the transcripts’ 3’ or 5’ ends, often using UMIs to correct for amplification biases and improve quantification accuracy.
+**Full-length** protocols capture entire transcripts.
+**Tag-based** protocols sequence either the transcripts’ 3’ or 5’ ends.
 :::
 
 :::{card}
 :link: single-cell-sequencing-protocols
 :link-type: ref
-Single-cell sequencing protocols vary in their approach to cell isolation and transcript recovery.
-**Droplet-based methods** (e.g., 10x Genomics, Drop-seq, inDrop) are cost-effective for large-scale studies but recover fewer transcripts per cell.
-**Plate-based methods** (e.g., SMART-seq2, MARS-seq, QUARTZ-seq) allow for deeper transcriptome profiling but are limited in throughput.
-**Fluidigm C1** offers full-length transcript coverage but is more expensive and less scalable.
+ScRNA-Seq protocols vary in their approach to cell isolation and transcript recovery.
+**Droplet-based** methods encapsulate cells into hydrogel droplets.
+**Plate-based** physically separated cells into wells.
+**Fluidigm C1** loads and separates cells into small reaction chambers.
 :::
 
 :::{card}
 :link: single-cell-vs-single-nuclei
 :link-type: ref
-**Single-nuclei RNA sequencing (snRNA-Seq)** is an alternative to scRNA-Seq, particularly useful for tissues where cell dissociation is challenging (e.g., brain tissue).
-Nuclei are more resistant to mechanical stress and can be isolated from frozen samples, making snRNA-Seq suitable for biobank studies.
-However, the choice between single-cell and single-nuclei sequencing depends on the tissue type and research question.
+**Single-nuclei RNA-seq (snRNA-Seq)** is an alternative to scRNA-Seq, handy for tissues where cell dissociation is challenging (e.g., brain tissue).
+Nuclei are more resistant to mechanical stress and can be isolated from frozen samples (e.g., biobank studies).
 :::
+```
+
+This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
+{term}`Multimodal` or spatial assays are not covered here but are introduced in the respective advanced chapters.
+All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
 ## The building block of life
 
