@@ -1,36 +1,46 @@
+from collections.abc import Iterable, Mapping
+
 from IPython.display import HTML, display
 
 
-# use by doing:
-# import sys
-# sys.path.append("../src")
-# from lib import multiple_choice_question
-# multiple_choice_question(
-#     "q1",
-#     "What is the capital of France?",
-#     ["Paris", "London", "Berlin", "Madrid"],
-#     "Paris",
-#     explanations={
-#         "London": "London is the capital of the UK, not France.",
-#         "Berlin": "Berlin is the capital of Germany, not France.",
-#         "Madrid": "Madrid is the capital of Spain, not France.",
-#     },
-# )
 def multiple_choice_question(
-    question_id,
-    question,
-    options,
-    correct_answer,
-    explanations,
-    bg_color="#3965a3",
-    text_color="white",
-    answer_color="red",
-):
+    question_id: str,
+    question: str,
+    options: Iterable[str],
+    correct_answer: str,
+    explanations: Mapping[str, str],
+    bg_color: str = "#3965a3",
+    text_color: str = "white",
+    answer_color: str = "red",
+) -> None:
+    """Interactive multiple choice question component for Jupyter notebooks.
+
+    Args:
+        question_id: Unique identifier for the question
+        question: The question text to display
+        options: Possible answer choices
+        correct_answer: The correct option
+        explanations: Dict mapping incorrect options to explanation texts
+        bg_color: Background color of question box
+        text_color: Text color of questions and options
+        answer_color: Color of correct answer text
+
+    Examples:
+        >>> multiple_choice_question(
+            "q1",
+            "What is the capital of France?",
+            ["Paris", "London", "Berlin", "Madrid"],
+            "Paris",
+            {
+                "London": "London is the capital of the UK",
+                "Berlin": "Berlin is the capital of Germany",
+                "Madrid": "Madrid is the capital of Spain",
+            }
+        )
+    """
     options_html = ""
     for option in options:
-        explanation_text = explanations.get(
-            option, ""
-        )  # Get explanation if the answer is incorrect
+        explanation_text = explanations.get(option, "")
         options_html += f"""
         <label style="color: {text_color};">
             <input type="radio" name="q{question_id}" value="{option}"
@@ -40,11 +50,9 @@ def multiple_choice_question(
 
     html_code = f"""
     <style>
-        /* to remove the background color in dark mode */
         div#multiple-choice-question .output.text_html {{
             background-color: transparent;
         }}
-
         .mcq-box {{
             border: none !important;
             box-shadow: none !important;
@@ -58,15 +66,12 @@ def multiple_choice_question(
             border-radius: 10px;
             color: {text_color};
         }}
-
     </style>
 
     <div class="mcq-box">
         <p><strong>{question}</strong></p>
         {options_html}
         <p id="feedback-{question_id}" style="font-weight: bold;"></p>
-
-        <!-- Correct Answer (Hidden in HTML, Always Visible in PDF) -->
         <p class="mcq-answer-{question_id}" style="display: none; font-weight: bold; color: {answer_color};">
             ✔ Correct Answer: {correct_answer}
         </p>
@@ -88,24 +93,35 @@ def multiple_choice_question(
     display(HTML(html_code))
 
 
-# use by doing:
-# import sys
-# sys.path.append("../src")
-# from lib import flip_card
-# flip_card("q1", "This is a simple question", "a simple answer")
 def flip_card(
-    question_id,
-    question,
-    answer,
-    front_color="#3965a3",
-    back_color="#a8d480",
-    text_color="white",
-    front_font_size=20,
-    back_font_size=20,
-):
+    question_id: str,
+    question: str,
+    answer: str,
+    front_color: str = "#3965a3",
+    back_color: str = "#a8d480",
+    text_color: str = "white",
+    front_font_size: int = 20,
+    back_font_size: int = 20,
+) -> None:
+    """Interactive flip card component for Jupyter notebooks.
+
+    Creates a card that reveals the answer when hovered over.
+
+    Args:
+        question_id: Unique identifier for the card
+        question: Text to show on front of card
+        answer: Text to show on back of card
+        front_color: Background color of question side
+        back_color: Background color of answer side
+        text_color: Color of text on both sides
+        front_font_size: Font size on question side
+        back_font_size: Font size on answer side
+
+    Examples:
+        >>> flip_card("q1", "What is 2+2?", "4")
+    """
     html_code = f"""
     <style>
-        /* to remove the background color in dark mode */
         div#flip-card .output.text_html {{
             background-color: transparent;
         }}
