@@ -22,10 +22,14 @@ BAM files
     BAM files are binary, compressed versions of SAM (Sequence Alignment/Map) files that store sequencing read alignments to a reference genome.
     They contain the same information as {term}`SAM` files - including read sequences, quality scores, and alignment positions - but in a more space-efficient format that enables faster processing and reduced storage requirements.
 
+Amplification bias
+    A distortion that occurs during DNA or RNA amplification (e.g., PCR), where certain sequences are copied more efficiently than others. This can lead to uneven or inaccurate representation of the original genetic material, affecting results in experiments like sequencing or gene expression analysis.
+
 Barcode
 Barcodes
 Bar code
-Bar codes
+Bar code
+Cell barcode
     Short DNA barcode fragments ("tags") that are used to identify reads originating from the same cell.
     Reads are later grouped by their barcode during raw data processing steps.
 
@@ -37,15 +41,15 @@ Benchmark
     An (independent) comparison of performance of several tools with respect to pre-defined metrics.
 
 Bulk RNA sequencing
-    Contrary to single-cell sequencing, bulk sequencing measures the average expression values of several cells.
-    Therefore, resolution is lost, but bulk sequencing is usually cheaper, less laborious and faster to analyze.
+bulk RNA-Seq
+bulk sequencing
+    Contrary to single-cell sequencing, bulk sequencing measures the average expression values of several cells. Therefore, resolution is lost, but bulk sequencing is usually cheaper, less laborious and faster to analyze.
 
 Cell
+cells
     The fundamental unit of life, consisting of cytoplasm enclosed within a membrane, containing biomolecules such as proteins and nucleic acids.
     Cells acquire specific functions, transition into different types, divide, and communicate to sustain an organism.
     Studying cell structure, activity, and interactions enables insights into gene expression dynamics, cellular trajectories, developmental lineages, and disease mechanisms.
-Cell barcode
-    See {term}`barcode`
 
 Cell type annotation
     The process of labeling groups of {term}`clusters` of cells by {term}`cell type`.
@@ -59,6 +63,15 @@ Cell state
 
 Chromatin
     The complex of DNA and proteins efficiently packaging the DNA inside the nucleus and involved in regulating gene expression.
+
+Codon
+    A sequence of three nucleotides corresponding to a specific amino acid or a start/stop signal in protein synthesis.
+    Codons are the basic units of the genetic code, determining how genetic information is translated into proteins.
+
+CpG
+    A DNA sequence in which a cytosine (C) is followed by a guanine (G) along the 5' &rarr; 3' direction, linked by a phosphodiester bond.
+    CpG sites are often found in clusters called CpG islands near gene promoters.
+    Unmethylated CpG sites are associated with gene activation, while methylated CpG sites can lead to gene inhibition.
 
 Cluster
 Clusters
@@ -128,6 +141,12 @@ Indrop
 
 Library
     Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
+
+Modalities
+Multimodal
+    Different types of biological information measured at the single-cell level.
+    These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization.
+    Combining these modalities provides a more complete understanding of cell identity, function, and interactions.
 
 Locus
 Loci
@@ -209,9 +228,9 @@ Trajectory inference
     The computational recovery of dynamic processes by ordering cells by similarity or other means.
 
 Unique Molecular Identifier (UMI)
-unique molecular identifiers (UMIs)
-    Specific type of molecular barcodes aiding with error correction and increased accuracy during sequencing.
-    UMIs unique tag molecules in sample libraries enabling estimation of PCR duplication rates.
+UMI
+    A special type of molecular barcode that uniquely tags each molecule in a sample library.
+    This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
 UTR
