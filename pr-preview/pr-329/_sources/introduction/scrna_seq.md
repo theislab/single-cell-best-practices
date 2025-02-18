@@ -1,6 +1,6 @@
 # Single-cell RNA sequencing
 
-```{dropdown} <i class="fas fa-brain"></i> Key takeaways
+```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
 
 :::{card}
 :link: brief-history-sequencing
@@ -40,13 +40,13 @@ Nuclei are more resistant to mechanical stress and can be isolated from frozen s
 ```
 
 This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
-{term}`Multimodal` or spatial assays are not covered here but are introduced in the respective advanced chapters.
+{term}`Multimodal <Modalities>` or spatial assays are not covered here but are introduced in the respective advanced chapters.
 All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
 ## The building block of life
 
 Life, as we know it, is the characteristic that distinguishes living from dead or inanimate entities.
-Most definitions of the term life share a common entity - {term}`cells`.
+Most definitions of the term life share a common entity - {term}`cells <Cell>`.
 Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves.
 Therefore, cells are the fundamental building blocks of life, and they were first discovered in 1665 by the British scientist Robert Hooke.
 Hooke investigated a thin slice of cork with a very rudimentary microscope and, to his surprise, noticed that the slice appeared to resemble a honeycomb.
@@ -226,7 +226,7 @@ This results in rich data sets that can be used for exploratory data analysis.
 
 ### Overview
 
-RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
+RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
 Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell sequencing.
 Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity, such as cell expression profile heterogeneity, which may help answer the question of interest.
 Some drugs or perturbations may affect only specific cell types or interactions between cell types.
@@ -259,17 +259,17 @@ A major advantage of full-length protocols is that they allow for the detection 
 
 Tag-based protocols only sequence either the transcripts' 3' or 5' end.
 This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms {cite}`Archer2016`.
-However, it allows for the usage of unique molecular identifiers ({term}`UMI`s), which are useful to resolve biases in the transcript amplification process.
+However, it allows for the usage of unique molecular identifiers ({term}`UMIs <UMI>`), which are useful to resolve biases in the transcript amplification process.
 
 The transcript amplification process is a critical step in any RNA-seq sequencing run to ensure that the transcripts are abundant enough for quality control and sequencing.
 During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule.
 Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging.
 UMIs are a common solution for quantifying original, non-duplicated molecules.
 
-UMIs serve as molecular {term}`barcode`s and are sometimes called random barcodes.
+UMIs serve as molecular {term}`barcodes <barcode>` and are sometimes called random barcodes.
 These ‘barcodes’ consist of short random nucleotide sequences that are added to every molecule in the sample as a unique tag.
 UMIs must be added during library generation before the amplification step.
-Accurately identifying PCR duplicates is important for downstream analysis to rule out - or be aware of {term}`amplification bias`es {cite}`Aird2011`.
+Accurately identifying PCR duplicates is important for downstream analysis to rule out - or be aware of {term}`amplification biases <amplification bias>` {cite}`Aird2011`.
 
 Amplification bias is a term for the RNA/cDNA sequences that are preferentially amplified and will therefore be sequenced more often, resulting in higher counts.
 It can harm any gene expression analysis because the not-very-active genes may suddenly appear to be highly expressed.
@@ -296,7 +296,7 @@ The most widely used protocols **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
 
 Although all three protocols differ in detail, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
-The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode, and a 4-8b base pairs-long unique molecular identifier (UMI - see below) and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer).
+The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode, and a 4-8b base pairs-long UMI and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer).
 Upon lysis, the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached to the beads.
 Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs).
 This is followed by PCR and reverse transcription to capture and amplify the transcripts.
@@ -334,6 +334,8 @@ Limitations:
 
 - Low detection rates of transcripts compared to other methods.
 - Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
+
+(plate-based)=
 
 #### Plate-based protocols
 
@@ -428,8 +430,8 @@ The choice of single-cell versus single-nuclei in the experimental design is mos
 Data analysis, however, should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types.
 Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
 
-## Recommended reading
-
+```{seealso}
+:class: dropdown
 To get a more elaborate understanding of the experimental assays, we recommend the following papers:
 
 - Comparative Analysis of Single-Cell RNA Sequencing Methods {cite}`Ziegenhain2017`
@@ -438,6 +440,7 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Guidelines for the experimental design of single-cell RNA sequencing studies {cite}`Lafzi2018`
 - Benchmarking single-cell RNA-sequencing protocols for cell atlas projects {cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
+```
 
 ## References
 
