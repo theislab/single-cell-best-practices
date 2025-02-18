@@ -782,7 +782,7 @@ ref_dir="toy_human_ref"
 
 # Fetch CB permit list
 ## the right chevron (>) redirects the STDOUT to a file.
-wget -qO- https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/python/cellranger/barcodes/3M-february-2018.txt.gz | gunzip - > 3M-february-2018.txt
+wget -qO- https://github.com/f0t1h/3M-february-2018/raw/master/3M-february-2018.txt.gz | gunzip - > 3M-february-2018.txt
 
 ```
 
