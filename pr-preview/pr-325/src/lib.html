@@ -484,39 +484,49 @@
                   
   <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from IPython.display import HTML, display
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>from collections.abc import Iterable, Mapping
+
+from IPython.display import HTML, display
 
 
-# use by doing:
-# import sys
-# sys.path.append(&quot;../src&quot;)
-# from lib import multiple_choice_question
-# multiple_choice_question(
-#     &quot;q1&quot;,
-#     &quot;What is the capital of France?&quot;,
-#     [&quot;Paris&quot;, &quot;London&quot;, &quot;Berlin&quot;, &quot;Madrid&quot;],
-#     &quot;Paris&quot;,
-#     explanations={
-#         &quot;London&quot;: &quot;London is the capital of the UK, not France.&quot;,
-#         &quot;Berlin&quot;: &quot;Berlin is the capital of Germany, not France.&quot;,
-#         &quot;Madrid&quot;: &quot;Madrid is the capital of Spain, not France.&quot;,
-#     },
-# )
 def multiple_choice_question(
-    question_id,
-    question,
-    options,
-    correct_answer,
-    explanations,
-    bg_color=&quot;#3965a3&quot;,
-    text_color=&quot;white&quot;,
-    answer_color=&quot;red&quot;,
-):
+    question_id: str,
+    question: str,
+    options: Iterable[str],
+    correct_answer: str,
+    explanations: Mapping[str, str],
+    bg_color: str = &quot;#3965a3&quot;,
+    text_color: str = &quot;white&quot;,
+    answer_color: str = &quot;red&quot;,
+) -&gt; None:
+    &quot;&quot;&quot;Interactive multiple choice question component for Jupyter notebooks.
+
+    Args:
+        question_id: Unique identifier for the question
+        question: The question text to display
+        options: Possible answer choices
+        correct_answer: The correct option
+        explanations: Dict mapping incorrect options to explanation texts
+        bg_color: Background color of question box
+        text_color: Text color of questions and options
+        answer_color: Color of correct answer text
+
+    Examples:
+        &gt;&gt;&gt; multiple_choice_question(
+            &quot;q1&quot;,
+            &quot;What is the capital of France?&quot;,
+            [&quot;Paris&quot;, &quot;London&quot;, &quot;Berlin&quot;, &quot;Madrid&quot;],
+            &quot;Paris&quot;,
+            {
+                &quot;London&quot;: &quot;London is the capital of the UK&quot;,
+                &quot;Berlin&quot;: &quot;Berlin is the capital of Germany&quot;,
+                &quot;Madrid&quot;: &quot;Madrid is the capital of Spain&quot;,
+            }
+        )
+    &quot;&quot;&quot;
     options_html = &quot;&quot;
     for option in options:
-        explanation_text = explanations.get(
-            option, &quot;&quot;
-        )  # Get explanation if the answer is incorrect
+        explanation_text = explanations.get(option, &quot;&quot;)
         options_html += f&quot;&quot;&quot;
         &lt;label style=&quot;color: {text_color};&quot;&gt;
             &lt;input type=&quot;radio&quot; name=&quot;q{question_id}&quot; value=&quot;{option}&quot;
@@ -526,11 +536,9 @@ def multiple_choice_question(
 
     html_code = f&quot;&quot;&quot;
     &lt;style&gt;
-        /* to remove the background color in dark mode */
         div#multiple-choice-question .output.text_html {{
             background-color: transparent;
         }}
-
         .mcq-box {{
             border: none !important;
             box-shadow: none !important;
@@ -544,15 +552,12 @@ def multiple_choice_question(
             border-radius: 10px;
             color: {text_color};
         }}
-
     &lt;/style&gt;
 
     &lt;div class=&quot;mcq-box&quot;&gt;
         &lt;p&gt;&lt;strong&gt;{question}&lt;/strong&gt;&lt;/p&gt;
         {options_html}
         &lt;p id=&quot;feedback-{question_id}&quot; style=&quot;font-weight: bold;&quot;&gt;&lt;/p&gt;
-
-        &lt;!-- Correct Answer (Hidden in HTML, Always Visible in PDF) --&gt;
         &lt;p class=&quot;mcq-answer-{question_id}&quot; style=&quot;display: none; font-weight: bold; color: {answer_color};&quot;&gt;
             ✔ Correct Answer: {correct_answer}
         &lt;/p&gt;
@@ -574,24 +579,35 @@ def multiple_choice_question(
     display(HTML(html_code))
 
 
-# use by doing:
-# import sys
-# sys.path.append(&quot;../src&quot;)
-# from lib import flip_card
-# flip_card(&quot;q1&quot;, &quot;This is a simple question&quot;, &quot;a simple answer&quot;)
 def flip_card(
-    question_id,
-    question,
-    answer,
-    front_color=&quot;#3965a3&quot;,
-    back_color=&quot;#a8d480&quot;,
-    text_color=&quot;white&quot;,
-    front_font_size=20,
-    back_font_size=20,
-):
+    question_id: str,
+    question: str,
+    answer: str,
+    front_color: str = &quot;#3965a3&quot;,
+    back_color: str = &quot;#a8d480&quot;,
+    text_color: str = &quot;white&quot;,
+    front_font_size: int = 20,
+    back_font_size: int = 20,
+) -&gt; None:
+    &quot;&quot;&quot;Interactive flip card component for Jupyter notebooks.
+
+    Creates a card that reveals the answer when hovered over.
+
+    Args:
+        question_id: Unique identifier for the card
+        question: Text to show on front of card
+        answer: Text to show on back of card
+        front_color: Background color of question side
+        back_color: Background color of answer side
+        text_color: Color of text on both sides
+        front_font_size: Font size on question side
+        back_font_size: Font size on answer side
+
+    Examples:
+        &gt;&gt;&gt; flip_card(&quot;q1&quot;, &quot;What is 2+2?&quot;, &quot;4&quot;)
+    &quot;&quot;&quot;
     html_code = f&quot;&quot;&quot;
     &lt;style&gt;
-        /* to remove the background color in dark mode */
         div#flip-card .output.text_html {{
             background-color: transparent;
         }}
