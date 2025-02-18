@@ -184,7 +184,7 @@ Limitations:
 Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same.
 The differences lie primarily in the chemistry of the respective sequencing technologies.
 
-1. **Sample and library preparation**: As a first step, a so-called library is prepared by fragmenting the DNA samples and ligating them with adapter molecules.
+1. **Sample and library preparation**: As a first step, a so-called {term}`library` is prepared by fragmenting the DNA samples and ligating them with {term}`adapter molecules <Adapter sequences>`.
    These adapters participate in the hybridization of the library fragments to the matrix and form a priming site.
 
 2. **Amplification and sequencing**: In the second step, the library gets converted into single-strand molecules.
@@ -209,7 +209,7 @@ This alternative splicing event is a natural phenomenon that occurs frequently i
 In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
 This is where RNA sequencing (RNA-Seq) comes into play.
 
-RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where complementary DNA (cDNA) is synthesized from the RNA template.
+RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
 
 Sequencing RNA allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes, and other experimental conditions.
@@ -235,7 +235,7 @@ For example, in oncology, it is possible to have rare drug-resistant tumor cells
 To uncover such relationships, examining gene expression on a single-cell level is vital.
 Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct.
-Second, the downstream analysis becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
+Second, the {term}`downstream analysis` becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
 A single-cell experiment generally follows similar steps as a bulk RNA-Seq experiment (see above) but requires several adaptations.
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
@@ -259,10 +259,10 @@ A major advantage of full-length protocols is that they allow for the detection 
 
 Tag-based protocols only sequence either the transcripts' 3' or 5' end.
 This comes at the cost of not (necessarily) covering the full gene length, making it difficult to unambiguously align reads to a transcript and distinguishing between different isoforms {cite}`Archer2016`.
-However, it allows for the usage of unique molecular identifiers ({term}`UMIs <UMI>`), which are useful to resolve biases in the transcript amplification process.
+However, it allows for the usage of unique molecular identifiers ({term}`UMIs <Unique Molecular Identifier (UMI)>`), which are useful to resolve biases in the transcript amplification process.
 
 The transcript amplification process is a critical step in any RNA-seq sequencing run to ensure that the transcripts are abundant enough for quality control and sequencing.
-During this process, which is typically conducted with polymerase chain reaction (PCR), copies are made from identical fragments of the original molecule.
+During this process, which is typically conducted with polymerase chain reaction ({term}`PCR`), copies are made from identical fragments of the original molecule.
 Since the copies and the original molecules are indistinguishable, determining the original number of molecules in samples becomes challenging.
 UMIs are a common solution for quantifying original, non-duplicated molecules.
 
@@ -304,8 +304,8 @@ Finally, tagmentation takes place where the transcripts are randomly cut and seq
 Notably, this low sequencing is sufficient for a robust identification of cell types.
 
 All three microfluidic device-based methods result in characteristic biases.
-The material of the used beads differs between the protocols. Drop-seq uses brittle resin for the bead.
-Therefore, the beads are encapsulated with a Poisson distribution, whereas the InDrop and 10X Genomics beads are deformable resulting in bead occupancies of over 80% {cite}`Zhang2019`.
+The material of the used beads differs between the protocols. {term}`Drop-seq` uses brittle resin for the bead.
+Therefore, the beads are encapsulated with a {term}`Poisson distribution`, whereas the {term}`InDrop` and 10X Genomics beads are deformable resulting in bead occupancies of over 80% {cite}`Zhang2019`.
 
 Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
 This disparity also affects the location of the reverse transcription process.
@@ -348,7 +348,7 @@ This allows several hundred cells to be analyzed in a single experiment with 500
 Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability.
 For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities. SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
 A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
-This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type annotation.
+This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type {term}`annotation`.
 
 Strengths:
 
@@ -360,7 +360,7 @@ Limitations:
 
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
 - Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
-- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and batch effects.
+- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
 
 #### Fluidigm C1
 
@@ -411,7 +411,7 @@ In this case, one of the plate-based methods may be more suitable.
 On the contrary, droplet-based assays will capture heterogeneous mixtures better, allowing for a broader characterization of the sequenced cells.
 Moreover, if the budget is a limiting factor, the protocol of choice should be more cost-effective and robust.
 When analyzing the data, be aware of the sequencing assay-specific biases.
-For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
+For an extensive comparison of all single-cell sequencing protocols, we recommend the "{term}`Benchmarking` single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
 
 (single-cell-vs-single-nuclei)=
 

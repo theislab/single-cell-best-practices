@@ -25,11 +25,11 @@ BAM files
 Amplification bias
     A distortion that occurs during DNA or RNA amplification (e.g., PCR), where certain sequences are copied more efficiently than others. This can lead to uneven or inaccurate representation of the original genetic material, affecting results in experiments like sequencing or gene expression analysis.
 
-
 Barcode
 Barcodes
 Bar code
-Bar codes
+Bar code
+Cell barcode
     Short DNA barcode fragments ("tags") that are used to identify reads originating from the same cell.
     Reads are later grouped by their barcode during raw data processing steps.
 
@@ -50,8 +50,6 @@ cells
     The fundamental unit of life, consisting of cytoplasm enclosed within a membrane, containing biomolecules such as proteins and nucleic acids.
     Cells acquire specific functions, transition into different types, divide, and communicate to sustain an organism.
     Studying cell structure, activity, and interactions enables insights into gene expression dynamics, cellular trajectories, developmental lineages, and disease mechanisms.
-Cell barcode
-    See {term}`barcode`
 
 Cell type annotation
     The process of labeling groups of {term}`clusters` of cells by {term}`cell type`.
@@ -229,9 +227,9 @@ Trajectory inference
     Also known as pseudotemporal ordering.
     The computational recovery of dynamic processes by ordering cells by similarity or other means.
 
-UMI
 Unique Molecular Identifier (UMI)
-    A unique molecular identifier (UMI) is a special type of molecular barcode that uniquely tags each molecule in a sample library.
+UMI
+    A special type of molecular barcode that uniquely tags each molecule in a sample library.
     This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
