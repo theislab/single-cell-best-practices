@@ -489,10 +489,9 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-and-traps">22.4. Limitations and traps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">22.5. New directions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">22.6. Key takeaways</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.7. References</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.8. Contributors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.8.1. Authors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.7.1. Authors</a></li>
 </ul>
 </li>
 </ul>
@@ -508,9 +507,92 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="bulk-deconvolution">
 <h1><span class="section-number">22. </span>Bulk deconvolution<a class="headerlink" href="#bulk-deconvolution" title="Link to this heading">#</a></h1>
-<p><em>TL;DR We provide a brief overview over basic concepts of cell type deconvolution including input structure, data preprocessing and analysis of the output data.</em></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Use unbiased reference data with no missing cell type.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-1"><span class="std std-ref">Background</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Normalize the reference data using library size normalization.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-2"><span class="std std-ref">Visualization of single-cell data</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Feature selection prior deconvolution improves the accuracy of the results particularly for linear deconvolution methods.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-3"><span class="std std-ref">Limitations and traps</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Deconvolution is a challenging task (see limitations and traps). Therefore, we recommend the users to try more than one deconvolution method and select one after assessing the results biologically.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-4"><span class="std std-ref">Limitations and traps</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+</div>
+</div>
+</div>
+</details><p><em>TL;DR We provide a brief overview over basic concepts of cell type deconvolution including input structure, data preprocessing and analysis of the output data.</em></p>
 <section id="background">
-<h2><span class="section-number">22.1. </span>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<span id="deconvolution-bulk-deconvolution-key-takeaway-1"></span><h2><span class="section-number">22.1. </span>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
 <p>Studying differences in cell type compositions within a bulk tissue is important for several reasons. First, interactions between cell types play a major role in disease progression and recovery. Second, molecular patterns (such as gene expression and protein abundance) are often directly associated with the cell types compositions within the tissue. Understanding these compositions is crucial for studying the underlying molecular mechanisms of a biological condition such as disease. Third, uncovering disease-specific cell type patterns allow for better therapeutic targeting, providing an important clinical utility.</p>
 <p>Cell type deconvolution is a computational framework designed for inferring the compositions of cell populations within a bulk heterogeneous tissue <span id="id1">[<a class="reference internal" href="#id443" title="Rose Du, Vince Carey, and Scott T. Weiss. Deconvseq: deconvolution of cell mixture distribution in sequencing data. Bioinformatics, 35(24):5095–5102, Dec 2019. URL: https://doi.org/10.1093/bioinformatics/btz444, doi:10.1093/bioinformatics/btz444.">Du <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id441" title="Alexandre Kuhn, Azad Kumar, Alexandra Beilina, Allissa Dillman, Mark R. Cookson, and Andrew B. Singleton. Cell population-specific expression analysis of human cerebellum. BMC Genomics, 13(610):1471-2164, Nov 2012. URL: https://doi.org/10.1186/1471-2164-13-610, doi:10.1186/1471-2164-13-610.">Kuhn <em>et al.</em>, 2012</a>, <a class="reference internal" href="#id442" title="Stanley E. Schwartz, Russell Shackney. Applying unmixing to gene expression data for tumor phylogeny inference. BMC Bioinformatics, Jan 2010. URL: https://doi.org/10.1186/1471-2105-11-42, doi:10.1186/1471-2105-11-42.">Schwartz, 2010</a>, <a class="reference internal" href="#id444" title="Konstantin Zaitsev, Monika Bambouskova, Amanda Swain, and Maxim N. Artyomov. Complete deconvolution of cellular mixtures based on linearity of transcriptional signatures. Nature Communications, May 2019. URL: https://doi.org/10.1038/s41467-019-09990-5, doi:10.1038/s41467-019-09990-5.">Zaitsev <em>et al.</em>, 2019</a>]</span>. As measuring these compositions experimentally is time-consuming and expensive, deconvolution methods allow large scale analysis of cell populations based on molecular data. Deconvolution methods usually follow linear regression defined as:</p>
 <p><span class="math notranslate nohighlight">\(y = bX\)</span></p>
@@ -710,7 +792,7 @@ Name: cluster_labels_res.0.8, dtype: int64
 </div>
 </section>
 <section id="visualization-of-single-cell-data">
-<h3><span class="section-number">22.3.4. </span>Visualization of single-cell data<a class="headerlink" href="#visualization-of-single-cell-data" title="Link to this heading">#</a></h3>
+<span id="deconvolution-bulk-deconvolution-key-takeaway-2"></span><h3><span class="section-number">22.3.4. </span>Visualization of single-cell data<a class="headerlink" href="#visualization-of-single-cell-data" title="Link to this heading">#</a></h3>
 <p>For visualization of single-cell data, we first normalize the counts, select highly-variable genes and log transform the data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2334,7 +2416,7 @@ dtype: float64
 </section>
 </section>
 <section id="limitations-and-traps">
-<h2><span class="section-number">22.4. </span>Limitations and traps<a class="headerlink" href="#limitations-and-traps" title="Link to this heading">#</a></h2>
+<span id="deconvolution-bulk-deconvolution-key-takeaway-4"></span><span id="deconvolution-bulk-deconvolution-key-takeaway-3"></span><h2><span class="section-number">22.4. </span>Limitations and traps<a class="headerlink" href="#limitations-and-traps" title="Link to this heading">#</a></h2>
 <p>While single cell data is less prone to contain missing cell types, compared to pre-selected sorted cells, dealing with missing cell types is still considered a major challenge in the field of cell type deconvolution to this day <span id="id23">[]</span>. In addition, the number of cell types within the signature matrix has a major influence on deconvolution accuracy, as more cell types usually results in a less accurate deconvolution process <span id="id24">[<a class="reference internal" href="#id449" title="Aaron M. Newman, Chloé B. Steen, Chih Long Liu, Andrew J. Gentles, Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, Mohammad S. Esfahani, Bogdan A. Luca, David Steiner, Maximilian Diehn, and Ash A. Alizadeh. Determining cell type abundance and expression from bulk tissues with digital cytometry. Nature Biotechnology, 37:773–782, May 2019. URL: https://doi.org/10.1038/s41587-019-0114-2, doi:10.1038/s41587-019-0114-2.">Newman <em>et al.</em>, 2019</a>]</span>.</p>
 <p>While several deconvolution methods can correctly infer the proportion of major cellular components, their performance for rare or correlated components varies. To deal with the co-linearity between the predictors some methods perform feature selection prior deconvolution by selecting a subset of genes (called signature gene list) that minimizes the correlation between cell types.</p>
 </section>
@@ -2347,17 +2429,8 @@ cell populations.</p>
 <p><strong>CPM</strong> <span id="id26">[]</span> is a cell-state deconvolution method which allows discovering compositional changes occurring within each cell type, based on the single cell cell space, often capturing transitions in cell compositions across continuous cellular trajectories.
 By focusing on the variation within cell types, and less between cell types (as most deconvolution methods), CPM can discover changes in compositions of distinct subgroups of cells or continuous changes across specific cellular trajectories.</p>
 </section>
-<section id="key-takeaways">
-<h2><span class="section-number">22.6. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>Use unbiased reference data with no missing cell type.</p></li>
-<li><p>Normalize the reference data using library size normalization.</p></li>
-<li><p>Feature selection prior deconvolution improves the accuracy of the results particularly for linear deconvolution methods.</p></li>
-</ol>
-<p>Deconvolution is a challenging task (see limitations and traps). Therefore, we recommend the users to try more than one deconvolution method and select one after assessing the results biologically.</p>
-</section>
 <section id="references">
-<h2><span class="section-number">22.7. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">22.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
 <div class="docutils container" id="id27">
 <div role="list" class="citation-list">
 <div class="citation" id="id446" role="doc-biblioentry">
@@ -2419,10 +2492,10 @@ By focusing on the variation within cell types, and less between cell types (as 
 </div>
 </section>
 <section id="contributors">
-<h2><span class="section-number">22.8. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">22.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
 <p>We gratefully acknowledge the contributions of:</p>
 <section id="authors">
-<h3><span class="section-number">22.8.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">22.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Hananeh Aliee</p></li>
 <li><p>Amit Frishberg</p></li>
@@ -2513,10 +2586,9 @@ By focusing on the variation within cell types, and less between cell types (as 
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-and-traps">22.4. Limitations and traps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">22.5. New directions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">22.6. Key takeaways</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.7. References</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.8. Contributors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.8.1. Authors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.7.1. Authors</a></li>
 </ul>
 </li>
 </ul>
