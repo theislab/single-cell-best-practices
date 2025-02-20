@@ -3,19 +3,19 @@
 ```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
 
 :::{card}
-:link: brief-history-sequencing
+:link: introduction-scrna-seq-key-takeaway-1
 :link-type: ref
 Sequencing evolved from **Sanger sequencing** to **high-throughput NGS** to **long-read real-time sequencing**, which is also called first-, second-, and third-generation sequencing.
 :::
 
 :::{card}
-:link: single-cell-rna-sequencing
+:link: introduction-scrna-seq-key-takeaway-2
 :link-type: ref
 ScRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq.
 :::
 
 :::{card}
-:link: exp-data:transcript-quantification
+:link: introduction-scrna-seq-key-takeaway-3
 :link-type: ref
 In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.
 **Full-length** protocols capture entire transcripts.
@@ -23,7 +23,7 @@ In scRNA-Seq, transcript quantification converts the raw data into a table of es
 :::
 
 :::{card}
-:link: single-cell-sequencing-protocols
+:link: introduction-scrna-seq-key-takeaway-4
 :link-type: ref
 ScRNA-Seq protocols vary in their approach to cell isolation and transcript recovery.
 **Droplet-based** methods encapsulate cells into hydrogel droplets.
@@ -32,7 +32,7 @@ ScRNA-Seq protocols vary in their approach to cell isolation and transcript reco
 :::
 
 :::{card}
-:link: single-cell-vs-single-nuclei
+:link: introduction-scrna-seq-key-takeaway-5
 :link-type: ref
 **Single-nuclei RNA-seq (snRNA-Seq)** is an alternative to scRNA-Seq, handy for tissues where cell dissociation is challenging (e.g., brain tissue).
 Nuclei are more resistant to mechanical stress and can be isolated from frozen samples (e.g., biobank studies).
@@ -85,7 +85,7 @@ The gene defect is caused by a single nucleotide mutation where a GAG {term}`cod
 This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and, henceforth, the disease mentioned above.
 Unfortunately, it is not always possible to find such "simple" associations between single nucleotide mutations and diseases because most diseases are caused by, for example, complex regulatory processes.
 
-(brief-history-sequencing)=
+(introduction-scrna-seq-key-takeaway-1)=
 
 ## A brief history of sequencing
 
@@ -198,6 +198,7 @@ The differences lie primarily in the chemistry of the respective sequencing tech
    Such data requires complex and computationally heavy processing.
    This is further discussed in the raw data processing chapter.
 
+(introduction-scrna-seq-key-takeaway-3)=
 (exp-data:rna-sequencing)=
 
 ## RNA sequencing
@@ -220,7 +221,7 @@ The obtained gene expression profiles further enable the detection of gene isofo
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
 
-(single-cell-rna-sequencing)=
+(introduction-scrna-seq-key-takeaway-2)=
 
 ## Single-cell RNA sequencing
 
@@ -277,7 +278,7 @@ This is especially true for sequences that are amplified at a later stage of the
 Although it is computationally possible to detect and remove such sequences by filtering out reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 Using UMIs further allows for normalizing gene counts without a loss of accuracy {cite}`Kivioja2012`.
 
-(single-cell-sequencing-protocols)=
+(introduction-scrna-seq-key-takeaway-4)=
 
 ### Single-cell sequencing protocols
 
@@ -413,7 +414,7 @@ Moreover, if the budget is a limiting factor, the protocol of choice should be m
 When analyzing the data, be aware of the sequencing assay-specific biases.
 For an extensive comparison of all single-cell sequencing protocols, we recommend the "{term}`Benchmarking` single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
 
-(single-cell-vs-single-nuclei)=
+(introduction-scrna-seq-key-takeaway-5)=
 
 ### Single-cell vs single-nuclei
 
