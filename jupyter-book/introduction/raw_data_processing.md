@@ -2,6 +2,37 @@
 
 # Raw data processing
 
+```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
+
+:::{card}
+:link: introduction-raw-data-processing-key-takeaway-1
+:link-type: ref
+Accurate raw data processing transforms FASTQ files into a count matrix, enabling reliable single-cell sequencing analyses through read alignment, barcode correction, and UMI counting.
+:::
+
+```
+
+``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
+`````{tab-set}
+
+````{tab-item} Steps
+```{include} ../_static/default_text_env_setup.md
+```
+````
+
+````{tab-item} yml
+```{literalinclude} differential_gene_expression.yml
+:language: yaml
+```
+````
+
+`````
+``````
+
+(introduction-raw-data-processing-key-takeaway-1)=
+
+## Motivation
+
 Raw data processing in single-cell sequencing converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
 This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
@@ -465,8 +496,7 @@ Several common strategies are used for cell barcode identification and correctio
 After cell barcode (CB) correction, reads have either been discarded or assigned to a corrected CB.
 Subsequently, we wish to quantify the abundance of each gene within each corrected CB.
 
-Because of the amplification bias as discussed in {ref}`exp-data:transcript-quantification`, reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules.
-Additionally, several other complicating factors present challenges when attempting to perform this estimation.
+Because of the {term}`amplification bias` as discussed in {ref}`exp-data:transcript-quantification`, reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules. Additionally, several other complicating factors present challenges when attempting to perform this estimation.
 
 The UMI deduplication step aims to identify the set of reads and UMIs derived from each original, pre-PCR molecule in each cell captured and sequenced in the experiment.
 The result of this process is to allocate a molecule count to each gene in each cell, which is subsequently used in the downstream analysis as the raw expression estimate for this gene.
