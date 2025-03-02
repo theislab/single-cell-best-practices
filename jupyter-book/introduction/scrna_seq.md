@@ -140,6 +140,7 @@ Second, the ability to sequence in real-time is another major advancement in thi
 Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
 ```{admonition} A note on sequencing length
+:class: hint, dropdown
 - 1 base pair (bp)
 - 1 kilo base pair (kb) = 1,000 bp
 - 1 mega base pair (Mb) = 1,000,000 bp
@@ -430,6 +431,10 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Benchmarking single-cell RNA-sequencing protocols for cell atlas projects {cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
 ```
+
+[sequencing by expansion](https://www.youtube.com/watch?v=G8ECt04qPos)
+
+[Roche](https://sequencing.roche.com/global/en/article-listing/sequencing-platform-technologies.html)
 
 ## References
 
