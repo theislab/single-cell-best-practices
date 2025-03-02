@@ -432,9 +432,35 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
 ```
 
-[sequencing by expansion](https://www.youtube.com/watch?v=G8ECt04qPos)
+## New Developments
 
+- I am in general a bit confused by the different terms, which are used (hydrogel based, droplet)
+
+[link](https://www.nature.com/articles/s41587-023-01685-z)
+
+- Cell isolation by: Particle-templated instant partition sequencing (PIP-seq), isolation of cells by vortexing
+- Direct citation: "Schematic of the emulsification process. Barcoded particle templates, cells and lysis reagents are combined with oil and vortexed to generate monodispersed droplets. "
+- They are then used for Illumina seqeuncing
+- monodispered droplets means droplets of same size
+- based to this papaer we have 5 technolgies (Microwells, plates, Microfluidox, combinatorial indexing, pip-seq)
+- easy to use, not need for specialzied devices expertise or hardware. You just need a vortexer.
+- "PIP-seq is a simple, flexible and scalable "
+
+in generell
+[sequencing by expansion](https://www.youtube.com/watch?v=G8ECt04qPos)
 [Roche](https://sequencing.roche.com/global/en/article-listing/sequencing-platform-technologies.html)
+
+single cell
+
+- [Recent overview of scRNA-Seq Methods](https://academic.oup.com/nar/article/53/2/gkae1186/7924191?login=false)
+- [Overview of scRNA-Seq Methods 2023](https://academic.oup.com/stmcls/article/42/1/1/7338616?login=true#435619364)
+
+Other links:
+
+- https://onlinelibrary.wiley.com/doi/full/10.1002/ctm2.694
+- Fluidigim should also be Microfluidig: https://www.researchgate.net/figure/Fluidigm-C1-IFC-Autoprep-System-A-Illustration-of-C1-IFC-left-IFC-with-carrier_fig2_358052347
+- different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
+- [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
 
 ## References
 
