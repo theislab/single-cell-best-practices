@@ -100,18 +100,18 @@ In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument
 Its most crucial innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules.
 This change not only made the method safer to perform but also allowed computers to analyze the acquired data {cite}`Hood1987`.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Sanger sequencing is simple and affordable.
 - If done correctly, the error rate is very low (<0.001%).
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
 - The quality of a Sanger sequence is often poor in the first 15 to 40 bases because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
 - If the sequenced DNA fragment has been cloned, some of the cloning vector sequence (a DNA carrier for copying, storing, and amplifying genes) may find its way into the final sequence.
 - Sanger sequencing is more expensive than second or third-generation sequencing per sequenced base.
+```
 
 ### Second-generation sequencing
 
@@ -126,20 +126,20 @@ Life Technologies introduced several other platforms, including SOLiD in 2007 (a
 In general, sequencing-by-synthesis involves adding single nucleotides to a growing DNA strand and detecting each addition.
 At the same time, sequencing-by-ligation relies on detecting the joining of short DNA probes to the fragment to determine the sequence.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Second-generation sequencing is often the cheapest option concerning required chemicals.
 - Sparse material can still be used as input.
 - High sensitivity to detect low-frequency variants and comprehensive genome coverage.
 - High capacity with sample multiplexing.
 - Ability to sequence thousands of genes simultaneously.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The sequencing machines are expensive and often must be shared with colleagues.
 - Second-generation sequencers are big, stationary machines that are not designed for fieldwork.
 - Generally, second-generation sequencing results in many short sequencing fragments (reads) that are hard to use for novel genomes.
 - The quality of the sequencing result depends on the reference genome.
+```
 
 ### Third-generation sequencing
 
@@ -167,17 +167,17 @@ Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its
 Notably, such a sequencing device even fits into a single human hand.
 The idea of Oxford Nanopore sequencers is to detect changes in the electrical current as nucleic acids migrate through protein nanopores {cite}`Jain2016`.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Long reads will allow for the assembly of large novel genomes.
 - Sequencers are portable, making them ideal for fieldwork.
 - Possibility to directly detect epigenetic modifications of DNA and RNA sequences.
 - Speed! Third-generation sequencers are fast.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Some third-generation sequencers exhibit higher error rates than second-generation sequencers.
 - The reagents are generally more expensive than second-generation sequencing.
+```
 
 ## Overview of the NGS process
 
@@ -326,15 +326,15 @@ Moreover, except the beads, Drop-seq is open-source and the protocol can more ea
 InDrop is completely open-source, where even the beads can be manufactured and modified in labs.
 Hence, InDrop is the most flexible of the three protocols.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Allows for the cost-efficient sequencing of cells in large quantities to identify the overall composition of a tissue and characterize rare cell types.
 - UMIs can be incorporated.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Low detection rates of transcripts compared to other methods.
 - Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
+```
 
 (plate-based)=
 
@@ -351,17 +351,17 @@ For example, MARS-seq allows for three barcode levels, namely molecular, cellula
 A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
 This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type {term}`annotation`.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Recovers many genes per cell, allowing for a deep characterization.
 - It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
 - Allows for full-length transcript recovery.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
 - Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
 - Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
+```
 
 #### Fluidigm C1
 
@@ -371,17 +371,17 @@ However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cel
 Full-length sequencing is possible since the amplification step is carried out in individual wells, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols.
 The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Allows for full-length transcript coverage.
 - Splicing variants and T/B cell receptor repertoire diversity can be recovered.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Only allows for the sequencing of up to 800 cells {cite}`fluidigm`.
 - More expensive per cell than other protocols.
 - Only about 10% of the extracted cells are captured, which makes this protocol unsuitable for rare cell types or low input.
 - The used arrays only capture specific cell sizes, which may bias the captured transcripts.
+```
 
 #### Nanopore single-cell transcriptome sequencing
 
@@ -394,15 +394,15 @@ ScCOLOR-seq computationally identifies barcodes without errors using nucleotide 
 These barcodes are then used as guides to correct the remaining erroneous barcodes {cite}`Philpott2021`.
 A modified UMI-tools directional network-based method corrects for UMI sequence duplication.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Recovers splicing and sequence heterogeneity information
+```
 
-Weaknesses:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Nanopore reagents are expensive.
 - High cell barcode recovery error rates.
 - Depending on the protocol, barcode assignment is guided with Illumina data requiring two sequencing assays.
+```
 
 #### Summary
 
