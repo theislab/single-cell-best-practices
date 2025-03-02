@@ -50,7 +50,7 @@ Most definitions of the term life share a common entity - {term}`cells <Cell>`.
 Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves.
 Therefore, cells are the fundamental building blocks of life, and they were first discovered in 1665 by the British scientist Robert Hooke.
 Hooke investigated a thin slice of cork with a very rudimentary microscope and, to his surprise, noticed that the slice appeared to resemble a honeycomb.
-He named these tiny units 'cells'.
+He named these tiny units "cells".
 
 :::{figure-md} markdown-fig
 <img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
@@ -59,31 +59,19 @@ Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
 In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, stating that all living organisms are made up of cells.
-Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
-
-Since the early definition of cell theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
+Since the early definition of Cell Theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
 Two general types of cells exist: eukaryotes and prokaryotes.
 Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region but no nucleus.
 The nucleus hosts the cells' genomic DNA, which is why they are called eukaryotes: _Nucleus_ is Latin for kernel or seed.
-Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms.
-Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e., membrane-bound organelles carry out highly specialized functions and provide crucial support for cells.
-
-Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 times the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
 The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going.
 The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
+
 _Sequencing_ is the process of deciphering the order of DNA nucleotides.
 It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome and uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate promotor regions.
+DNA _sequencing_ allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate promotor regions.
 Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
 DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
-
-A very popular example is sickle cell disease, a group of blood disorders resulting from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
-This leads to serious health issues, including pain, anemia, swelling in the hands and feet, bacterial infections, and strokes.
-The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
-The gene defect is caused by a single nucleotide mutation where a GAG {term}`codon` changes to a GTG codon of the β-globin gene.
-This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and, henceforth, the disease mentioned above.
-Unfortunately, it is not always possible to find such "simple" associations between single nucleotide mutations and diseases because most diseases are caused by, for example, complex regulatory processes.
 
 (introduction-scrna-seq-key-takeaway-1)=
 
