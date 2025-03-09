@@ -41,11 +41,12 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 
    ```python
    import lamindb as ln
-   af = ln.Artifact.get(key="key_of_dataset", is_latest=True)
+   af = ln.Artifact.get(key="key_of_dataset", is_latest=True)  # or ln.Artifact("SOMEID").get()
    obj = af.load()
    ```
 
    The object is now accessible in memory and is ready for analysis.
+   Adapt the `ln.Artifact("SOMEID").get()` suffix to get older versions like `ln.Artifact("SOMEID0001").get()` to get the second uploaded version.
 
 6. **Accessing notebooks (Transforms)**
 
@@ -57,7 +58,8 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
    ```
 
    which will download the notebook to the current working directory.
+   Analogously to `Artifacts`, you can adapt the suffix ID to get older versions.
 
-7. \*\*On `ln.track()` and `ln.finish()`
+7. **On `ln.track()` and `ln.finish()`**
 
    - These functions are currently only available for users with write access and may error. Please comment them out for now.
