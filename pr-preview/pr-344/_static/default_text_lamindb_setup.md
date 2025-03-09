@@ -3,24 +3,25 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 
 1. **Install lamindb**
 
-- Install the lamindb Python package:
-  ```bash
-  pip install lamindb[bionty,jupyter,zarr]
-  ```
+   - Install the lamindb Python package:
+
+   ```bash
+   pip install lamindb[bionty,jupyter,zarr]
+   ```
 
 2. **Optionally create a lamin account**
 
-- Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
+   - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
 
 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
 
-- Run the `lamin connect` command:
+   - Run the `lamin connect` command:
 
-  ```bash
-  lamin connect theislab/sc-best-practices
-  ```
+   ```bash
+   lamin connect theislab/sc-best-practices
+   ```
 
-  You should now see `→ connected lamindb: theislab/sc-best-practices`.
+You should now see `→ connected lamindb: theislab/sc-best-practices`.
 
 4. **Verify your setup**
 
