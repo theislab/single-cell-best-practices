@@ -434,6 +434,32 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 
 ## New Developments
 
+# for the comparison table
+
+"Run times includes cluster generation, sequencing, and base calling on a NextSeq 1000 or NextSeq 2000 System and NovaSeq 6000 System. Run times include automated onboard cluster generation, sequencing, automated post-run wash, and base calling on the NovaSeq X Systems." [link](https://sapac.illumina.com/systems/sequencing-platforms.html)
+
+what is a run:
+
+- Cluster Generation: Amplifies DNA fragments into clusters.
+- Sequencing: Determines the nucleotide sequence using fluorescence.
+- Base Calling: Converts fluorescence data into a digital sequence.
+  All steps that are involved to come from dna framents to the data of nucleotide seqeunces
+
+maximum output range meaning:
+What Does "Maximum Output" Mean?
+
+Total Data Generated:
+The maximum output is the total amount of DNA sequence data (in gigabases, where 1 Gb = 1 billion base pairs) that a sequencing platform can produce in one run.
+For example, if a platform has a maximum output of 1,000 Gb (1 Tb), it means the instrument can generate up to 1 trillion base pairs of sequence data in a single run.
+
+wiki:
+Comparisons to other sequencing techniques
+Performance values for genome sequencing technologies including Sanger methods and next-generation methods[17][19][20]
+Technology Number of lanes Injection volume (nL) Analysis time Average read length Throughput (including analysis; Mb/h) Gel pouring Lane tracking
+Slab gel 96 500–1000 6–8 hours 700 bp 0.0672 Yes Yes
+Capillary array electrophoresis 96 1–5 1–3 hours 700 bp 0.166 No No
+[link](https://en.wikipedia.org/wiki/Sanger_sequencing)
+
 - I am in general a bit confused by the different terms, which are used (hydrogel based, droplet)
 
 [link](https://www.nature.com/articles/s41587-023-01685-z)
@@ -445,6 +471,13 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - based to this papaer we have 5 technolgies (Microwells, plates, Microfluidox, combinatorial indexing, pip-seq)
 - easy to use, not need for specialzied devices expertise or hardware. You just need a vortexer.
 - "PIP-seq is a simple, flexible and scalable "
+
+Cell isolation by hydrogel [picture](https://www.explorea.cz/asteria-single-cell-rna-seq-benchtop-kit)
+
+- buffer solution with cells and beads
+- buffer become a gel
+- cells are lyzed in the buffer
+- rna stays in the near of the bead so that they can be barcoded
 
 in generell
 [sequencing by expansion](https://www.youtube.com/watch?v=G8ECt04qPos)
