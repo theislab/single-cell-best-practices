@@ -168,6 +168,33 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 - The reagents are generally more expensive than second-generation sequencing.
 ```
 
+### Overview
+
+```{list-table} Comparison of the mentioned seqeuncing methods
+:header-rows: 1
+:label: example-table
+
+* - Training
+  - Validation
+* - 0
+  - 5
+* - 13720
+  - 2744
+* - 13720
+  - 2744
+* - 13720
+  - 2744
+```
+
+```{csv-table} Frozen Delights!
+:header: "Treat", "Quantity", "Description"
+
+"Albatross", 2.99, "On a stick!"
+"Crunchy Frog", 1.49, "If we took the bones out
+it wouldn't be crunchy, now would it?"
+"Gannet Ripple", 1.99, "On a stick!"
+```
+
 ## Overview of the NGS process
 
 Even though a variety of NGS technologies exist, the general steps to sequence DNA (and therefore reverse transcribed RNA) are largely the same.
@@ -209,6 +236,33 @@ The obtained gene expression profiles further enable the detection of gene isofo
 
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
+
+<table>
+    <thead>
+        <tr>
+            <th>Layer 1</th>
+            <th>Layer 2</th>
+            <th>Layer 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=4>L1 Name</td>
+            <td rowspan=2>L2 Name A</td>
+            <td>L3 Name A</td>
+        </tr>
+        <tr>
+            <td>L3 Name B</td>
+        </tr>
+        <tr>
+            <td rowspan=2>L2 Name B</td>
+            <td>L3 Name C</td>
+        </tr>
+        <tr>
+            <td>L3 Name D</td>
+        </tr>
+    </tbody>
+</table>
 
 (introduction-scrna-seq-key-takeaway-2)=
 
@@ -433,6 +487,25 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 ```
 
 ## New Developments
+
+# How we could categorize
+
+single cell RNA seq
+
+Emulsion/Droplet-based
+
+- Classic methods (Drop-seq, etc.)
+- Vortexing (PiP-seq)
+
+Well-based methods
+
+- individuals wells (Fluidigm C1)
+- Combinatorial indexing
+
+Others
+
+- hydrogel
+- combining Nanopore sequencing with cell barcode and UMI assignment
 
 # for the comparison table
 
