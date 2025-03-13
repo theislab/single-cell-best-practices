@@ -2,7 +2,7 @@
 
 <!-- towncrier release notes start -->
 
-## [v1.0.0](https://github.com/theislab/single-cell-best-practices/tree/1.0.0) <sub>2021-08-17</sub>
+## [v1.0.0](https://github.com/theislab/single-cell-best-practices/releases/tag/1.0.0) <sub>2021-08-17</sub>
 
 ### Changed
 
