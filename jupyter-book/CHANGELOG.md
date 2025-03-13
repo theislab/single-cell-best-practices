@@ -1,15 +1,15 @@
-# Changelog
+# Release notes
 
 <!-- towncrier release notes start -->
 
-## [v1.0.0](https://github.com/theislab/single-cell-best-practices/tree/1.0.0) <sub>2025-03-12</sub>
+## [v1.0.0](https://github.com/theislab/single-cell-best-practices/tree/1.0.0) <sub>2021-08-17</sub>
 
 ### Changed
 
 - Fix typos ([#164](https://github.com/theislab/single-cell-best-practices/pull/164)) <sub>@mjstrumillo</sub>
 - Correct 2 spelling mistakes ([#155](https://github.com/theislab/single-cell-best-practices/pull/155)) <sub>@namsaraeva</sub>
 - Fix typos in chapter Normalization ([#118](https://github.com/theislab/single-cell-best-practices/pull/118)) <sub>@galicae</sub>
-- Update `RNA velocity` chapter ([#100](https://github.com/theislab/single-cell-best-practices/pull/100)) <sub>>@WeilerP</sub>
+- Update `RNA velocity` chapter ([#100](https://github.com/theislab/single-cell-best-practices/pull/100)) <sub>@WeilerP</sub>
 - Update `pseudotime` chapter ([#148](https://github.com/theislab/single-cell-best-practices/pull/148)) <sub>@WeilerP</sub>
 - Update multimodal immune receptor chapters ([#110](https://github.com/theislab/single-cell-best-practices/pull/110)) <sub>@drEast</sub>
 - Simplify `GSEA` chapter and improve performance ([#119](https://github.com/theislab/single-cell-best-practices/pull/119)) <sub>@ivirshup</sub>
