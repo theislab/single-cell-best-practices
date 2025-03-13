@@ -1,4 +1,4 @@
-# Release notes
+# Changelog
 
 <!-- towncrier release notes start -->
 
