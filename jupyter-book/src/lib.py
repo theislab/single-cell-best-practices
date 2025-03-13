@@ -50,8 +50,8 @@ def multiple_choice_question(
 
     html_code = f"""
     <style>
-        div#multiple-choice-question .output.text_html {{
-            background-color: transparent;
+        .output.text_html {{
+            --pst-color-text-base: transparent !important;
         }}
         .mcq-box {{
             border: none !important;
@@ -122,8 +122,8 @@ def flip_card(
     """
     html_code = f"""
     <style>
-        div#flip-card .output.text_html {{
-            background-color: transparent;
+        .output.text_html {{
+            --pst-color-text-base: transparent !important;
         }}
         .flip-card-{question_id} {{
             background-color: transparent;
@@ -172,7 +172,7 @@ def flip_card(
             background-color: {back_color};
             transform: rotateY(180deg);
             font-size: {back_font_size}px;
-        }}
+        }}_b
     </style>
 
     <div class="flip-card-{question_id}">
