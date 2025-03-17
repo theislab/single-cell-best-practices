@@ -52,9 +52,15 @@ def get_index_in_cell(str_anchor, cell_content):
 
 
 def get_env_setup_str(notebook_path, md_env_setup):
-    os.path.split(notebook_path)[0]
+    nb_path_folder = os.path.split(notebook_path)[0]
     nb_path_file = os.path.split(notebook_path)[1]
     yml_file = nb_path_file.split(".")[0] + ".yml"
+
+    if not (Path(nb_path_folder) / yml_file).is_file():
+        # print((Path(nb_path_folder) / yml_file))
+        yml_file = nb_path_folder.split("/")[-1] + ".yml"
+        # print(yml_file)
+
     return md_env_setup.replace("?yml_file_path?", yml_file)
 
 
@@ -63,9 +69,9 @@ with open("scripts/env_setup.md") as f:
     md_env_setup = f.read()
 
 # Process notebooks
-notebooks = Path("jupyter-book").glob("**/*.ipynb")
+notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
 
-for notebook in notebooks:
+for notebook in notebooks_ipynb:
     # Insert yml box after the anchor, only look for the anchor in the first 5 cells
     if "_build" not in str(notebook):
         # print(str(notebook))
@@ -75,3 +81,7 @@ for notebook in notebooks:
                 json.dump(nb, f, indent=2)
         else:
             print(f"Skipping {notebook} due to errors.")
+
+# notebooks_md = Path("jupyter-book").glob("**/*.md")
+# for notebook in notebooks_md:
+#     print(str(notebook))
