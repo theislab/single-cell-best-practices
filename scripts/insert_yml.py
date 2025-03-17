@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 
-def insert(notebook_path, n):
+def insert_to_ipynb(notebook_path, n):
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
@@ -75,13 +75,58 @@ for notebook in notebooks_ipynb:
     # Insert yml box after the anchor, only look for the anchor in the first 5 cells
     if "_build" not in str(notebook):
         # print(str(notebook))
-        nb = insert(notebook, 5)
+        nb = insert_to_ipynb(notebook, 5)
         if nb is not None:
             with open(notebook, "w", encoding="utf-8") as f:
                 json.dump(nb, f, indent=2)
         else:
             print(f"Skipping {notebook} due to errors.")
 
-# notebooks_md = Path("jupyter-book").glob("**/*.md")
-# for notebook in notebooks_md:
-#     print(str(notebook))
+
+def insert_to_md(md_path, n):
+    try:
+        with open(md_path, encoding="utf-8") as f:
+            content = f.readlines()
+    except Exception as e:
+        print(f"Error loading {md_path}: {e}")
+        return None
+
+    if not content:
+        print(f"Markdown file {md_path} is empty.")
+        return None
+
+    n_lines_checked = 0
+    for i, line in enumerate(content):
+        if "<!-- START ENV-SETUP -->" in line:
+            index_start = i
+            index_end = None
+            # Search for the end anchor within the next `n` lines
+            for j in range(i, min(i + n, len(content))):
+                if "<!-- END ENV-SETUP -->" in content[j]:
+                    index_end = j
+                    break
+
+            if index_start is not None and index_end is not None:
+                # Replace the content between the anchors
+                env_setup_str = get_env_setup_str(md_path, md_env_setup)
+                new_content = (
+                    content[: index_start + 1]
+                    + [env_setup_str + "\n"]
+                    + content[index_end:]
+                )
+                with open(md_path, "w", encoding="utf-8") as f:
+                    f.writelines(new_content)
+                print(f"{md_path} !!!YML Box inserted!!!")
+                return
+
+        n_lines_checked += 1
+        if n_lines_checked >= n:
+            break
+
+    # print(md_path)
+
+
+notebooks_md = Path("jupyter-book/introduction").glob("**/*.md")
+for notebook in notebooks_md:
+    print(str(notebook))
+    insert_to_md(notebook, 5)
