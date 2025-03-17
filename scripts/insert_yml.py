@@ -28,17 +28,17 @@ def insert(notebook_path, n):
                 cell["source"][index_start + 1 : index_start] = [
                     get_env_setup_str(notebook_path, md_env_setup)
                 ]
-                # print(str(notebook_path) + " !!!YML Box inserted!!!")
+                print(str(notebook_path) + " !!!YML Box inserted!!!")
                 return nb
 
         n_cells_checked += 1
 
         if n_cells_checked >= n:
             # Return the notebook even if no modification was made
-            # print(notebook_path)
+            print(notebook_path)
             return nb
 
-    # print(notebook_path)
+    print(notebook_path)
     return nb  # Ensure the function always returns a notebook dictionary
 
 
