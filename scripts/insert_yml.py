@@ -28,17 +28,17 @@ def insert_to_ipynb(notebook_path, n):
                 cell["source"][index_start + 1 : index_start] = [
                     get_env_setup_str(notebook_path, md_env_setup)
                 ]
-                print(str(notebook_path) + " !!!YML Box inserted!!!")
+                # print(str(notebook_path) + " !!!YML Box inserted!!!")
                 return nb
 
         n_cells_checked += 1
 
         if n_cells_checked >= n:
             # Return the notebook even if no modification was made
-            print(notebook_path)
+            # print(notebook_path)
             return nb
 
-    print(notebook_path)
+    # print(notebook_path)
     return nb  # Ensure the function always returns a notebook dictionary
 
 
@@ -116,7 +116,7 @@ def insert_to_md(md_path, n):
                 )
                 with open(md_path, "w", encoding="utf-8") as f:
                     f.writelines(new_content)
-                print(f"{md_path} !!!YML Box inserted!!!")
+                # print(f"{md_path} !!!YML Box inserted!!!")
                 return
 
         n_lines_checked += 1
@@ -128,5 +128,7 @@ def insert_to_md(md_path, n):
 
 notebooks_md = Path("jupyter-book/introduction").glob("**/*.md")
 for notebook in notebooks_md:
-    print(str(notebook))
-    insert_to_md(notebook, 5)
+    # print(str(notebook))
+    # is only for one md file in introduction which does not has a yml file at all
+    # maybe transform also introduction file into .ipynb files
+    insert_to_md(notebook, 100)
