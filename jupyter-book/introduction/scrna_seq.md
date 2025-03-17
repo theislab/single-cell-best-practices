@@ -568,6 +568,10 @@ Other links:
 - different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
 - [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
 
+# Chapter for Manuel
+
+Even tough the gene count can diffrentiate between diffretn individuals the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206)
+
 ## References
 
 ```{bibliography}
