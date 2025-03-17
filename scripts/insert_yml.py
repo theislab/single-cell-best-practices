@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 
-def insert_to_ipynb(notebook_path, n):
+def insert_to_ipynb(notebook_path: Path, n: int):
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
@@ -28,62 +28,17 @@ def insert_to_ipynb(notebook_path, n):
                 cell["source"][index_start + 1 : index_start] = [
                     get_env_setup_str(notebook_path, md_env_setup)
                 ]
-                # print(str(notebook_path) + " !!!YML Box inserted!!!")
                 return nb
 
         n_cells_checked += 1
 
         if n_cells_checked >= n:
-            # Return the notebook even if no modification was made
-            # print(notebook_path)
             return nb
 
-    # print(notebook_path)
-    return nb  # Ensure the function always returns a notebook dictionary
+    return nb
 
 
-def get_index_in_cell(str_anchor, cell_content):
-    if str_anchor in cell_content:
-        return cell_content.index(str_anchor)
-    elif str_anchor.strip() in cell_content:
-        return cell_content.index(str_anchor.strip())
-    else:
-        return None
-
-
-def get_env_setup_str(notebook_path, md_env_setup):
-    nb_path_folder = os.path.split(notebook_path)[0]
-    nb_path_file = os.path.split(notebook_path)[1]
-    yml_file = nb_path_file.split(".")[0] + ".yml"
-
-    if not (Path(nb_path_folder) / yml_file).is_file():
-        # print((Path(nb_path_folder) / yml_file))
-        yml_file = nb_path_folder.split("/")[-1] + ".yml"
-        # print(yml_file)
-
-    return md_env_setup.replace("?yml_file_path?", yml_file)
-
-
-# Load reusable content
-with open("scripts/env_setup.md") as f:
-    md_env_setup = f.read()
-
-# Process notebooks
-notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
-
-for notebook in notebooks_ipynb:
-    # Insert yml box after the anchor, only look for the anchor in the first 5 cells
-    if "_build" not in str(notebook):
-        # print(str(notebook))
-        nb = insert_to_ipynb(notebook, 5)
-        if nb is not None:
-            with open(notebook, "w", encoding="utf-8") as f:
-                json.dump(nb, f, indent=2)
-        else:
-            print(f"Skipping {notebook} due to errors.")
-
-
-def insert_to_md(md_path, n):
+def insert_to_md(md_path: Path, n: int):
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
@@ -116,19 +71,50 @@ def insert_to_md(md_path, n):
                 )
                 with open(md_path, "w", encoding="utf-8") as f:
                     f.writelines(new_content)
-                # print(f"{md_path} !!!YML Box inserted!!!")
                 return
 
         n_lines_checked += 1
         if n_lines_checked >= n:
             break
 
-    # print(md_path)
+
+def get_index_in_cell(str_anchor: str, cell_content: list):
+    if str_anchor in cell_content:
+        return cell_content.index(str_anchor)
+    elif str_anchor.strip() in cell_content:
+        return cell_content.index(str_anchor.strip())
+    else:
+        return None
 
 
+def get_env_setup_str(notebook_path: Path, md_env_setup: str):
+    nb_path_folder = os.path.split(notebook_path)[0]
+    nb_path_file = os.path.split(notebook_path)[1]
+    yml_file = nb_path_file.split(".")[0] + ".yml"
+
+    # replace notebook yml with section yml if yml_file doesn't exist
+    if not (Path(nb_path_folder) / yml_file).is_file():
+        yml_file = nb_path_folder.split("/")[-1] + ".yml"
+
+    return md_env_setup.replace("?yml_file_path?", yml_file)
+
+
+# load env-setup template
+with open("scripts/env_setup.md") as f:
+    md_env_setup = f.read()
+
+# insert env dropdown to all .ipynb's
+notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
+for notebook in notebooks_ipynb:
+    if "_build" not in str(notebook):
+        nb = insert_to_ipynb(notebook, 5)
+        if nb is not None:
+            with open(notebook, "w", encoding="utf-8") as f:
+                json.dump(nb, f, indent=2)
+        else:
+            print(f"Skipping {notebook} due to errors.")
+
+# insert env dropdown to all .md's
 notebooks_md = Path("jupyter-book/introduction").glob("**/*.md")
 for notebook in notebooks_md:
-    # print(str(notebook))
-    # is only for one md file in introduction which does not has a yml file at all
-    # maybe transform also introduction file into .ipynb files
     insert_to_md(notebook, 100)
