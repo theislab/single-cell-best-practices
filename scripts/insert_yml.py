@@ -12,7 +12,7 @@ def insert_to_ipynb(notebook_path: Path, n: int):
         return None
 
     if nb is None:
-        print(f"Notebook {notebook_path} is empty or malformed.")
+        raise ValueError(f"Notebook {notebook_path} is empty or malformed.")
         return None
 
     n_cells_checked = 0
