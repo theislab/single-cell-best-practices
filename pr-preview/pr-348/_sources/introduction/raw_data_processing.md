@@ -13,6 +13,23 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 ```
 
 <!-- START ENV-SETUP -->
+``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
+`````{tab-set}
+
+````{tab-item} Steps
+```{include} ../_static/default_text_env_setup.md
+```
+````
+
+````{tab-item} yml
+```{literalinclude} introduction.yml
+:language: yaml
+```
+````
+
+`````
+``````
+
 <!-- END ENV-SETUP -->
 
 (introduction-raw-data-processing-key-takeaway-1)=
