@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 
-def insert_to_ipynb(notebook_path: Path, n: int):
+def insert_to_ipynb(notebook_path: Path, n: int) -> dict:
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
@@ -16,6 +16,9 @@ def insert_to_ipynb(notebook_path: Path, n: int):
         return None
 
     n_cells_checked = 0
+    # Check if in the first n cells there is a markdown cell with the anchors
+    # "<!-- START ENV-SETUP -->" and "<!-- END ENV-SETUP -->". If so, we replace
+    # the content between the anchors with the newly loaded dropdown string.
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
             index_start = get_index_in_cell(
@@ -38,19 +41,23 @@ def insert_to_ipynb(notebook_path: Path, n: int):
     return nb
 
 
-def insert_to_md(md_path: Path, n: int):
+def insert_to_md(md_path: Path, n: int) -> None:
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
-    except Exception as e:
-        print(f"Error loading {md_path}: {e}")
-        return None
+    except FileNotFoundError:
+        print(f"File not found: {md_path}")
+        raise
 
     if not content:
         print(f"Markdown file {md_path} is empty.")
         return None
 
     n_lines_checked = 0
+    # Check if in the first n lines there is a markdown cell with the anchors
+    # "<!-- START ENV-SETUP -->" and "<!-- END ENV-SETUP -->". If so, we replace
+    # the content between the anchors with the newly loaded dropdown string
+    # and write the file.
     for i, line in enumerate(content):
         if "<!-- START ENV-SETUP -->" in line:
             index_start = i
@@ -78,7 +85,7 @@ def insert_to_md(md_path: Path, n: int):
             break
 
 
-def get_index_in_cell(str_anchor: str, cell_content: list):
+def _get_index_in_cell(str_anchor: str, cell_content: list) -> int | None:
     if str_anchor in cell_content:
         return cell_content.index(str_anchor)
     elif str_anchor.strip() in cell_content:
@@ -87,7 +94,7 @@ def get_index_in_cell(str_anchor: str, cell_content: list):
         return None
 
 
-def get_env_setup_str(notebook_path: Path, md_env_setup: str):
+def get_env_setup_str(notebook_path: Path, md_env_setup: str) -> str:
     nb_path_folder = os.path.split(notebook_path)[0]
     nb_path_file = os.path.split(notebook_path)[1]
     yml_file = nb_path_file.split(".")[0] + ".yml"
@@ -99,7 +106,6 @@ def get_env_setup_str(notebook_path: Path, md_env_setup: str):
     return md_env_setup.replace("?yml_file_path?", yml_file)
 
 
-# load env-setup template
 with open("scripts/env_setup.md") as f:
     md_env_setup = f.read()
 
@@ -108,6 +114,8 @@ notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
 for notebook in notebooks_ipynb:
     if "_build" not in str(notebook):
         nb = insert_to_ipynb(notebook, 5)
+        print(str(type(nb)))
+
         if nb is not None:
             with open(notebook, "w", encoding="utf-8") as f:
                 json.dump(nb, f, indent=2)
