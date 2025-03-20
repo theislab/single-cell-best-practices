@@ -17,20 +17,40 @@ def insert_to_ipynb(notebook_path: Path, n: int) -> dict:
 
     n_cells_checked = 0
     # Check if in the first n cells there is a markdown cell with the anchors
-    # "<!-- START ENV-SETUP -->" and "<!-- END ENV-SETUP -->". If so, we replace
+    # "<!-- START ENV/LAMIN-SETUP -->" and "<!-- END ENV/LAMIN-SETUP -->". If so, we replace
     # the content between the anchors with the newly loaded dropdown string.
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
-            index_start = _get_index_in_cell(
+            index_start_env = _get_index_in_cell(
                 "<!-- START ENV-SETUP -->\n", cell["source"]
             )
-            index_end = _get_index_in_cell("<!-- END ENV-SETUP -->\n", cell["source"])
+            index_end_env = _get_index_in_cell(
+                "<!-- END ENV-SETUP -->\n", cell["source"]
+            )
 
-            if index_start is not None and index_end is not None:
-                del cell["source"][index_start + 1 : index_end]
-                cell["source"][index_start + 1 : index_start] = [
+            anchor_found = False
+            if index_start_env is not None and index_end_env is not None:
+                del cell["source"][index_start_env + 1 : index_end_env]
+                cell["source"][index_start_env + 1 : index_start_env] = [
                     _get_env_setup_str(notebook_path, md_env_setup)
                 ]
+                anchor_found = True
+
+            index_start_lamin = _get_index_in_cell(
+                "<!-- START LAMIN-SETUP -->\n", cell["source"]
+            )
+            index_end_lamin = _get_index_in_cell(
+                "<!-- END LAMIN-SETUP -->\n", cell["source"]
+            )
+
+            if index_start_lamin is not None and index_end_lamin is not None:
+                del cell["source"][index_start_lamin + 1 : index_end_lamin]
+                cell["source"][index_start_lamin + 1 : index_start_lamin] = [
+                    md_lamin_setup
+                ]
+                anchor_found = True
+
+            if anchor_found:
                 return nb
 
         n_cells_checked += 1
@@ -107,6 +127,9 @@ def _get_env_setup_str(notebook_path: Path, md_env_setup: str) -> str:
 
 with open("scripts/env_setup.md") as f:
     md_env_setup = f.read()
+
+with open("scripts/lamin_setup.md") as f:
+    md_lamin_setup = f.read()
 
 # insert env dropdown to all .ipynb's
 notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
