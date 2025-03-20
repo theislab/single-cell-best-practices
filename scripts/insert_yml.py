@@ -21,10 +21,10 @@ def insert_to_ipynb(notebook_path: Path, n: int) -> dict:
     # the content between the anchors with the newly loaded dropdown string.
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
-            index_start = get_index_in_cell(
+            index_start = _get_index_in_cell(
                 "<!-- START ENV-SETUP -->\n", cell["source"]
             )
-            index_end = get_index_in_cell("<!-- END ENV-SETUP -->\n", cell["source"])
+            index_end = _get_index_in_cell("<!-- END ENV-SETUP -->\n", cell["source"])
 
             if index_start is not None and index_end is not None:
                 del cell["source"][index_start + 1 : index_end]
@@ -114,7 +114,6 @@ notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
 for notebook in notebooks_ipynb:
     if "_build" not in str(notebook):
         nb = insert_to_ipynb(notebook, 5)
-        print(str(type(nb)))
 
         if nb is not None:
             with open(notebook, "w", encoding="utf-8") as f:
