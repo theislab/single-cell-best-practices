@@ -1,10 +1,11 @@
 import json
+import logging
 import os
 from collections.abc import Sequence
 from pathlib import Path
 
 
-def insert_to_ipynb(notebook_path: Path, n: int) -> dict:
+def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict | int]:
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
@@ -55,18 +56,18 @@ def insert_to_ipynb(notebook_path: Path, n: int) -> dict:
 
         n_cells_checked += 1
 
-        if n_cells_checked >= n:
+        if n_cells_checked >= n_cells:
             return nb
 
     return nb
 
 
-def insert_to_md(md_path: Path, n: int) -> None:
+def insert_to_md(md_path: Path, n_lines: int) -> None:
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
     except FileNotFoundError:
-        print(f"File not found: {md_path}")
+        logging.error(f"File not found: {md_path}", exc_info=True)
         raise
 
     if not content:
@@ -77,14 +78,16 @@ def insert_to_md(md_path: Path, n: int) -> None:
     # "<!-- START ENV-SETUP -->" and "<!-- END ENV-SETUP -->". If so, we replace
     # the content between the anchors with the newly loaded dropdown string
     # and write the file.
-    for i, line in enumerate(content):
+    for line_number, line in enumerate(content):
         if "<!-- START ENV-SETUP -->" in line:
-            index_start = i
+            index_start = line_number
             index_end = None
             # Search for the end anchor within the next `n` lines
-            for j in range(i, min(i + n, len(content))):
-                if "<!-- END ENV-SETUP -->" in content[j]:
-                    index_end = j
+            for line_number_after_start_anchor in range(
+                line_number, min(line_number + n_lines, len(content))
+            ):
+                if "<!-- END ENV-SETUP -->" in content[line_number_after_start_anchor]:
+                    index_end = line_number_after_start_anchor
                     break
 
             if index_start is not None and index_end is not None:
@@ -100,7 +103,7 @@ def insert_to_md(md_path: Path, n: int) -> None:
                 return
 
         n_lines_checked += 1
-        if n_lines_checked >= n:
+        if n_lines_checked >= n_lines:
             break
 
 
