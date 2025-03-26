@@ -12,6 +12,7 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 
 ```
 
+<!-- START ENV-SETUP -->
 ``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
 `````{tab-set}
 
@@ -21,13 +22,15 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 ````
 
 ````{tab-item} yml
-```{literalinclude} differential_gene_expression.yml
+```{literalinclude} introduction.yml
 :language: yaml
 ```
 ````
 
 `````
 ``````
+
+<!-- END ENV-SETUP -->
 
 (introduction-raw-data-processing-key-takeaway-1)=
 

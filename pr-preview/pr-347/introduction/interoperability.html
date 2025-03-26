@@ -573,7 +573,8 @@ document.write(`
 </div>
 <a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-interoperability-key-takeaway-4"><span class="std std-ref">Motivation</span></a></div>
 </div>
-</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+</details><!-- START ENV-SETUP -->
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <div class="sd-tab-set docutils">
@@ -665,7 +666,7 @@ yml</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-</details><section id="motivation">
+</details><!-- END ENV-SETUP --><section id="motivation">
 <span id="introduction-interoperability-key-takeaway-4"></span><span id="introduction-interoperability-key-takeaway-1"></span><h2><span class="section-number">5.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>As we have discussed in the <a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a>, there are three main ecosystems for single-cell analysis: the <a class="reference external" href="https://bioconductor.org/">Bioconductor</a> and <a class="reference external" href="https://satijalab.org/seurat/index.html">Seurat</a> ecosystems in R and the Python-based <a class="reference external" href="https://scverse.org/">scverse</a> ecosystem.
 A common question from new analysts is which ecosystem they should focus on learning and using.
@@ -688,15 +689,21 @@ We focus on single-modality data and moving between R and Python, as these are t
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">mudata</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rpy2.robjects</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
 <span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+
+<span class="k">assert</span> <span class="n">ln</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">slug</span> <span class="o">==</span> <span class="s2">&quot;theislab/sc-best-practices&quot;</span>
+
+<span class="n">ln</span><span class="o">.</span><span class="n">track</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ connected lamindb: theislab/sc-best-practices
+→ created Transform(&#39;QaILJZMpZyJ40000&#39;), started new Run(&#39;1YEGroVZ...&#39;) at 2025-03-26 12:58:46 UTC
 </pre></div>
 </div>
 </div>
@@ -740,25 +747,11 @@ To standardize this process, specific guidelines have been developed for storing
 <h4><span class="section-number">5.3.2.1. </span>H5AD<a class="headerlink" href="#h5ad" title="Link to this heading">#</a></h4>
 <p>The H5AD format is the HDF5 disk representation of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object used by scverse packages and is commonly used to share single-cell datasets.
 As it is part of the scverse ecosystem, reading and writing these files from Python is well-supported and is part of the core functionality of the <a class="reference external" href="https://anndata.readthedocs.io/en/latest/index.html"><strong>anndata</strong> package</a> (read more about the format <a class="reference external" href="https://anndata.readthedocs.io/en/latest/fileformat-prose.html">here</a>).</p>
-<p>To demonstrate interoperability, we will use a small, randomly generated dataset that has gone through some of the steps of a standard analysis workflow to populate the various slots.</p>
+<p>To demonstrate interoperability, we will load a small, randomly generated dataset that has gone through some of the steps of a standard analysis workflow to populate the various slots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a randomly generated AnnData object to use as an example</span>
-<span class="n">counts</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
-<span class="p">)</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Cell_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)]</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Gene_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_vars</span><span class="p">)]</span>
-<span class="c1"># Do some standard processing to populate the object</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">scanpy</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;introduction/interoperability_adata.h5ad&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <span class="n">adata</span>
 </pre></div>
 </div>
@@ -767,11 +760,11 @@ As it is part of the scverse ecosystem, reading and writing these files from Pyt
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 100 × 2000
     obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
     var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
-    uns: &#39;log1p&#39;, &#39;hvg&#39;, &#39;pca&#39;, &#39;neighbors&#39;, &#39;umap&#39;
+    uns: &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
     obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
     varm: &#39;PCs&#39;
     layers: &#39;counts&#39;
-    obsp: &#39;distances&#39;, &#39;connectivities&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
 </pre></div>
 </div>
 </div>
@@ -1150,28 +1143,28 @@ cpm[1:10, 1:10]
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]:   [[ suppressing 10 column names ‘Cell_0’, ‘Cell_1’, ‘Cell_2’ ... ]]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                        
-Gene-0 605.9359 942.2688  611.2890  610.8322 589.0593 1558.7505   .     
-Gene-1 605.9359 593.4443    .       610.8322 589.0593  603.2774   .     
-Gene-2 605.9359   .       611.2890    .        .       955.9804   .     
-Gene-3   .        .         .         .        .       955.9804 621.9247
-Gene-4   .      593.4443 1220.7552  610.8322   .         .      621.9247
-Gene-5 605.9359 942.2688  611.2890  966.7818 589.0593  603.2774   .     
-Gene-6   .        .         .       610.8322   .      1400.2172   .     
-Gene-7 605.9359   .       611.2890 1218.9557 589.0593  603.2774 621.9247
-Gene-8 605.9359 593.4443  967.9523  966.7818 589.0593  955.9804 621.9247
-Gene-9   .        .       967.9523  610.8322 935.4116  603.2774   .     
-                                  
-Gene-0  963.7185   .      616.2711
-Gene-1 1215.4961   .        .     
-Gene-2    .      608.7542   .     
-Gene-3 1215.4961 964.1608 616.2711
-Gene-4    .      608.7542 616.2711
-Gene-5  608.5451 964.1608 974.7099
-Gene-6    .      964.1608 616.2711
-Gene-7  963.7185   .      616.2711
-Gene-8    .      964.1608 616.2711
-Gene-9  963.7185 608.7542 616.2711
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                      
+Gene-0 594.0456    .     984.0238  610.329 964.4394 616.4169    .     
+Gene-1 594.0456 1168.519 622.6029    .     608.7911   .         .     
+Gene-2   .         .     984.0238    .     608.7911 973.2674 1205.5970
+Gene-3 594.0456    .     622.6029  610.329 964.4394 616.4169    .     
+Gene-4 594.0456    .     622.6029  966.820 964.4394   .         .     
+Gene-5 594.0456  580.157 622.6029  610.329 608.7911   .       601.7422
+Gene-6   .         .     622.6029  610.329   .      616.4169  601.7422
+Gene-7 594.0456  580.157 622.6029  966.820 608.7911 616.4169    .     
+Gene-8 594.0456  580.157   .      1219.608 608.7911 973.2674    .     
+Gene-9 942.9097    .       .         .     964.4394   .       954.8014
+                                    
+Gene-0  576.0808  619.7236  604.3937
+Gene-1  918.4111 1234.7593  958.4625
+Gene-2    .       619.7236 1209.8233
+Gene-3    .       619.7236  958.4625
+Gene-4  576.0808  979.8761  604.3937
+Gene-5    .       619.7236  958.4625
+Gene-6    .      1234.7593    .     
+Gene-7    .       619.7236  604.3937
+Gene-8 1162.8180  979.8761  958.4625
+Gene-9    .      1234.7593    .     
 </pre></div>
 </div>
 </div>
@@ -1203,23 +1196,11 @@ For example:</p>
           <tr>
           
             <td>
-            503.271263
+            494.804552
             </td>
           
             <td>
-            503.271263
-            </td>
-          
-            <td>
-            503.271263
-            </td>
-          
-            <td>
-            ...
-            </td>
-          
-            <td>
-            977.039570
+            494.804552
             </td>
           
             <td>
@@ -1227,7 +1208,19 @@ For example:</p>
             </td>
           
             <td>
-            488.519785
+            ...
+            </td>
+          
+            <td>
+            519.750520
+            </td>
+          
+            <td>
+            519.750520
+            </td>
+          
+            <td>
+            0.000000
             </td>
           
           </tr>
@@ -1255,19 +1248,19 @@ magic_cpm &lt;- scuttle::calculateCPM(counts_mat)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 503.27126321,  983.28416912,  503.52467271, ...,  503.01810865,
-           0.        ,  488.51978505],
-       [ 503.27126321,  491.64208456,    0.        , ...,  503.01810865,
-         491.15913556,    0.        ],
-       [ 503.27126321,    0.        ,  503.52467271, ..., 2012.07243461,
-         982.31827112,  488.51978505],
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 494.8045522 ,    0.        , 1027.2213662 , ...,    0.        ,
+           0.        ,  519.75051975],
+       [ 494.8045522 , 1445.78313253,  513.6106831 , ...,    0.        ,
+         499.5004995 ,  519.75051975],
+       [   0.        ,    0.        , 1027.2213662 , ...,  485.90864917,
+         499.5004995 ,    0.        ],
        ...,
-       [ 503.27126321,    0.        , 1007.04934542, ...,  503.01810865,
-           0.        ,  977.0395701 ],
-       [ 503.27126321,    0.        ,    0.        , ...,  503.01810865,
-           0.        ,    0.        ],
-       [   0.        ,    0.        ,  503.52467271, ...,  503.01810865,
-         491.15913556,  488.51978505]])
+       [ 494.8045522 ,    0.        ,  513.6106831 , ...,    0.        ,
+           0.        ,  519.75051975],
+       [ 989.6091044 ,  481.92771084,    0.        , ...,    0.        ,
+         499.5004995 ,  519.75051975],
+       [2474.02276101,  963.85542169,  513.6106831 , ...,  485.90864917,
+         999.000999  ,    0.        ]])
 </pre></div>
 </div>
 </div>
@@ -1285,12 +1278,6 @@ Additionally, it facilitates the conversion of sparse <strong>scipy</strong> mat
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/functools.py:912: NotConvertedWarning: Conversion &#39;py2rpy&#39; not defined for objects of type &#39;&lt;class &#39;NoneType&#39;&gt;&#39;
-  return dispatch(args[0].__class__)(*args, **kw)
-</pre></div>
-</div>
-</div>
 </div>
 <p>Now, we can pass it to R.</p>
 <div class="cell docutils container">
@@ -1305,12 +1292,12 @@ head(qc)
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DataFrame with 6 rows and 3 columns
              sum  detected     total
        &lt;numeric&gt; &lt;integer&gt; &lt;numeric&gt;
-Cell_0      1987      1265      1987
-Cell_1      2034      1290      2034
-Cell_2      1986      1247      1986
-Cell_3      1978      1256      1978
-Cell_4      2036      1305      2036
-Cell_5      1999      1264      1999
+Cell_0      2021      1297      2021
+Cell_1      2075      1314      2075
+Cell_2      1947      1233      1947
+Cell_3      1986      1250      1986
+Cell_4      1987      1255      1987
+Cell_5      1930      1266      1930
 </pre></div>
 </div>
 </div>
@@ -1334,7 +1321,7 @@ py_builtins$zip(letters, LETTERS)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>List (26 items)
-&lt;zip object at 0x14e7aef80&gt;
+&lt;zip object at 0x15d0dc6c0&gt;
 </pre></div>
 </div>
 </div>
@@ -1524,16 +1511,21 @@ The <code class="docutils literal notranslate"><span class="pre">MuData</span></
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read file</span>
-<span class="n">mdata</span> <span class="o">=</span> <span class="n">mudata</span><span class="o">.</span><span class="n">read_h5mu</span><span class="p">(</span><span class="s2">&quot;../interoperability_mdata.h5mu&quot;</span><span class="p">)</span>
+<span class="n">af_mudata</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;introduction/interoperability_mdata.h5mu&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">mdata</span> <span class="o">=</span> <span class="n">af_mudata</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
-
-<span class="c1"># Write new file</span>
-<span class="n">python_h5mu_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;python.h5mu&quot;</span>
-<span class="n">mdata</span><span class="o">.</span><span class="n">write_h5mu</span><span class="p">(</span><span class="n">python_h5mu_file</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1531: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
+  self._update_attr(&quot;var&quot;, axis=0, join_common=join_common)
+/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1429: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
+  self._update_attr(&quot;obs&quot;, axis=1, join_common=join_common)
+</pre></div>
+</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MuData object with n_obs × n_vars = 1000 × 150
   var:	&#39;dummy_var&#39;
   2 modalities
@@ -1543,16 +1535,6 @@ The <code class="docutils literal notranslate"><span class="pre">MuData</span></
     B:	1000 x 50
       obs:	&#39;dummy_obs&#39;
       var:	&#39;dummy_var&#39;
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1531: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
-  self._update_attr(&quot;var&quot;, axis=0, join_common=join_common)
-/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1429: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
-  self._update_attr(&quot;obs&quot;, axis=1, join_common=join_common)
-/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1531: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
-  self._update_attr(&quot;var&quot;, axis=0, join_common=join_common)
-/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1429: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
-  self._update_attr(&quot;obs&quot;, axis=1, join_common=join_common)
 </pre></div>
 </div>
 </div>
@@ -1565,8 +1547,30 @@ The <code class="docutils literal notranslate"><span class="pre">MuData</span></
 <p>Read/write from/to a <code class="docutils literal notranslate"><span class="pre">MultiAssayExperiment</span></code> object</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Save MuData file locally for R</span>
+<span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">local_path</span> <span class="o">=</span> <span class="n">af_mudata</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">path</span>
+
+<span class="n">target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;interoperability_mdata.h5mu&quot;</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File copied to: </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File copied to: data/interoperability_mdata.h5mu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
-mae &lt;- MuData::readH5MU(&quot;../interoperability_mdata.h5mu&quot;)
+mae &lt;- MuData::readH5MU(&quot;data/interoperability_mdata.h5mu&quot;)
 print(mae)
 
 bioc_h5mu_file &lt;- tempfile(fileext = &quot;.h5mu&quot;)
@@ -1599,7 +1603,7 @@ Functionality:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
-seurat &lt;- MuDataSeurat::ReadH5MU(&quot;../interoperability_mdata.h5mu&quot;)
+seurat &lt;- MuDataSeurat::ReadH5MU(&quot;data/interoperability_mdata.h5mu&quot;)
 print(seurat)
 
 seurat_h5mu_file &lt;- tempfile(fileext = &quot;.h5mu&quot;)
@@ -1658,125 +1662,150 @@ Active assay: A (100 features, 0 variable features)
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/session_info/main.py:213: UserWarning: The &#39;__version__&#39; attribute is deprecated and will be removed in MarkupSafe 3.1. Use feature detection, or `importlib.metadata.version(&quot;markupsafe&quot;)`, instead.
+  mod_version = _find_version(mod.__version__)
+</pre></div>
+</div>
 <div class="output text_html"><details>
 <summary>Click to view session information</summary>
 <pre>
 -----
 anndata             0.11.3
 anndata2ri          1.3.2
+lamindb             1.3.0
+lamindb_setup       1.3.2
 mudata              0.3.1
 numpy               2.1.3
 rpy2                3.5.11
-scanpy              1.10.4
-scipy               1.15.2
+scanpy              1.11.0
+scipy               1.14.1
 session_info        1.0.0
 -----
 </pre>
 <details>
 <summary>Click to view modules imported as dependencies</summary>
 <pre>
-CoreFoundation              NA
-Foundation                  NA
-PIL                         11.1.0
-PyObjCTools                 NA
-anyio                       NA
-appnope                     0.1.4
-argcomplete                 NA
-arrow                       1.3.0
-asttokens                   NA
-attr                        25.2.0
-attrs                       25.2.0
-babel                       2.17.0
-brotli                      1.1.0
-certifi                     2025.01.31
-cffi                        1.17.1
-charset_normalizer          3.4.1
-colorama                    0.4.6
-comm                        0.2.2
-cycler                      0.12.1
-cython_runtime              NA
-dateutil                    2.9.0.post0
-debugpy                     1.8.13
-decorator                   5.2.1
-defusedxml                  0.7.1
-executing                   2.1.0
-fastjsonschema              NA
-fqdn                        NA
-h5py                        3.13.0
-idna                        3.10
-ipykernel                   6.29.5
-ipywidgets                  8.1.5
-isoduration                 NA
-jedi                        0.19.2
-jinja2                      3.1.5
-joblib                      1.4.2
-json5                       0.10.0
-jsonpointer                 3.0.0
-jsonschema                  4.23.0
-jsonschema_specifications   NA
-jupyter_events              0.12.0
-jupyter_server              2.15.0
-jupyterlab_server           2.27.3
-kiwisolver                  1.4.8
-legacy_api_wrap             NA
-llvmlite                    0.44.0
-markupsafe                  3.0.2
-matplotlib                  3.10.0
-mpl_toolkits                NA
-natsort                     8.4.0
-nbformat                    5.10.4
-numba                       0.61.0
-objc                        11.0
-overrides                   NA
-packaging                   24.2
-pandas                      2.2.3
-parso                       0.8.4
-platformdirs                4.3.6
-prometheus_client           NA
-prompt_toolkit              3.0.50
-psutil                      7.0.0
-pure_eval                   0.2.3
-pycparser                   2.22
-pydev_ipython               NA
-pydevconsole                NA
-pydevd                      3.2.3
-pydevd_file_utils           NA
-pydevd_plugins              NA
-pydevd_tracing              NA
-pygments                    2.19.1
-pynndescent                 0.5.13
-pyparsing                   3.2.1
-pythonjsonlogger            NA
-pytz                        2024.1
-referencing                 NA
-requests                    2.32.3
-rfc3339_validator           0.1.4
-rfc3986_validator           0.1.1
-rpds                        NA
-rpycall                     NA
-rpytools                    NA
-send2trash                  NA
-six                         1.17.0
-sklearn                     1.6.1
-sniffio                     1.3.1
-socks                       1.7.1
-stack_data                  0.6.3
-threadpoolctl               3.5.0
-tornado                     6.4.2
-tqdm                        4.67.1
-traitlets                   5.14.3
-typing_extensions           NA
-tzlocal                     NA
-umap                        0.5.7
-uri_template                NA
-urllib3                     2.3.0
-vscode                      NA
-wcwidth                     0.2.13
-webcolors                   NA
-websocket                   1.8.0
-yaml                        6.0.2
-zmq                         26.3.0
-zstandard                   0.23.0
+PIL                 11.1.0
+aiobotocore         2.21.1
+aiohappyeyeballs    2.6.1
+aiohttp             3.11.14
+aioitertools        0.12.0
+aiosignal           1.3.2
+annotated_types     0.7.0
+anyio               NA
+appdirs             1.4.4
+appnope             0.1.4
+argcomplete         NA
+asgiref             3.8.1
+asttokens           NA
+attr                25.3.0
+bionty              1.1.2
+botocore            1.37.1
+certifi             2025.01.31
+chardet             5.2.0
+charset_normalizer  3.4.1
+click               8.1.8
+colorama            0.4.6
+comm                0.2.2
+cycler              0.12.1
+cython_runtime      NA
+dateutil            2.9.0.post0
+debugpy             1.8.13
+decorator           5.2.1
+defusedxml          0.7.1
+deprecation         2.1.0
+dj_database_url     NA
+django              5.1.7
+dotenv              NA
+executing           2.1.0
+fastobo             0.13.0
+filelock            3.17.0
+frozenlist          1.5.0
+fsspec              2025.2.0
+gotrue              2.11.4
+h11                 0.14.0
+h2                  4.2.0
+h5py                3.13.0
+hpack               4.1.0
+httpcore            1.0.7
+httpx               0.28.1
+hyperframe          6.1.0
+idna                3.10
+importlib_metadata  NA
+ipykernel           6.29.5
+jedi                0.19.2
+jinja2              3.1.5
+jmespath            1.0.1
+joblib              1.4.2
+kiwisolver          1.4.8
+lamin_utils         0.13.11
+legacy_api_wrap     NA
+llvmlite            0.44.0
+markupsafe          3.0.2
+matplotlib          3.10.0
+mpl_toolkits        NA
+multidict           6.2.0
+mypy_extensions     NA
+natsort             8.4.0
+nbproject           0.10.6
+numba               0.61.0
+orjson              3.10.15
+packaging           24.2
+pandas              2.2.3
+pandera             0.0.0+dev0
+parso               0.8.4
+platformdirs        4.3.6
+postgrest           0.19.3
+prompt_toolkit      3.0.50
+pronto              2.7.0
+propcache           0.3.0
+psutil              7.0.0
+psycopg2            2.9.10 (dt dec pq3 ext lo64)
+pure_eval           0.2.3
+pyarrow             19.0.1
+pydantic            2.10.6
+pydantic_core       2.27.2
+pydantic_settings   2.8.1
+pydev_ipython       NA
+pydevconsole        NA
+pydevd              3.2.3
+pydevd_file_utils   NA
+pydevd_plugins      NA
+pydevd_tracing      NA
+pygments            2.19.1
+pyparsing           3.2.1
+pytz                2024.1
+realtime            2.4.1
+requests            2.32.3
+rich                NA
+rpycall             NA
+rpytools            NA
+s3fs                2025.2.0
+six                 1.17.0
+sklearn             1.5.2
+sniffio             1.3.1
+sqlparse            0.5.3
+stack_data          0.6.3
+storage3            0.11.3
+supabase            2.11.0
+supafunc            NA
+threadpoolctl       3.5.0
+tornado             6.4.2
+traitlets           5.14.3
+typeguard           NA
+typing_extensions   NA
+typing_inspect      NA
+tzlocal             NA
+upath               0.2.6
+urllib3             1.26.20
+vscode              NA
+wcwidth             0.2.13
+websockets          14.2
+wrapt               1.17.2
+yaml                6.0.2
+yarl                1.18.3
+zipp                NA
+zmq                 26.3.0
 </pre>
 </details> <!-- seems like this ends pre, so might as well be explicit -->
 <pre>
@@ -1784,13 +1813,11 @@ zstandard                   0.23.0
 IPython             9.0.2
 jupyter_client      8.6.3
 jupyter_core        5.7.2
-jupyterlab          4.3.5
-notebook            7.3.2
 -----
-Python 3.12.9 | packaged by conda-forge | (main, Feb 14 2025, 07:58:07) [Clang 18.1.8 ]
-macOS-15.3.1-x86_64-i386-64bit
+Python 3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:45:25) [Clang 18.1.8 ]
+macOS-15.3.2-x86_64-i386-64bit
 -----
-Session information updated at 2025-03-14 02:36
+Session information updated at 2025-03-26 14:24
 </pre>
 </details></div></div>
 </div>
@@ -1808,14 +1835,14 @@ sessioninfo::session_info()
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>─ Session info ───────────────────────────────────────────────────────────────
  setting  value
  version  R version 4.3.3 (2024-02-29)
- os       macOS 15.3.1
+ os       macOS 15.3.2
  system   x86_64, darwin13.4.0
  ui       unknown
  language (EN)
  collate  C
  ctype    UTF-8
- tz       Asia/Seoul
- date     2025-03-14
+ tz       Europe/Berlin
+ date     2025-03-26
  pandoc   3.6.3 @ /Users/seohyon/miniconda3/envs/interoperability/bin/pandoc
  quarto   NA
 
@@ -1829,30 +1856,23 @@ sessioninfo::session_info()
  bit                    4.6.0      2025-03-06 [1] CRAN (R 4.3.3)
  bit64                  4.6.0-1    2025-01-16 [1] CRAN (R 4.3.3)
  bitops                 1.0-9      2024-10-03 [1] CRAN (R 4.3.3)
- cachem                 1.1.0      2024-05-16 [1] CRAN (R 4.3.3)
- callr                  3.7.6      2024-03-25 [1] CRAN (R 4.3.3)
  cli                    3.6.4      2025-02-13 [1] CRAN (R 4.3.3)
  cluster                2.1.8      2024-12-11 [1] CRAN (R 4.3.3)
  codetools              0.2-20     2024-03-31 [1] CRAN (R 4.3.3)
  colorspace             2.1-1      2024-07-26 [1] CRAN (R 4.3.3)
  cowplot                1.1.3      2024-01-22 [1] CRAN (R 4.3.3)
  crayon                 1.5.3      2024-06-20 [1] CRAN (R 4.3.3)
- curl                   6.2.1      2025-02-19 [1] CRAN (R 4.3.3)
  data.table             1.17.0     2025-02-22 [1] CRAN (R 4.3.3)
  DelayedArray           0.28.0     2023-10-24 [1] Bioconductor
  DelayedMatrixStats     1.24.0     2023-10-24 [1] Bioconductor
  deldir                 2.0-4      2024-02-28 [1] CRAN (R 4.3.3)
- desc                   1.4.3      2023-12-10 [1] CRAN (R 4.3.3)
- devtools             * 2.4.5      2022-10-11 [1] CRAN (R 4.3.3)
  digest                 0.6.37     2024-08-19 [1] CRAN (R 4.3.3)
  dotCall64              1.2        2024-10-04 [1] CRAN (R 4.3.3)
  dplyr                  1.1.4      2023-11-17 [1] CRAN (R 4.3.3)
- ellipsis               0.3.2      2021-04-29 [1] CRAN (R 4.3.3)
  farver                 2.1.2      2024-05-13 [1] CRAN (R 4.3.3)
  fastDummies            1.7.5      2025-01-20 [1] CRAN (R 4.3.3)
  fastmap                1.2.0      2024-05-15 [1] CRAN (R 4.3.3)
  fitdistrplus           1.2-2      2025-01-07 [1] CRAN (R 4.3.3)
- fs                     1.6.5      2024-10-30 [1] CRAN (R 4.3.3)
  future                 1.34.0     2024-07-29 [1] CRAN (R 4.3.3)
  future.apply           1.11.3     2024-10-27 [1] CRAN (R 4.3.3)
  generics               0.1.3      2022-07-05 [1] CRAN (R 4.3.3)
@@ -1889,11 +1909,10 @@ sessioninfo::session_info()
  Matrix               * 1.6-5      2024-01-11 [1] CRAN (R 4.3.3)
  MatrixGenerics       * 1.14.0     2023-10-24 [1] Bioconductor
  matrixStats          * 1.5.0      2025-01-07 [1] CRAN (R 4.3.3)
- memoise                2.0.1      2021-11-26 [1] CRAN (R 4.3.3)
  mime                   0.12       2021-09-28 [1] CRAN (R 4.3.3)
  miniUI                 0.1.1.1    2018-05-18 [1] CRAN (R 4.3.3)
- MuData               * 0.99.9     2025-03-13 [1] Bioconductor
- MuDataSeurat         * 0.0.0.9000 2025-03-13 [1] Github (PMBio/MuDataSeurat@e34e908)
+ MuData                 0.99.9     2025-03-13 [1] Bioconductor
+ MuDataSeurat           0.0.0.9000 2025-03-13 [1] Github (PMBio/MuDataSeurat@e34e908)
  MultiAssayExperiment   1.28.0     2023-10-24 [1] Bioconductor
  munsell                0.5.1      2024-04-01 [1] CRAN (R 4.3.3)
  nlme                   3.1-167    2025-01-27 [1] CRAN (R 4.3.3)
@@ -1901,18 +1920,13 @@ sessioninfo::session_info()
  patchwork              1.3.0      2024-09-16 [1] CRAN (R 4.3.3)
  pbapply                1.7-2      2023-06-27 [1] CRAN (R 4.3.3)
  pillar                 1.10.1     2025-01-07 [1] CRAN (R 4.3.3)
- pkgbuild               1.4.6      2025-01-16 [1] CRAN (R 4.3.3)
  pkgconfig              2.0.3      2019-09-22 [1] CRAN (R 4.3.3)
- pkgload                1.4.0      2024-06-28 [1] CRAN (R 4.3.3)
  plotly                 4.10.4     2024-01-13 [1] CRAN (R 4.3.3)
  plyr                   1.8.9      2023-10-02 [1] CRAN (R 4.3.3)
  png                    0.1-8      2022-11-29 [1] CRAN (R 4.3.3)
  polyclip               1.10-7     2024-07-23 [1] CRAN (R 4.3.3)
- processx               3.8.6      2025-02-21 [1] CRAN (R 4.3.3)
- profvis                0.4.0      2024-09-20 [1] CRAN (R 4.3.3)
  progressr              0.15.1     2024-11-22 [1] CRAN (R 4.3.3)
  promises               1.3.2      2024-11-28 [1] CRAN (R 4.3.3)
- ps                     1.9.0      2025-02-18 [1] CRAN (R 4.3.3)
  purrr                  1.0.4      2025-02-05 [1] CRAN (R 4.3.3)
  R6                     2.6.1      2025-02-15 [1] CRAN (R 4.3.3)
  RANN                   2.6.2      2024-08-25 [1] CRAN (R 4.3.3)
@@ -1921,10 +1935,9 @@ sessioninfo::session_info()
  RcppAnnoy              0.0.22     2024-01-23 [1] CRAN (R 4.3.3)
  RcppHNSW               0.6.0      2024-02-04 [1] CRAN (R 4.3.3)
  RCurl                  1.98-1.16  2024-07-11 [1] CRAN (R 4.3.3)
- remotes                2.5.0      2024-03-17 [1] CRAN (R 4.3.3)
  reshape2               1.4.4      2020-04-09 [1] CRAN (R 4.3.3)
  reticulate             1.41.0.1   2025-03-09 [1] CRAN (R 4.3.3)
- rhdf5                * 2.46.1     2023-11-29 [1] Bioconductor 3.18 (R 4.3.3)
+ rhdf5                  2.46.1     2023-11-29 [1] Bioconductor 3.18 (R 4.3.3)
  rhdf5filters           1.14.1     2023-11-06 [1] Bioconductor
  Rhdf5lib               1.24.0     2023-10-24 [1] Bioconductor
  rlang                  1.1.5      2025-01-17 [1] CRAN (R 4.3.3)
@@ -1962,8 +1975,6 @@ sessioninfo::session_info()
  tibble                 3.2.1      2023-03-20 [1] CRAN (R 4.3.3)
  tidyr                  1.3.1      2024-01-24 [1] CRAN (R 4.3.3)
  tidyselect             1.2.1      2024-03-11 [1] CRAN (R 4.3.3)
- urlchecker             1.0.1      2021-11-30 [1] CRAN (R 4.3.3)
- usethis              * 3.1.0      2024-11-26 [1] CRAN (R 4.3.3)
  uwot                   0.2.3      2025-02-24 [1] CRAN (R 4.3.3)
  vctrs                  0.6.5      2023-12-01 [1] CRAN (R 4.3.3)
  viridisLite            0.4.2      2023-05-02 [1] CRAN (R 4.3.3)
@@ -1980,7 +1991,7 @@ sessioninfo::session_info()
  python:         /Users/seohyon/miniconda3/envs/interoperability/bin/python
  libpython:      /Users/seohyon/miniconda3/envs/interoperability/bin/python3.12
  pythonhome:     /Users/seohyon/miniconda3/envs/interoperability:/Users/seohyon/miniconda3/envs/interoperability
- version:        3.12.9 | packaged by conda-forge | (main, Feb 14 2025, 07:58:07) [Clang 18.1.8 ]
+ version:        3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:45:25) [Clang 18.1.8 ]
  numpy:          /Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/numpy
  numpy_version:  2.1.3
  
