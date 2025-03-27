@@ -75,6 +75,57 @@ All chapters are available as Jupyter Notebooks and end-to-end executable.
 The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
 Hence, we decided to provide minimal Conda environments per chapter. These can be found in the respective folders.
 
+## Adding changelog entries with `towncrier`
+
+We use `towncrier` to manage our changelog. Here’s how to include a changelog entry when making a PR:
+
+1. Install `towncrier` (only once):
+
+```bash
+pip install towncrier
+```
+
+2. Make your pull request as usual.
+
+3. After opening your PR, note the PR number (e.g., 34), and create a changelog fragment:
+
+```bash
+towncrier create -c "update blah blah" 34.changed.md
+```
+
+Replace "update blah blah" with a brief description of your change.
+Valid categories are:
+
+`added`
+`changed`
+`fixed`
+`removed`
+
+4. This will create a `.md` file (e.g., `34.changed.md`) in the `changelog.d/` directory (at the root of the repo). Make sure this file is included in your commit.
+
+5. Push your changes again. Once your PR is reviewed, it can be merged!
+
+### Releasing a new version (maintainers only)
+
+To release a new version:
+
+1. Run Towncrier to build the changelog:
+
+```bash
+towncrier build --yes --version 2.0.0
+```
+
+This will update `CHANGELOG.md` and remove the `changelog.d/` directory.
+
+2. Add contributor names manually under each relevant PR entry in the generated `CHANGELOG.md`.
+
+3. Recreate the `changelog.d/` directory for future PRs:
+
+```bash
+mkdir changelog.d
+touch changelog.d/.gitkeep
+```
+
 ## Environment setup
 
 Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
