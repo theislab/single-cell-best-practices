@@ -90,11 +90,11 @@ pip install towncrier
 3. After opening your PR, note the PR number (e.g., 34), and create a changelog fragment:
 
 ```bash
-towncrier create -c "update blah blah" 34.changed.md
+towncrier create -c 'update blah blah ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>' 34.changed.md
 ```
 
-Replace "update blah blah" with a brief description of your change.
-Valid categories are:
+Replace "update blah blah" with a brief description of your change, PR number with your PR number, and the author of the PR with your github tag.
+Valid categories for the filename of the `markdown` are:
 
 `added`
 `changed`
