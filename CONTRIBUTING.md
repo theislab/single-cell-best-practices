@@ -103,7 +103,7 @@ Valid categories for the filename of the `markdown` are:
 
 4. This will create a `.md` file (e.g., `34.changed.md`) in the `changelog.d/` directory (at the root of the repo). Make sure this file is included in your commit.
 
-5. Push your changes again. Once your PR is reviewed, it can be merged!
+5. Push your changes again.
 
 ### Releasing a new version (maintainers only)
 
