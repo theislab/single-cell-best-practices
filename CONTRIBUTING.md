@@ -117,7 +117,7 @@ towncrier build --yes --version 2.0.0
 
 This will update `CHANGELOG.md` and remove the `changelog.d/` directory.
 
-2. Add contributor names manually under each relevant PR entry in the generated `CHANGELOG.md`.
+2. Add contributor names and links to the PR manually under each relevant PR entry in the generated `CHANGELOG.md`.
 
 3. Recreate the `changelog.d/` directory for future PRs:
 
