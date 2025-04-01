@@ -18,7 +18,7 @@
     document.querySelector(".prev-next-bottom").remove();
     document.querySelector(".footer").remove();
     var elementsToRemove = document.querySelectorAll(
-      ".remove-from-content-only"
+      ".remove-from-content-only",
     );
     elementsToRemove.forEach(function (el) {
       el.remove();
@@ -30,8 +30,8 @@
     var style = document.createElement("style");
     style.appendChild(
       document.createTextNode(
-        "hypothesis-sidebar, hypothesis-notebook, hypothesis-adder{display:none!important;}"
-      )
+        "hypothesis-sidebar, hypothesis-notebook, hypothesis-adder{display:none!important;}",
+      ),
     );
     document.getElementsByTagName("head")[0].appendChild(style);
   }
