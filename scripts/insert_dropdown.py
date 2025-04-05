@@ -4,6 +4,8 @@ import os
 from collections.abc import Sequence
 from pathlib import Path
 
+from keytakeaways import Key_takeaways
+
 
 def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict | int]:
     try:
@@ -49,6 +51,26 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict 
                 cell["source"][index_start_lamin + 1 : index_start_lamin] = [
                     md_lamin_setup
                 ]
+                anchor_found = True
+
+            index_start_key_takeaways = _get_index_in_cell(
+                "<!-- START KEY-TAKEAWAYS -->\n", cell["source"]
+            )
+            index_end_key_takeaways = _get_index_in_cell(
+                "<!-- END KEY-TAKEAWAYS -->\n", cell["source"]
+            )
+
+            if (
+                index_start_key_takeaways is not None
+                and index_end_key_takeaways is not None
+            ):
+                Key_takeaways()
+                del cell["source"][
+                    index_start_key_takeaways + 1 : index_end_key_takeaways
+                ]
+                cell["source"][
+                    index_start_key_takeaways + 1 : index_start_key_takeaways
+                ] = [_get_key_takeaways_str(notebook_path)]
                 anchor_found = True
 
             if anchor_found:
@@ -126,6 +148,18 @@ def _get_env_setup_str(notebook_path: Path, md_env_setup: str) -> str:
         yml_file = nb_path_folder.split("/")[-1] + ".yml"
 
     return md_env_setup.replace("?yml_file_path?", yml_file)
+
+
+def _get_key_takeaways_str(notebook_path: Path) -> str:
+    nb_path_folder = os.path.split(notebook_path)[0]
+    nb_path_file = os.path.split(notebook_path)[1]
+    keytakeaways_file = nb_path_file.split(".")[0] + ".keytakeaways"
+    keytakeaways_path = Path(nb_path_folder) / keytakeaways_file
+    if not keytakeaways_path.is_file():
+        return "<!-- " + keytakeaways_file + " DOES NOT EXIST -->"
+    else:
+        keytakeaways_cur = Key_takeaways(keytakeaways_path)
+        return keytakeaways_cur.get_key_takeaway_dropdown_str()
 
 
 with open("scripts/env_setup.md") as f:
