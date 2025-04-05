@@ -7,7 +7,7 @@ class Key_takeaways:
         '```{dropdown} <i class="fas fa-brain"></i>&nbsp;&nbsp;&nbsp;Key takeaways\n\n'
     )
 
-    _str_dropdown_end: str = "\n```"
+    _str_dropdown_end: str = "```\n"
 
     _str_card_ref: str
 
@@ -37,7 +37,7 @@ class Key_takeaways:
                     key_takeaways_number = int(line.strip())
                     self._dict_key_takeaways[key_takeaways_number] = []
 
-        print(self._dict_key_takeaways)
+        # print(self._dict_key_takeaways)
 
     def get_key_takeaway_dropdown_str(self) -> str:
         str_dropdown = self._str_dropdown_start
@@ -60,7 +60,9 @@ class Key_takeaways:
 
     def __init__(self, key_takeaways_path: Path):
         self._str_card_ref = (
-            os.path.split(key_takeaways_path)[1].split(".")[0].replace("_", "-")
+            os.path.split(key_takeaways_path)[0].split("/")[-1].replace("_", "-")
+            + "-"
+            + os.path.split(key_takeaways_path)[1].split(".")[0].replace("_", "-")
             + "-key-takeaway-"
         )
 

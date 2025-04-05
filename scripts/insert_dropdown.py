@@ -64,7 +64,6 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict 
                 index_start_key_takeaways is not None
                 and index_end_key_takeaways is not None
             ):
-                Key_takeaways()
                 del cell["source"][
                     index_start_key_takeaways + 1 : index_end_key_takeaways
                 ]
