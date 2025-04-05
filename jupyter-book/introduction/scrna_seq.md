@@ -570,7 +570,13 @@ Other links:
 
 # Chapter for Manuel
 
-Even tough the gene count can diffrentiate between diffretn individuals the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206)
+# Central dogma in numbers and in the context of RNA seq
+
+Before we can start explaining the methods to measure RNA in individuals cells we need to clarify what we want to measure and to what extend we can measure that with exsiting sequecing methods. Therefore it is importatnt zu vergegenwörtigen whcih amounts exists in a cell. A ...ful/ricth resource for this is (Quelle von lukas), which we recommend to read for a more detailed explaintion and the source for the number we provide in this paragraph. It is a rough estimate to give a Eindrcuk über verhältnisse in einer zelle.
+
+Before an organism can produce RNA the prodcution machinery needs to now where to read the bhilding plan from. Theref
+The start of our journey begins with the DNA of
+The template for RNA is the a certain region in the DNA also called gene. Even tough the gene count can vary between diffrent individuals by ~70genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
 
 ## References
 
