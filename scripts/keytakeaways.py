@@ -16,34 +16,31 @@ class Key_takeaways:
     _dict_key_takeaways: dict[int, list[str]]
 
     def _read_key_takeaways(self, key_takeaways_path: Path) -> None:
+        """_read_key_takeaways reads the `.keytakeaways`-file and stores the content in the internal data structure _dict_key_takeaways.
+
+        :param key_takeaways_path: path to an existing `.keytakeaways`-file
+        """
         with open(key_takeaways_path, encoding="utf-8") as f:
             key_takeaways_number = None
             for line in f:
                 if line.strip() == "":
-                    # print(line.strip() == "")
-                    # print(line)
                     key_takeaways_number = None
                     continue
 
                 if key_takeaways_number is not None:
-                    # print("key_takeaways_number is not None")
-                    # print(line)
                     self._dict_key_takeaways[key_takeaways_number].append(line.strip())
                     continue
 
                 if line.strip().isnumeric() and key_takeaways_number is None:
-                    # print("line.strip().isnumeric()")
-                    # print(line)
                     key_takeaways_number = int(line.strip())
                     self._dict_key_takeaways[key_takeaways_number] = []
 
-        # print(self._dict_key_takeaways)
-
     def get_key_takeaway_dropdown_str(self) -> str:
+        """get_key_takeaway_dropdown_str creates a correct string of the dropdown from the internal data structure _dict_key_takeaways that can be used in a jupyter book.
+
+        :return: describe what it returns
+        """
         str_dropdown = self._str_dropdown_start
-
-        # print(sorted(list(self._dict_key_takeaways.keys())))
-
         for key_takeaway_number in sorted(self._dict_key_takeaways.keys()):
             str_card_copy = self._str_card.replace(
                 "?key_takeaway_number?", str(key_takeaway_number)
@@ -78,7 +75,7 @@ class Key_takeaways:
         self._read_key_takeaways(key_takeaways_path)
 
 
-# I will remove this as soon as I extended the sript to all the chapters
+# I will remove this as soon as I extended the script to all the chapters
 if __name__ == "__main__":
     # path: Path = Path("/Users/luisheinzlmeier/Desktop/Helmholtz/single-cell-best-practices/jupyter-book/introduction/scrna_seq.keytakeaways")
     path: Path = Path(

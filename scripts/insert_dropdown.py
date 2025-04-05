@@ -20,10 +20,11 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict 
 
     n_cells_checked = 0
     # Check if in the first n cells there is a markdown cell with the anchors
-    # "<!-- START ENV/LAMIN-SETUP -->" and "<!-- END ENV/LAMIN-SETUP -->". If so, we replace
+    # "<!-- START ENV-SETUP/LAMIN-SETUP/KEY-TAKEAWAYS -->" and "<!-- END ENV-SETUP/LAMIN-SETUP/KEY-TAKEAWAYS -->". If so, we replace
     # the content between the anchors with the newly loaded dropdown string.
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
+            # I will replace this redundant code block with a function if we stick to the anchor approach
             index_start_env = _get_index_in_cell(
                 "<!-- START ENV-SETUP -->\n", cell["source"]
             )
