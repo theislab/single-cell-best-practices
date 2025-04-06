@@ -72,7 +72,6 @@ def insert_dropdowns_in_lines(
 
     index_anchor_dropdown = _get_index_in_cell("<!-- END DROPDOWNS -->\n", lines)
     if index_anchor_dropdown is not None:
-        print("test")
         del lines[index_title + 1 : index_anchor_dropdown]
     else:
         lines.insert(index_title + 1, "<!-- END DROPDOWNS -->\n")
@@ -91,15 +90,18 @@ def _get_lamin_setup_str(notebook_path: Path) -> str:
 
 
 def _get_env_setup_str(notebook_path: Path) -> str:
-    nb_path_folder = os.path.split(notebook_path)[0]
-    nb_path_file = os.path.split(notebook_path)[1]
-    yml_file = nb_path_file.split(".")[0] + ".yml"
+    if os.path.split(notebook_path)[1].split(".")[0] not in black_list_files_yml:
+        nb_path_folder = os.path.split(notebook_path)[0]
+        nb_path_file = os.path.split(notebook_path)[1]
+        yml_file = nb_path_file.split(".")[0] + ".yml"
 
-    # replace notebook yml with section yml if yml_file doesn't exist
-    if not (Path(nb_path_folder) / yml_file).is_file():
-        yml_file = nb_path_folder.split("/")[-1] + ".yml"
+        # replace notebook yml with section yml if yml_file doesn't exist
+        if not (Path(nb_path_folder) / yml_file).is_file():
+            yml_file = nb_path_folder.split("/")[-1] + ".yml"
 
-    return md_env_setup.replace("?yml_file_path?", yml_file)
+        return md_env_setup.replace("?yml_file_path?", yml_file)
+    else:
+        return ""
 
 
 def _get_key_takeaways_str(notebook_path: Path) -> str:
