@@ -6,6 +6,49 @@ from pathlib import Path
 
 from keytakeaways import Key_takeaways
 
+black_list_directories = ["_build", "_static", "src"]
+black_list_files_yml = ["prior_art", "scrna_seq", "introduction", "muon_to_seurat"]
+all_files = [
+    # IPYNB files
+    "gene_regulatory_networks_atac",
+    "quality_control",
+    "muon_to_seurat",
+    "feature_selection",
+    "normalization",
+    "dimensionality_reduction",
+    "cell_cell_communication",
+    "gene_regulatory_networks",
+    "clonotype",
+    "multimodal_integration",
+    "ir_profiling",
+    "specificity",
+    "analysis_tools",
+    "annotation",
+    "integration",
+    "clustering",
+    "bulk_deconvolution",
+    "paired_integration",
+    "advanced_integration",
+    "perturbation_modeling",
+    "differential_gene_expression",
+    "gsea_pathway",
+    "compositional",
+    "batch_correction",
+    "doublet_detection",
+    "imputation",
+    "deconvolution",
+    "neighborhood",
+    "spatially_variable_genes",
+    "domains",
+    "lineage_tracing",
+    "rna_velocity",
+    # MD files
+    "data_infrastructure",
+    "scrna_seq",
+    "prior_art",
+    "raw_data_processing",
+]
+
 
 def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict | int]:
     try:
@@ -170,6 +213,30 @@ with open("scripts/lamin_setup.md") as f:
 
 # insert env dropdown to all .ipynb's
 notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
+
+# Only .ipynb files in direct subfolders of "jupyter-book"
+notebooks_ipynb = []
+notebooks_md = []
+
+for subdir in Path("jupyter-book").iterdir():
+    if subdir.is_dir() and all(
+        excluded not in str(subdir) for excluded in black_list_directories
+    ):
+        notebooks_ipynb.extend(subdir.glob("*.ipynb"))
+        notebooks_md.extend(subdir.glob("*.md"))
+
+        # Only consider directories (not files)
+        # notebooks_ipynb.extend(subdir.glob("*.ipynb"))  # Find all .ipynb files in the subfolder
+
+# Print aller Pfade (formatiert)
+# print("IPYNB-Files:")
+# for path in notebooks_ipynb:
+#     print(f"  - {path}")
+
+# print("\nMD-Files:")
+# for path in notebooks_md:
+#     print(f"  - {path}")
+
 for notebook in notebooks_ipynb:
     if "_build" not in str(notebook):
         nb = insert_to_ipynb(notebook, 5)
