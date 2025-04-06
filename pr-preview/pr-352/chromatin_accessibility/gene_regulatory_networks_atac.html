@@ -523,6 +523,20 @@ document.write(`
 <h1><span class="section-number">25. </span>Gene regulatory networks using chromatin accessibility<a class="headerlink" href="#gene-regulatory-networks-using-chromatin-accessibility" title="Link to this heading">#</a></h1>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">We prepared an RNA and ATAC object using R, for processing with FigR and CisTopic.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#chromatin-accessibility-gene-regulatory-networks-atac-key-takeaway-1"><span class="std std-ref">Use zellkonverter to convert h5ad to SingleCellExperiment</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">We calculated DORC scores with FigR, and visualized those as scatter, heatmap and networks.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#chromatin-accessibility-gene-regulatory-networks-atac-key-takeaway-2"><span class="std std-ref">Preparation and execution of cisTopic</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
@@ -614,22 +628,7 @@ yml</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </details><!-- END DROPDOWNS -->
-<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
-<summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
-<div class="sd-card-body docutils">
-<p class="sd-card-text">We prepared an RNA and ATAC object using R, for processing with FigR and CisTopic.</p>
-</div>
-<a class="sd-stretched-link sd-hide-link-text reference internal" href="#chromatin-accessibility-gene-regulatory-networks-atac-key-takeaway-1"><span class="std std-ref">Use zellkonverter to convert h5ad to SingleCellExperiment</span></a></div>
-<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
-<div class="sd-card-body docutils">
-<p class="sd-card-text">We calculated DORC scores with FigR, and visualized those as scatter, heatmap and networks.</p>
-</div>
-<a class="sd-stretched-link sd-hide-link-text reference internal" href="#chromatin-accessibility-gene-regulatory-networks-atac-key-takeaway-2"><span class="std std-ref">Preparation and execution of cisTopic</span></a></div>
-</div>
-</details><!-- START ENV-SETUP -->
-<!-- END ENV-SETUP --><section id="motivation">
+<section id="motivation">
 <h2><span class="section-number">25.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>Analyzing chromatin accessibility and gene expression together to understand gene regulation is helpful due to the mechanistic relationship between those two during the control of gene regulation, mediated through transcription factors (TFs) and other epigenetic modulators <span id="id1">[<a class="reference internal" href="#id445" title="François Spitz and Eileen E M Furlong. Transcription factors: from enhancer binding to developmental control. Nat. Rev. Genet., 13(9):613–626, 2012.">Spitz and Furlong, 2012</a>]</span>. Briefly, regulatory regions annotated as promoters and local/distal enhancers are engaged during the early phases of gene expression regulation, and chromatin accessibility increase, or decrease, can be used as a proxy for changes in their activity. Hence, the global positive or negative correlation between proximal and distal accessible elements (measured by ATAC-seq) and target genes (measured by RNA-seq) within a genome neighborhood distance (e.g. less than 200 Kbp), serves to annotate genomic regulatory relationships during the inference of Gene Regulatory Networks (GRNs). Using sequencing data describing gene (RNA) and peak (ATAC) features, tools that build correlation matrices between peaks and matrices help summarize strong peak-gene interactions.</p>
 <section id="gene-regulatory-network-inference-using-rna-and-atac-features">
