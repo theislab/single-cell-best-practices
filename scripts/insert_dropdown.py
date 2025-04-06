@@ -157,8 +157,6 @@ def insert_to_md(md_path: Path, n_lines: int) -> None:
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
-            # print(type(content))
-            # print(content)
     except FileNotFoundError:
         logging.error(f"File not found: {md_path}", exc_info=True)
         raise
@@ -184,34 +182,7 @@ def insert_to_md(md_path: Path, n_lines: int) -> None:
 
         n_lines_checked += 1
         if n_lines_checked >= n_lines:
-            break
-
-        if "<!-- START ENV-SETUP -->" in line:
-            index_start = line_number
-            index_end = None
-            # Search for the end anchor within the next `n` lines
-            for line_number_after_start_anchor in range(
-                line_number, min(line_number + n_lines, len(content))
-            ):
-                if "<!-- END ENV-SETUP -->" in content[line_number_after_start_anchor]:
-                    index_end = line_number_after_start_anchor
-                    break
-
-            if index_start is not None and index_end is not None:
-                # Replace the content between the anchors
-                env_setup_str = _get_env_setup_str(md_path)
-                new_content = (
-                    content[: index_start + 1]
-                    + [env_setup_str + "\n"]
-                    + content[index_end:]
-                )
-                with open(md_path, "w", encoding="utf-8") as f:
-                    f.writelines(new_content)
-                return
-
-        n_lines_checked += 1
-        if n_lines_checked >= n_lines:
-            break
+            return
 
 
 def _get_index_in_cell(str_anchor: str, cell_content: Sequence[str]) -> int | None:
