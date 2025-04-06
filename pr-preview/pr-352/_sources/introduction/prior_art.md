@@ -1,23 +1,5 @@
 # Prior art
-``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
-`````{tab-set}
-
-````{tab-item} Steps
-```{include} ../_static/default_text_env_setup.md
-```
-````
-
-````{tab-item} yml
-```{literalinclude} introduction.yml
-:language: yaml
-```
-````
-
-`````
-``````
-<!-- END DROPDOWNS -->
-
-```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
+```{dropdown} <i class="fas fa-brain"></i>&nbsp;&nbsp;&nbsp;Key takeaways
 
 :::{card}
 :link: introduction-prior-art-key-takeaway-1
@@ -32,6 +14,7 @@ The Luecken and Theis tutorial offers scRNA-seq best practices but has outdated 
 :::
 
 ```
+<!-- END DROPDOWNS -->
 
 Single-cell analysis has evolving from a niche area of interest into a well-established field of study.
 As a result, we are certainly not the first to produce a book on this subject, nor to provide guides and tutorials.

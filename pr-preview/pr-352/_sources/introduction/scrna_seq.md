@@ -1,23 +1,5 @@
 # Single-cell RNA sequencing
-``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
-`````{tab-set}
-
-````{tab-item} Steps
-```{include} ../_static/default_text_env_setup.md
-```
-````
-
-````{tab-item} yml
-```{literalinclude} introduction.yml
-:language: yaml
-```
-````
-
-`````
-``````
-<!-- END DROPDOWNS -->
-
-```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
+```{dropdown} <i class="fas fa-brain"></i>&nbsp;&nbsp;&nbsp;Key takeaways
 
 :::{card}
 :link: introduction-scrna-seq-key-takeaway-1
@@ -48,13 +30,8 @@ ScRNA-Seq protocols vary in their approach to cell isolation and transcript reco
 **Fluidigm C1** loads and separates cells into small reaction chambers.
 :::
 
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-5
-:link-type: ref
-**Single-nuclei RNA-seq (snRNA-Seq)** is an alternative to scRNA-Seq, handy for tissues where cell dissociation is challenging (e.g., brain tissue).
-Nuclei are more resistant to mechanical stress and can be isolated from frozen samples (e.g., biobank studies).
-:::
 ```
+<!-- END DROPDOWNS -->
 
 This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
 {term}`Multimodal <Modalities>` or spatial assays are not covered here but are introduced in the respective advanced chapters.
