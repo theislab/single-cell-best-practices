@@ -1,18 +1,6 @@
 (raw-proc)=
 
 # Raw data processing
-
-```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
-
-:::{card}
-:link: introduction-raw-data-processing-key-takeaway-1
-:link-type: ref
-Accurate raw data processing transforms FASTQ files into a count matrix, enabling reliable single-cell sequencing analyses through read alignment, barcode correction, and UMI counting.
-:::
-
-```
-
-<!-- START ENV-SETUP -->
 ``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
 `````{tab-set}
 
@@ -29,7 +17,19 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 
 `````
 ``````
+<!-- END DROPDOWNS -->
 
+```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
+
+:::{card}
+:link: introduction-raw-data-processing-key-takeaway-1
+:link-type: ref
+Accurate raw data processing transforms FASTQ files into a count matrix, enabling reliable single-cell sequencing analyses through read alignment, barcode correction, and UMI counting.
+:::
+
+```
+
+<!-- START ENV-SETUP -->
 <!-- END ENV-SETUP -->
 
 (introduction-raw-data-processing-key-takeaway-1)=
