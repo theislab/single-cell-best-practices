@@ -49,6 +49,16 @@ black_list_files_lamin = [
     "raw_data_processing",
 ]
 
+
+"""
+test_function does blah blah blah.
+
+:param p1: describe about parameter p1
+:param p2: describe about parameter p2
+:param p3: describe about parameter p3
+:return: describe what it returns
+"""
+
 with open("scripts/env_setup.md") as f:
     md_env_setup = f.read()
 
@@ -57,6 +67,7 @@ with open("scripts/lamin_setup.md") as f:
 
 
 def get_dropdowns_str(notebook_path: Path) -> list[str]:
+    """Puts together all the different dropdowns strings into one big string."""
     dropdowns_str = ""
     dropdowns_str += _get_key_takeaways_str(notebook_path)
     dropdowns_str += _get_env_setup_str(notebook_path)
@@ -67,6 +78,12 @@ def get_dropdowns_str(notebook_path: Path) -> list[str]:
 def insert_dropdowns_in_lines(
     lines: list[str], index_title: int, notebook_path: Path
 ) -> None:
+    r"""Inserts the dropdowns after the title and adds "<!-- END DROPDOWNS -->\n" so that we can call the python script multiple times without adding multiple dropdown.
+
+    :param lines: The list of lines in a document (from our md's and ipynb's)
+    :param index_title: The index of the element in the list that contains the title
+    :param notebook_path: the path to our current notebook
+    """
     if "\n" not in lines[index_title]:
         lines[index_title] += "\n"
 
@@ -245,18 +262,6 @@ else:
         ):
             notebooks_ipynb.extend(subdir.glob("*.ipynb"))
             notebooks_md.extend(subdir.glob("*.md"))
-
-            # Only consider directories (not files)
-            # notebooks_ipynb.extend(subdir.glob("*.ipynb"))  # Find all .ipynb files in the subfolder
-
-    # Print aller Pfade (formatiert)
-    # print("IPYNB-Files:")
-    # for path in notebooks_ipynb:
-    #     print(f"  - {path}")
-
-    # print("\nMD-Files:")
-    # for path in notebooks_md:
-    #     print(f"  - {path}")
 
     for notebook in notebooks_ipynb:
         nb = insert_to_ipynb(notebook, 5)
