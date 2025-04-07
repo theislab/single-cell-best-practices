@@ -10,7 +10,7 @@ black_list_directories = ["_build", "_static", "src"]
 black_list_files_yml = ["prior_art", "scrna_seq", "introduction", "muon_to_seurat"]
 black_list_files_lamin = [
     # IPYNB files
-    "gene_regulatory_networks_atac",
+    "introductiongene_regulatory_networks_atac",
     "quality_control",
     "muon_to_seurat",
     "feature_selection",
