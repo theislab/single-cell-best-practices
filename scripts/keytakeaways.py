@@ -73,13 +73,3 @@ class Key_takeaways:
 
         self._dict_key_takeaways = {}
         self._read_key_takeaways(key_takeaways_path)
-
-
-# I will remove this as soon as I extended the script to all the chapters
-if __name__ == "__main__":
-    # path: Path = Path("/Users/luisheinzlmeier/Desktop/Helmholtz/single-cell-best-practices/jupyter-book/introduction/scrna_seq.keytakeaways")
-    path: Path = Path(
-        "/Users/luisheinzlmeier/Desktop/Helmholtz/single-cell-best-practices/jupyter-book/conditions/differential_gene_expression.keytakeaways"
-    )
-    key_takeaways_cur = Key_takeaways(path)
-    print(key_takeaways_cur.get_key_takeaway_dropdown_str())
