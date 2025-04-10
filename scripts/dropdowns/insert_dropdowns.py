@@ -51,10 +51,10 @@ black_list_files_lamin = [
 ]
 
 
-with open("scripts/env_setup.md") as f:
+with open("scripts/dropdowns/env_setup.md") as f:
     md_env_setup = f.read()
 
-with open("scripts/lamin_setup.md") as f:
+with open("scripts/dropdowns/lamin_setup.md") as f:
     md_lamin_setup = f.read()
 
 
