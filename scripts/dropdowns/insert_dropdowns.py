@@ -113,10 +113,10 @@ def _get_env_setup_str(notebook_path: Path) -> str:
 
 
 def _get_key_takeaways_str(notebook_path: Path) -> str:
-    """Returns the key takeaways dropdown string if a <notebook-name>.keytakeaways file exists. Otherwise, an empty string is returned."""
+    """Returns the key takeaways dropdown string if a <notebook-name>.txt file exists. Otherwise, an empty string is returned."""
     nb_path_folder = os.path.split(notebook_path)[0]
     nb_path_file = os.path.split(notebook_path)[1]
-    keytakeaways_file = nb_path_file.split(".")[0] + ".keytakeaways"
+    keytakeaways_file = nb_path_file.split(".")[0] + ".txt"
     keytakeaways_path = Path(nb_path_folder) / keytakeaways_file
 
     if not keytakeaways_path.is_file():

@@ -16,9 +16,9 @@ class Key_takeaways:
     _dict_key_takeaways: dict[int, list[str]]
 
     def _read_key_takeaways(self, key_takeaways_path: Path) -> None:
-        """_read_key_takeaways reads the `.keytakeaways`-file and stores the content in the internal data structure _dict_key_takeaways.
+        """_read_key_takeaways reads the `.txt`-file and stores the content in the internal data structure _dict_key_takeaways.
 
-        :param key_takeaways_path: path to an existing `.keytakeaways`-file
+        :param key_takeaways_path: path to an existing `.txt`-file
         """
         with open(key_takeaways_path, encoding="utf-8") as f:
             key_takeaways_number = None
