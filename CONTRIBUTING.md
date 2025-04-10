@@ -154,8 +154,8 @@ The first sentence of key takeaway 2.
 ...
 ```
 
-If you want to link a key takeaway to a certain heading in your chapter, add <section-name>-<notebook-name>-key-takeaway-<key-takeaway-number> as a label before the heading.
-Replace all `_` with`-`, and the card of the key takeaway will be linked to the heading in the text (e.g.,`(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
+If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
+Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
 
 You can insert the dropdowns locally by calling `make dropdown` before `make`.
 You can call `make dropdown` several times without inserting duplicate dropdowns.
