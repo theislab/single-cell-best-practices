@@ -10,7 +10,8 @@ black_list_directories = ["_build", "_static", "src"]
 black_list_files_yml = ["prior_art", "scrna_seq", "introduction", "muon_to_seurat"]
 black_list_files_lamin = [
     # IPYNB files
-    "introductiongene_regulatory_networks_atac",
+    "introduction",
+    "gene_regulatory_networks_atac",
     "quality_control",
     "muon_to_seurat",
     "feature_selection",
@@ -50,15 +51,6 @@ black_list_files_lamin = [
 ]
 
 
-"""
-test_function does blah blah blah.
-
-:param p1: describe about parameter p1
-:param p2: describe about parameter p2
-:param p3: describe about parameter p3
-:return: describe what it returns
-"""
-
 with open("scripts/env_setup.md") as f:
     md_env_setup = f.read()
 
@@ -67,7 +59,7 @@ with open("scripts/lamin_setup.md") as f:
 
 
 def get_dropdowns_str(notebook_path: Path) -> list[str]:
-    """Puts together all the different dropdowns strings into one big string."""
+    """Puts together all the different dropdown strings into one big string."""
     dropdowns_str = ""
     dropdowns_str += _get_key_takeaways_str(notebook_path)
     dropdowns_str += _get_env_setup_str(notebook_path)
@@ -97,16 +89,15 @@ def insert_dropdowns_in_lines(
 
 
 def _get_lamin_setup_str(notebook_path: Path) -> str:
-    name_yml_file = os.path.split(notebook_path)[1].split(".")[0]
-
-    # replace notebook yml with section yml if yml_file doesn't exist
-    if name_yml_file not in black_list_files_lamin:
+    """Returns the template of the lamin dropdown string if the name of the file is not contained in the blacklist. Otherwise, an empty string is returned."""
+    if os.path.split(notebook_path)[1].split(".")[0] not in black_list_files_lamin:
         return md_lamin_setup
     else:
         return ""
 
 
 def _get_env_setup_str(notebook_path: Path) -> str:
+    """Returns the template of the env dropdown string if the name of the file is not contained in the blacklist. Otherwise, an empty string is returned. If there is no specific yml for the notebook, the yml section file is used."""
     if os.path.split(notebook_path)[1].split(".")[0] not in black_list_files_yml:
         nb_path_folder = os.path.split(notebook_path)[0]
         nb_path_file = os.path.split(notebook_path)[1]
@@ -122,10 +113,12 @@ def _get_env_setup_str(notebook_path: Path) -> str:
 
 
 def _get_key_takeaways_str(notebook_path: Path) -> str:
+    """Returns the key takeaways dropdown string if a <notebook-name>.keytakeaways file exists. Otherwise, an empty string is returned."""
     nb_path_folder = os.path.split(notebook_path)[0]
     nb_path_file = os.path.split(notebook_path)[1]
     keytakeaways_file = nb_path_file.split(".")[0] + ".keytakeaways"
     keytakeaways_path = Path(nb_path_folder) / keytakeaways_file
+
     if not keytakeaways_path.is_file():
         return ""
     else:
@@ -133,7 +126,12 @@ def _get_key_takeaways_str(notebook_path: Path) -> str:
         return keytakeaways_cur.get_key_takeaway_dropdown_str()
 
 
-def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict | int]:
+def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
+    """The function tries to find the title in the first n_cells. If there is a title, it then inserts the dropdown templates after the title and writes the new .ipynb file. Otherwise, the function skips this notebook and does nothing.
+
+    :param notebook_path: the path to the current notebook
+    :param n_cells: the number of the first n cells the function should check to find the title before it breaks
+    """
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
@@ -145,34 +143,39 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> dict[str, list | dict 
         raise ValueError(f"Notebook {notebook_path} is empty or malformed.")
 
     n_cells_checked = 0
-    # Check if in the first n cells there is a markdown cell with the anchors
-    # "<!-- START ENV-SETUP/LAMIN-SETUP/KEY-TAKEAWAYS -->" and "<!-- END ENV-SETUP/LAMIN-SETUP/KEY-TAKEAWAYS -->". If so, we replace
-    # the content between the anchors with the newly loaded dropdown string.
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
-            # I will replace this redundant code block with a function if we stick to the anchor approach
-
             index_title = next(
                 (
                     index
                     for index, line in enumerate(cell["source"])
-                    if line.startswith("#")
+                    if line.startswith("# ")
                 ),
                 None,
             )
             if index_title is not None:
                 insert_dropdowns_in_lines(cell["source"], index_title, notebook_path)
-                return nb
+
+                if nb is not None:
+                    with open(notebook_path, "w", encoding="utf-8") as f:
+                        json.dump(nb, f, indent=2)
+                else:
+                    raise RuntimeError(f"Failed to process notebook: {notebook}")
+
+                return
 
         n_cells_checked += 1
 
         if n_cells_checked >= n_cells:
-            return nb
-
-    return nb
+            return
 
 
 def insert_to_md(md_path: Path, n_lines: int) -> None:
+    """The function tries to find the title in the first n_lines. If there is a title, it then inserts the dropdown templates after the title and writes the new .md file. Otherwise, the function skips this notebook and does nothing.
+
+    :param notebook_path: the path to the current notebook
+    :param n_lines: the number of the first n lines the function should check to find the title before it breakes
+    """
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
@@ -183,12 +186,7 @@ def insert_to_md(md_path: Path, n_lines: int) -> None:
     if not content:
         raise RuntimeError(f"Markdown file {md_path} is empty.")
 
-    # n_lines_to_check_for_anchor =
     n_lines_checked = 0
-    # Check if in the first n lines there is a markdown cell with the anchors
-    # "<!-- START ENV-SETUP -->" and "<!-- END ENV-SETUP -->". If so, we replace
-    # the content between the anchors with the newly loaded dropdown string
-    # and write the file.
     for line_number, line in enumerate(content):
         if line.startswith("# "):
             index_title = line_number
@@ -205,6 +203,7 @@ def insert_to_md(md_path: Path, n_lines: int) -> None:
 
 
 def _get_index_in_cell(str_anchor: str, cell_content: Sequence[str]) -> int | None:
+    """Returns the index of a specific anchor in a list of strings."""
     if str_anchor in cell_content:
         return cell_content.index(str_anchor)
     elif str_anchor.strip() in cell_content:
@@ -214,10 +213,8 @@ def _get_index_in_cell(str_anchor: str, cell_content: Sequence[str]) -> int | No
 
 
 def main():
-    # insert env dropdown to all .ipynb's
-    notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
-
-    # Only insert dropdowns to .ipynb- and .md-files that are in direct subfolders of "jupyter-book" and not in black_list_directories
+    """Only inserts dropdowns to .ipynb- and .md-files that are in direct subfolders of "jupyter-book" and not in black_list_directories."""
+    # creates the list of relevant notebooks
     notebooks_ipynb = []
     notebooks_md = []
     for subdir in Path("jupyter-book").iterdir():
@@ -227,14 +224,9 @@ def main():
             notebooks_ipynb.extend(subdir.glob("*.ipynb"))
             notebooks_md.extend(subdir.glob("*.md"))
 
+    # insert dropdowns to notebooks
     for notebook in notebooks_ipynb:
-        nb = insert_to_ipynb(notebook, 5)
-
-        if nb is not None:
-            with open(notebook, "w", encoding="utf-8") as f:
-                json.dump(nb, f, indent=2)
-        else:
-            raise RuntimeError(f"Failed to process notebook: {notebook}")
+        insert_to_ipynb(notebook, 5)
 
     for notebook in notebooks_md:
         insert_to_md(notebook, 100)
@@ -242,37 +234,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-else:
-    with open("scripts/env_setup.md") as f:
-        md_env_setup = f.read()
-
-    with open("scripts/lamin_setup.md") as f:
-        md_lamin_setup = f.read()
-
-    # insert env dropdown to all .ipynb's
-    notebooks_ipynb = Path("jupyter-book").glob("**/*.ipynb")
-
-    # Only .ipynb files in direct subfolders of "jupyter-book"
-    notebooks_ipynb = []
-    notebooks_md = []
-
-    for subdir in Path("jupyter-book").iterdir():
-        if subdir.is_dir() and all(
-            excluded not in str(subdir) for excluded in black_list_directories
-        ):
-            notebooks_ipynb.extend(subdir.glob("*.ipynb"))
-            notebooks_md.extend(subdir.glob("*.md"))
-
-    for notebook in notebooks_ipynb:
-        nb = insert_to_ipynb(notebook, 5)
-
-        if nb is not None:
-            with open(notebook, "w", encoding="utf-8") as f:
-                json.dump(nb, f, indent=2)
-        else:
-            raise RuntimeError(f"Failed to process notebook: {notebook}")
-
-    # insert env dropdown to all .md's
-    notebooks_md = Path("jupyter-book/introduction").glob("**/*.md")
-    for notebook in notebooks_md:
-        md = insert_to_md(notebook, 100)
