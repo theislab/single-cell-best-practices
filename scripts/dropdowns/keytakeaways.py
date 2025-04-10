@@ -18,7 +18,8 @@ class Key_takeaways:
     def _read_key_takeaways(self, key_takeaways_path: Path) -> None:
         """_read_key_takeaways reads the `.txt`-file and stores the content in the internal data structure _dict_key_takeaways.
 
-        :param key_takeaways_path: path to an existing `.txt`-file
+        Args:
+            key_takeaways_path: path to an existing `.txt`-file
         """
         with open(key_takeaways_path, encoding="utf-8") as f:
             key_takeaways_number = None
@@ -38,7 +39,8 @@ class Key_takeaways:
     def get_key_takeaway_dropdown_str(self) -> str:
         """get_key_takeaway_dropdown_str creates a correct string of the dropdown from the internal data structure _dict_key_takeaways that can be used in a jupyter book.
 
-        :return: describe what it returns
+        Returns:
+            returns the complete key takeaways dropdown string from the <notebook-name>.txt file
         """
         str_dropdown = self._str_dropdown_start
         for key_takeaway_number in sorted(self._dict_key_takeaways.keys()):

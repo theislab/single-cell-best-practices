@@ -72,9 +72,10 @@ def insert_dropdowns_in_lines(
 ) -> None:
     r"""Inserts the dropdowns after the title and adds "<!-- END DROPDOWNS -->\n" so that we can call the python script multiple times without adding multiple dropdown.
 
-    :param lines: The list of lines in a document (from our md's and ipynb's)
-    :param index_title: The index of the element in the list that contains the title
-    :param notebook_path: the path to our current notebook
+    Args:
+        lines: The list of lines in a document (from our md's and ipynb's)
+        index_title: The index of the element in the list that contains the title
+        notebook_path: the path to our current notebook
     """
     if "\n" not in lines[index_title]:
         lines[index_title] += "\n"
@@ -129,8 +130,9 @@ def _get_key_takeaways_str(notebook_path: Path) -> str:
 def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
     """The function tries to find the title in the first n_cells. If there is a title, it then inserts the dropdown templates after the title and writes the new .ipynb file. Otherwise, the function skips this notebook and does nothing.
 
-    :param notebook_path: the path to the current notebook
-    :param n_cells: the number of the first n cells the function should check to find the title before it breaks
+    Args:
+        notebook_path: the path to the current notebook
+        n_cells: the number of the first n cells the function should check to find the title before it breaks
     """
     try:
         with open(notebook_path, encoding="utf-8") as f:
@@ -173,8 +175,9 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
 def insert_to_md(md_path: Path, n_lines: int) -> None:
     """The function tries to find the title in the first n_lines. If there is a title, it then inserts the dropdown templates after the title and writes the new .md file. Otherwise, the function skips this notebook and does nothing.
 
-    :param notebook_path: the path to the current notebook
-    :param n_lines: the number of the first n lines the function should check to find the title before it breakes
+    Args:
+        notebook_path: the path to the current notebook
+        n_lines: the number of the first n lines the function should check to find the title before it breakes
     """
     try:
         with open(md_path, encoding="utf-8") as f:
