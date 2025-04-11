@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 
@@ -19,7 +18,7 @@ class Key_takeaways:
         """Parses a `*_keytakeaways.txt`-file.
 
         Args:
-            key_takeaways_path: path to an existing `.txt`-file
+            key_takeaways_path: Path to an existing `.txt`-file
         """
         with open(key_takeaways_path, encoding="utf-8") as f:
             key_takeaways_number = None
@@ -59,11 +58,9 @@ class Key_takeaways:
 
     def __init__(self, key_takeaways_path: Path):
         self._str_card_ref = (
-            os.path.split(key_takeaways_path)[0].split("/")[-1].replace("_", "-")
+            str(key_takeaways_path.parent).split("/")[-1].replace("_", "-")
             + "-"
-            + "-".join(
-                os.path.split(key_takeaways_path)[1].split(".")[0].split("_")[0:-1]
-            )
+            + "-".join(str(key_takeaways_path.stem).split("_")[0:-1])
             + "-key-takeaway-"
         )
 
