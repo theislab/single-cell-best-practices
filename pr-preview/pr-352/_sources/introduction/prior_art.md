@@ -1,19 +1,4 @@
 # Prior art
-```{dropdown} <i class="fas fa-brain"></i>&nbsp;&nbsp;&nbsp;Key takeaways
-
-:::{card}
-:link: introduction-prior-art-key-takeaway-1
-:link-type: ref
-The Bioconductor OSCA book provides comprehensive scRNA-seq analysis workflows using R, but is limited to Bioconductor tools and excludes other single-cell omics or spatial transcriptomics.
-:::
-
-:::{card}
-:link: introduction-prior-art-key-takeaway-2
-:link-type: ref
-The Luecken and Theis tutorial offers scRNA-seq best practices but has outdated examples and omits newer techniques like RNA velocity or spatial transcriptomics.
-:::
-
-```
 <!-- END DROPDOWNS -->
 
 Single-cell analysis has evolving from a niche area of interest into a well-established field of study.
