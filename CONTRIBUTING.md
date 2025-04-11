@@ -158,7 +158,6 @@ If you want to link a key takeaway to a certain heading in your chapter, add `<s
 Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
 
 You can insert the dropdowns locally by calling `make dropdown` before `make`.
-You can call `make dropdown` several times without inserting duplicate dropdowns.
 
 ## Data access
 
