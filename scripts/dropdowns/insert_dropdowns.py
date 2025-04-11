@@ -1,6 +1,4 @@
 import json
-import logging
-import os
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -70,12 +68,14 @@ def get_dropdowns_str(notebook_path: Path) -> list[str]:
 def insert_dropdowns_in_lines(
     lines: list[str], index_title: int, notebook_path: Path
 ) -> None:
-    r"""Inserts the dropdowns after the title and adds "<!-- END DROPDOWNS -->\n" so that we can call the python script multiple times without adding multiple dropdown.
+    r"""Inserts the dropdowns after the title.
+
+    Adds "<!-- END DROPDOWNS -->\n" so that we can call the python script multiple times without adding multiple dropdown.
 
     Args:
         lines: Lines of ``.md`` or ``.ipynb`` files
         index_title: The index of the element in the list that contains the title
-        notebook_path: the path to our current notebook
+        notebook_path: The path to our current notebook
     """
     if "\n" not in lines[index_title]:
         lines[index_title] += "\n"
@@ -90,23 +90,25 @@ def insert_dropdowns_in_lines(
 
 
 def _get_lamin_setup_str(notebook_path: Path) -> str:
-    """Returns the template of the lamin dropdown string if the name of the file is not contained in the blacklist. Otherwise, an empty string is returned."""
-    if os.path.split(notebook_path)[1].split(".")[0] not in black_list_files_lamin:
+    """Returns the lamin dropdown template if the filename isn’t blacklisted, otherwise returns an empty string."""
+    if notebook_path.stem not in black_list_files_lamin:
         return md_lamin_setup
     else:
         return ""
 
 
 def _get_env_setup_str(notebook_path: Path) -> str:
-    """Returns the template of the env dropdown string if the name of the file is not contained in the blacklist. Otherwise, an empty string is returned. If there is no specific yml for the notebook, the yml section file is used."""
-    if os.path.split(notebook_path)[1].split(".")[0] not in black_list_files_yml:
-        nb_path_folder = os.path.split(notebook_path)[0]
-        nb_path_file = os.path.split(notebook_path)[1]
-        yml_file = nb_path_file.split(".")[0] + ".yml"
+    """Returns the template of the env dropdown string if the name of the file is not contained in the blacklist.
+
+    Otherwise, an empty string is returned. If there is no specific yml for the notebook, the yml section file is used.
+    """
+    if notebook_path.stem not in black_list_files_yml:
+        nb_path_folder = notebook_path.parent
+        yml_file = f"{notebook_path.stem}.yml"
 
         # replace notebook yml with section yml if yml_file doesn't exist
         if not (Path(nb_path_folder) / yml_file).is_file():
-            yml_file = nb_path_folder.split("/")[-1] + ".yml"
+            yml_file = str(nb_path_folder).split("/")[-1] + ".yml"
 
         return md_env_setup.replace("?yml_file_path?", yml_file)
     else:
@@ -114,11 +116,8 @@ def _get_env_setup_str(notebook_path: Path) -> str:
 
 
 def _get_key_takeaways_str(notebook_path: Path) -> str:
-    """Returns the key takeaways dropdown string if a <notebook-name>.txt file exists. Otherwise, an empty string is returned."""
-    nb_path_folder = os.path.split(notebook_path)[0]
-    nb_path_file = os.path.split(notebook_path)[1]
-    keytakeaways_file = nb_path_file.split(".")[0] + ".txt"
-    keytakeaways_path = Path(nb_path_folder) / keytakeaways_file
+    """Returns the key takeaways dropdown string if a <notebook-name>_keytakeaways.txt file exists, otherwise an empty string."""
+    keytakeaways_path = notebook_path.parent / f"{notebook_path.stem}.txt"
 
     if not keytakeaways_path.is_file():
         return ""
@@ -128,18 +127,21 @@ def _get_key_takeaways_str(notebook_path: Path) -> str:
 
 
 def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
-    """The function tries to find the title in the first n_cells. If there is a title, it then inserts the dropdown templates after the title and writes the new .ipynb file. Otherwise, the function skips this notebook and does nothing.
+    """Inserts the dropdowns to ipynb-files.
+
+    The function tries to find the title in the first n_cells. If there is a title, it then inserts the dropdown templates after the title and writes the new .ipynb file. Otherwise, the function skips this notebook and does nothing.
 
     Args:
-        notebook_path: the path to the current notebook
-        n_cells: the number of the first n cells the function should check to find the title before it breaks
+        notebook_path: The path to the current notebook
+        n_cells: The number of the first ``n`` cells the function should check to find the title before it breaks
     """
     try:
         with open(notebook_path, encoding="utf-8") as f:
             nb = json.load(f)
     except json.JSONDecodeError as e:
-        print(f"Error loading {notebook_path}: {e}")
-        raise
+        raise json.JSONDecodeError(
+            f"Error loading {notebook_path}: {e.msg}", e.doc, e.pos
+        ) from e
 
     if nb is None:
         raise ValueError(f"Notebook {notebook_path} is empty or malformed.")
@@ -173,18 +175,19 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
 
 
 def insert_to_md(md_path: Path, n_lines: int) -> None:
-    """The function tries to find the title in the first n_lines. If there is a title, it then inserts the dropdown templates after the title and writes the new .md file. Otherwise, the function skips this notebook and does nothing.
+    """Inserts the dropdowns to md-files.
+
+    The function tries to find the title in the first n_lines. If there is a title, it then inserts the dropdown templates after the title and writes the new .md file. Otherwise, the function skips this notebook and does nothing.
 
     Args:
-        notebook_path: the path to the current notebook
-        n_lines: the number of the first n lines the function should check to find the title before it breakes
+        notebook_path: The path to the current notebook
+        n_lines: The number of the first ``n`` lines the function should check to find the title before it stops
     """
     try:
         with open(md_path, encoding="utf-8") as f:
             content = f.readlines()
-    except FileNotFoundError:
-        logging.error(f"File not found: {md_path}", exc_info=True)
-        raise
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {md_path}") from e
 
     if not content:
         raise RuntimeError(f"Markdown file {md_path} is empty.")
@@ -232,7 +235,7 @@ def main():
         insert_to_ipynb(notebook, n_cells=5)
 
     for notebook in notebooks_md:
-        insert_to_md(notebook, 100)
+        insert_to_md(notebook, n_lines=100)
 
 
 if __name__ == "__main__":
