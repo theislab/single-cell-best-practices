@@ -73,7 +73,7 @@ def insert_dropdowns_in_lines(
     r"""Inserts the dropdowns after the title and adds "<!-- END DROPDOWNS -->\n" so that we can call the python script multiple times without adding multiple dropdown.
 
     Args:
-        lines: The list of lines in a document (from our md's and ipynb's)
+        lines: Lines of ``.md`` or ``.ipynb`` files
         index_title: The index of the element in the list that contains the title
         notebook_path: the path to our current notebook
     """
