@@ -16,7 +16,7 @@ class Key_takeaways:
     _dict_key_takeaways: dict[int, list[str]]
 
     def _read_key_takeaways(self, key_takeaways_path: Path) -> None:
-        """_read_key_takeaways reads the `.txt`-file and stores the content in the internal data structure _dict_key_takeaways.
+        """Parses a `*_keytakeaways.txt`-file.
 
         Args:
             key_takeaways_path: path to an existing `.txt`-file
@@ -37,10 +37,10 @@ class Key_takeaways:
                     self._dict_key_takeaways[key_takeaways_number] = []
 
     def get_key_takeaway_dropdown_str(self) -> str:
-        """get_key_takeaway_dropdown_str creates a correct string of the dropdown from the internal data structure _dict_key_takeaways that can be used in a jupyter book.
+        """Creates a string representation of the dropdown.
 
         Returns:
-            returns the complete key takeaways dropdown string from the <notebook-name>.txt file
+            Complete key takeaways dropdown string from the <notebook-name>.txt file
         """
         str_dropdown = self._str_dropdown_start
         for key_takeaway_number in sorted(self._dict_key_takeaways.keys()):
@@ -61,7 +61,9 @@ class Key_takeaways:
         self._str_card_ref = (
             os.path.split(key_takeaways_path)[0].split("/")[-1].replace("_", "-")
             + "-"
-            + os.path.split(key_takeaways_path)[1].split(".")[0].replace("_", "-")
+            + "-".join(
+                os.path.split(key_takeaways_path)[1].split(".")[0].split("_")[0:-1]
+            )
             + "-key-takeaway-"
         )
 

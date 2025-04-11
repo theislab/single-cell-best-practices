@@ -140,8 +140,8 @@ Now you can execute all cells in the notebook.
 
 The environment and lamin dropdowns are inserted after the title of every chapter.
 If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
-A key takeaways dropdown is only inserted if a file called `<name-notebook>.txt` is in the same directory as your notebook.
-The `<name-notebook>.txt` has to contain the key takeaways in the following format:
+A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
+This file has to contain the key takeaways in the following format:
 
 ```
 1
