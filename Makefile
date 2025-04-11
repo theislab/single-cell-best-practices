@@ -5,7 +5,7 @@ build:
 	jupyter-book build $(JUPYTER_BOOK_DIR)
 
 dropdown:
-	python3 scripts/insert_dropdown.py 	
+	python3 scripts/dropdowns/insert_dropdowns.py
 
 clean:
 	jupyter-book clean --all $(JUPYTER_BOOK_DIR)

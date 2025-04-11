@@ -136,6 +136,29 @@ conda env create -f CHAPTER.yml
 
 Now you can execute all cells in the notebook.
 
+## Key takeaways, environment, and lamin dropdown
+
+The environment and lamin dropdowns are inserted after the title of every chapter.
+If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
+A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
+This file has to contain the key takeaways in the following format:
+
+```
+1
+The first sentence of key takeaway 1.
+The second sentence of key takeaway 1.
+
+2
+The first sentence of key takeaway 2.
+
+...
+```
+
+If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
+Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
+
+You can insert the dropdowns locally by calling `make dropdown` before `make`.
+
 ## Data access
 
 We are currently still working on making all datasets accessible.
