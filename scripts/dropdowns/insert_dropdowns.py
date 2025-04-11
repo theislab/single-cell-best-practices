@@ -229,7 +229,7 @@ def main():
 
     # insert dropdowns to notebooks
     for notebook in notebooks_ipynb:
-        insert_to_ipynb(notebook, 5)
+        insert_to_ipynb(notebook, n_cells=5)
 
     for notebook in notebooks_md:
         insert_to_md(notebook, 100)
