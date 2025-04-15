@@ -1,44 +1,5 @@
 # Single-cell RNA sequencing
 
-```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
-
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-1
-:link-type: ref
-Sequencing evolved from **Sanger sequencing** to **high-throughput NGS** to **long-read real-time sequencing**, which is also called first-, second-, and third-generation sequencing.
-:::
-
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-2
-:link-type: ref
-ScRNA-Seq allows for the analysis of gene expression **at the individual cell level**, uncovering cellular heterogeneity and rare cell types that are often masked in bulk RNA-Seq.
-:::
-
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-3
-:link-type: ref
-In scRNA-Seq, transcript quantification converts the raw data into a table of estimated transcript counts per cell.
-**Full-length** protocols capture entire transcripts.
-**Tag-based** protocols sequence either the transcripts’ 3’ or 5’ ends.
-:::
-
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-4
-:link-type: ref
-ScRNA-Seq protocols vary in their approach to cell isolation and transcript recovery.
-**Droplet-based** methods encapsulate cells into hydrogel droplets.
-**Plate-based** physically separated cells into wells.
-**Fluidigm C1** loads and separates cells into small reaction chambers.
-:::
-
-:::{card}
-:link: introduction-scrna-seq-key-takeaway-5
-:link-type: ref
-**Single-nuclei RNA-seq (snRNA-Seq)** is an alternative to scRNA-Seq, handy for tissues where cell dissociation is challenging (e.g., brain tissue).
-Nuclei are more resistant to mechanical stress and can be isolated from frozen samples (e.g., biobank studies).
-:::
-```
-
 This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
 {term}`Multimodal <Modalities>` or spatial assays are not covered here but are introduced in the respective advanced chapters.
 All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
