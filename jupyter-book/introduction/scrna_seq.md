@@ -572,11 +572,42 @@ Other links:
 
 # Central dogma in numbers and in the context of RNA seq
 
+In single cell RNA-seq, we want to measure messenger RNA (messenger RNA ({term}`mRNA`)). In fact the total RNA mass only is made of of...
+
 Before we can start explaining the methods to measure RNA in individuals cells we need to clarify what we want to measure and to what extend we can measure that with exsiting sequecing methods. Therefore it is importatnt zu vergegenwörtigen whcih amounts exists in a cell. A ...ful/ricth resource for this is (Quelle von lukas), which we recommend to read for a more detailed explaintion and the source for the number we provide in this paragraph. It is a rough estimate to give a Eindrcuk über verhältnisse in einer zelle.
+
+What are we actually measure in scRNA seq?
+
+In scRNA-seq we mainly measure a cell's messenger RNA ({term}`mRNA`).
+It is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`.
+In fact, the majority of total RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
+Only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`.
+Show difference between pre-mRNA and mRNA (posttranscriptionsal modifications)
+To collect only mRNA Gen10X uses polyA primer
+Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
+mRNA to glossary
+
+Actually, the total RNA mass of a mammalian cell is made up of 80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA), 3-7% mRNA and ~1% other RNA's.
+
+What are we actually measure in scRNA seq?
+To use the words of Brenner, Jacob, and Meselson (1961), who were one of the first indetifier and nameshakes of the messenger RNA ({term}`mRNA`): "An unstable intermediate carrying information from genes to ribosomes for protein synthesis".
+
+With this paper they described and coined the term messenger RNA .
+Actually, the total RNA mass of a mammalian cell is made up of 80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA), 3-7% messenger RNA ({term}`mRNA`) and ~1% other RNA's. In Single cell RNA-seq we Interested in the mRNA.
+
+There are also other types of RNA like pre-mRNA, small nuclear ribonucleic acid (snRNA) and microRNA (miRNA).
+
+miRNA
+
+https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7
+
+max 0.03% of total RNA mass. {cite}`palazzo2015non`
 
 Before an organism can produce RNA the prodcution machinery needs to now where to read the bhilding plan from. Theref
 The start of our journey begins with the DNA of
-The template for RNA is the a certain region in the DNA also called gene. Even tough the gene count can vary between diffrent individuals by ~70genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
+The template for RNA is the a certain region in the DNA also called gene. Even tough the gene count can vary between diffrent individuals by ~70 genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
+
+Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
 
 ## References
 
