@@ -157,11 +157,11 @@ The first sentence of key takeaway 2.
 If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
 Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
 
-Our CI-workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
+Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
 
 > [!WARNING]
-> Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command by using `git restore .`.
+> Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command using `git restore .`. Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
 ## Data access
 
