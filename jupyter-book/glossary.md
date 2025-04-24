@@ -52,14 +52,14 @@ cells
     Studying cell structure, activity, and interactions enables insights into gene expression dynamics, cellular trajectories, developmental lineages, and disease mechanisms.
 
 Cell type annotation
-    The process of labeling groups of {term}`clusters` of cells by {term}`cell type`.
-    Commonly done based on {term}`cell type` specific markers, automatically with classifiers or by mapping against a reference.
+    The process of labeling groups of {term}`clusters <Cluster>` of cells by {term}`cell type <Cell type>`.
+    Commonly done based on cell type specific markers, automatically with classifiers or by mapping against a reference.
 
 Cell type
     Cells that share common morphological or phenotypic features.
 
 Cell state
-    Cells can be annotated according to {term}`cell type` or other cell states as defined by the cell-cycle, perturbational state or other features.
+    Cells can be annotated according to {term}`cell type <Cell type>` or other cell states as defined by the cell-cycle, perturbational state or other features.
 
 Chromatin
     The complex of DNA and proteins efficiently packaging the DNA inside the nucleus and involved in regulating gene expression.
@@ -76,7 +76,7 @@ CpG
 Cluster
 Clusters
     A group of a population or data points that share similarities.
-    In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation`).
+    In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation <Cell type annotation>`).
 
 Complementary DNA (cDNA)
 cDNA
@@ -84,7 +84,7 @@ cDNA
     cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
 Demultiplexing
-    The process of determining which sequencing reads belong to which cell using {term}`barcodes`.
+    The process of determining which sequencing reads belong to which cell using {term}`barcodes <Barcode>`.
 
 directed graph
     A directed graph (or digraph) is a graph consisting of a set of nodes (vertices) connected by edges (arcs), where each edge has a direction indicating a one-way relationship between nodes.
@@ -103,7 +103,7 @@ downstream analyses
     In the context of scRNA-seq, this includes tasks such as normalization, integration, filtering, cell type identification, trajectory inference, and studying expression dynamics.
 
 Dropout
-    A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type`.
+    A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type <Cell type>`.
     The reason for dropouts are commonly low amounts of mRNA expression in cells and the general stochasticity of mRNA expression.
     Dropouts are one of the reasons why scRNA-seq data is sparse.
 
@@ -230,7 +230,7 @@ Trajectory inference
 Unique Molecular Identifier (UMI)
 UMI
     A special type of molecular barcode that uniquely tags each molecule in a sample library.
-    This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias`), which leads to error correction and increases accuracy.
+    This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias <Amplification bias>`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
 UTR
