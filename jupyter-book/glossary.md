@@ -2,23 +2,19 @@
 
 ```{glossary}
 Adapter sequences
-adapter sequences
     Short, synthetic DNA or RNA sequences that are ligated to the ends of DNA or RNA fragments during library preparation for sequencing.
     These adapters are essential for binding the fragments to the flowcell and enabling amplification and sequencing.
     However, if adapters are not trimmed after sequencing, they can appear in the reads, potentially interfering with alignment and downstream analyses.
 
 Algorithm
-Algorithms
     A pre-defined set of instructions to solve a problem.
 
 AnnData
-AnnDatas
     A Python package for handling annotated data matrices, commonly used in single-cell and other omics analyses.
     It provides an efficient way to store data as a matrix where rows (observations) and columns (features) can have associated metadata.
     [AnnData](https://anndata.readthedocs.io/en/latest/index.html) supports slicing, subsetting, and saving to disk in formats like H5AD and Zarr.
 
 BAM
-BAM files
     BAM files are binary, compressed versions of SAM (Sequence Alignment/Map) files that store sequencing read alignments to a reference genome.
     They contain the same information as {term}`SAM` files - including read sequences, quality scores, and alignment positions - but in a more space-efficient format that enables faster processing and reduced storage requirements.
 
@@ -26,10 +22,6 @@ Amplification bias
     A distortion that occurs during DNA or RNA amplification (e.g., PCR), where certain sequences are copied more efficiently than others. This can lead to uneven or inaccurate representation of the original genetic material, affecting results in experiments like sequencing or gene expression analysis.
 
 Barcode
-Barcodes
-Bar code
-Bar code
-Cell barcode
     Short DNA barcode fragments ("tags") that are used to identify reads originating from the same cell.
     Reads are later grouped by their barcode during raw data processing steps.
 
@@ -41,12 +33,9 @@ Benchmark
     An (independent) comparison of performance of several tools with respect to pre-defined metrics.
 
 Bulk RNA sequencing
-bulk RNA-Seq
-bulk sequencing
     Contrary to single-cell sequencing, bulk sequencing measures the average expression values of several cells. Therefore, resolution is lost, but bulk sequencing is usually cheaper, less laborious and faster to analyze.
 
 Cell
-cells
     The fundamental unit of life, consisting of cytoplasm enclosed within a membrane, containing biomolecules such as proteins and nucleic acids.
     Cells acquire specific functions, transition into different types, divide, and communicate to sustain an organism.
     Studying cell structure, activity, and interactions enables insights into gene expression dynamics, cellular trajectories, developmental lineages, and disease mechanisms.
@@ -74,12 +63,10 @@ CpG
     Unmethylated CpG sites are associated with gene activation, while methylated CpG sites can lead to gene inhibition.
 
 Cluster
-Clusters
     A group of a population or data points that share similarities.
     In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation <Cell type annotation>`).
 
 Complementary DNA (cDNA)
-cDNA
     DNA synthesized from an RNA template by the enzyme reverse transcriptase.
     cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
@@ -98,7 +85,6 @@ Doublets
     Reads obtained from droplet based assays might be mistakenly associated to a single cell while the RNA expression origins from two or more cells (a doublet).
 
 Downstream analysis
-downstream analyses
     A phase of data analysis that follows the initial processing of raw data.
     In the context of scRNA-seq, this includes tasks such as normalization, integration, filtering, cell type identification, trajectory inference, and studying expression dynamics.
 
@@ -114,13 +100,11 @@ Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
 
 FASTQ
-FASTQ reads
     Sequencing reads that are saved in the FASTQ format.
     A FASTQ file stores DNA/RNA sequences and their corresponding quality scores in a 4-line format: identifier, sequence, optional description, and quality scores encoded in ASCII characters.
     FASTQ files are then used to map against the reference genome of interest to obtain gene counts for cells.
 
 Flowcell
-flowcell
     A consumable device used in sequencing platforms where DNA or RNA fragments are sequenced.
     It consists of a glass or polymer surface with lanes or channels coated with oligonucleotides, which capture and anchor DNA or RNA fragments.
     During sequencing, these fragments are amplified into clusters, and their sequences are determined by detecting fluorescent signals emitted during nucleotide incorporation.
@@ -143,14 +127,11 @@ Library
     Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
 
 Modalities
-Multimodal
     Different types of biological information measured at the single-cell level.
     These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization.
     Combining these modalities provides a more complete understanding of cell identity, function, and interactions.
 
 Locus
-Loci
-loci
     Specific position or region on a genome or transcriptome where a particular sequence or genetic feature is located.
     In sequencing, loci refer to the potential origins of a read or fragment, such as a gene, exon, or intergenic region.
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
@@ -160,7 +141,6 @@ MuData
     The primary data structure in the scverse ecosystem for multimodal data.
 
 Muon
-muon
     A Python package for multi-modal single-cell analysis in Python by scverse.
 
 Negative binomial distribution
@@ -198,7 +178,6 @@ RT-qPCR
     Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
 
 SAM
-SAM files
     SAM (Sequence Alignment/Map) files are tab-delimited text files that store sequencing alignment data, showing how sequencing reads map to a reference genome.
     Each line in a SAM file contains information about a single read alignment, including the read sequence, base quality scores, mapping position, and mapping quality.
 
@@ -219,7 +198,6 @@ Spike-in RNA
     RNA transcripts of known sequence and quantity to calibrate measurements in RNA hybridization steps for RNA-seq.
 
 Splice Junctions
-splice junctions
     Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
     These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
 
@@ -228,12 +206,10 @@ Trajectory inference
     The computational recovery of dynamic processes by ordering cells by similarity or other means.
 
 Unique Molecular Identifier (UMI)
-UMI
     A special type of molecular barcode that uniquely tags each molecule in a sample library.
     This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias <Amplification bias>`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
-UTR
     A segment of an mRNA transcript that is transcribed but not translated into protein.
     UTRs are located at both ends of the coding sequence.
 ```
