@@ -16,7 +16,7 @@ An overview of the topics discussed in this chapter. In the plot, "txome" stands
 :::
 
 The count matrix is the foundation for a wide range of scRNA-seq analyses {cite}`Zappia2021_raw`, including cell type identification or developmental trajectory inference.
-A robust and accurate count matrix is essential for reliable {term}`downstream analyses`.
+A robust and accurate count matrix is essential for reliable {term}`downstream analyses <Downstream analysis>`.
 Errors at this stage can lead to invalid conclusions and discoveries based on missed insights, or distorted signals in the data.
 Despite the straightforward nature of the input (FASTQ files) and the desired output (count matrix), raw data processing presents several technical challenges.
 
@@ -24,7 +24,7 @@ In this section, we focus on key steps of raw data processing:
 
 1. Read alignment/mapping
 2. Cell barcode (CB) identification and correction
-3. Estimation of molecule counts through {term}`unique molecular identifiers (UMIs)`
+3. Estimation of molecule counts through {term}`unique molecular identifiers (UMIs) <Unique Molecular Identifier (UMI)>`
 
 We also discuss the challenges and trade-offs involved in each step.
 
@@ -103,7 +103,7 @@ A good (left) and a bad (right) per-read sequence quality graph.
 
 **3. Per tile sequence quality**
 
-Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}`flowcell` [tile](https://www.biostars.org/p/9461090/)(miniature imaging areas of the {term}`flowcell`).
+Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}` <Flowcell>` [tile](https://www.biostars.org/p/9461090/)(miniature imaging areas of the {term}`flowcell <Flowcell>`).
 The plot uses a color gradient to represent deviations, where warmer colors indicate larger deviations.
 High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
 
@@ -221,7 +221,7 @@ An overrepresented sequence table.
 
 **11. Adapter content**
 
-The adapter content module displays the cumulative percentage of reads containing {term}`adapter sequences` at each base position.
+The adapter content module displays the cumulative percentage of reads containing {term}`adapter sequences <Adapter sequences>` at each base position.
 High levels of adapter sequences indicate incomplete removal of adapters during library preparation, which can interfere with downstream analyses.
 Ideally, no significant adapter content should be present in the data.
 If adapter sequences are abundant, additional trimming may be necessary to improve data quality.
@@ -241,14 +241,14 @@ Multiple FastQC reports can be combined into a single report using the tool [`Mu
 ## Alignment and mapping
 
 Mapping or Alignment is a critical step in single-cell raw data processing.
-It involves determining the potential {term}`loci` of origin for each sequenced fragment, such as the genomic or transcriptomic locations that closely match the read sequence.
+It involves determining the potential {term}`loci <Locus>` of origin for each sequenced fragment, such as the genomic or transcriptomic locations that closely match the read sequence.
 This step is essential for correctly assigning reads to their source regions.
 
 In single-cell sequencing protocols, the raw sequence files typically include:
 
-- Cell {term}`Barcodes` (CB): Unique identifiers for individual cells.
+- Cell {term}`Barcodes <Barcode>` (CB): Unique identifiers for individual cells.
 - Unique Molecular Identifiers (UMIs): Tags that distinguish individual molecules to account for amplification bias.
-- Raw {term}`cDNA` Sequences: The actual read sequences generated from the molecules.
+- Raw {term}`cDNA <Complementary DNA (cDNA)>` Sequences: The actual read sequences generated from the molecules.
 
 As the first step ({numref}`raw-proc-fig-overview`), accurate mapping or alignment is crucial for reliable downstream analyses.
 Errors during this step, such as incorrect mapping of reads to transcripts or genes, can result in inaccurate or misleading count matrices.
@@ -298,7 +298,7 @@ Recent advances, such as wavefront alignment {cite}`marco2021fast`, marco2022opt
 Additionally, much work has focused on optimizing data layout and computation to leverage instruction-level parallelism {cite}`wozniak1997using, rognes2000six, farrar2007striped`, and expressing dynamic programming recurrences in ways that facilitate data parallelism and vectorization, such as through difference encoding {cite:t}`Suzuki2018`.
 Most widely-used alignment tools incorporate these highly optimized, vectorized implementations.
 
-In addition to the alignment score, the {term}`backtrace` of the actual alignment that produces this score is often encoded as a `CIGAR` string (short for "Concise Idiosyncratic Gapped Alignment Report").
+In addition to the alignment score, the backtrace of the actual alignment that produces this score is often encoded as a `CIGAR` string (short for "Concise Idiosyncratic Gapped Alignment Report").
 This alphanumeric representation is typically stored in the SAM or BAM file output.
 For example, the `CIGAR` string `3M2D4M` indicates that the alignment has three matches or mismatches, followed by a deletion of length two (representing bases present in the reference but not the read), and then four more matches or mismatches.
 Extended `CIGAR` strings can provide additional details, such as distinguishing between matches, mismatches, or insertions.
@@ -319,7 +319,7 @@ Alignment-based approaches can be categorized into spliced-alignment and contigu
 
 ```{dropdown} Spliced-alignment methods
 Spliced-alignment methods allow a sequence read to align across multiple distinct segments of a reference, allowing potentially large gaps between aligned regions.
-These approaches are particularly useful for aligning RNA-seq reads to the genome, where reads may span {term}`splice junctions`.
+These approaches are particularly useful for aligning RNA-seq reads to the genome, where reads may span {term}`splice junctions <Splice Junctions>`.
 In such cases, a contiguous sequence in the read may be separated by intron and exon subsequence in the reference, potentially spanning kilobases of sequence.
 Spliced alignment is especially challenging when only a small portion of a read overlaps a splice junction, as limited sequence information is available to accurately place the overhanging segment.
 ```

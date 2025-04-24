@@ -310,7 +310,7 @@ This allows several hundred cells to be analyzed in a single experiment with 500
 Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability.
 For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities. SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
 A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
-This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type {term}`annotation`.
+This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type annotation.
 
 Strengths:
 
@@ -322,7 +322,7 @@ Limitations:
 
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
 - Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
-- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
+- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and batch effects.
 
 #### Fluidigm C1
 
@@ -373,7 +373,7 @@ In this case, one of the plate-based methods may be more suitable.
 On the contrary, droplet-based assays will capture heterogeneous mixtures better, allowing for a broader characterization of the sequenced cells.
 Moreover, if the budget is a limiting factor, the protocol of choice should be more cost-effective and robust.
 When analyzing the data, be aware of the sequencing assay-specific biases.
-For an extensive comparison of all single-cell sequencing protocols, we recommend the "{term}`Benchmarking` single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
+For an extensive comparison of all single-cell sequencing protocols, we recommend the "Benchmarking single-cell RNA-sequencing protocols for cell atlas projects" paper by Mereu et al. {cite}`Mereu2020`.
 
 (introduction-scrna-seq-key-takeaway-5)=
 
