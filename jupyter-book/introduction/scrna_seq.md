@@ -568,71 +568,79 @@ Other links:
 - different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
 - [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
 
-# Chapter for Manuel
+## Central dogma in numbers (Chapter for Manuel)
 
-# Central dogma in numbers and in the context of RNA seq
+### What do we want to measure
 
-In single cell RNA-seq, we want to measure messenger RNA (messenger RNA ({term}`mRNA`)). In fact the total RNA mass only is made of of...
-
-Before we can start explaining the methods to measure RNA in individuals cells we need to clarify what we want to measure and to what extend we can measure that with exsiting sequecing methods. Therefore it is importatnt zu vergegenwörtigen whcih amounts exists in a cell. A ...ful/ricth resource for this is (Quelle von lukas), which we recommend to read for a more detailed explaintion and the source for the number we provide in this paragraph. It is a rough estimate to give a Eindrcuk über verhältnisse in einer zelle.
-
-What are we actually measure in scRNA seq?
-
+Let's start this paragraph with a central question: What exaclty do we want to measure?
 In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
-This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`.
-In fact, the majority of total RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
-Only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`.
-As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`velculescu1999analysis`.
-This is a huge range due to many reasons.
-First of all, the threshold for a gene to be called as active isn't fixed and can influence the number of mRNA experimentally measured, see [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg) {cite}`fagerberg2014analysis`.
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`, while the
+In fact, only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`, while the majority RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
+As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
+This is a huge range due to many reasons and but lets`s start chornologically.
+
+### from gene to protein
+
+The template for RNA is that a certain region in the DNA also called gene. Even tough the gene count can vary between diffrenet individuals by ~70 genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
+TODO Bursts...
+
+(not papaer yet)
+In one cell around 30-70% of the genes are transcpried. This number can vary a lot so that some gene are not transcirpted at all an other 10 times.
+https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71
+
+1 to 30 mRNA copies per cell [source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71)
+Some gene might
+
+// TODO
+After transcprions we have pre-mRNA 5`capoing, poly a (there are proteins that )
+Show difference between pre-mRNA and mRNA (posttranscriptionsal modifications)
+The
+To collect only mRNA Gen10X uses polyA primer
+// TODO
+
+### Other facotros influencing RNA level
+
+First of all, theoretical thresholds for a gene to be called as active aren't fixed and can influence the number of mRNA experimentally measured, see [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg) {cite}`fagerberg2014analysis`.
 Next to that there a difference due to cell type which can also be seen in [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg)
 Another factor that influences this wide range in mRNA numbers are is the stochatic process of transcprition {cite}`zhang2024transcriptional`. Cells have shown to transcribe genes only in reanodm and short periods of time ball expression bursts. A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again. Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour. Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes. This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
 
+Other: Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
+
+- Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
+
 ```{dropdown}
-
-```
-
 The distribution
 Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
 
-We can model this by negative binominal distribution
-several models proposed
-
-Gene expression is a stochastic process
+several models proposed (https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1451461/full)
 
 dropdown mit negative binominal verteilung warum wir das benutzen
-
 this can be modeled by rnaomdly swithching on and of
 
-Determining orientational numbers for the amount
-Range of threshold, cell type, state
 
-Show difference between pre-mRNA and mRNA (posttranscriptionsal modifications)
-To collect only mRNA Gen10X uses polyA primer
-Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
-mRNA to glossary
+neg bin in own word
+What is th eprob to hav n succes after x repeptions of bernolli experiment (e.g. p = 0.5). A cell has on average 10 burtst an hour. What is the prop to have a burst after 10 min.
 
-Actually, the total RNA mass of a mammalian cell is made up of 80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA), 3-7% mRNA and ~1% other RNA's.
+sources:
+https://de.wikipedia.org/wiki/Negative_Binomialverteilung
+https://www.datacamp.com/tutorial/negative-binomial-distribution
+--> technical and biological variation
+https://www.science.org/doi/10.1126/science.1198817
+--> manuel
+https://www.nature.com/articles/ncomms13788
+https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
+--> both biological explanation for bursts
 
-What are we actually measure in scRNA seq?
-To use the words of Brenner, Jacob, and Meselson (1961), who were one of the first indetifier and nameshakes of the messenger RNA ({term}`mRNA`): "An unstable intermediate carrying information from genes to ribosomes for protein synthesis".
+```
 
-With this paper they described and coined the term messenger RNA .
-Actually, the total RNA mass of a mammalian cell is made up of 80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA), 3-7% messenger RNA ({term}`mRNA`) and ~1% other RNA's. In Single cell RNA-seq we Interested in the mRNA.
+### END
 
-There are also other types of RNA like pre-mRNA, small nuclear ribonucleic acid (snRNA) and microRNA (miRNA).
+As you can see: Determining orientational numbers for the amount is difficulit
+Before we can start explaining the methods to measure RNA in individuals cells we need to clarify what we want to measure and to what extend we can measure that with exsiting sequecing methods. Therefore it is importatnt zu vergegenwörtigen whcih amounts exists in a cell. A ...ful/ricth resource for this is (Quelle von lukas), which we recommend to read for a more detailed explaintion and the source for the number we provide in this paragraph. It is a rough estimate to give a Eindrcuk über verhältnisse in einer zelle.
 
-miRNA
+### TODO
 
-https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7
-
-max 0.03% of total RNA mass. {cite}`palazzo2015non`
-
-Before an organism can produce RNA the prodcution machinery needs to now where to read the bhilding plan from. Theref
-The start of our journey begins with the DNA of
-The template for RNA is the a certain region in the DNA also called gene. Even tough the gene count can vary between diffrent individuals by ~70 genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
-
-Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
+- mRNA to glossary
 
 ## References
 
