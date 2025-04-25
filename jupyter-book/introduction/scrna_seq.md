@@ -578,10 +578,16 @@ Before we can start explaining the methods to measure RNA in individuals cells w
 
 What are we actually measure in scRNA seq?
 
-In scRNA-seq we mainly measure a cell's messenger RNA ({term}`mRNA`).
+In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
 It is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`.
 In fact, the majority of total RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
 Only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`.
+As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`velculescu1999analysis`.
+This is a huge range to to many reasons.
+Range of threshold is importnatn for determining active genes (https://www.mcponline.org/article/S1535-9476(20)34633-8/fulltext)
+Determining orientational numbers for the amount
+Range of threshold, cell type, state
+
 Show difference between pre-mRNA and mRNA (posttranscriptionsal modifications)
 To collect only mRNA Gen10X uses polyA primer
 Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
