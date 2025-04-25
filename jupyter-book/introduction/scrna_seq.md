@@ -579,12 +579,31 @@ Before we can start explaining the methods to measure RNA in individuals cells w
 What are we actually measure in scRNA seq?
 
 In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
-It is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`.
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`.
 In fact, the majority of total RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
 Only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`.
 As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`velculescu1999analysis`.
-This is a huge range to to many reasons.
-Range of threshold is importnatn for determining active genes (https://www.mcponline.org/article/S1535-9476(20)34633-8/fulltext)
+This is a huge range due to many reasons.
+First of all, the threshold for a gene to be called as active isn't fixed and can influence the number of mRNA experimentally measured, see [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg) {cite}`fagerberg2014analysis`.
+Next to that there a difference due to cell type which can also be seen in [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg)
+Another factor that influences this wide range in mRNA numbers are is the stochatic process of transcprition {cite}`zhang2024transcriptional`. Cells have shown to transcribe genes only in reanodm and short periods of time ball expression bursts. A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again. Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour. Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes. This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
+
+```{dropdown}
+
+```
+
+The distribution
+Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
+
+We can model this by negative binominal distribution
+several models proposed
+
+Gene expression is a stochastic process
+
+dropdown mit negative binominal verteilung warum wir das benutzen
+
+this can be modeled by rnaomdly swithching on and of
+
 Determining orientational numbers for the amount
 Range of threshold, cell type, state
 
