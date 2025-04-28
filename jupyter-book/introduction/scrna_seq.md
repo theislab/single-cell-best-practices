@@ -574,15 +574,21 @@ Other links:
 
 Let's start this paragraph with a central question: What exaclty do we want to measure?
 In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
-This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term mRNA {cite}`brenner1961unstable`, while the
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
 In fact, only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`, while the majority RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
 As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
 This is a huge range due to many reasons and but lets`s start chornologically.
 
 ### from gene to protein
 
-The template for RNA is that a certain region in the DNA also called gene. Even tough the gene count can vary between diffrenet individuals by ~70 genes we can estimate that the human genomes consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
-TODO Bursts...
+The template for RNA is a certain region in the DNA also called gene.
+Even tough the gene count can vary between different individuals by ~70 genes we can estimate that the human genome consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
+The transcriptoin of gene is a stochatic process {cite}`zhang2024transcriptional`.
+Cells have shown to transcribe genes only in reanodm and short periods of time called expression bursts.
+A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again.
+Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour.
+Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes.
+This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
 
 (not papaer yet)
 In one cell around 30-70% of the genes are transcpried. This number can vary a lot so that some gene are not transcirpted at all an other 10 times.
@@ -592,17 +598,22 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71
 Some gene might
 
 // TODO
-After transcprions we have pre-mRNA 5`capoing, poly a (there are proteins that )
-Show difference between pre-mRNA and mRNA (posttranscriptionsal modifications)
-The
-To collect only mRNA Gen10X uses polyA primer
+This pre mRNA is further processed by adding a 5' cap, 3'-poly Adenin tail, and performing a processed called alternative splicing./Now pre mRNA is underdogingn a processessed called alternative splicing.
+Alternative splicing means combining differents regions in the mRMA to produce different mature mRNA's out of one pre-mRNA.
+
+On average 3.4 isoformsic mRNA are produced from on genen in a human {cite}`lee2015mechanisms`.  
+While all human genes have at least two alternative splicing isoforms, the most exterme example is the
+An extremly large example is the human basonuclin 2 gene having the potential to generate up to 90,000 mRNA isoforms resulting in more than 2000 different proteins {cite}`vanhoutteghem2007human`.
+The median protein to mRNA ratio might be around has shown to be ~10,000 in mice {cite}`li2014system`.
+But of course this seem to varie greatly between genes, from a few hundrets to close to a million protein translation from one mRNA {cite}`edfors2016gene` in humans.
+
 // TODO
+To collect only mRNA Gen10X uses polyA primer
 
 ### Other facotros influencing RNA level
 
 First of all, theoretical thresholds for a gene to be called as active aren't fixed and can influence the number of mRNA experimentally measured, see [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg) {cite}`fagerberg2014analysis`.
 Next to that there a difference due to cell type which can also be seen in [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg)
-Another factor that influences this wide range in mRNA numbers are is the stochatic process of transcprition {cite}`zhang2024transcriptional`. Cells have shown to transcribe genes only in reanodm and short periods of time ball expression bursts. A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again. Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour. Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes. This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
 
 Other: Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
 
