@@ -1,0 +1,2463 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>45. Paired integration &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'multimodal_integration/paired_integration';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="46. Advanced integration" href="advanced_integration.html" />
+    <link rel="prev" title="44. Integrating AIR and transcriptomics" href="../air_repertoire/multimodal_integration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/multimodal_integration/paired_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fmultimodal_integration/paired_integration.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/multimodal_integration/paired_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Paired integration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">45.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">45.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cite-seq-data">45.3. CITE-seq data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-data">45.3.1. Prepare data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-nearest-neighbor-wnn">45.3.2. Weighted Nearest Neighbor (WNN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-omics-factor-analysis-mofa">45.3.3. Multi-Omics Factor Analysis (MOFA+)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-variational-inference-totalvi">45.3.4. Total Variational Inference (totalVI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scib-metrics-evaluation">45.3.5. scIB metrics evaluation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiome-data">45.4. Multiome data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">45.4.1. Prepare data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivi">45.4.2. MultiVI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">45.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">45.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">45.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">45.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="paired-integration">
+<h1><span class="section-number">45. </span>Paired integration<a class="headerlink" href="#paired-integration" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">The integration of single-cell multi-modal data (e.g., gene expression and chromatin accessibility) is challenging due to differences in dimensionality and data distributions across modalities, but tools like MOFA+, WNN, totalVI, and multiVI aim to address these challenges.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#multimodal-integration-paired-integration-key-takeaway-1"><span class="std std-ref">Motivation</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Query-to-reference mapping allows for the integration of new data into a pre-existing reference framework, enabling tasks like cell type prediction and imputation of missing modalities (e.g., predicting protein abundance from RNA-seq data)</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#multimodal-integration-paired-integration-key-takeaway-2"><span class="std std-ref">scIB metrics evaluation</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paired-integration</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::python=3.9.15</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scanpy=1.9.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::r-base=4.2.2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::r-seurat=4.3.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::bioconductor-singlecellexperiment=1.20.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::notebook</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::rpy2=3.5.6</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda::anndata2ri=1.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pip&lt;24.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">muon</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pysam</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mofapy2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scib</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scvi-tools==0.19.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<span id="multimodal-integration-paired-integration-key-takeaway-1"></span><h2><span class="section-number">45.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>In the recent years several technologies appeared that allow us to measure several modalities in a single-cell. Modalities in this context refer to different type of information that we can capture in each cell. For instance, CITE-seq allows measuring gene expression and surface protein abundance in the same cell. Alternatively, paired RNA-seq/ATAC-seq experiments using, for example, the Multiome assay, capture gene expression and chromatin accessibility simultaneously.</p>
+<p>We are interested in the most holistic representation of single cells that incorporate information from all the available modalities, but several challenges might arise when integrating these different modalities. Data stemming from different sequencing technologies can vary in dimensions: RNA-seq experiments usually capture 20-30 thousand genes, but the protein panel can be as small just a few proteins up to 200. ATAC-seq experiments on the other hand can have more than 200000 peaks. On top of having different dimensionality, the data can follow different distributions. RNA-seq counts are often modelled with negative binomial distribution, while chromatin accessibility can be binarized and modelled as either open or closed and therefore with a Bernoulli distribution <span id="id1">[<a class="reference internal" href="#id523" title="Tal Ashuach, Mariano I. Gabitto, Michael I. Jordan, and Nir Yosef. Multivi: deep generative model for the integration of multi-modal data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057, arXiv:https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057.full.pdf, doi:10.1101/2021.08.20.457057.">Ashuach <em>et al.</em>, 2021</a>]</span>. Alternatively raw ATAC-seq counts can be modelled following Poisson distribution <span id="id2">[<a class="reference internal" href="#id526" title="Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell atac-seq analysis. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536, arXiv:https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536.full.pdf, doi:10.1101/2022.05.04.490536.">Martens <em>et al.</em>, 2022</a>]</span>.</p>
+<p>Here, we showcase several tools for paired integration including MOFA+ <span id="id3">[<a class="reference internal" href="#id521" title="Ricard Argelaguet, Damien Arnol, Danila Bredikhin, Yonatan Deloro, Britta Velten, John C. Marioni, and Oliver Stegle. Mofa+: a statistical framework for comprehensive integration of multi-modal single-cell data. Genome Biology, 21(1):111, May 2020. URL: https://doi.org/10.1186/s13059-020-02015-1, doi:10.1186/s13059-020-02015-1.">Argelaguet <em>et al.</em>, 2020</a>]</span>, WNN <span id="id4">[<a class="reference internal" href="#id520" title="Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. Cell, 184(13):3573-3587.e29, 2021. URL: https://www.sciencedirect.com/science/article/pii/S0092867421005833, doi:https://doi.org/10.1016/j.cell.2021.04.048.">Hao <em>et al.</em>, 2021</a>]</span>, totalVI <span id="id5">[<a class="reference internal" href="#id522" title="Adam Gayoso, Zoë Steier, Romain Lopez, Jeffrey Regier, Kristopher L. Nazor, Aaron Streets, and Nir Yosef. Joint probabilistic modeling of single-cell multi-omic data with totalvi. Nature Methods, 18(3):272-282, Mar 2021. URL: https://doi.org/10.1038/s41592-020-01050-x, doi:10.1038/s41592-020-01050-x.">Gayoso <em>et al.</em>, 2021</a>]</span> and multiVI <span id="id6">[<a class="reference internal" href="#id523" title="Tal Ashuach, Mariano I. Gabitto, Michael I. Jordan, and Nir Yosef. Multivi: deep generative model for the integration of multi-modal data. bioRxiv, 2021. URL: https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057, arXiv:https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057.full.pdf, doi:10.1101/2021.08.20.457057.">Ashuach <em>et al.</em>, 2021</a>]</span>. We use 10x Multiome and CITE-seq data generated for the single cell data integration challenge at the NeurIPS conference 2021 <span id="id7">[<a class="reference internal" href="#id525" title="Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). 2021. URL: https://openreview.net/forum?id=gN35BGa1Rt.">Luecken <em>et al.</em>, 2021</a>]</span>. This dataset captures single-cell data from bone marrow mononuclear cells of 12 healthy human donors measured at four different sites to obtain nested batch effects. In this tutorial, we will use 3 batches from one site to showcase the integration tools.</p>
+<p>Since there are multiple integration tools available, it can be quite challenging to assess which tool to use for a particular task at hand. We therefore use the scIB <span id="id8">[<a class="reference internal" href="#id524" title="Malte D. Luecken, M. Büttner, K. Chaichoompu, A. Danese, M. Interlandi, M. F. Mueller, D. C. Strobl, L. Zappia, M. Dugas, M. Colomé-Tatché, and Fabian J. Theis. Benchmarking atlas-level data integration in single-cell genomics. Nature Methods, 19(1):41-50, Jan 2022. URL: https://doi.org/10.1038/s41592-021-01336-8, doi:10.1038/s41592-021-01336-8.">Luecken <em>et al.</em>, 2022</a>]</span> package that allows to make such a decision by quantitatively assessing the quality of the integration. It is important to note though that scIB was designed for unimodal integration of batches and not for multimodal integration. We expect more metrics to appear in the near future that are specifically designed for multimodal data, but for now we show how to use scIB metrics to compare the integration results.</p>
+</section>
+<section id="environment-setup">
+<h2><span class="section-number">45.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rpy2.rinterface_lib.callbacks</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rpy2.robjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">pandas2ri</span>
+
+<span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface_lib</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>During startup - Warning message:
+Setting LC_CTYPE failed, using &quot;C&quot; 
+Global seed set to 0
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/pytorch_lightning/utilities/warnings.py:53: LightningDeprecationWarning: pytorch_lightning.utilities.warnings.rank_zero_deprecation has been deprecated in v1.6 and will be removed in v1.8. Use the equivalent function from the pytorch_lightning.utilities.rank_zero module instead.
+  new_rank_zero_deprecation(
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/pytorch_lightning/utilities/warnings.py:58: LightningDeprecationWarning: The `pytorch_lightning.loggers.base.rank_zero_experiment` is deprecated in v1.7 and will be removed in v1.9. Please use `pytorch_lightning.loggers.logger.rank_zero_experiment` instead.
+  return new_rank_zero_deprecation(*args, **kwargs)
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/rpy2/robjects/pandas2ri.py:351: DeprecationWarning: The global conversion available with activate() is deprecated and will be removed in the next major release. Use a local converter.
+  warnings.warn(&#39;The global conversion available with activate() &#39;
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/rpy2/robjects/numpy2ri.py:226: DeprecationWarning: The global conversion available with activate() is deprecated and will be removed in the next major release. Use a local converter.
+  warnings.warn(&#39;The global conversion available with activate() &#39;
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/rpy2/robjects/conversion.py:28: DeprecationWarning: The use of converter in module rpy2.robjects.conversion is deprecated. Use rpy2.robjects.conversion.get_conversion() instead of rpy2.robjects.conversion.converter.
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+suppressPackageStartupMessages({
+    library(Seurat)
+})
+set.seed(123)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    WARNING: The R package &quot;reticulate&quot; only fixed recently
+    an issue that caused a segfault when used with rpy2:
+    https://github.com/rstudio/reticulate/pull/1188
+    Make sure that you use a version of that package that includes
+    the fix.
+    
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="cite-seq-data">
+<h2><span class="section-number">45.3. </span>CITE-seq data<a class="headerlink" href="#cite-seq-data" title="Link to this heading">#</a></h2>
+<p>We first show how to integrate a CITE-seq dataset using WNN, MOFA+ and totalVI. CITE-seq data contains raw gene expression counts and counts for surface proteins. The surface protein data is represented as antibody-derived tags (adt) here. We refer to the <a class="reference internal" href="../surface_protein/quality_control.html#surface-protein-motivation"><span class="std std-ref">Motivation</span></a> section of the Surface Proteins chapter for more details.</p>
+<section id="prepare-data">
+<h3><span class="section-number">45.3.1. </span>Prepare data<a class="headerlink" href="#prepare-data" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-cite/adt_pp.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">adt</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 120502 × 136
+    obs: &#39;donor&#39;, &#39;batch&#39;, &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;n_counts&#39;, &#39;outliers&#39;
+    var: &#39;gene_ids&#39;, &#39;feature_types&#39;, &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;
+    uns: &#39;batch_colors&#39;, &#39;donor_colors&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_isotypes&#39;, &#39;X_pca&#39;, &#39;X_pcahm&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-cite/rna_hvg.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 90261 × 4000
+    obs: &#39;GEX_n_genes_by_counts&#39;, &#39;GEX_pct_counts_mt&#39;, &#39;GEX_size_factors&#39;, &#39;GEX_phase&#39;, &#39;ADT_n_antibodies_by_counts&#39;, &#39;ADT_total_counts&#39;, &#39;ADT_iso_count&#39;, &#39;cell_type&#39;, &#39;batch&#39;, &#39;ADT_pseudotime_order&#39;, &#39;GEX_pseudotime_order&#39;, &#39;Samplename&#39;, &#39;Site&#39;, &#39;DonorNumber&#39;, &#39;Modality&#39;, &#39;VendorLot&#39;, &#39;DonorID&#39;, &#39;DonorAge&#39;, &#39;DonorBMI&#39;, &#39;DonorBloodType&#39;, &#39;DonorRace&#39;, &#39;Ethnicity&#39;, &#39;DonorGender&#39;, &#39;QCMeds&#39;, &#39;DonorSmoker&#39;, &#39;is_train&#39;
+    var: &#39;feature_types&#39;, &#39;gene_id&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;dataset_id&#39;, &#39;genome&#39;, &#39;hvg&#39;, &#39;organism&#39;
+    obsm: &#39;ADT_X_pca&#39;, &#39;ADT_X_umap&#39;, &#39;ADT_isotype_controls&#39;, &#39;GEX_X_pca&#39;, &#39;GEX_X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We subset the data to Site 1 and the 3 corresponding donors to reduce the run time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batches_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s1d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d2&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d3&quot;</span><span class="p">]</span>
+<span class="n">rna</span> <span class="o">=</span> <span class="n">rna</span><span class="p">[</span><span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">batches_to_keep</span><span class="p">)]</span>
+<span class="n">adt</span> <span class="o">=</span> <span class="n">adt</span><span class="p">[</span><span class="n">adt</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">batches_to_keep</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We only keep the cells that are present in both modality objects. First we need to make sure that <code class="docutils literal notranslate"><span class="pre">.obs_names</span></code> of both objects have similar structure and if not clean up a bit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt</span><span class="o">.</span><span class="n">obs_names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;AAACCCAAGGATGGCT-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCAAGGCCTAGA-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCAAGTGAGTGC-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCACAAGAGGCT-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCACATCGTGGC-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCACATTCTCTA-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCAGTCCGCAGT-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCAGTGCATACT-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCAGTTGACGGA-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       &#39;AAACCCATCGATACTG-1-0-0-0-0-0-0-0-0-0-0-0&#39;,
+       ...
+       &#39;TTTGGTTCATGTTACG-1-1-0-0-0&#39;, &#39;TTTGGTTGTCTCACAA-1-1-0-0-0&#39;,
+       &#39;TTTGGTTTCCCATTCG-1-1-0-0-0&#39;, &#39;TTTGGTTTCCGTCCTA-1-1-0-0-0&#39;,
+       &#39;TTTGGTTTCTTGCGCT-1-1-0-0-0&#39;, &#39;TTTGTTGAGAGTCTGG-1-1-0-0-0&#39;,
+       &#39;TTTGTTGCAGACAATA-1-1-0-0-0&#39;, &#39;TTTGTTGCATGTTACG-1-1-0-0-0&#39;,
+       &#39;TTTGTTGGTAGTCACT-1-1-0-0-0&#39;, &#39;TTTGTTGTCGCGCTGA-1-1-0-0-0&#39;],
+      dtype=&#39;object&#39;, length=24326)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna</span><span class="o">.</span><span class="n">obs_names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;GCATTAGCATAAGCGG-1-s1d1&#39;, &#39;TACAGGTGTTAGAGTA-1-s1d1&#39;,
+       &#39;AGGATCTAGGTCTACT-1-s1d1&#39;, &#39;GTAGAAAGTGACACAG-1-s1d1&#39;,
+       &#39;TCCGAAAAGGATCATA-1-s1d1&#39;, &#39;CTCCCAATCCATTGGA-1-s1d1&#39;,
+       &#39;GACCAATCAATTTCGG-1-s1d1&#39;, &#39;TTCCGGTAGTTGTAAG-1-s1d1&#39;,
+       &#39;ACCTGTCAGGACTGGT-1-s1d1&#39;, &#39;TTCGATTTCAGGACAG-1-s1d1&#39;,
+       ...
+       &#39;GTGGTTAGTCGAGTTT-1-s1d3&#39;, &#39;TGAGACTCAATAGTAG-1-s1d3&#39;,
+       &#39;CATGAGTTCAGCAGAG-1-s1d3&#39;, &#39;GCTACAACAGTGCGCT-1-s1d3&#39;,
+       &#39;AGAAATGAGTGCCTCG-1-s1d3&#39;, &#39;AACAAAGGTTGGTACT-1-s1d3&#39;,
+       &#39;TGACAGTCATGGCTGC-1-s1d3&#39;, &#39;CTGGCAGGTCTCACGG-1-s1d3&#39;,
+       &#39;GTAACCATCGGAGTGA-1-s1d3&#39;, &#39;GAGTTGTCAGTCGGAA-1-s1d3&#39;],
+      dtype=&#39;object&#39;, length=16311)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">batch</span>
+    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adt</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">],</span> <span class="n">adt</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rna</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adt</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)))</span>
+<span class="n">rna</span> <span class="o">=</span> <span class="n">rna</span><span class="p">[</span><span class="n">common_idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adt</span> <span class="o">=</span> <span class="n">adt</span><span class="p">[</span><span class="n">common_idx</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to rename the proteins in the <code class="docutils literal notranslate"><span class="pre">adt</span></code> object so that the gene names and protein names do not intersect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adt</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PROT_&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">adt</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we create a MuData object where we store data for both modalities.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">MuData</span><span class="p">({</span><span class="s2">&quot;rna&quot;</span><span class="p">:</span> <span class="n">rna</span><span class="p">,</span> <span class="s2">&quot;adt&quot;</span><span class="p">:</span> <span class="n">adt</span><span class="p">})</span>
+<span class="n">mdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 16294 × 4136
+  var:	&#x27;feature_types&#x27;
+  2 modalities
+    rna:	16294 x 4000
+      obs:	&#x27;GEX_n_genes_by_counts&#x27;, &#x27;GEX_pct_counts_mt&#x27;, &#x27;GEX_size_factors&#x27;, &#x27;GEX_phase&#x27;, &#x27;ADT_n_antibodies_by_counts&#x27;, &#x27;ADT_total_counts&#x27;, &#x27;ADT_iso_count&#x27;, &#x27;cell_type&#x27;, &#x27;batch&#x27;, &#x27;ADT_pseudotime_order&#x27;, &#x27;GEX_pseudotime_order&#x27;, &#x27;Samplename&#x27;, &#x27;Site&#x27;, &#x27;DonorNumber&#x27;, &#x27;Modality&#x27;, &#x27;VendorLot&#x27;, &#x27;DonorID&#x27;, &#x27;DonorAge&#x27;, &#x27;DonorBMI&#x27;, &#x27;DonorBloodType&#x27;, &#x27;DonorRace&#x27;, &#x27;Ethnicity&#x27;, &#x27;DonorGender&#x27;, &#x27;QCMeds&#x27;, &#x27;DonorSmoker&#x27;, &#x27;is_train&#x27;
+      var:	&#x27;feature_types&#x27;, &#x27;gene_id&#x27;, &#x27;highly_variable&#x27;, &#x27;means&#x27;, &#x27;dispersions&#x27;, &#x27;dispersions_norm&#x27;
+      uns:	&#x27;dataset_id&#x27;, &#x27;genome&#x27;, &#x27;hvg&#x27;, &#x27;organism&#x27;
+      obsm:	&#x27;ADT_X_pca&#x27;, &#x27;ADT_X_umap&#x27;, &#x27;ADT_isotype_controls&#x27;, &#x27;GEX_X_pca&#x27;, &#x27;GEX_X_umap&#x27;
+      layers:	&#x27;counts&#x27;
+    adt:	16294 x 136
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;
+      uns:	&#x27;batch_colors&#x27;, &#x27;donor_colors&#x27;, &#x27;neighbors&#x27;, &#x27;pca&#x27;, &#x27;umap&#x27;
+      obsm:	&#x27;X_isotypes&#x27;, &#x27;X_pca&#x27;, &#x27;X_pcahm&#x27;, &#x27;X_umap&#x27;
+      varm:	&#x27;PCs&#x27;
+      layers:	&#x27;counts&#x27;
+      obsp:	&#x27;connectivities&#x27;, &#x27;distances&#x27;</pre></div></div>
+</div>
+<p>We copy <code class="docutils literal notranslate"><span class="pre">batch</span></code> and <code class="docutils literal notranslate"><span class="pre">cell_type</span></code> column from one of the modality adatas to <code class="docutils literal notranslate"><span class="pre">.obs</span></code> of the mdata object to later use for visualizations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mdata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="weighted-nearest-neighbor-wnn">
+<h3><span class="section-number">45.3.2. </span>Weighted Nearest Neighbor (WNN)<a class="headerlink" href="#weighted-nearest-neighbor-wnn" title="Link to this heading">#</a></h3>
+<p>WNN is a graph-based method that takes neighbor graphs for each modality and constructs a common graph which is a weighted combination of the modality graphs. This constructed WNN graph can later be used together with gene expression matrix to obtain a supervised PCA (sPCA) representation guided by a WNN graph. The sPCA representation can be viewed as an embedding in a latent space.</p>
+<p>First, we use the <code class="docutils literal notranslate"><span class="pre">anndata2ri</span></code> package (<a class="github reference external" href="https://github.com/theislab/anndata2ri">theislab/anndata2ri</a>) to move Python AnnData object to SingleCellExperiment and Seurat R objects. We create slimmer versions of AnnData objects that only contain the information that we need to the analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">adt</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">adt</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">adt</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;donor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;harmony_pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adt</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pcahm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
+# indicate that data is stored in .X of AnnData object
+adt = as.Seurat(adata_, data=&#39;X&#39;, counts=NULL)
+# the assay is called &quot;originalexp&quot; by default, we rename it to &quot;ADT&quot;
+adt &lt;- RenameAssays(object = adt, originalexp = &quot;ADT&quot;, verbose=FALSE) 
+adt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+136 features across 16294 samples within 1 assay 
+Active assay: ADT (136 features, 0 variable features)
+ 1 dimensional reduction calculated: harmony_pca
+</pre></div>
+</div>
+</div>
+</div>
+<p>We repeat the same for RNA data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">rna</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs_names</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_
+rna = as.Seurat(adata_, data=&#39;X&#39;, counts=NULL)
+rna
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+4000 features across 16294 samples within 1 assay 
+Active assay: originalexp (4000 features, 0 variable features)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we create a Seurat object with both assays.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite &lt;- rna
+cite[[&quot;ADT&quot;]] &lt;- CreateAssayObject(data = adt@assays$ADT@data)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite &lt;- RenameAssays(object = cite, originalexp = &quot;RNA&quot;, verbose=FALSE) 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we have several batches in the dataset, we would need to perform batch correction before integrating the modalities. One option would be to batch correct using Seurat’s <code class="docutils literal notranslate"><span class="pre">FindIntegrationAnchors()</span></code> and <code class="docutils literal notranslate"><span class="pre">IntegrateData()</span></code> (see <a class="reference external" href="https://satijalab.org/seurat/articles/integration_introduction.html">https://satijalab.org/seurat/articles/integration_introduction.html</a>) functions separately for each modality. We will use batch corrected embedding from previous analysis done separately for ADT and RNA data, namely Harmony corrected PCA embedding for ADT and scVI batch-corrected latent embedding for RNA.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+# TODO need to change after we have the preprocessed data, for now RNA is not batch-corrected
+DefaultAssay(cite) &lt;- &quot;RNA&quot;
+VariableFeatures(cite) &lt;- rownames(cite)
+cite &lt;- ScaleData(cite, verbose=FALSE)
+cite &lt;- RunPCA(cite, verbose=FALSE)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite@reductions$harmony_pca &lt;- adt@reductions$harmony_pca
+cite
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+4136 features across 16294 samples within 2 assays 
+Active assay: RNA (4000 features, 4000 variable features)
+ 1 other assay present: ADT
+ 2 dimensional reductions calculated: pca, harmony_pca
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we follow the WNN vignette to perform the analysis. First, we need to find multimodal neighbors using the specified dimensionality reductions for each of the modalities. This function adds a WNN graph to the Seurat object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite &lt;- FindMultiModalNeighbors(
+    cite, 
+    reduction.list = list(&quot;pca&quot;, &quot;harmony_pca&quot;), 
+    dims.list = list(1:50, 1:30), 
+    modality.weight.name = &quot;RNA.weight&quot;,
+    verbose = FALSE
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we are also interested in finding an embedding for our multimodal data, we additionally run the <code class="docutils literal notranslate"><span class="pre">RunSPCA()</span></code> function that uses RNA gene expression data and the WNN graph for supervised PCA. Supervised PCA is a “guided” version of standard PCA run on gene expression data guided by the WNN graph to better preserve relationships between cells learn in WNN graph. We also will need a reference UMAP later for mapping an RNA query onto this multimodal reference as discussed in <a class="reference internal" href="advanced_integration.html#multimodal-integration-advanced-integration"><span class="std std-ref">Advanced integration</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite &lt;- RunSPCA(cite, assay = &quot;RNA&quot;, graph = &quot;wsnn&quot;, npcs = 20)
+cite &lt;- RunUMAP(cite, nn.name = &quot;weighted.nn&quot;, reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;, return.model=TRUE)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+cite
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+4136 features across 16294 samples within 2 assays 
+Active assay: RNA (4000 features, 4000 variable features)
+ 1 other assay present: ADT
+ 4 dimensional reductions calculated: pca, harmony_pca, spca, wnn.umap
+</pre></div>
+</div>
+</div>
+</div>
+<p>We save the Seurat object as an <code class="docutils literal notranslate"><span class="pre">.rds</span></code> file for the <a class="reference internal" href="advanced_integration.html#multimodal-integration-advanced-integration"><span class="std std-ref">Advanced integration</span></a> section.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+saveRDS(cite, file = &quot;wnn_ref.rds&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We move the sPCA embedding to Python and store them in <code class="docutils literal notranslate"><span class="pre">.obsm</span></code> of the MuData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o spca
+spca = Embeddings(object = cite[[&quot;spca&quot;]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_spca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spca</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also need to extract the calculated WNN graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o wnn
+wnn &lt;- as.data.frame(summary(cite@graphs$wknn))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The table indicates indices with connections between cells in the WNN graph. Since R starts indexing at 1 but Python at 0, we modify the indices to start with 0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wnn</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>i</th>
+      <th>j</th>
+      <th>x</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>202</td>
+      <td>1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>787</td>
+      <td>1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1628</td>
+      <td>1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2076</td>
+      <td>1</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">wnn</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>i</th>
+      <th>j</th>
+      <th>x</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>201</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>786</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1627</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2075</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We store the graph in <code class="docutils literal notranslate"><span class="pre">.obsp</span></code> of the MuData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;wnn_connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">],</span> <span class="n">wnn</span><span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">]))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next we use the WWN graph to calculate the UMAP coordinates and save them in <code class="docutils literal notranslate"><span class="pre">.obsm['X_umap_wnn']</span></code>. We could alternatively also just use sPCA coordinates for visualization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we won&#39;t actually need the neighbors</span>
+<span class="c1"># but need to run this anyway as a little trick to make scanpy work with externally-computed neighbors</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_spca&quot;</span><span class="p">)</span>
+<span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;wnn_connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># delete distances to make sure we are not using anything calculated with sc.pp.neighbors()</span>
+<span class="k">del</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap_wnn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally we visualize the cell types and batches on a UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+    <span class="n">mdata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap_wnn&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/14af7112d52bf955c1b5420081605cd180725b351c8970a09853559868bebbfe.png" src="../_images/14af7112d52bf955c1b5420081605cd180725b351c8970a09853559868bebbfe.png" />
+</div>
+</div>
+<p>To be able to quantitatively assess the result of the integration and compare to other methods we compute some of the scIB metrics using the sPCA embedding and WNN graph. More specifically, we calculate the following metrics:</p>
+<ul class="simple">
+<li><p>bio conservation: <code class="docutils literal notranslate"><span class="pre">NMI_cluster/label</span></code>, <code class="docutils literal notranslate"><span class="pre">ARI_cluster/label</span></code>, <code class="docutils literal notranslate"><span class="pre">ASW_label</span></code> and <code class="docutils literal notranslate"><span class="pre">isolated_label_silhouette</span></code>;</p></li>
+<li><p>batch correction: <code class="docutils literal notranslate"><span class="pre">ASW_label/batch</span></code>, <code class="docutils literal notranslate"><span class="pre">graph_conn</span></code>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scib_anndata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_spca&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_spca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_spca&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_wnn</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+    <span class="n">label_key</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">embed</span><span class="o">=</span><span class="s2">&quot;X_spca&quot;</span><span class="p">,</span>
+    <span class="n">ari_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">nmi_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">silhouette_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">graph_conn_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">isolated_labels_asw_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">metrics_wnn</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NMI...
+ARI...
+Silhouette score...
+Isolated labels ASW...
+Graph connectivity...
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NMI_cluster/label</th>
+      <td>0.808672</td>
+    </tr>
+    <tr>
+      <th>ARI_cluster/label</th>
+      <td>0.729036</td>
+    </tr>
+    <tr>
+      <th>ASW_label</th>
+      <td>0.595822</td>
+    </tr>
+    <tr>
+      <th>ASW_label/batch</th>
+      <td>0.854867</td>
+    </tr>
+    <tr>
+      <th>PCR_batch</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cell_cycle_conservation</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_F1</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_silhouette</th>
+      <td>0.420527</td>
+    </tr>
+    <tr>
+      <th>graph_conn</th>
+      <td>0.914140</td>
+    </tr>
+    <tr>
+      <th>kBET</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>iLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>hvg_overlap</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>trajectory</th>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We note that even though batch correction was performed using Harmony for ADT and scVI for RNA, we still include metrics that assess batch correction here too.</p>
+</section>
+<section id="multi-omics-factor-analysis-mofa">
+<h3><span class="section-number">45.3.3. </span>Multi-Omics Factor Analysis (MOFA+)<a class="headerlink" href="#multi-omics-factor-analysis-mofa" title="Link to this heading">#</a></h3>
+<p>MOFA+ is a linear factor model that decomposes the input matrices into the product of low-rank matrices. The low-rank representation can be used as an embedding in a low-dimensional space for visualization and other downstream tasks. The latent dimensions are interpretable with respect to the original input features and represent the leading sources of variation in the data.</p>
+<p>By default, we are using data from <code class="docutils literal notranslate"><span class="pre">.X</span></code> and the data should be normalized. Since there are some batch effects in the data that MOFA+ can correct for, we also pass the <code class="docutils literal notranslate"><span class="pre">groups_label</span></code> parameter to specify the batch covariate.</p>
+<p>If you want to run MOFA+ on a GPU, you need to additionally install a version of cuPY (<a class="reference external" href="https://cupy.dev">https://cupy.dev</a>) which is compatible with your CUDA.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">mofa</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">groups_label</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">gpu_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>        #########################################################
+        ###           __  __  ____  ______                    ### 
+        ###          |  \/  |/ __ \|  ____/\    _             ### 
+        ###          | \  / | |  | | |__ /  \ _| |_           ### 
+        ###          | |\/| | |  | |  __/ /\ \_   _|          ###
+        ###          | |  | | |__| | | / ____ \|_|            ###
+        ###          |_|  |_|\____/|_|/_/    \_\              ###
+        ###                                                   ### 
+        ######################################################### 
+       
+ 
+        
+Loaded view=&#39;rna&#39; group=&#39;s1d1&#39; with N=5219 samples and D=4000 features...
+Loaded view=&#39;rna&#39; group=&#39;s1d3&#39; with N=4975 samples and D=4000 features...
+Loaded view=&#39;rna&#39; group=&#39;s1d2&#39; with N=6100 samples and D=4000 features...
+Loaded view=&#39;adt&#39; group=&#39;s1d1&#39; with N=5219 samples and D=136 features...
+Loaded view=&#39;adt&#39; group=&#39;s1d3&#39; with N=4975 samples and D=136 features...
+Loaded view=&#39;adt&#39; group=&#39;s1d2&#39; with N=6100 samples and D=136 features...
+
+
+Model options:
+- Automatic Relevance Determination prior on the factors: True
+- Automatic Relevance Determination prior on the weights: True
+- Spike-and-slab prior on the factors: False
+- Spike-and-slab prior on the weights: True
+Likelihoods:
+- View 0 (rna): gaussian
+- View 1 (adt): gaussian
+
+
+
+GPU mode is activated
+
+
+
+######################################
+## Training the model with seed 1 ##
+######################################
+
+
+
+Converged!
+
+
+
+#######################
+## Training finished ##
+#######################
+
+
+Saving model in /tmp/mofa_20230103-162506.hdf5...
+Saved MOFA embeddings in .obsm[&#39;X_mofa&#39;] slot and their loadings in .varm[&#39;LFs&#39;].
+</pre></div>
+</div>
+</div>
+</div>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">X_mofa</span></code> representation to calculate the neighbors and the UMAP coordinates, and store them in <code class="docutils literal notranslate"><span class="pre">.obsm['X_umap_mofa']</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_mofa&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+<span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap_mofa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We plot the cell types and batches again on the resulting UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+    <span class="n">mdata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap_mofa&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e83d20cbb80f1ace6b69ea1911080f0ecb9055f52081bf55759a30d937f4a8f8.png" src="../_images/e83d20cbb80f1ace6b69ea1911080f0ecb9055f52081bf55759a30d937f4a8f8.png" />
+</div>
+</div>
+<p>Finally, we calculate the same scIB metrics as before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scib_anndata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_mofa&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_mofa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_mofa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_mofa</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+    <span class="n">label_key</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">embed</span><span class="o">=</span><span class="s2">&quot;X_mofa&quot;</span><span class="p">,</span>
+    <span class="n">ari_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">nmi_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">silhouette_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">graph_conn_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">isolated_labels_asw_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">metrics_mofa</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NMI...
+ARI...
+Silhouette score...
+Isolated labels ASW...
+Graph connectivity...
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NMI_cluster/label</th>
+      <td>0.727261</td>
+    </tr>
+    <tr>
+      <th>ARI_cluster/label</th>
+      <td>0.497166</td>
+    </tr>
+    <tr>
+      <th>ASW_label</th>
+      <td>0.566888</td>
+    </tr>
+    <tr>
+      <th>ASW_label/batch</th>
+      <td>0.800875</td>
+    </tr>
+    <tr>
+      <th>PCR_batch</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cell_cycle_conservation</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_F1</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_silhouette</th>
+      <td>0.418293</td>
+    </tr>
+    <tr>
+      <th>graph_conn</th>
+      <td>0.886662</td>
+    </tr>
+    <tr>
+      <th>kBET</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>iLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>hvg_overlap</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>trajectory</th>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="total-variational-inference-totalvi">
+<h3><span class="section-number">45.3.4. </span>Total Variational Inference (totalVI)<a class="headerlink" href="#total-variational-inference-totalvi" title="Link to this heading">#</a></h3>
+<p>TotalVI is variational-inference-based methods for joint analysis of paired gene expression and protein abundance measurements. It takes into account batch effects, protein background noise, which allows the model to learn a join latent representation disentangled form technical factors. TotalVI models transcriptome counts with negative-binomial (NB) distribution and the protein counts as NB mixture of foreground and background signal. Hence, the model takes raw gene expression and raw protein counts as input.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;protein_expression&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;adt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to specify that raw counts for RNA are stored in <code class="docutils literal notranslate"><span class="pre">counts</span></code> layer of our adata and that we want to correct for batch effect with <code class="docutils literal notranslate"><span class="pre">batch_key=&quot;batch&quot;</span></code> parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">TOTALVI</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">protein_expression_obsm_key</span><span class="o">=</span><span class="s2">&quot;protein_expression&quot;</span><span class="p">,</span>
+    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">INFO    </span> Generating sequential column names                                                                        
+</pre></div>
+</div>
+</div>
+</div>
+<p>We initialize the totalVI model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vae</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">TOTALVI</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">INFO    </span> Computing empirical prior initialization for protein background.                                          
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we train the model with default parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vae</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 340/400:  85%|████████▌ | 340/400 [08:00&lt;01:22,  1.37s/it, loss=1.65e+03, v_num=1]Epoch 00340: reducing learning rate of group 0 to 2.4000e-03.
+Epoch 400/400: 100%|██████████| 400/400 [09:22&lt;00:00,  1.37s/it, loss=1.64e+03, v_num=1]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=400` reached.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 400/400: 100%|██████████| 400/400 [09:22&lt;00:00,  1.41s/it, loss=1.64e+03, v_num=1]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we obtain the latent representation and store it in <code class="docutils literal notranslate"><span class="pre">.obsm['X_totalVI']</span></code> and then use it to calculate the UMAP coordinates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vae</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap_totalVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As above, we plot cell types and batches on a UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+    <span class="n">mdata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap_totalVI&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0cf40b1515a675ccd866430e3f28e6d4bb25573aecd31b83bba9f393b963263f.png" src="../_images/0cf40b1515a675ccd866430e3f28e6d4bb25573aecd31b83bba9f393b963263f.png" />
+</div>
+</div>
+<p>And finally, we calculate scIB metrics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scib_anndata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsp</span><span class="p">[</span><span class="s2">&quot;connectivities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scib_anndata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_totalvi</span> <span class="o">=</span> <span class="n">scib</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">scib_anndata</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span>
+    <span class="n">label_key</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">embed</span><span class="o">=</span><span class="s2">&quot;X_totalVI&quot;</span><span class="p">,</span>
+    <span class="n">ari_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">nmi_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">silhouette_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">graph_conn_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">isolated_labels_asw_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">metrics_totalvi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/scib/metrics/metrics.py:293: DeprecationWarning: Call to deprecated function (or staticmethod) opt_louvain.
+  res_max, nmi_max, nmi_all = opt_louvain(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NMI...
+ARI...
+Silhouette score...
+Isolated labels ASW...
+Graph connectivity...
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NMI_cluster/label</th>
+      <td>0.847325</td>
+    </tr>
+    <tr>
+      <th>ARI_cluster/label</th>
+      <td>0.796760</td>
+    </tr>
+    <tr>
+      <th>ASW_label</th>
+      <td>0.566315</td>
+    </tr>
+    <tr>
+      <th>ASW_label/batch</th>
+      <td>0.910679</td>
+    </tr>
+    <tr>
+      <th>PCR_batch</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cell_cycle_conservation</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_F1</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>isolated_label_silhouette</th>
+      <td>0.513436</td>
+    </tr>
+    <tr>
+      <th>graph_conn</th>
+      <td>0.959439</td>
+    </tr>
+    <tr>
+      <th>kBET</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>iLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>cLISI</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>hvg_overlap</th>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>trajectory</th>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="scib-metrics-evaluation">
+<span id="multimodal-integration-paired-integration-key-takeaway-2"></span><h3><span class="section-number">45.3.5. </span>scIB metrics evaluation<a class="headerlink" href="#scib-metrics-evaluation" title="Link to this heading">#</a></h3>
+<p>To better see the differences in models’ performances, we visualize the scIB output for each of the methods. We need to merge the output DataFrames into one and additionally calculate the overall score for each method. We follow the scIB publication and calculate the overall score as <code class="docutils literal notranslate"><span class="pre">0.4</span> <span class="pre">*</span> <span class="pre">batch_correction_metrics</span> <span class="pre">+</span> <span class="pre">0.6</span> <span class="pre">*</span> <span class="pre">bio_conservation_metrics</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">metrics_wnn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">metrics_mofa</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">metrics_totalvi</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">([</span><span class="s2">&quot;WNN&quot;</span><span class="p">,</span> <span class="s2">&quot;MOFA+&quot;</span><span class="p">,</span> <span class="s2">&quot;totalVI&quot;</span><span class="p">]))</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">metrics</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NMI_cluster/label</th>
+      <th>ARI_cluster/label</th>
+      <th>ASW_label</th>
+      <th>ASW_label/batch</th>
+      <th>isolated_label_silhouette</th>
+      <th>graph_conn</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>WNN</th>
+      <td>0.808672</td>
+      <td>0.729036</td>
+      <td>0.595822</td>
+      <td>0.854867</td>
+      <td>0.420527</td>
+      <td>0.914140</td>
+    </tr>
+    <tr>
+      <th>MOFA+</th>
+      <td>0.727261</td>
+      <td>0.497166</td>
+      <td>0.566888</td>
+      <td>0.800875</td>
+      <td>0.418293</td>
+      <td>0.886662</td>
+    </tr>
+    <tr>
+      <th>totalVI</th>
+      <td>0.847325</td>
+      <td>0.796760</td>
+      <td>0.566315</td>
+      <td>0.910679</td>
+      <td>0.513436</td>
+      <td>0.959439</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;overall&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;ASW_label/batch&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;graph_conn&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="o">+</span> <span class="mf">0.6</span>
+    <span class="o">*</span> <span class="p">(</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;NMI_cluster/label&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;ARI_cluster/label&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;ASW_label&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;isolated_label_silhouette&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">/</span> <span class="mi">4</span>
+<span class="p">)</span>
+<span class="n">metrics</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NMI_cluster/label</th>
+      <th>ARI_cluster/label</th>
+      <th>ASW_label</th>
+      <th>ASW_label/batch</th>
+      <th>isolated_label_silhouette</th>
+      <th>graph_conn</th>
+      <th>overall</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>WNN</th>
+      <td>0.808672</td>
+      <td>0.729036</td>
+      <td>0.595822</td>
+      <td>0.854867</td>
+      <td>0.420527</td>
+      <td>0.914140</td>
+      <td>0.736910</td>
+    </tr>
+    <tr>
+      <th>MOFA+</th>
+      <td>0.727261</td>
+      <td>0.497166</td>
+      <td>0.566888</td>
+      <td>0.800875</td>
+      <td>0.418293</td>
+      <td>0.886662</td>
+      <td>0.668948</td>
+    </tr>
+    <tr>
+      <th>totalVI</th>
+      <td>0.847325</td>
+      <td>0.796760</td>
+      <td>0.566315</td>
+      <td>0.910679</td>
+      <td>0.513436</td>
+      <td>0.959439</td>
+      <td>0.782599</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">metrics</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6f9a129280&gt;
+</pre></div>
+</div>
+<img alt="../_images/b1197777a54b766712260d65110523b1c5b2fd9c58e8c48e579f9fdb69b9d63a.png" src="../_images/b1197777a54b766712260d65110523b1c5b2fd9c58e8c48e579f9fdb69b9d63a.png" />
+</div>
+</div>
+<p>We observe that totalVI obtained the highest overall score, and therefore we will use totalVI embedding later in the notebook to show how one can annotate the cluster in the latent space using both ADT and RNA markers. Depending on the downstream task and the experimental design, selecting the best performing based on a specific metric is advisable.</p>
+</section>
+</section>
+<section id="multiome-data">
+<h2><span class="section-number">45.4. </span>Multiome data<a class="headerlink" href="#multiome-data" title="Link to this heading">#</a></h2>
+<p>To show that integration methods can also work with multiome (i.e. paired RNA-seq and ATAC-seq) data, we demonstrate how multiVI can be used for this task. We note that WNN and MOFA+ can also be run on multiome data with almost exactly the same code as above, so here we only present multiVI where the underlying model differs from totalVI.</p>
+<section id="id9">
+<h3><span class="section-number">45.4.1. </span>Prepare data<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atac</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-multiome/atac_hvf.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">atac</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 69249 × 40002
+    obs: &#39;GEX_pct_counts_mt&#39;, &#39;GEX_n_counts&#39;, &#39;GEX_n_genes&#39;, &#39;GEX_size_factors&#39;, &#39;GEX_phase&#39;, &#39;ATAC_nCount_peaks&#39;, &#39;ATAC_atac_fragments&#39;, &#39;ATAC_reads_in_peaks_frac&#39;, &#39;ATAC_blacklist_fraction&#39;, &#39;ATAC_nucleosome_signal&#39;, &#39;cell_type&#39;, &#39;batch&#39;, &#39;ATAC_pseudotime_order&#39;, &#39;GEX_pseudotime_order&#39;, &#39;Samplename&#39;, &#39;Site&#39;, &#39;DonorNumber&#39;, &#39;Modality&#39;, &#39;VendorLot&#39;, &#39;DonorID&#39;, &#39;DonorAge&#39;, &#39;DonorBMI&#39;, &#39;DonorBloodType&#39;, &#39;DonorRace&#39;, &#39;Ethnicity&#39;, &#39;DonorGender&#39;, &#39;QCMeds&#39;, &#39;DonorSmoker&#39;, &#39;cell_type_l2&#39;, &#39;cell_type_l1&#39;, &#39;cell_type_l3&#39;, &#39;assay&#39;
+    var: &#39;feature_types&#39;, &#39;gene_id&#39;, &#39;n_cells&#39;, &#39;prop_shared_cells&#39;, &#39;variability_score&#39;
+    uns: &#39;ATAC_gene_activity_var_names&#39;, &#39;dataset_id&#39;, &#39;genome&#39;, &#39;organism&#39;
+    obsm: &#39;ATAC_gene_activity&#39;, &#39;ATAC_lsi_full&#39;, &#39;ATAC_lsi_red&#39;, &#39;ATAC_umap&#39;, &#39;GEX_X_pca&#39;, &#39;GEX_X_umap&#39;
+    layers: &#39;binary&#39;, &#39;counts&#39;, &#39;cpm&#39;, &#39;tf-idf&#39;, &#39;tf-idf-binary&#39;, &#39;tf-idf-counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="s2">&quot;/lustre/groups/ml01/workspace/anastasia.litinetskaya/data/neurips-multiome/rna_hvg.h5ad&quot;</span>
+<span class="p">)</span>
+<span class="n">rna</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 69249 × 4000
+    obs: &#39;GEX_pct_counts_mt&#39;, &#39;GEX_n_counts&#39;, &#39;GEX_n_genes&#39;, &#39;GEX_size_factors&#39;, &#39;GEX_phase&#39;, &#39;ATAC_nCount_peaks&#39;, &#39;ATAC_atac_fragments&#39;, &#39;ATAC_reads_in_peaks_frac&#39;, &#39;ATAC_blacklist_fraction&#39;, &#39;ATAC_nucleosome_signal&#39;, &#39;cell_type&#39;, &#39;batch&#39;, &#39;ATAC_pseudotime_order&#39;, &#39;GEX_pseudotime_order&#39;, &#39;Samplename&#39;, &#39;Site&#39;, &#39;DonorNumber&#39;, &#39;Modality&#39;, &#39;VendorLot&#39;, &#39;DonorID&#39;, &#39;DonorAge&#39;, &#39;DonorBMI&#39;, &#39;DonorBloodType&#39;, &#39;DonorRace&#39;, &#39;Ethnicity&#39;, &#39;DonorGender&#39;, &#39;QCMeds&#39;, &#39;DonorSmoker&#39;
+    var: &#39;feature_types&#39;, &#39;gene_id&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;ATAC_gene_activity_var_names&#39;, &#39;Site_colors&#39;, &#39;batch_colors&#39;, &#39;cell_type_colors&#39;, &#39;dataset_id&#39;, &#39;genome&#39;, &#39;hvg&#39;, &#39;organism&#39;
+    obsm: &#39;ATAC_gene_activity&#39;, &#39;ATAC_lsi_full&#39;, &#39;ATAC_lsi_red&#39;, &#39;ATAC_umap&#39;, &#39;GEX_X_pca&#39;, &#39;GEX_X_umap&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We again subset the data to one site and 3 batches.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batches_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s1d1&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d2&quot;</span><span class="p">,</span> <span class="s2">&quot;s1d3&quot;</span><span class="p">]</span>
+<span class="n">rna</span> <span class="o">=</span> <span class="n">rna</span><span class="p">[</span><span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">batches_to_keep</span><span class="p">)]</span>
+<span class="n">atac</span> <span class="o">=</span> <span class="n">atac</span><span class="p">[</span><span class="n">atac</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">batches_to_keep</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_multiome</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">MuData</span><span class="p">({</span><span class="s2">&quot;rna&quot;</span><span class="p">:</span> <span class="n">rna</span><span class="p">,</span> <span class="s2">&quot;atac&quot;</span><span class="p">:</span> <span class="n">atac</span><span class="p">})</span>
+<span class="n">mdata_multiome</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 17243 × 44002
+  var:	&#x27;feature_types&#x27;, &#x27;gene_id&#x27;
+  2 modalities
+    rna:	17243 x 4000
+      obs:	&#x27;GEX_pct_counts_mt&#x27;, &#x27;GEX_n_counts&#x27;, &#x27;GEX_n_genes&#x27;, &#x27;GEX_size_factors&#x27;, &#x27;GEX_phase&#x27;, &#x27;ATAC_nCount_peaks&#x27;, &#x27;ATAC_atac_fragments&#x27;, &#x27;ATAC_reads_in_peaks_frac&#x27;, &#x27;ATAC_blacklist_fraction&#x27;, &#x27;ATAC_nucleosome_signal&#x27;, &#x27;cell_type&#x27;, &#x27;batch&#x27;, &#x27;ATAC_pseudotime_order&#x27;, &#x27;GEX_pseudotime_order&#x27;, &#x27;Samplename&#x27;, &#x27;Site&#x27;, &#x27;DonorNumber&#x27;, &#x27;Modality&#x27;, &#x27;VendorLot&#x27;, &#x27;DonorID&#x27;, &#x27;DonorAge&#x27;, &#x27;DonorBMI&#x27;, &#x27;DonorBloodType&#x27;, &#x27;DonorRace&#x27;, &#x27;Ethnicity&#x27;, &#x27;DonorGender&#x27;, &#x27;QCMeds&#x27;, &#x27;DonorSmoker&#x27;
+      var:	&#x27;feature_types&#x27;, &#x27;gene_id&#x27;, &#x27;highly_variable&#x27;, &#x27;means&#x27;, &#x27;dispersions&#x27;, &#x27;dispersions_norm&#x27;
+      uns:	&#x27;ATAC_gene_activity_var_names&#x27;, &#x27;Site_colors&#x27;, &#x27;batch_colors&#x27;, &#x27;cell_type_colors&#x27;, &#x27;dataset_id&#x27;, &#x27;genome&#x27;, &#x27;hvg&#x27;, &#x27;organism&#x27;
+      obsm:	&#x27;ATAC_gene_activity&#x27;, &#x27;ATAC_lsi_full&#x27;, &#x27;ATAC_lsi_red&#x27;, &#x27;ATAC_umap&#x27;, &#x27;GEX_X_pca&#x27;, &#x27;GEX_X_umap&#x27;, &#x27;X_umap&#x27;
+      layers:	&#x27;counts&#x27;
+    atac:	17243 x 40002
+      obs:	&#x27;GEX_pct_counts_mt&#x27;, &#x27;GEX_n_counts&#x27;, &#x27;GEX_n_genes&#x27;, &#x27;GEX_size_factors&#x27;, &#x27;GEX_phase&#x27;, &#x27;ATAC_nCount_peaks&#x27;, &#x27;ATAC_atac_fragments&#x27;, &#x27;ATAC_reads_in_peaks_frac&#x27;, &#x27;ATAC_blacklist_fraction&#x27;, &#x27;ATAC_nucleosome_signal&#x27;, &#x27;cell_type&#x27;, &#x27;batch&#x27;, &#x27;ATAC_pseudotime_order&#x27;, &#x27;GEX_pseudotime_order&#x27;, &#x27;Samplename&#x27;, &#x27;Site&#x27;, &#x27;DonorNumber&#x27;, &#x27;Modality&#x27;, &#x27;VendorLot&#x27;, &#x27;DonorID&#x27;, &#x27;DonorAge&#x27;, &#x27;DonorBMI&#x27;, &#x27;DonorBloodType&#x27;, &#x27;DonorRace&#x27;, &#x27;Ethnicity&#x27;, &#x27;DonorGender&#x27;, &#x27;QCMeds&#x27;, &#x27;DonorSmoker&#x27;, &#x27;cell_type_l2&#x27;, &#x27;cell_type_l1&#x27;, &#x27;cell_type_l3&#x27;, &#x27;assay&#x27;
+      var:	&#x27;feature_types&#x27;, &#x27;gene_id&#x27;, &#x27;n_cells&#x27;, &#x27;prop_shared_cells&#x27;, &#x27;variability_score&#x27;
+      uns:	&#x27;ATAC_gene_activity_var_names&#x27;, &#x27;dataset_id&#x27;, &#x27;genome&#x27;, &#x27;organism&#x27;
+      obsm:	&#x27;ATAC_gene_activity&#x27;, &#x27;ATAC_lsi_full&#x27;, &#x27;ATAC_lsi_red&#x27;, &#x27;ATAC_umap&#x27;, &#x27;GEX_X_pca&#x27;, &#x27;GEX_X_umap&#x27;
+      layers:	&#x27;binary&#x27;, &#x27;counts&#x27;, &#x27;cpm&#x27;, &#x27;tf-idf&#x27;, &#x27;tf-idf-binary&#x27;, &#x27;tf-idf-counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata_multiome</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mdata_multiome</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata_multiome</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="multivi">
+<h3><span class="section-number">45.4.2. </span>MultiVI<a class="headerlink" href="#multivi" title="Link to this heading">#</a></h3>
+<p>MultiVI is also based on variational inference and conditional variational autoencoders. The gene expression counts are modeled exactly the same way as in totalVI, i.e. using raw counts and NB distribution. Chromatin accessibility on the other hand is modeled using Bernoulli distribution modeling how likely a particular region is to be open. Hence, the input data for ATAC assay has to be binary where 0 means a closed region and 1 means an open region.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_genes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rna</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">n_regions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atac</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>MultiVI requires one AnnData object with concatenated genes and peaks as features. Since we start off with two different objects for each modality but have paired measurements, we can use the following trick to concatenate the AnnData objects along the feature axis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_paired</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">atac</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">adata_paired</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adata_paired</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]])</span>
+<span class="n">adata_paired</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;modality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;paired&quot;</span>
+<span class="n">adata_paired</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 17243 × 44002
+    obs: &#39;cell_type&#39;, &#39;batch&#39;, &#39;modality&#39;
+    var: &#39;feature_types&#39;, &#39;gene_id&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_mvi</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">organize_multiome_anndatas</span><span class="p">(</span><span class="n">adata_paired</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also make sure that we pass raw counts as input to the model by specifying <code class="docutils literal notranslate"><span class="pre">layer='counts'</span></code> in the <code class="docutils literal notranslate"><span class="pre">setup_anndata</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MULTIVI</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span>
+    <span class="n">adata_mvi</span><span class="p">,</span>
+    <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;modality&quot;</span><span class="p">,</span>
+    <span class="n">categorical_covariate_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We initialize the MultiVI model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mvi</span> <span class="o">=</span> <span class="n">scvi</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">MULTIVI</span><span class="p">(</span>
+    <span class="n">adata_mvi</span><span class="p">,</span>
+    <span class="n">n_genes</span><span class="o">=</span><span class="n">n_genes</span><span class="p">,</span>
+    <span class="n">n_regions</span><span class="o">=</span><span class="n">n_regions</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we train the model with the default parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mvi</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/python3.9/site-packages/pytorch_lightning/trainer/configuration_validator.py:267: LightningDeprecationWarning: The `Callback.on_epoch_end` hook was deprecated in v1.6 and will be removed in v1.8. Please use `Callback.on_&lt;train/validation/test&gt;_epoch_end` instead.
+  rank_zero_deprecation(
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 106/500:  21%|██        | 106/500 [11:30&lt;42:46,  6.51s/it, loss=4.47e+03, v_num=1]
+Monitored metric reconstruction_loss_validation did not improve in the last 50 records. Best score: 9223.312. Signaling Trainer to stop.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we visualize the latent embedding on the UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_multiome</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_multiVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mvi</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mdata_multiome</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;X_multiVI&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata_multiome</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_multiome</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap_multiVI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata_multiome</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span>
+    <span class="n">mdata_multiome</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+    <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap_multiVI&quot;</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4f48f488278b9005b89a6137fe280d4781b3ca80878604443becf7d67965a9a3.png" src="../_images/4f48f488278b9005b89a6137fe280d4781b3ca80878604443becf7d67965a9a3.png" />
+</div>
+</div>
+<p>Session info.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+sessionInfo()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R version 4.2.2 (2022-10-31)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /lustre/groups/ml01/workspace/anastasia.litinetskaya/miniconda3/envs/paired_integration_chapter/lib/libopenblasp-r0.3.21.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats4    tools     stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] Matrix_1.5-3                SingleCellExperiment_1.20.0
+ [3] SummarizedExperiment_1.28.0 Biobase_2.58.0             
+ [5] GenomicRanges_1.50.0        GenomeInfoDb_1.34.1        
+ [7] IRanges_2.32.0              MatrixGenerics_1.10.0      
+ [9] matrixStats_0.63.0          S4Vectors_0.36.0           
+[11] BiocGenerics_0.44.0         SeuratObject_4.1.3         
+[13] Seurat_4.3.0               
+
+loaded via a namespace (and not attached):
+  [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          
+  [4] ellipsis_0.3.2         ggridges_0.5.4         XVector_0.38.0        
+  [7] spatstat.data_3.0-0    leiden_0.4.3           listenv_0.9.0         
+ [10] ggrepel_0.9.2          fansi_1.0.3            codetools_0.2-18      
+ [13] splines_4.2.2          polyclip_1.10-4        jsonlite_1.8.4        
+ [16] ica_1.0-3              cluster_2.1.4          png_0.1-8             
+ [19] uwot_0.1.14            shiny_1.7.4            sctransform_0.3.5     
+ [22] spatstat.sparse_3.0-0  compiler_4.2.2         httr_1.4.4            
+ [25] fastmap_1.1.0          lazyeval_0.2.2         cli_3.5.0             
+ [28] later_1.3.0            htmltools_0.5.4        igraph_1.3.5          
+ [31] gtable_0.3.1           glue_1.6.2             GenomeInfoDbData_1.2.9
+ [34] RANN_2.6.1             reshape2_1.4.4         dplyr_1.0.10          
+ [37] Rcpp_1.0.9             scattermore_0.8        vctrs_0.5.1           
+ [40] spatstat.explore_3.0-5 nlme_3.1-161           progressr_0.12.0      
+ [43] lmtest_0.9-40          spatstat.random_3.0-1  stringr_1.5.0         
+ [46] globals_0.16.2         mime_0.12              miniUI_0.1.1.1        
+ [49] lifecycle_1.0.3        irlba_2.3.5.1          goftest_1.2-3         
+ [52] future_1.30.0          MASS_7.3-58.1          zlibbioc_1.44.0       
+ [55] zoo_1.8-11             scales_1.2.1           promises_1.2.0.1      
+ [58] spatstat.utils_3.0-1   parallel_4.2.2         RColorBrewer_1.1-3    
+ [61] reticulate_1.26        pbapply_1.6-0          gridExtra_2.3         
+ [64] ggplot2_3.4.0          stringi_1.7.8          rlang_1.0.6           
+ [67] pkgconfig_2.0.3        bitops_1.0-7           lattice_0.20-45       
+ [70] ROCR_1.0-11            purrr_1.0.0            tensor_1.5            
+ [73] patchwork_1.1.2        htmlwidgets_1.6.0      cowplot_1.1.1         
+ [76] tidyselect_1.2.0       parallelly_1.33.0      RcppAnnoy_0.0.20      
+ [79] plyr_1.8.8             magrittr_2.0.3         R6_2.5.1              
+ [82] generics_0.1.3         DelayedArray_0.24.0    pillar_1.8.1          
+ [85] fitdistrplus_1.1-8     survival_3.4-0         abind_1.4-5           
+ [88] RCurl_1.98-1.9         sp_1.5-1               tibble_3.1.8          
+ [91] future.apply_1.10.0    KernSmooth_2.23-20     utf8_1.2.2            
+ [94] spatstat.geom_3.0-3    plotly_4.10.1          grid_4.2.2            
+ [97] data.table_1.14.6      digest_0.6.31          xtable_1.8-4          
+[100] tidyr_1.2.1            httpuv_1.6.7           munsell_0.5.0         
+[103] viridisLite_0.4.1     
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="references">
+<h2><span class="section-number">45.5. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id10">
+<div role="list" class="citation-list">
+<div class="citation" id="id521" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">AAB+20</a><span class="fn-bracket">]</span></span>
+<p>Ricard Argelaguet, Damien Arnol, Danila Bredikhin, Yonatan Deloro, Britta Velten, John C. Marioni, and Oliver Stegle. Mofa+: a statistical framework for comprehensive integration of multi-modal single-cell data. <em>Genome Biology</em>, 21(1):111, May 2020. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-020-02015-1">https://doi.org/10.1186/s13059-020-02015-1</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-020-02015-1">doi:10.1186/s13059-020-02015-1</a>.</p>
+</div>
+<div class="citation" id="id523" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>AGJY21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Tal Ashuach, Mariano I. Gabitto, Michael I. Jordan, and Nir Yosef. Multivi: deep generative model for the integration of multi-modal data. <em>bioRxiv</em>, 2021. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057">https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057.full.pdf">arXiv:https://www.biorxiv.org/content/early/2021/09/07/2021.08.20.457057.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2021.08.20.457057">doi:10.1101/2021.08.20.457057</a>.</p>
+</div>
+<div class="citation" id="id522" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">GSL+21</a><span class="fn-bracket">]</span></span>
+<p>Adam Gayoso, Zoë Steier, Romain Lopez, Jeffrey Regier, Kristopher L. Nazor, Aaron Streets, and Nir Yosef. Joint probabilistic modeling of single-cell multi-omic data with totalvi. <em>Nature Methods</em>, 18(3):272–282, Mar 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-020-01050-x">https://doi.org/10.1038/s41592-020-01050-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-020-01050-x">doi:10.1038/s41592-020-01050-x</a>.</p>
+</div>
+<div class="citation" id="id520" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">HHAN+21</a><span class="fn-bracket">]</span></span>
+<p>Yuhan Hao, Stephanie Hao, Erica Andersen-Nissen, William M. Mauck, Shiwei Zheng, Andrew Butler, Maddie J. Lee, Aaron J. Wilk, Charlotte Darby, Michael Zager, Paul Hoffman, Marlon Stoeckius, Efthymia Papalexi, Eleni P. Mimitou, Jaison Jain, Avi Srivastava, Tim Stuart, Lamar M. Fleming, Bertrand Yeung, Angela J. Rogers, Juliana M. McElrath, Catherine A. Blish, Raphael Gottardo, Peter Smibert, and Rahul Satija. Integrated analysis of multimodal single-cell data. <em>Cell</em>, 184(13):3573–3587.e29, 2021. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0092867421005833">https://www.sciencedirect.com/science/article/pii/S0092867421005833</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.cell.2021.04.048">doi:https://doi.org/10.1016/j.cell.2021.04.048</a>.</p>
+</div>
+<div class="citation" id="id525" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">LBC+21</a><span class="fn-bracket">]</span></span>
+<p>Malte D Luecken, Daniel Bernard Burkhardt, Robrecht Cannoodt, Christopher Lance, Aditi Agrawal, Hananeh Aliee, Ann T Chen, Louise Deconinck, Angela M Detweiler, Alejandro A Granados, Shelly Huynh, Laura Isacco, Yang Joon Kim, Dominik Klein, BONY DE KUMAR, Sunil Kuppasani, Heiko Lickert, Aaron McGeever, Honey Mekonen, Joaquin Caceres Melgarejo, Maurizio Morri, Michaela Müller, Norma Neff, Sheryl Paul, Bastian Rieck, Kaylie Schneider, Scott Steelman, Michael Sterr, Daniel J. Treacy, Alexander Tong, Alexandra-Chloe Villani, Guilin Wang, Jia Yan, Ce Zhang, Angela Oliveira Pisco, Smita Krishnaswamy, Fabian J Theis, and Jonathan M. Bloom. A sandbox for prediction and integration of dna, rna, and proteins in single cells. In <em>Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)</em>. 2021. URL: <a class="reference external" href="https://openreview.net/forum?id=gN35BGa1Rt">https://openreview.net/forum?id=gN35BGa1Rt</a>.</p>
+</div>
+<div class="citation" id="id524" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">LButtnerC+22</a><span class="fn-bracket">]</span></span>
+<p>Malte D. Luecken, M. Büttner, K. Chaichoompu, A. Danese, M. Interlandi, M. F. Mueller, D. C. Strobl, L. Zappia, M. Dugas, M. Colomé-Tatché, and Fabian J. Theis. Benchmarking atlas-level data integration in single-cell genomics. <em>Nature Methods</em>, 19(1):41–50, Jan 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01336-8">https://doi.org/10.1038/s41592-021-01336-8</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01336-8">doi:10.1038/s41592-021-01336-8</a>.</p>
+</div>
+<div class="citation" id="id526" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">MFTG22</a><span class="fn-bracket">]</span></span>
+<p>Laura D. Martens, David S. Fischer, Fabian J. Theis, and Julien Gagneur. Modeling fragment counts improves single-cell atac-seq analysis. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536">https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/04/2022.05.04.490536.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.05.04.490536">doi:10.1101/2022.05.04.490536</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">45.6. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">45.6.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Anastasia Litinetskaya</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">45.6.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./multimodal_integration"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../air_repertoire/multimodal_integration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">44. </span>Integrating AIR and transcriptomics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="advanced_integration.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">46. </span>Advanced integration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">45.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">45.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cite-seq-data">45.3. CITE-seq data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-data">45.3.1. Prepare data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-nearest-neighbor-wnn">45.3.2. Weighted Nearest Neighbor (WNN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-omics-factor-analysis-mofa">45.3.3. Multi-Omics Factor Analysis (MOFA+)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#total-variational-inference-totalvi">45.3.4. Total Variational Inference (totalVI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scib-metrics-evaluation">45.3.5. scIB metrics evaluation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiome-data">45.4. Multiome data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">45.4.1. Prepare data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multivi">45.4.2. MultiVI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">45.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">45.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">45.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">45.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
