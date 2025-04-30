@@ -577,6 +577,7 @@ In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
 This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
 In fact, only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`, while the majority RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
 As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
+This also means that there a a lot of genes not transcribed at all within a cell.
 This is a huge range due to many reasons and but lets`s start chornologically.
 
 ### from gene to protein
@@ -586,29 +587,16 @@ Even tough the gene count can vary between different individuals by ~70 genes we
 The transcriptoin of gene is a stochatic process {cite}`zhang2024transcriptional`.
 Cells have shown to transcribe genes only in reanodm and short periods of time called expression bursts.
 A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again.
-Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour.
-Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes.
-This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
 
-(not papaer yet)
-In one cell around 30-70% of the genes are transcpried. This number can vary a lot so that some gene are not transcirpted at all an other 10 times.
-https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71
-
-1 to 30 mRNA copies per cell [source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71)
-Some gene might
-
-// TODO
-This pre mRNA is further processed by adding a 5' cap, 3'-poly Adenin tail, and performing a processed called alternative splicing./Now pre mRNA is underdogingn a processessed called alternative splicing.
+Now pre mRNA is underdogingn a processessed called alternative splicing.
 Alternative splicing means combining differents regions in the mRMA to produce different mature mRNA's out of one pre-mRNA.
 
 On average 3.4 isoformsic mRNA are produced from on genen in a human {cite}`lee2015mechanisms`.  
 While all human genes have at least two alternative splicing isoforms, the most exterme example is the
 An extremly large example is the human basonuclin 2 gene having the potential to generate up to 90,000 mRNA isoforms resulting in more than 2000 different proteins {cite}`vanhoutteghem2007human`.
+The final strep is translating the Nucleotide code into AAs.
 The median protein to mRNA ratio might be around has shown to be ~10,000 in mice {cite}`li2014system`.
 But of course this seem to varie greatly between genes, from a few hundrets to close to a million protein translation from one mRNA {cite}`edfors2016gene` in humans.
-
-// TODO
-To collect only mRNA Gen10X uses polyA primer
 
 ### Other facotros influencing RNA level
 
@@ -619,7 +607,15 @@ Other: Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cyto
 
 - Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
 
-```{dropdown}
+```{dropdown} Why are expression bursts the reason negativ binominal distrubtion
+
+Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour.
+Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes.
+This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
+
+
+
+
 The distribution
 Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
 
@@ -643,6 +639,19 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
 --> both biological explanation for bursts
 
 ```
+
+// TODO
+This pre mRNA is further processed by adding a 5' cap, 3'-poly Adenin tail, and performing a processed called alternative splicing./
+
+// TODO
+To collect only mRNA Gen10X uses polyA primer
+
+(not papaer yet)
+In one cell around 30-70% of the genes are transcpried. This number can vary a lot so that some gene are not transcirpted at all an other 10 times.
+https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71
+
+1 to 30 mRNA copies per cell [source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71)
+Some gene might
 
 ### END
 
