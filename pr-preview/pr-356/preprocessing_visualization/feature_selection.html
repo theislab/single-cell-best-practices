@@ -602,7 +602,7 @@ yml</label><div class="sd-tab-content docutils">
 <section id="motivation">
 <span id="preprocessing-visualization-feature-selection-key-takeaway-1"></span><h2><span class="section-number">8.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>We now have a normalized data representation that still preserves biological heterogeneity but with reduced technical sampling effects in gene expression.
-Single-cell RNA-seq datasets usually contain up to 30,000 genes and so far we only removed genes that are not detected in at least 20 cells.
+ScRNA-seq datasets usually contain up to 30,000 genes (depending on the organism) and so far we only removed genes that are not detected in at least 20 cells.
 However, many of the remaining genes are not informative and contain mostly zero counts.
 Therefore, a standard preprocessing pipeline involves the step of feature selection which aims to exclude uninformative genes which might not represent meaningful biological variation across samples.</p>
 <figure class="align-default" id="id1">
@@ -612,7 +612,7 @@ Therefore, a standard preprocessing pipeline involves the step of feature select
 <p><span class="caption-number">Fig. 8.1 </span><span class="caption-text">Feature selection generally describes the process of only selecting a subset of relevant features which can be the most informative, most variable or most deviant ones.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Usually, the scRNA-seq experiment and resulting dataset focuses on one specific tissue and hence, only a small fraction of genes is informative and biologically variable.
+<p>Often, the scRNA-seq experiment focuses on one specific tissue and hence, only a small fraction of genes is informative and biologically variable.
 Traditional approaches and pipelines either compute the coefficient of variation (highly variable genes) or the average expression level (highly expressed genes) of all genes to obtain 500-2000 selected genes and use these features for their downstream analysis steps.
 However, these methods are highly sensitive to the normalization technique used before.
 As mentioned earlier, a former preprocessing workflow included normalization with CPM and subsequent log transformation.
@@ -627,8 +627,8 @@ Highly informative genes across cells will have a high deviance value which indi
 According to the deviance values, the method then ranks all genes and obtains only highly deviant genes.</p>
 <p>As mentioned before, deviance can be computed in closed form and is provided within the R package scry.</p>
 <p>We start by setting up our environment.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
@@ -659,6 +659,11 @@ According to the deviance values, the method then ranks all genes and obtains on
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ connected lamindb: theislab/sc-best-practices
 → loaded Transform(&#39;xKADqrV9wgwX0000&#39;), re-started Run(&#39;yI5lBnmJ...&#39;) at 2025-04-25 15:36:40 UTC
@@ -666,6 +671,7 @@ According to the deviance values, the method then ranks all genes and obtains on
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -790,13 +796,10 @@ We use a scanpy function to compute the mean and dispersion for each gene across
 </div>
 <p>We observe that genes with a high mean expression are selected as highly deviant.
 This is in agreement with empirical observations by <span id="id4">[<a class="reference internal" href="#id140" title="F. William Townes, Stephanie C. Hicks, Martin J. Aryee, and Rafael A. Irizarry. Feature selection and dimension reduction for single-cell term`rna`-seq based on a multinomial model. Genome Biology, 20(1):295, Dec 2019. URL: https://doi.org/10.1186/s13059-019-1861-6, doi:10.1186/s13059-019-1861-6.">Townes <em>et al.</em>, 2019</a>]</span>.</p>
-<p>Now we save our anndata object on our database.
-You don’t have to run the cell below.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_feature_selection.h5ad&quot;</span><span class="p">)</span>
-<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
-    <span class="s2">&quot;s4d8_feature_selection.h5ad&quot;</span><span class="p">,</span>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s2">&quot;preprocessing_visualization/s4d8_feature_selection.h5ad&quot;</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;anndata after feature selection&quot;</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -804,6 +807,11 @@ You don’t have to run the cell below.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ creating new artifact version for key=&#39;preprocessing_visualization/s4d8_feature_selection.h5ad&#39; (storage: &#39;s3://lamin-eu-central-1/VPwcjx3CDAa2&#39;)
 ... uploading s4d8_feature_selection.h5ad: 100.0%
@@ -814,6 +822,7 @@ You don’t have to run the cell below.</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="references">

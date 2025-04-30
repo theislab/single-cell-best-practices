@@ -623,8 +623,8 @@ yml</label><div class="sd-tab-content docutils">
 <section id="motivation">
 <h2><span class="section-number">6.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>Single-cell RNA-seq datasets have two essential properties that one should have in mind when performing an analysis.
-Firstly, scRNA-seq data is a drop-out, meaning there is an excessive number of zeros in the data due to the limitation of mRNA.
-Secondly, the potential for correcting the data and performing quality control might be limited as the data may be confounded with biology.
+First, scRNA-seq data contains drop-outs, meaning there is an excessive number of zeros in the data due to the limitation of mRNA.
+Second, the potential for correcting the data and performing quality control might be limited as the data may be confounded with biology.
 It is therefore crucial to select preprocessing methods that are suitable for the underlying data without overcorrecting or removing biological effects.</p>
 <p>The set of tools for analyzing single-cell <a class="reference internal" href="../glossary.html#term-RNA"><span class="xref std std-term">RNA</span></a>-sequencing data is evolving fast due to new sequencing technologies and a growing number of captured cells, measured genes, and identified cell populations <span id="id2">[<a class="reference internal" href="#id137" title="Luke Zappia and Fabian J. Theis. Over 1000 tools reveal trends in the single-cell rna-seq analysis landscape. Genome Biology, 22(1):301, Oct 2021. URL: https://doi.org/10.1186/s13059-021-02519-4, doi:10.1186/s13059-021-02519-4.">Zappia and Theis, 2021</a>]</span>.
 Many of these tools are dedicated to preprocessing, which aims to address the following analysis steps:</p>
@@ -633,13 +633,12 @@ Many of these tools are dedicated to preprocessing, which aims to address the fo
 <li><p>Quality control</p></li>
 <li><p>Normalization</p></li>
 <li><p>Feature selection</p></li>
-<li><p>Dimensionality reduction.
-The tools selected throughout this chapter can heavily affect downstream analysis and interpretation of the data.
+<li><p>Dimensionality reduction.</p></li>
+</ol>
+<p>The algorithms selected throughout this process can heavily affect downstream analysis and interpretation of the data.
 For example, if you filter out too many cells during quality control, you might lose rare cell subpopulations and miss insight into interesting cell biology.
 Whereas if you are too permissive, you might have a hard time annotating your cells if you did not exclude poor-quality cells in your preprocessing pipeline.
-Therefore, it is important to choose tools that both follow best practices and consistently outperform alternatives in downstream tasks.
-In many cases, you will still have to re-assess your preprocessing analysis and change, for example, the filtering strategy.</p></li>
-</ol>
+In many cases, you will still have to re-assess your preprocessing analysis at a later point and change, for example, the filtering strategy.</p>
 <p>The starting point of this notebook is single-cell data that has been processed as previously described in the <a class="reference internal" href="../introduction/raw_data_processing.html"><span class="std std-doc">raw data processing chapter</span></a>.
 The data was aligned to obtain matrices of molecular counts, the so-called count matrices, or read counts (read matrices).
 The difference between count and read matrices depends on whether <a class="reference internal" href="../glossary.html#term-Unique-Molecular-Identifier-UMI"><span class="xref std std-term">unique molecular identifiers (UMIs)</span></a> were included in the single-cell library construction protocol.
@@ -655,8 +654,8 @@ In this tutorial, we will use one batch of the aforementioned dataset, sample 4 
 <p>Although single-cell count matrix preprocessing is generally a linear process where various quality control and preprocessing steps are conducted in a clear order, the introduction of specific steps here requires us to sometimes jump ahead to steps that we are going to introduce in one of the later subchapters.
 For example, we make use of clustering for the ambient RNA correction, but will only introduce clustering later.</p>
 <p>As a first step, we import the packages we need.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
@@ -678,6 +677,11 @@ For example, we make use of clustering for the ambient RNA correction, but will 
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ connected lamindb: theislab/sc-best-practices
 → loaded Transform(&#39;FATGTTa0bL500000&#39;), re-started Run(&#39;ek9F27dk...&#39;) at 2025-04-25 15:12:08 UTC
@@ -685,8 +689,9 @@ For example, we make use of clustering for the ambient RNA correction, but will 
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p>We can load the dataset via <code class="docutils literal notranslate"><span class="pre">lamindb</span></code>.</p>
+<p>We can load the dataset using <code class="docutils literal notranslate"><span class="pre">lamindb</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -709,7 +714,7 @@ For example, we make use of clustering for the ambient RNA correction, but will 
 </div>
 </div>
 <p>After reading the data, scanpy displays a warning that not all variable names are unique.
-This indicates that some variables (=genes) appear more than once which can lead to errors or unintended behavior for downstream analysis tasks.
+This indicates that some variables (here genes) appear more than once which can lead to errors or unintended behavior for downstream analysis tasks.
 We execute the proposed function <code class="docutils literal notranslate"><span class="pre">var_names_make_unique()</span></code> which makes the variable name unique by appending a number string to each duplicate index element: ‘1’, ‘2’, etc.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -800,8 +805,8 @@ For mouse datasets, the prefix is usually in lower case, so “mt-“.</p>
 </div>
 </div>
 </div>
-<p>As we can see, the function added a couple of additional columns to <code class="docutils literal notranslate"><span class="pre">.var</span></code> and <code class="docutils literal notranslate"><span class="pre">.obs</span></code>.
-We want to highlight a few of them here, more information on the different metrics can be found in the scanpy documentation:</p>
+<p>The function added a couple of additional columns to <code class="docutils literal notranslate"><span class="pre">.var</span></code> and <code class="docutils literal notranslate"><span class="pre">.obs</span></code>.
+We want to highlight a few of them here:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">n_genes_by_counts</span></code> in <code class="docutils literal notranslate"><span class="pre">.obs</span></code> is the number of genes with positive counts in a cell,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">total_counts</span></code> is the total number of counts for a cell, this might also be known as library size, and</p></li>
@@ -811,7 +816,6 @@ We want to highlight a few of them here, more information on the different metri
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;total_counts&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># sc.pl.violin(adata, &#39;total_counts&#39;)</span>
 <span class="n">p2</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">)</span>
 <span class="n">p3</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;total_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1094,12 +1098,11 @@ We load this similarly as before the <code class="docutils literal notranslate">
 </div>
 </div>
 </div>
-<p>We have now everything in place to run SoupX.
+<p>We now have everything in place to run SoupX.
 The inputs are the filtered cellranger matrix of shape barcodes x cells, the raw table of droplets from cellranger of shape <code class="docutils literal notranslate"><span class="pre">barcodes</span> <span class="pre">x</span> <span class="pre">droplets</span></code>, the gene and cell names and the clusters obtained by simple leiden clustering.
 The output will be the corrected count matrix.</p>
 <p>We first construct a so called <code class="docutils literal notranslate"><span class="pre">SoupChannel</span></code> from the table of droplets and the table of cells.
-Next, we add metadata to the SoupChannel object which can be any metadata in the form of a <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>.
-We add here</p>
+Next, we add metadata to the SoupChannel object which can be any metadata in the form of a <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -o out 
@@ -1228,7 +1231,7 @@ These artificial doublets are projected together with the remaining calls into a
 The doublet detection method computes a doublet score based on the number of artificial doublet neighbors in the k nearest neighbor graph.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>We first load some additional python and R packages.</p>
+<p>We first load some additional R packages.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
@@ -1321,11 +1324,10 @@ Name: count, dtype: int64
 <p>During downstream clustering it might be useful to reassess quality control and the chosen parameters to potentially filter out more or less cells.
 We will now save the dataset into <code class="docutils literal notranslate"><span class="pre">lamindb</span></code>, so that we can continue with the <a class="reference internal" href="normalization.html"><span class="std std-doc">normalization chapter</span></a>.
 You don’t have to run the code below.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_quality_control.h5ad&quot;</span><span class="p">)</span>
-<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
-    <span class="s2">&quot;s4d8_quality_control.h5ad&quot;</span><span class="p">,</span>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s2">&quot;preprocessing_visualization/s4d8_quality_control.h5ad&quot;</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;anndata after quality control&quot;</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -1333,6 +1335,11 @@ You don’t have to run the code below.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ creating new artifact version for key=&#39;preprocessing_visualization/s4d8_quality_control.h5ad&#39; (storage: &#39;s3://lamin-eu-central-1/VPwcjx3CDAa2&#39;)
 ... uploading s4d8_quality_control.h5ad: 100.0%
@@ -1343,6 +1350,7 @@ You don’t have to run the code below.</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="references">
@@ -1395,7 +1403,7 @@ You don’t have to run the code below.</p>
 <h3><span class="section-number">6.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Lukas Heumos</p></li>
-<li><p>Lukas Zappia</p></li>
+<li><p>Luke Zappia</p></li>
 </ul>
 </section>
 </section>

@@ -607,17 +607,17 @@ yml</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </details><!-- END DROPDOWNS -->
-<p>As previously mentioned, scRNA-seq is a high-throughput sequencing technology that produces datasets with high dimensions in the number of cells and genes.
-This immediately points to the fact that scRNA-seq data suffers from the ‘curse of dimensionality’.</p>
-<div class="admonition-curse-of-dimensionality admonition">
+<p>scRNA-seq is a high-throughput sequencing technology that produces datasets with high dimensions in the number of cells and genes.
+Therefore, scRNA-seq data suffers from the ‘curse of dimensionality’.</p>
+<div class="dropdown admonition">
 <p class="admonition-title">Curse of dimensionality</p>
-<p>The Curse of dimensionality was first brought up by R. Bellman <span id="id1">[<a class="reference internal" href="#id144" title="R. Bellman, R.E. Bellman, and Rand Corporation. Dynamic Programming. Rand Corporation research study. Princeton University Press, 1957. URL: https://books.google.de/books?id=rZW4ugAACAAJ.">Bellman <em>et al.</em>, 1957</a>]</span> and describes the problem that, in theory, high-dimensional data contains more information, but in practice this is not the case.
+<p>The Curse of dimensionality was first brought up by R. Bellman <span id="id1">[<a class="reference internal" href="#id144" title="R. Bellman, R.E. Bellman, and Rand Corporation. Dynamic Programming. Rand Corporation research study. Princeton University Press, 1957. URL: https://books.google.de/books?id=rZW4ugAACAAJ.">Bellman <em>et al.</em>, 1957</a>]</span> and describes that, in theory, high-dimensional data contains more information, but in practice this is not the case.
 Higher-dimensional data often contains more noise and redundancy, and therefore, adding more information does not provide benefits for downstream analysis steps.</p>
 </div>
-<p>Not all genes are informative and are important for the task of cell type clustering based on their expression profiles.
-We already aimed to reduce the dimensionality of the data with feature selection, as a next step, one can further reduce the dimensions of single-cell RNA-seq data with dimensionality reduction algorithms.
-These algorithms are an important step during preprocessing to reduce the data complexity and for visualization.
-Several dimensionality reduction techniques have been developed and used for single-cell data analysis.</p>
+<p>Not all genes are informative and therefore not all genes are essential for tasks such as clustering.
+We already aimed to reduce the dimensionality of the data with feature selection.
+As a next step, we will further reduce the dimensions of single-cell RNA-seq data with dimensionality reduction algorithms.
+These algorithms are an important step during preprocessing to reduce the data complexity and for visualization.</p>
 <figure class="align-default" id="id2">
 <a class="bg-primary mb-1 reference internal image-reference" href="../_images/dimensionality_reduction.jpeg"><img alt="Dimensionality reduction" class="bg-primary mb-1" src="../_images/dimensionality_reduction.jpeg" style="width: 800px;" />
 </a>
@@ -634,8 +634,8 @@ An additional dimensionality reduction worth mentioning in this context is princ
 <p>Generally, t-SNE and UMAP are very robust and mostly equivalent if specific choices for the initialization are selected <span id="id4">[<a class="reference internal" href="#id142" title="Dmitry Kobak and Philipp Berens. The art of using t-sne for single-cell transcriptomics. Nature Communications, 10(1):5416, Nov 2019. URL: https://doi.org/10.1038/s41467-019-13056-x, doi:10.1038/s41467-019-13056-x.">Kobak and Berens, 2019</a>]</span>.</p>
 <p>All aforementioned methods are implemented in scanpy.</p>
 <p>Now we start with importing all required Python packages and load the dataset after <a class="reference internal" href="quality_control.html"><span class="std std-doc">quality control</span></a>, <a class="reference internal" href="normalization.html"><span class="std std-doc">normalization</span></a>, and <a class="reference internal" href="feature_selection.html"><span class="std std-doc">feature selection</span></a>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
 
@@ -651,12 +651,18 @@ An additional dimensionality reduction worth mentioning in this context is princ
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ loaded Transform(&#39;liGMVGre4G5H0000&#39;), re-started Run(&#39;ZFh04bqi...&#39;) at 2025-04-25 15:51:23 UTC
 → notebook imports: lamindb==1.3.2 scanpy==1.11.1
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -669,6 +675,17 @@ An additional dimensionality reduction worth mentioning in this context is princ
 </div>
 </div>
 <p>We will use a normalized representation of the dataset for dimensionality reduction and visualization, specifically the shifted logarithm.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Why should you use normalized data for dimensionality reduction?</p>
+<p>First, gene expression data is typically heavily right-skewed with many zeros and a few highly expressed genes.
+Log transformation helps normalize this distribution, making it more symmetric and reducing the impact of extreme values.
+This prevents highly expressed genes from dominating any distance calculations.</p>
+<p>Second, biological signals in expression data often follow multiplicative rather than additive patterns.
+Log transformation converts multiplicative relationships to additive ones, which most dimensionality reduction algorithms (PCA, t-SNE, UMAP) are designed to detect.</p>
+<p>Third, variance in raw expression data typically scales with mean expression levels.
+Log transformation stabilizes this variance, preventing highly expressed genes from dominating the analysis.
+For zero values (dropout events common in single-cell data), a pseudocount is typically added before log transformation (log1p) to avoid mathematical errors.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log1p_norm&quot;</span><span class="p">]</span>
@@ -718,7 +735,7 @@ PC1 is the direction where the data is most spread out, and PC2 is the next most
 The color of each point represents the total number of transcripts (<a class="reference internal" href="../glossary.html#term-Unique-Molecular-Identifier-UMI"><span class="xref std std-term">UMIs</span></a>) detected in that cell.</p></li>
 </ol>
 <p>By projecting the data onto PC1 and PC2, we capture most of the meaningful variation in fewer dimensions.</p>
-<p>Although we don’t aim to interpret biological meaning directly from this PCA plot at this stage, we can observe cellular heterogeneity: cells with similar expression profiles tend to cluster together, which may reflect different cell types or states.</p>
+<p>Although we do not aim to interpret biological meaning directly from this PCA plot at this stage, we can observe cellular heterogeneity: cells with similar expression profiles tend to cluster together, which may reflect different cell types or states.</p>
 </div>
 </section>
 <section id="t-sne">
@@ -809,11 +826,10 @@ UMAP is widely used for visualizing cell clusters and trajectories in single-cel
 </a>
 </div>
 </div>
-<p>As we can observe, cells with a high doublet score are projected to the same region in the UMAP.
-We will keep them in the dataset for now but might re-visit our quality control strategy later.
-You don’t have to run the cell below.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<p>Cells with a high doublet score are projected to the same region in the UMAP.
+We will keep them in the dataset for now but generally this suggests to potentially re-visit the quality control strategy again to ensure that as few doublets as possible are retained.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_dimensionality_reduction.h5ad&quot;</span><span class="p">)</span>
 <span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
     <span class="s2">&quot;s4d8_dimensionality_reduction.h5ad&quot;</span><span class="p">,</span>
@@ -824,6 +840,11 @@ You don’t have to run the cell below.</p>
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ creating new artifact version for key=&#39;preprocessing_visualization/s4d8_dimensionality_reduction.h5ad&#39; (storage: &#39;s3://lamin-eu-central-1/VPwcjx3CDAa2&#39;)
 ... uploading s4d8_dimensionality_reduction.h5ad: 100.0%
@@ -834,6 +855,7 @@ You don’t have to run the cell below.</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="references">

@@ -610,24 +610,22 @@ These counts represent a molecule’s capture, reverse transcription and sequenc
 Each of these steps adds a degree of variability to the measured count depth for identical cells, so the difference in gene expression between cells in the count data might simply be due to sampling effects.
 This means that the dataset and therefore the count matrix still contains widely varying variance terms.
 Analyzing the dataset is often challenging as many statistical methods assume data with uniform variance structure.</p>
-<div class="admonition-gamma-poisson-distribution admonition">
+<div class="dropdown admonition">
 <p class="admonition-title">Gamma-Poisson distribution</p>
 <p>A theoretically and empirically established model for UMI data is the Gamma-Poisson distribution which implies a quadratic mean-variance relation with <span class="math notranslate nohighlight">\(\operatorname{Var}[Y] = \mu + \alpha \mu^2\)</span> with mean <span class="math notranslate nohighlight">\(\mu\)</span> and overdispersion <span class="math notranslate nohighlight">\(\alpha\)</span>.
 For <span class="math notranslate nohighlight">\(\alpha=0\)</span> this is the Poisson distribution and <span class="math notranslate nohighlight">\(\alpha\)</span> describes the additional variance on top of the Poisson.</p>
 </div>
-<p>The preprocessing step of “normalization” aims to adjust the raw counts in the dataset for variable sampling effects by scaling the observable variance to a specified range.
-Several normalization techniques are used in practice varying in complexity.
-They are mostly designed in such a way that subsequent analysis tasks and their underlying statistical methods are applicable.</p>
-<p>A recent benchmark published by Ahlmann-Eltze and Huber<span id="id2">[<a class="reference internal" href="#id138" title="Constantin Ahlmann-Eltze and Wolfgang Huber. Comparison of transformations for single-cell RNA-seq data. Nature Methods, 2023. URL: https://www.nature.com/articles/s41592-023-01814-1, arXiv:https://www.nature.com/articles/s41592-023-01814-1.pdf, doi:10.1038/s41592-023-01814-1.">Ahlmann-Eltze and Huber, 2023</a>]</span> compared 22 different transformations for single-cell data.
-The benchmark compared the performance of the different normalization techniques based on the cell graph overlap with the ground truth.
-We would like to highlight that a complete benchmark that also compares the impact of the normalization on a variety of different downstream analysis tasks is still outstanding.
-We advise analysts to choose the normalization carefully and always depend on the subsequent analysis task.</p>
-<p>This chapter will introduce the reader to three different normalization techniques, the shifted logarithm transformation, scran normalization and analytic approximation of Pearson residuals.
+<p>Normalization aims to adjust the raw counts in the dataset for variable sampling effects by scaling the observable variance to a specified range.
+Several normalization techniques are used in practice varying in complexity.</p>
+<p>A recent benchmark published by Ahlmann-Eltze and Huber<span id="id2">[<a class="reference internal" href="#id138" title="Constantin Ahlmann-Eltze and Wolfgang Huber. Comparison of transformations for single-cell RNA-seq data. Nature Methods, 2023. URL: https://www.nature.com/articles/s41592-023-01814-1, arXiv:https://www.nature.com/articles/s41592-023-01814-1.pdf, doi:10.1038/s41592-023-01814-1.">Ahlmann-Eltze and Huber, 2023</a>]</span> compared 22 different normalization algorithms.
+Notably, a benchmark that also compares the impact of the normalization on a variety of different downstream analysis tasks is still outstanding.
+We advise analysts to choose the normalization method carefully and always evaluate based on the subsequent analysis task.</p>
+<p>This chapter will introduce three different normalization techniques, the shifted logarithm transformation, scran normalization and analytic approximation of Pearson residuals.
 The shifted logarithm works beneficial for stabilizing variance for subsequent dimensionality reduction and identification of differentially expressed genes.
 Scran was extensively tested and used for batch correction tasks and analytic Pearson residuals are well suited for selecting biologically variable genes and identification of rare cell types.</p>
 <p>We first import all required Python packages and load the dataset for which we filtered low-quality cells, removed ambient RNA, and scored doublets.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
@@ -658,6 +656,11 @@ Scran was extensively tested and used for batch correction tasks and analytic Pe
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ connected lamindb: theislab/sc-best-practices
 → loaded Transform(&#39;Z95qTilYUzGh0000&#39;), re-started Run(&#39;fPEduYxk...&#39;) at 2025-04-25 15:19:47 UTC
@@ -665,6 +668,7 @@ Scran was extensively tested and used for batch correction tasks and analytic Pe
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -756,7 +760,7 @@ The only difference now is that Scran leverages a deconvolution approach to esti
 This approach aims to better account for differences in count depths across all cells present in the dataset.</p>
 <p>Cells are partitioned into pools and Scran estimates pool-based size factors using a linear regression over genes.
 Scran was extensively tested for batch correction tasks and can be easily called with the respective R package.</p>
-<div class="admonition-scran-s-pooling-based-size-factor-estimation-method admonition">
+<div class="dropdown admonition">
 <p class="admonition-title">Scran’s pooling-based size factor estimation method</p>
 <p>Scran estimates size factors for single cells by first pooling cells (combining the counts from multiple cells into a single “pseudo-sample”, or pool, by summing their gene expression values) into overlapping groups to reduce noise.
 It calculates size factors for these pools using gene-wise comparisons (via linear regression), then uses a deconvolution step to infer individual cell size factors from the pooled estimates.
@@ -888,7 +892,7 @@ The output of this method is normalized values that can be positive or negative.
 Negative residuals for a cell and gene indicate that fewer counts are observed than expected compared to the gene’s average expression and cellular sequencing depth.
 Positive residuals indicate more counts respectively.
 Analytic Pearson residuals are implemented in scanpy and can directly be calculated on the raw count matrix.</p>
-<div class="admonition-pearson-residual admonition">
+<div class="dropdown admonition">
 <p class="admonition-title">Pearson residual</p>
 <p>A Pearson residual is a measure used in statistical modeling to evaluate how well a model’s predicted values match the observed data.
 It tells you how far off a prediction is, taking into account the variability expected under the model.</p>
@@ -931,11 +935,10 @@ It tells you how far off a prediction is, taking into account the variability ex
 <p>We applied different normalization techniques to our dataset and saved them as separate layers to our anndata object.
 Depending on the downstream analysis task it can be favourable to use a differently normalized layer and assess the result.</p>
 <p>The code below is to save the adata object on our database. You don’t have to run the cell.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;s4d8_normalization.h5ad&quot;</span><span class="p">)</span>
-<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
-    <span class="s2">&quot;s4d8_normalization.h5ad&quot;</span><span class="p">,</span>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s2">&quot;preprocessing_visualization/s4d8_normalization.h5ad&quot;</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;anndata after three different normalization methods&quot;</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -943,6 +946,11 @@ Depending on the downstream analysis task it can be favourable to use a differen
 </pre></div>
 </div>
 </div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ creating new artifact version for key=&#39;preprocessing_visualization/s4d8_normalization.h5ad&#39; (storage: &#39;s3://lamin-eu-central-1/VPwcjx3CDAa2&#39;)
 ... uploading s4d8_normalization.h5ad: 100.0%
@@ -953,6 +961,7 @@ Depending on the downstream analysis task it can be favourable to use a differen
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="references">
