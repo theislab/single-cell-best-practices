@@ -482,6 +482,12 @@ A read can be tagged by only one UMI but may belong to multiple references if it
 Additionally, since molecule barcoding in scRNA-seq is typically isolated and independent for each cell (aside from the previously discussed challenges in resolving cell barcodes), _UMI resolution_ will be explained for a single cell without loss of generality.
 This same procedure is generally applied to all cells independently.
 
+:::{figure-md} raw-proc-fig-overview
+<img src="../_static/images/raw_data_processing/UMI.jpeg" alt="Figure UMIs" class="bg-primary mb-1" width="800px">
+
+Using UMI's to reduce bias, while taking care of possible errors (blue boxes).
+:::
+
 (raw-proc:need-for-umi-resolution)=
 
 ### The need for UMI resolution
