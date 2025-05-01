@@ -170,20 +170,48 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 
 ### Overview
 
-```{list-table} Comparison of the mentioned seqeuncing methods
-:header-rows: 1
-:label: example-table
+:::{table} Performance comparison of common sequencing techniques sorted for maximum read length. We obtained the numbers for Sanger sequencing from individual sources ([a](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf), [b](https://www.sciencedirect.com/science/article/abs/pii/B9780128154991000132), [c](https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=$500%20per%20megabase.), [d](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)), while all other methods were obtained from {cite:t}`logsdon2020long`.
+:label: table
 
-* - Training
-  - Validation
-* - 0
-  - 5
-* - 13720
-  - 2744
-* - 13720
-  - 2744
-* - 13720
-  - 2744
+| Name                                 | Max read length (kb) | Accuracy (%)  | Cost ($/GB)     | Throughput (Mb/year) | Generation |
+| ------------------------------------ | -------------------- | ------------- | --------------- | -------------------- | ---------- |
+| Illumina NextSeq 550                 | 0.15                 | >99.9         | >47,782         | 50-63                | 2          |
+| Illumina NovaSeq 6000                | 0.25                 | >99.9         | 10-35           | >1,194,545           | 2          |
+| Sanger sequecing (e.g. ThermoFisher) | 1{sup}`b`            | 99.99{sup}`a` | 500,000{sup}`c` | 0.73{sup}`d`         | 1          |
+| PacBio (Sequel II, HiFi)             | >20                  | >99           | 43–86           | 10,220               | 3          |
+| PacBio (Sequel II, CLR)              | >200                 | 87–92         | 13-26           | 93,440               | 3          |
+| Nanopore (PromethION)                | >1,000               | 87–98         | 21-42           | 3,153,600            | 3          |
+| Nanopore (MinION/GridION)            | >1,500               | 87–98         | 50-2,000        | 913-109,500          | 3          |
+
+:::
+
+| Generation | Name                                 | Accuracy (%)                                                                                              | Maximum read length (kb)        | Cost ($/GB) | Throughput (Mb/year)                                                                                                                                                                                                                                                                                   |
+| ---------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1          | Sanger sequecing (e.g. ThermoFisher) | [99.99](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf) | 1[^a] {cite}`DEHARVENGT2020215` | 500,000     | 0.73 ([or 2 Mb/day](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)%20using%20one%20instrument.) |
+| 2          | Illumina NextSeq 550                 | 0.15                                                                                                      | >99.9                           | >47,782     | 50-63                                                                                                                                                                                                                                                                                                  |
+| 2          | Illumina NovaSeq 6000                | 0.25                                                                                                      | >99.9                           | 10-35       | >1,194,545                                                                                                                                                                                                                                                                                             |
+| 3          | Nanopore (MinION/GridION)            | 87–98                                                                                                     | >1,500                          | 50-2,000    | 913-109,500                                                                                                                                                                                                                                                                                            |
+| 3          | Nanopore (PromethION)                | 87–98                                                                                                     | >1,000                          | 21-42       | 3,153,600                                                                                                                                                                                                                                                                                              |
+| 3          | PacBio (Sequel II, CLR)              | 87–92                                                                                                     | >200                            | 13-26       | 93,440                                                                                                                                                                                                                                                                                                 |
+| 3          | PacBio (Sequel II, HiFi)             | >99                                                                                                       | >20                             | 43–86       | 10,220                                                                                                                                                                                                                                                                                                 |
+
+1 kb also source for (https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf)
+
+| Training  | Validation |
+| :-------- | ---------: | --- |
+| alsdkjhfk |    laskdfl | 5   |
+| 13720     |       2744 |
+
+Sanger:
+https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=Current%20Sequencing%20Costs,-Now%2C%20sequencing%20is&text=The%20cost%20varies%20by%20the,a%20genome%20for%20about%20$300.
+
+```{csv-table} Frozen Delights!
+:header: "Treat", "Quantity", "Description"
+
+"Albatross", 2.99, "On a stick!"
+"Crunchy Frog", 1.49, "If we took the bones out
+it wouldn't be crunchy, now would it?"
+"Gannet Ripple", 1.99, "On a stick!"
 ```
 
 ```{csv-table} Frozen Delights!
@@ -592,6 +620,54 @@ Gene transcription is far from continuous.
 Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
 This is also the reason why we model mRNA transcription with a negative binomial distribution (see dropdown TODO).
 
+```{dropdown} Why are expression bursts the reason negativ binominal distrubtion
+Evene though there exists a couple of model, we can model gene transciption in a basic two state model to show the basic principle.
+Either the gene is siwtch ON lading to the production of mRNA or it is switched OFF turning it silent again.
+This is the perfect prereqeuisite for a bernoulli experiment.
+Whenever we observe the activity of a gene we can either have a succes "the genen is switched ON" or failure the gene is siwtched OFF.
+Now, a negative binomianl distribution describes the number of failures in seqeuntailly independet bernoulli experiments (the propabliity of success = p) must accour before we can have r successes.
+So lets a assum cell A and B are livingn in the same environment, which both produce on average 10 bursts an hour.
+Let`s say we measure the state of our target genen every minute, so that probablilty to see an active gene is (p = 10/60 = 1/6).
+Because of stochastic nature transcpiriotn be observe Cell A to produc 3 burst in 10 minute ´ while cell B produce 1 in 10 minutes.
+We could now ask ourselves, What is know the probabliity to obsever the transcipriotn pattern A and B just by chance?
+
+
+Let's say
+
+The  is a stochatic process, which is .
+
+
+Next, this behaviour is random between cell under the same conditions.
+
+This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
+
+
+
+
+The distribution
+Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
+
+several models proposed (https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1451461/full)
+
+dropdown mit negative binominal verteilung warum wir das benutzen
+this can be modeled by rnaomdly swithching on and of
+
+
+neg bin in own word
+
+
+sources:
+https://de.wikipedia.org/wiki/Negative_Binomialverteilung
+https://www.datacamp.com/tutorial/negative-binomial-distribution
+--> technical and biological variation
+https://www.science.org/doi/10.1126/science.1198817
+--> manuel
+https://www.nature.com/articles/ncomms13788
+https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
+--> both biological explanation for bursts
+
+```
+
 The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
 This means that a single gene can give rise to multiple distinct mRNA isoforms.
 On average, each human gene produces about 3.4 mRNA isoforms {cite}`lee2015mechanisms`.
@@ -647,52 +723,6 @@ Next to that there a difference due to cell type which can also be seen in [A](h
 Other: Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
 
 - Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
-
-```{dropdown} Why are expression bursts the reason negativ binominal distrubtion
-
-Next, this behaviour is random between cell under the same conditions. So lets a assum cell A and B are livingn in the same environment and produce on average 10 bursts an hour.
-Then Cell A might produc 8 burst in the first 30 min and 2 burst in the seond while cell B produce 5 burst in the first and second 30 minutes.
-This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
-
-
-
-
-The distribution
-Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
-
-several models proposed (https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1451461/full)
-
-dropdown mit negative binominal verteilung warum wir das benutzen
-this can be modeled by rnaomdly swithching on and of
-
-
-neg bin in own word
-What is th eprob to hav n succes after x repeptions of bernolli experiment (e.g. p = 0.5). A cell has on average 10 burtst an hour. What is the prop to have a burst after 10 min.
-
-sources:
-https://de.wikipedia.org/wiki/Negative_Binomialverteilung
-https://www.datacamp.com/tutorial/negative-binomial-distribution
---> technical and biological variation
-https://www.science.org/doi/10.1126/science.1198817
---> manuel
-https://www.nature.com/articles/ncomms13788
-https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
---> both biological explanation for bursts
-
-```
-
-// TODO
-This pre mRNA is further processed by adding a 5' cap, 3'-poly Adenin tail, and performing a processed called alternative splicing./
-
-// TODO
-To collect only mRNA Gen10X uses polyA primer
-
-(not papaer yet)
-In one cell around 30-70% of the genes are transcpried. This number can vary a lot so that some gene are not transcirpted at all an other 10 times.
-https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71
-
-1 to 30 mRNA copies per cell [source](https://pmc.ncbi.nlm.nih.gov/articles/PMC3941114/#B71)
-Some gene might
 
 ### END
 
