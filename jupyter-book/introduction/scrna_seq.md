@@ -568,7 +568,46 @@ Other links:
 - different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
 - [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
 
-## Central dogma in numbers (Chapter for Manuel)
+## Central Dogma in Numbers
+
+### Measuring "messengers"
+
+At the core of single-cell RNA sequencing (scRNA-seq) lies a fundamental question: What exactly are we trying to measure?
+In scRNA-seq experiments, our focus is on quantifying messenger RNA ({term}`mRNA`) within individual cells.
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
+Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
+Yet, mRNA makes up only a small fraction of a cell’s total RNA.
+Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
+Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
+This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
+However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
+
+Understanding the central dogma through these numerical lenses reveals not only the biological complexity but also the limitations of our tools. To appreciate this more deeply, let’s walk step by step from gene to protein.
+
+### From Gene to Protein
+
+Our journey begins with a gene, a defined region in the DNA that acts as a template for mRNA synthesis.
+While the number of genes can vary slightly between individuals (~70 genes), the average human genome contains roughly 22,000 genes {cite}`pertea2010between`.
+Gene transcription is far from continuous.
+Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
+This is also the reason why we model mRNA transcription with a negative binomial distribution (see dropdown TODO).
+
+The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
+This means that a single gene can give rise to multiple distinct mRNA isoforms.
+On average, each human gene produces about 3.4 mRNA isoforms {cite}`lee2015mechanisms`.
+While all human genes have at least two alternative isoforms, some push the limits of complexity.
+The human basonuclin 2 gene, for instance, has the potential to generate up to 90,000 mRNA isoforms, resulting in over 2,000 different proteins {cite}`vanhoutteghem2007human`.
+Finally, this "mature" mRNA is translated into proteins.
+Here, too, the numbers vary dramatically.
+In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 proteins per mRNA {cite}`li2014system`.
+However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
+
+Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
+
+Dropdown
+{cite}`zhang2024transcriptional`
+
+## Central dogma in numbers
 
 ### What do we want to measure
 
@@ -577,7 +616,9 @@ In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
 This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
 In fact, only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`, while the majority RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
 As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
-This also means that there a a lot of genes not transcribed at all within a cell.
+This also means that there a lot of genes not transcribed at all within a cell.
+Besides that common methods like 10X genomics are only able to capture ~65% of cells per run and only 14% of cells's mRNA {cite}`aljanahi2018introduction`.
+This makes it very difficult to caputre low expressed genes in sinlge cell experimenets.
 This is a huge range due to many reasons and but lets`s start chornologically.
 
 ### from gene to protein
