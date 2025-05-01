@@ -168,12 +168,13 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 - The reagents are generally more expensive than second-generation sequencing.
 ```
 
-### Overview
+### Comparison of sequencing technologies across generations
 
 :::{table} Performance comparison of common sequencing techniques sorted for maximum read length. We obtained the numbers for Sanger sequencing from individual sources ([a](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf), [b](https://www.sciencedirect.com/science/article/abs/pii/B9780128154991000132), [c](https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=$500%20per%20megabase.), [d](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)), while all other methods were obtained from {cite:t}`logsdon2020long`.
 :label: table
+:align: center
 
-| Name                                 | Max read length (kb) | Accuracy (%)  | Cost ($/GB)     | Throughput (Mb/year) | Generation |
+| Name                                 | Max read length (kb) | Accuracy (%)  | Cost ($/Gb)     | Throughput (Mb/year) | Generation |
 | ------------------------------------ | -------------------- | ------------- | --------------- | -------------------- | ---------- |
 | Illumina NextSeq 550                 | 0.15                 | >99.9         | >47,782         | 50-63                | 2          |
 | Illumina NovaSeq 6000                | 0.25                 | >99.9         | 10-35           | >1,194,545           | 2          |
@@ -184,44 +185,6 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 | Nanopore (MinION/GridION)            | >1,500               | 87–98         | 50-2,000        | 913-109,500          | 3          |
 
 :::
-
-| Generation | Name                                 | Accuracy (%)                                                                                              | Maximum read length (kb)        | Cost ($/GB) | Throughput (Mb/year)                                                                                                                                                                                                                                                                                   |
-| ---------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1          | Sanger sequecing (e.g. ThermoFisher) | [99.99](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf) | 1[^a] {cite}`DEHARVENGT2020215` | 500,000     | 0.73 ([or 2 Mb/day](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)%20using%20one%20instrument.) |
-| 2          | Illumina NextSeq 550                 | 0.15                                                                                                      | >99.9                           | >47,782     | 50-63                                                                                                                                                                                                                                                                                                  |
-| 2          | Illumina NovaSeq 6000                | 0.25                                                                                                      | >99.9                           | 10-35       | >1,194,545                                                                                                                                                                                                                                                                                             |
-| 3          | Nanopore (MinION/GridION)            | 87–98                                                                                                     | >1,500                          | 50-2,000    | 913-109,500                                                                                                                                                                                                                                                                                            |
-| 3          | Nanopore (PromethION)                | 87–98                                                                                                     | >1,000                          | 21-42       | 3,153,600                                                                                                                                                                                                                                                                                              |
-| 3          | PacBio (Sequel II, CLR)              | 87–92                                                                                                     | >200                            | 13-26       | 93,440                                                                                                                                                                                                                                                                                                 |
-| 3          | PacBio (Sequel II, HiFi)             | >99                                                                                                       | >20                             | 43–86       | 10,220                                                                                                                                                                                                                                                                                                 |
-
-1 kb also source for (https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf)
-
-| Training  | Validation |
-| :-------- | ---------: | --- |
-| alsdkjhfk |    laskdfl | 5   |
-| 13720     |       2744 |
-
-Sanger:
-https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=Current%20Sequencing%20Costs,-Now%2C%20sequencing%20is&text=The%20cost%20varies%20by%20the,a%20genome%20for%20about%20$300.
-
-```{csv-table} Frozen Delights!
-:header: "Treat", "Quantity", "Description"
-
-"Albatross", 2.99, "On a stick!"
-"Crunchy Frog", 1.49, "If we took the bones out
-it wouldn't be crunchy, now would it?"
-"Gannet Ripple", 1.99, "On a stick!"
-```
-
-```{csv-table} Frozen Delights!
-:header: "Treat", "Quantity", "Description"
-
-"Albatross", 2.99, "On a stick!"
-"Crunchy Frog", 1.49, "If we took the bones out
-it wouldn't be crunchy, now would it?"
-"Gannet Ripple", 1.99, "On a stick!"
-```
 
 ## Overview of the NGS process
 
@@ -249,63 +212,29 @@ The differences lie primarily in the chemistry of the respective sequencing tech
 
 So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced.
 However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about a cell's dynamic and real-time processes.
-For example, by combining different splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins.
-This alternative splicing event is a natural phenomenon that occurs frequently in eukaryotes.
-In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
-This is where RNA sequencing (RNA-Seq) comes into play.
-
-RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
-
-Sequencing RNA allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
+RNA sequencing (RNA-Seq) allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes, and other experimental conditions.
 
+RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
-
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
-
-<table>
-    <thead>
-        <tr>
-            <th>Layer 1</th>
-            <th>Layer 2</th>
-            <th>Layer 3</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=4>L1 Name</td>
-            <td rowspan=2>L2 Name A</td>
-            <td>L3 Name A</td>
-        </tr>
-        <tr>
-            <td>L3 Name B</td>
-        </tr>
-        <tr>
-            <td rowspan=2>L2 Name B</td>
-            <td>L3 Name C</td>
-        </tr>
-        <tr>
-            <td>L3 Name D</td>
-        </tr>
-    </tbody>
-</table>
 
 (introduction-scrna-seq-key-takeaway-2)=
 
 ## Single-cell RNA sequencing
 
-### Overview
+### Bulk sequencing vs single-cell RNA sequencing
 
-RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
-Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell sequencing.
+RNA-Seq can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
+Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell RNA-Seq (scRNA-Seq)
 Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity, such as cell expression profile heterogeneity, which may help answer the question of interest.
 Some drugs or perturbations may affect only specific cell types or interactions between cell types.
 For example, in oncology, it is possible to have rare drug-resistant tumor cells causing relapse, which is difficult to identify by simple bulk RNA-Seq, even on cultured cells.
 
 To uncover such relationships, examining gene expression on a single-cell level is vital.
-Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
+ScRNA-Seq does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct.
 Second, the {term}`downstream analysis` becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
@@ -313,6 +242,44 @@ A single-cell experiment generally follows similar steps as a bulk RNA-Seq exper
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
+But before we can start explaing the
+
+### Central dogma in numbers
+
+#### Measuring "messengers"
+
+At the core of scRNA-Seq lies a fundamental question: What **exactly** are we trying to measure?
+In RNA-seq experiments, our focus is on quantifying messenger RNA ({term}`mRNA`) within individual cells.
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
+Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
+Yet, mRNA makes up only a small fraction of a cell’s total RNA.
+Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
+Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
+This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
+However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
+
+Understanding the central dogma through these numerical lenses reveals not only the biological complexity but also the limitations of our tools. To appreciate this more deeply, let’s walk step by step from gene to protein.
+
+#### From Gene to Protein
+
+Our journey begins with a gene, a defined region in the DNA that acts as a template for mRNA synthesis.
+While the number of genes can vary slightly between individuals (~70 genes), the average human genome contains roughly 22,000 genes {cite}`pertea2010between`.
+Gene transcription is far from continuous.
+Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
+This is also the reason why we model mRNA transcription with a negative binomial distribution (see dropdown TODO).
+
+The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
+This means that a single gene can give rise to multiple distinct mRNA isoforms.
+On average, each human gene produces about 3.4 mRNA isoforms {cite}`lee2015mechanisms`.
+While all human genes have at least two alternative isoforms, some push the limits of complexity.
+The human basonuclin 2 gene, for instance, has the potential to generate up to 90,000 mRNA isoforms, resulting in over 2,000 different proteins {cite}`vanhoutteghem2007human`.
+In some cases, however, alternative splicing could also lead to a non-functioning enzyme and an induced disease state.
+Finally, this "mature" mRNA is translated into proteins.
+Here, too, the numbers vary dramatically.
+In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 proteins per mRNA {cite}`li2014system`.
+However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
+
+Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
 Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
 
 (exp-data:transcript-quantification)=
@@ -516,7 +483,7 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 
 ## New Developments
 
-# How we could categorize
+## How we could categorize
 
 single cell RNA seq
 
@@ -535,7 +502,7 @@ Others
 - hydrogel
 - combining Nanopore sequencing with cell barcode and UMI assignment
 
-# for the comparison table
+## for the comparison table
 
 "Run times includes cluster generation, sequencing, and base calling on a NextSeq 1000 or NextSeq 2000 System and NovaSeq 6000 System. Run times include automated onboard cluster generation, sequencing, automated post-run wash, and base calling on the NovaSeq X Systems." [link](https://sapac.illumina.com/systems/sequencing-platforms.html)
 
@@ -596,32 +563,8 @@ Other links:
 - different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
 - [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
 
-## Central Dogma in Numbers
-
-### Measuring "messengers"
-
-At the core of single-cell RNA sequencing (scRNA-seq) lies a fundamental question: What exactly are we trying to measure?
-In scRNA-seq experiments, our focus is on quantifying messenger RNA ({term}`mRNA`) within individual cells.
-This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
-Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
-Yet, mRNA makes up only a small fraction of a cell’s total RNA.
-Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
-Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
-This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
-However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
-
-Understanding the central dogma through these numerical lenses reveals not only the biological complexity but also the limitations of our tools. To appreciate this more deeply, let’s walk step by step from gene to protein.
-
-### From Gene to Protein
-
-Our journey begins with a gene, a defined region in the DNA that acts as a template for mRNA synthesis.
-While the number of genes can vary slightly between individuals (~70 genes), the average human genome contains roughly 22,000 genes {cite}`pertea2010between`.
-Gene transcription is far from continuous.
-Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
-This is also the reason why we model mRNA transcription with a negative binomial distribution (see dropdown TODO).
-
 ```{dropdown} Why are expression bursts the reason negativ binominal distrubtion
-Evene though there exists a couple of model, we can model gene transciption in a basic two state model to show the basic principle.
+Evene though there exists a couple of model, we can model gene transciption in a basic two state model to show the basic principle.{cite}`zhang2024transcriptional`
 Either the gene is siwtch ON lading to the production of mRNA or it is switched OFF turning it silent again.
 This is the perfect prereqeuisite for a bernoulli experiment.
 Whenever we observe the activity of a gene we can either have a succes "the genen is switched ON" or failure the gene is siwtched OFF.
@@ -668,22 +611,9 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
 
 ```
 
-The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
-This means that a single gene can give rise to multiple distinct mRNA isoforms.
-On average, each human gene produces about 3.4 mRNA isoforms {cite}`lee2015mechanisms`.
-While all human genes have at least two alternative isoforms, some push the limits of complexity.
-The human basonuclin 2 gene, for instance, has the potential to generate up to 90,000 mRNA isoforms, resulting in over 2,000 different proteins {cite}`vanhoutteghem2007human`.
-Finally, this "mature" mRNA is translated into proteins.
-Here, too, the numbers vary dramatically.
-In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 proteins per mRNA {cite}`li2014system`.
-However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
-
-Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
-
-Dropdown
-{cite}`zhang2024transcriptional`
-
 ## Central dogma in numbers
+
+In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
 
 ### What do we want to measure
 
