@@ -115,7 +115,7 @@ These can be found in the respective folders.
 Each chapter comes with a few essential files.
 The `.ipynb` notebook contains the main content and includes citations drawn from the accompanying `.bib` file.
 The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters).
-Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown)..
+Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown).
 
 ```bash
 ├── SECTION-NAME
@@ -144,13 +144,13 @@ Each `.ipynb` notebook should follow this standard structure:
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
 [Below](#create-quizflashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
-We’ve also prepared a chapter [template](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb), which you can view in your browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (template not done yet!). (note: the template is still a work in progress, TODO update links).
+We’ve also prepared a chapter [template](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb), which you can view in your browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (note: the template is still a work in progress, TODO update links).
 
 ### Rules
 
 - Place each sentence on its own line to make reviewing easier.
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``. However, only link the **first occurrence** of each term within the chapter — not every time it appears.
-- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed. If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
+- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed. In this case, also add the link to this term in the other chapters. If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
 - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``)
 - Use dropdowns whenever possible.
 - Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``)
@@ -186,7 +186,7 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 > We recommend discarding these changes immediately after running the command using `git restore .`.
 > Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
-### Create Quiz/flashcards
+### Create custom quizzes and flashcards
 
 ### Adding changelog entries with `towncrier`
 
