@@ -11,40 +11,42 @@ To support this, we've included numerous short quizzes and flashcards with solut
 ## How can I contribute?
 
 We warmly welcome contributions, especially those that help us keep our best practices up to date!
-However, as mentioned above, these recommendations are held to high standards.
+However, as mentioned [above](#our-philosophy), these recommendations are held to high standards.
 
 If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to discuss your ideas with us.
 We're always eager to learn about the latest developments and will likely have follow-up questions — but we're genuinely excited to collaborate.
 
-We also encourage contributions in the form of quizzes and flashcards.
-Our collection of quizzes and solutions is always growing, and community support in expanding them is greatly appreciated.
+We also encourage contributions in the form of [quizzes and flashcards](#create-quizflashcards).
+Our collection of self-assessment questions is always growing, and community support in expanding them is greatly appreciated.
 The same applies to these contributions: Just open an issue and let's get in touch!
 
 [![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
 ## Book architecture
 
-The following depicts the rough structure of the book inside the `jupyter_book` folder.
-Beyond several configuration files, all chapters are stored inside corresponding folders, such as for example, `conditions`.
-Inside, the corresponding notebooks, together with the associated `reference.bib` and `environment.yml` files, are stored.
+The structure of the book is organized within the `jupyter_book` folder.
+In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
+Each section contains the relevant notebooks along with their [associated files](#structure-of-our-chapter).
+
+Here’s an example of the folder layout:
 
 ```bash
 ├── conditions
-│   ├── compositional_environment.yaml
+│   ├── compositional_keytakeaways.txt
+│   ├── compositional.bib
 │   ├── compositional.ipynb
-│   ├── compositional_references.bib
+│   ├── compositional.yml
+│   ├── differential_gene_expression_keytakeaways.txt
 │   ├── differential_gene_expression.bib
 │   ├── differential_gene_expression.ipynb
-│   ├── gsea_pathway.bib
-│   ├── gsea_pathway_environment.yml
-│   ├── gsea_pathway.ipynb
-│   ├── perturbation_modeling.bib
-│   ├── perturbation_modeling_environment.yml
-│   └── perturbation_modeling.ipynb
+│   ├── differential_gene_expression.yml
+│   ├── gsea_pathway_keytakeaways.txt
+│   └── ...
 ├── ...
 ├── _toc.yml
 ├── _config.yml
 ├── acknowledgements.md
+├── CHANGELOG.md
 ├── glossary.md
 ├── outlook.md
 ├── preamble.md
@@ -81,7 +83,8 @@ Building the book is then as simple as:
 make
 ```
 
-which will build the complete book. This does not execute any notebooks and any updated chapters must be updated in a separate step.
+which will build the complete book.
+This does not execute any notebooks and any updated chapters must be updated in a separate step.
 
 To clean the build directory run:
 
@@ -93,43 +96,63 @@ make clean
 
 All chapters are available as Jupyter Notebooks and end-to-end executable.
 The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
-Hence, we decided to provide minimal Conda environments per chapter. These can be found in the respective folders.
+Hence, we decided to provide minimal Conda environments per chapter.
+These can be found in the respective folders.
 
-## Guide for contributors
+> [!WARNING]
+> Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
+>
+> ```bash
+> conda env create -f CHAPTER.yml
+> ```
+>
+> Now you can execute all cells in the notebook.
 
-### Structure of our chapter
-
-First of all, each chapter comes with a few files.
-In the `.ipynb` you write the main content and cite the references from `.bib`.
-The `.yml` file stores the minimal Conda environments, mentioned [above](#building-individual-chapters).
-The `_keytakeaways.txt` stores the key takeaways of the chapter in the corresponding [format](#key-takeaways-environment-and-lamin-dropdown).
+Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
 
 ```bash
-├── section_1
-│   ├── chapter_1.ipynb
-│   ├── chapter_1.bib
-│   ├── chapter_1.yml
-│   ├── chapter_1_keytakeaways.txt
-│   ├── chapter_2.ipynb
+conda env create -f CHAPTER.yml
+```
+
+Now you can execute all cells in the notebook.
+
+## Style guide for contributors
+
+### Essential files for every chapter
+
+Each chapter comes with a few essential files.
+The `.ipynb` notebook contains the main content and includes citations drawn from the accompanying `.bib` file.
+The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters).
+Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown)..
+
+```bash
+├── SECTION-NAME
+│   ├── CHAPTER-NAME.ipynb
+│   ├── CHAPTER-NAME.bib
+│   ├── CHAPTER-NAME.yml
+│   ├── CHAPTER-NAME_keytakeaways.txt
 │   ├── ...
 ```
 
-Each chapter is structured as follows:
+### Notebook Structure
 
-1. Title
-2. Dropdowns
-   - Key takeaways
-   - Env setup
-   - Lamin setup
-3. Main content
-4. Quiz/flashcards
-5. See also dropdown (useful links/further readings)
-6. References
-7. Contributors
+Each `.ipynb` notebook should follow this standard structure:
 
-All dropdowns directly after the title are automatically inserted, when they meet the [requirements](#key-takeaways-environment-and-lamin-dropdown).
+1. 🧠 **Title**
+2. 🔽 **Dropdown Section**
+   - Key Takeaways
+   - Environment Setup
+   - Lamin Setup
+3. 📖 **Main Content**
+4. ❓ **Quiz / Flashcards**
+5. 🔗 **See Also** _(Dropdown)_
+6. 📚 **References**
+7. 👥 **Contributors**
+
+All dropdowns directly after the title are automatically inserted, when they meet their corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 Besides that every chapter should end with some questions covering the main aspects of the chapter.
 See the paragraph below to see [how to create our costum quiz/flashcard](#create-quizflashcards).
+We created a chapter template, which you can also see in browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (template not done yet!).
 
 ### Rules
 
@@ -169,16 +192,6 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 > Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command using `git restore .`. Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
 ### Create Quiz/flashcards
-
-## Environment setup
-
-Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
-
-```bash
-conda env create -f CHAPTER.yml
-```
-
-Now you can execute all cells in the notebook.
 
 ### Adding changelog entries with `towncrier`
 
