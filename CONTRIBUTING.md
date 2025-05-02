@@ -75,7 +75,92 @@ All chapters are available as Jupyter Notebooks and end-to-end executable.
 The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
 Hence, we decided to provide minimal Conda environments per chapter. These can be found in the respective folders.
 
-## Adding changelog entries with `towncrier`
+## Guide for contributors
+
+### Structure of our chapter
+
+First of all, each chapter comes with a few files.
+In the `.ipynb` you write the main content and cite the references from `.bib`.
+The `.yml` file stores the minimal Conda environments, mentioned [above](#building-individual-chapters).
+The `_keytakeaways.txt` stores the key takeaways of the chapter in the corresponding [format](#key-takeaways-environment-and-lamin-dropdown).
+
+```bash
+├── section_1
+│   ├── chapter_1.ipynb
+│   ├── chapter_1.bib
+│   ├── chapter_1.yml
+│   ├── chapter_1_keytakeaways.txt
+│   ├── chapter_2.ipynb
+│   ├── ...
+```
+
+Each chapter is structured as follows:
+
+1. Title
+2. Dropdowns
+   - Key takeaways
+   - Env setup
+   - Lamin setup
+3. Main content
+4. Quiz/flashcards
+5. See also dropdown (useful links/further readings)
+6. References
+7. Contributors
+
+All dropdowns directly after the title are automatically inserted, when they meet the [requirements](#key-takeaways-environment-and-lamin-dropdown).
+Besides that every chapter should end with some questions covering the main aspects of the chapter.
+See the paragraph below to see [how to create our costum quiz/flashcard](#create-quizflashcards).
+
+### Recommendations
+
+- Every sentence should be in its own row (makes reviewing easier).
+- Write in American English!
+- Always add a term to the glossary if it is used several times in the book. If it is just used once and the term might be unclear, directly clarify the term in the corresponding chapter.
+- In a chapter, only link the first occurrence of a term to the glossary. Do not link the term every single time within the text of a chapter.
+- If you want to link a term that semantically means the same thing or is not spelled exactly the same in the glossary use: {term}`your term <glossary term>`(e.g.: {term}`barcodes <Barcode>`)
+- Use dropdowns whenever possible.
+- Based on ours of proofreading: Always make a space before “cite” (e.g., `“  `{cite}``Smith2017`”`)!
+
+### Key takeaways, environment, and lamin dropdown
+
+The environment and lamin dropdowns are inserted after the title of every chapter.
+If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
+A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
+This file has to contain the key takeaways in the following format:
+
+```
+1
+The first sentence of key takeaway 1.
+The second sentence of key takeaway 1.
+
+2
+The first sentence of key takeaway 2.
+
+...
+```
+
+If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
+Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
+
+Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
+For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
+
+> [!WARNING]
+> Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command using `git restore .`. Ensure you’ve staged your wanted changes (`git add`) beforehand.
+
+### Create Quiz/flashcards
+
+## Environment setup
+
+Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
+
+```bash
+conda env create -f CHAPTER.yml
+```
+
+Now you can execute all cells in the notebook.
+
+### Adding changelog entries with `towncrier`
 
 We use `towncrier` to manage our changelog. Here’s how to include a changelog entry when making a PR:
 
@@ -105,7 +190,7 @@ Valid categories for the filename of the `markdown` are:
 
 5. Push your changes again.
 
-### Releasing a new version (maintainers only)
+#### Releasing a new version (maintainers only)
 
 To release a new version:
 
@@ -125,43 +210,6 @@ This will update `CHANGELOG.md` and remove the `changelog.d/` directory.
 mkdir changelog.d
 touch changelog.d/.gitkeep
 ```
-
-## Environment setup
-
-Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
-
-```bash
-conda env create -f CHAPTER.yml
-```
-
-Now you can execute all cells in the notebook.
-
-## Key takeaways, environment, and lamin dropdown
-
-The environment and lamin dropdowns are inserted after the title of every chapter.
-If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
-A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
-This file has to contain the key takeaways in the following format:
-
-```
-1
-The first sentence of key takeaway 1.
-The second sentence of key takeaway 1.
-
-2
-The first sentence of key takeaway 2.
-
-...
-```
-
-If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
-Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
-
-Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
-For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
-
-> [!WARNING]
-> Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command using `git restore .`. Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
 ## Data access
 
