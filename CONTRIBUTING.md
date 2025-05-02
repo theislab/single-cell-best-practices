@@ -4,10 +4,11 @@
 
 We aim for this book to become a leading resource for introducing people to the field of single-cell sequencing data analysis.
 To ensure our recommendations reflect best practices, we rely exclusively on external, independent benchmarks (studies conducted by researchers who are not affiliated with the tools being evaluated).
+
 Drawing on our extensive experience in teaching, we've learned that encouraging learners to reflect on their understanding considerably enhances the learning process.
 To support this, we've included numerous short quizzes and flashcards with solutions throughout the book, designed to promote active engagement and support self-directed learning.
 
-## How can I constribute?
+## How can I contribute?
 
 We warmly welcome contributions, especially those that help us keep our best practices up to date!
 However, as mentioned above, these recommendations are held to high standards.
@@ -17,8 +18,9 @@ We're always eager to learn about the latest developments and will likely have f
 
 We also encourage contributions in the form of quizzes and flashcards.
 Our collection of quizzes and solutions is always growing, and community support in expanding them is greatly appreciated.
+The same applies to these contributions: Just open an issue and let's get in touch!
 
-[![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/your-username/your-repo/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
+[![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
 ## Book architecture
 
