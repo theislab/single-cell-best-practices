@@ -119,9 +119,11 @@ See the paragraph below to see [how to create our costum quiz/flashcard](#create
 - In a chapter, only link the first occurrence of a term to the glossary. Do not link the term every single time within the text of a chapter.
 - If you want to link a term that semantically means the same thing or is not spelled exactly the same in the glossary use: {term}`your term <glossary term>`(e.g.: {term}`barcodes <Barcode>`)
 - Use dropdowns whenever possible.
-- Based on ours of proofreading: Always make a space before “cite” (e.g., {cite}`Smith2017`)!
+- Based on hours of proofreading: Always make a space before “cite” (e.g., {cite}`Smith2017`)!
 
-`<span>{cite}`Smith2017`</span>`
+``"This was shown by {cite}`Smith2017`."``
+
+`` {cite}`Smith2017` ``
 
 ### Key takeaways, environment, and lamin dropdown
 
