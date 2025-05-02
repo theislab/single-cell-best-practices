@@ -99,22 +99,14 @@ The diverse requirements of tools for the chapters do not allow it for us to pro
 Hence, we decided to provide minimal Conda environments per chapter.
 These can be found in the respective folders.
 
-> [!Environment-setup]
+> [!NOTE]
 > Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
 >
 > ```bash
-> conda env create -f CHAPTER.yml
+> conda env create -f CHAPTER-NAME.yml
 > ```
 >
 > Now you can execute all cells in the notebook.
-
-Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
-
-```bash
-conda env create -f CHAPTER.yml
-```
-
-Now you can execute all cells in the notebook.
 
 ## Style guide for contributors
 
@@ -149,20 +141,20 @@ Each `.ipynb` notebook should follow this standard structure:
 6. 📚 **References**
 7. 👥 **Contributors**
 
-All dropdowns directly after the title are automatically inserted, when they meet their corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
-Besides that every chapter should end with some questions covering the main aspects of the chapter.
-See the paragraph below to see [how to create our costum quiz/flashcard](#create-quizflashcards).
-We created a chapter template, which you can also see in browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (template not done yet!).
+All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
+In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
+[Below](#create-quizflashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
+We’ve also prepared a chapter [template](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb), which you can view in your browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (template not done yet!). (note: the template is still a work in progress, TODO update links).
 
 ### Rules
 
-- Every sentence should be in its own row (makes reviewing easier).
-- Write in American English!
-- Always add a term to the glossary if it is used several times in the book. If it is just used once and the term might be unclear, directly clarify the term in the corresponding chapter.
-- In a chapter, only link the first occurrence of a term to the glossary. Do not link the term every single time within the text of a chapter.
-- If you want to link a term that semantically means the same thing or is not spelled exactly the same in the glossary use: {term}`your term <glossary term>`(e.g.: `` {term}`barcodes <Barcode>` ``)
+- Place each sentence on its own line to make reviewing easier.
+- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``. However, only link the **first occurrence** of each term within the chapter — not every time it appears.
+- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed. If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
+- To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``)
 - Use dropdowns whenever possible.
-- Based on hours of proofreading: Always make a space before “cite” (e.g., ``"This was shown by {cite}`Smith2017`."``)
+- Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``)
+- Write in American English!
 
 ### Key takeaways, environment, and lamin dropdown
 
@@ -189,7 +181,10 @@ Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` 
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
 
 > [!WARNING]
-> Executing `make dropdown` locally will modify nearly all notebook files. These changes should never be committed or pushed to the repository. We recommend discarding these changes immediately after running the command using `git restore .`. Ensure you’ve staged your wanted changes (`git add`) beforehand.
+> Executing `make dropdown` locally will modify nearly all notebook files.
+> These changes should never be committed or pushed to the repository.
+> We recommend discarding these changes immediately after running the command using `git restore .`.
+> Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
 ### Create Quiz/flashcards
 
