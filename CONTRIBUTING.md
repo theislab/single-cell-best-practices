@@ -16,7 +16,7 @@ However, as mentioned [above](#our-philosophy), these recommendations are held t
 If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to discuss your ideas with us.
 We're always eager to learn about the latest developments and will likely have follow-up questions — but we're genuinely excited to collaborate.
 
-We also encourage contributions in the form of [quizzes and flashcards](#create-quizflashcards).
+We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards)).
 Our collection of self-assessment questions is always growing, and community support in expanding them is greatly appreciated.
 The same applies to these contributions: Just open an issue and let's get in touch!
 
@@ -26,7 +26,7 @@ The same applies to these contributions: Just open an issue and let's get in tou
 
 The structure of the book is organized within the `jupyter_book` folder.
 In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
-Each section contains the relevant notebooks along with their [associated files](#structure-of-our-chapter).
+Each section contains the relevant notebooks along with their [associated files](#essential-files-for-every-chapter).
 
 Here’s an example of the folder layout:
 
@@ -143,7 +143,7 @@ Each `.ipynb` notebook should follow this standard structure:
 
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
-[Below](#create-quizflashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
+[Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
 We’ve also prepared a chapter [template](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb), which you can view in your browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (note: the template is still a work in progress, TODO update links).
 
 ### Rules
