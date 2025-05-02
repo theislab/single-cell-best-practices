@@ -1,6 +1,24 @@
 # Contributing
 
-We highly welcome community contributions and encourage contributions.
+## Our philosophy
+
+We aim for this book to become a leading resource for introducing people to the field of single-cell sequencing data analysis.
+To ensure our recommendations reflect best practices, we rely exclusively on external, independent benchmarks (studies conducted by researchers who are not affiliated with the tools being evaluated).
+Drawing on our extensive experience in teaching, we've learned that encouraging learners to reflect on their understanding considerably enhances the learning process.
+To support this, we've included numerous short quizzes and flashcards with solutions throughout the book, designed to promote active engagement and support self-directed learning.
+
+## How can I constribute?
+
+We warmly welcome contributions, especially those that help us keep our best practices up to date!
+However, as mentioned above, these recommendations are held to high standards.
+
+If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to discuss your ideas with us.
+We're always eager to learn about the latest developments and will likely have follow-up questions — but we're genuinely excited to collaborate.
+
+We also encourage contributions in the form of quizzes and flashcards.
+Our collection of quizzes and solutions is always growing, and community support in expanding them is greatly appreciated.
+
+[![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/your-username/your-repo/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
 ## Book architecture
 
@@ -117,13 +135,9 @@ See the paragraph below to see [how to create our costum quiz/flashcard](#create
 - Write in American English!
 - Always add a term to the glossary if it is used several times in the book. If it is just used once and the term might be unclear, directly clarify the term in the corresponding chapter.
 - In a chapter, only link the first occurrence of a term to the glossary. Do not link the term every single time within the text of a chapter.
-- If you want to link a term that semantically means the same thing or is not spelled exactly the same in the glossary use: {term}`your term <glossary term>`(e.g.: {term}`barcodes <Barcode>`)
+- If you want to link a term that semantically means the same thing or is not spelled exactly the same in the glossary use: {term}`your term <glossary term>`(e.g.: `` {term}`barcodes <Barcode>` ``)
 - Use dropdowns whenever possible.
-- Based on hours of proofreading: Always make a space before “cite” (e.g., {cite}`Smith2017`)!
-
-``"This was shown by {cite}`Smith2017`."``
-
-`` {cite}`Smith2017` ``
+- Based on hours of proofreading: Always make a space before “cite” (e.g., ``"This was shown by {cite}`Smith2017`."``)
 
 ### Key takeaways, environment, and lamin dropdown
 
@@ -219,15 +233,3 @@ touch changelog.d/.gitkeep
 
 We are currently still working on making all datasets accessible.
 The problem here isn't data protection or other terrible reasons, but rather the requirement to host them somewhere and ensuring that the correct versions are used per notebook.
-
-## Contributing new best practices, tutorials, quizzes and solutions
-
-### best practices
-
-Contributing or correcting new best practices is welcome, but subject to a high standard. Our philosophy is that we base our recommendations only on external (= not by the tools' authors) and independent benchmarks. Therefore, if you propose new best practices we strongly advise you to open an issue first and discuss them with us. We will certainly have questions, but are super keen on getting to know the latest best practices.
-
-### Contributing new tutorials, quizzes and solutions
-
-We want this book to become a prime resource for introducing people to the field of single-cell and especially best practice data analysis. In the past we have been involved in many teaching efforts, and we noticed that it is imperative to make people reflect on their learning for the most effective outcome. Therefore, we try to add many small quizzes with solutions for self-learners to encourage such a learning style. These quizzes and solutions can always be extended, and we would be happy to get community help.
-
-Entirely new tutorials on topics not yet covered or extensions are subject to "best practices" and we would encourage you to get in touch first with us by opening an issue to discuss such an addition. If best practices for a new topic do not yet exist we are generally open for new tutorials, but again, please ask us first to ensure that your work is not in vain!
