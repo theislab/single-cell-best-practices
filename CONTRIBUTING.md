@@ -99,7 +99,7 @@ The diverse requirements of tools for the chapters do not allow it for us to pro
 Hence, we decided to provide minimal Conda environments per chapter.
 These can be found in the respective folders.
 
-> [!WARNING]
+> [!Environment-setup]
 > Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
 >
 > ```bash
