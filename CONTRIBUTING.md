@@ -156,7 +156,7 @@ We’ve also prepared a chapter [template](https://github.com/theislab/single-ce
 - Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``)
 - Write in American English!
 
-### Key takeaways, environment, and lamin dropdown
+### Key takeaways, environment and lamin dropdown
 
 The environment and lamin dropdowns are inserted after the title of every chapter.
 If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
@@ -187,6 +187,24 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 > Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
 ### Create custom quizzes and flashcards
+
+To build quizzes or flashcards, use the helper functions in jupyter-book/src/lib.py.
+You can create multiple-choice questions or simple flip cards.
+
+1. Start your notebook cell with
+
+```python
+%run ../src/lib.py
+```
+
+2. Then, add as many questions as you like. For example:
+
+```python
+flip_card("q1", "What is 2 + 2?", "4")
+flip_card("q2", "What is the capital of Germany?", "Berlin")
+```
+
+You can also customize the font size, etc.
 
 ### Adding changelog entries with `towncrier`
 
