@@ -188,10 +188,10 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 
 ### Create custom quizzes and flashcards
 
-To build quizzes or flashcards, use the helper functions in jupyter-book/src/lib.py.
+To build quizzes or flashcards, use the helper functions in `jupyter-book/src/lib.py`.
 You can create multiple-choice questions or simple flip cards.
 
-1. Start your notebook cell with
+1. Start your notebook code cell with
 
 ```python
 %run ../src/lib.py
@@ -204,7 +204,13 @@ flip_card("q1", "What is 2 + 2?", "4")
 flip_card("q2", "What is the capital of Germany?", "Berlin")
 ```
 
+3. Run the code cell and it will build the multiple-choice questions or flip cards as output.
+
+> [!WARNING]
+> Add the cell tag `remove-input` to the code cell to remove the code, when building the book.
+
 You can also customize the font size, etc.
+For detailed information, check out the method descriptions in `jupyter-book/src/lib.py`.
 
 ### Adding changelog entries with `towncrier`
 
