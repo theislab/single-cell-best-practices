@@ -483,9 +483,11 @@ Additionally, since molecule barcoding in scRNA-seq is typically isolated and in
 This same procedure is generally applied to all cells independently.
 
 :::{figure-md} raw-proc-fig-overview
-<img src="../_static/images/raw_data_processing/UMI.jpeg" alt="Figure UMIs" class="bg-primary mb-1" width="800px">
+<img src="../_static/images/raw_data_processing/UMI.pdf" alt="Figure UMIs" class="bg-primary mb-1" width="800px">
 
-Using UMI's to reduce bias, while taking care of possible errors (blue boxes).
+UMIs reduce PCR amplification bias by tracking original molecules, but can be affected different types of errors (blue boxes).
+Nucleotide substitutions in UMI tags may occur during amplification or sequencing.
+Multimapping can arise when reads sharing the same UMI are mapped to different genes (blue and red), when a single read maps to multiple genes (gray), or both.
 :::
 
 (raw-proc:need-for-umi-resolution)=
