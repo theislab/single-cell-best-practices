@@ -514,7 +514,7 @@ This same procedure is generally applied to all cells independently.
 :with: 100%
 
 
-UMIs reduce PCR amplification bias by tracking original molecules, but can be affected different types of errors (blue boxes).
+UMIs reduce PCR amplification bias by tracking original molecules, but can be affected by different types of errors (blue boxes).
 Nucleotide substitutions in UMI tags may occur during amplification or sequencing.
 Multimapping can arise when reads sharing the same UMI are mapped to different genes (blue and red), when a single read maps to multiple genes (gray), or both.
 ```
