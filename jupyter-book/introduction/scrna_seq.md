@@ -320,17 +320,19 @@ Using UMIs further allows for normalizing gene counts without a loss of accuracy
 
 ### Single-cell sequencing protocols
 
-Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
+Numerous protocols exist for sequencing the transcriptomes of individual cells. However, the terminology can often be ambiguous, especially for those new to the field. To clarify, we categorize these techniques into two broad classes based on how cells are isolated:
 
-- microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
-- well plate-based protocols where cells are physically separated into wells and
-- the commercial Fluidigm C1 microfluidic chip-based solution that loads and separates cells into small reaction chambers.
+- **Separation in droplets**: These methods encapsulate individual cells into tiny droplets within an emulsion, enabling high-throughput processing.
+- **Separation in physical compartments**: These techniques isolate cells into distinct physical compartments, often referred to as wells.
 
-These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
+Each approach differs in the ability to recover transcripts, the number of sequenced cells, and many other aspects.
+In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
-#### Microfluidic device-based protocols
+#### Separation in Droplets
 
-Microfluidic device-based single-cell strategies trap cells inside hydrogel droplets, allowing for compartmentalization into single-cell reaction chambers.
+The following methods trap cells inside tiny, watery bubbles called droplets.
+Each droplet can hold just one cell, creating a tiny, separate space where we can study that single cell without it mixing with any others.
+These droplets work like mini test tubes, each containing one cell and the chemicals needed to study it.
 The most widely used protocols **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
 
@@ -339,14 +341,18 @@ The encapsulation process is conducted with specialized microbeads with on-bead 
 Upon lysis, the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached to the beads.
 Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs).
 This is followed by PCR and reverse transcription to capture and amplify the transcripts.
-Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached. This process results in sequencing libraries that are ready for sequencing, as described above. In microfluidic-based protocols, only about 10% of cell transcripts are recovered {cite}`Islam2014`.
+Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached.
+This process results in sequencing libraries that are ready for sequencing, as described above.
+In droplet-based protocols, only about 10% of cell transcripts are recovered {cite}`Islam2014`.
 Notably, this low sequencing is sufficient for a robust identification of cell types.
 
-All three microfluidic device-based methods result in characteristic biases.
-The material of the used beads differs between the protocols. {term}`Drop-seq` uses brittle resin for the bead.
+All three methods result in characteristic biases.
+The material of the used beads differs between the protocols.
+{term}`Drop-seq` uses brittle resin for the bead.
 Therefore, the beads are encapsulated with a {term}`Poisson distribution`, whereas the {term}`InDrop` and 10X Genomics beads are deformable resulting in bead occupancies of over 80% {cite}`Zhang2019`.
 
-Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
+Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq.
+InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
 This disparity also affects the location of the reverse transcription process.
 In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols {cite}`Zhang2019`.
 
@@ -374,54 +380,8 @@ Hence, InDrop is the most flexible of the three protocols.
 - Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
 ```
 
-(plate-based)=
-
-#### Plate-based protocols
-
-Typically, plate-based protocols physically separate the cells into microwell plates.
-The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
-The selected cells are then placed into individual wells containing cell lysis buffers.
-A reverse transcription is then carried out in these wells.
-This allows several hundred cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
-
-Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability.
-For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities. SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
-A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
-This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type {term}`annotation`.
-
-```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
-- Recovers many genes per cell, allowing for a deep characterization.
-- It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
-- Allows for full-length transcript recovery.
-```
-
-```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
-- The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
-- Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
-- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
-```
-
-#### Fluidigm C1
-
-The commercial Fluidigm C1 system is a microfluidic chip that loads and separates cells into small reaction chambers in an automated manner.
-The CEL-seq2 and SMART-seq (version 1) protocols use the Fluidigm C1 chips in their workflow, allowing the RNA extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor.
-However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
-Full-length sequencing is possible since the amplification step is carried out in individual wells, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols.
-The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
-
-```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
-- Allows for full-length transcript coverage.
-- Splicing variants and T/B cell receptor repertoire diversity can be recovered.
-```
-
-```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
-- Only allows for the sequencing of up to 800 cells {cite}`fluidigm`.
-- More expensive per cell than other protocols.
-- Only about 10% of the extracted cells are captured, which makes this protocol unsuitable for rare cell types or low input.
-- The used arrays only capture specific cell sizes, which may bias the captured transcripts.
-```
-
-#### Nanopore single-cell transcriptome sequencing
+````{admonition} Nanopore single-cell transcriptome sequencing (combining with DROP)
+:class: note, dropdown
 
 Long-read single-cell sequencing approaches rarely use UMI {cite}`Singh2019` or do not perform UMI correction {cite}`Gupta2018` and therefore misassign some reads to novel UMIs.
 Due to the higher sequencing error rate of long-read sequencers, this causes serious issues {cite}`Lebrigand2020`.
@@ -440,6 +400,58 @@ A modified UMI-tools directional network-based method corrects for UMI sequence 
 - Nanopore reagents are expensive.
 - High cell barcode recovery error rates.
 - Depending on the protocol, barcode assignment is guided with Illumina data requiring two sequencing assays.
+```
+````
+
+#### Separation in physical compartments:
+
+(plate-based)=
+
+##### Plate-based protocols
+
+Typically, plate-based protocols physically separate the cells into microwell plates.
+The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
+The selected cells are then placed into individual wells containing cell lysis buffers.
+A reverse transcription is then carried out in these wells.
+This allows several hundred cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
+
+Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq.
+Generally speaking, the protocols differ in their multiplexing ability.
+For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities.
+SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
+A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
+This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type {term}`annotation`.
+
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
+- Recovers many genes per cell, allowing for a deep characterization.
+- It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
+- Allows for full-length transcript recovery.
+```
+
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+- The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
+- Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
+- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
+```
+
+##### Fluidigm C1
+
+The commercial Fluidigm C1 system is a microfluidic chip that loads and separates cells into small reaction chambers in an automated manner.
+The CEL-seq2 and SMART-seq (version 1) protocols use the Fluidigm C1 chips in their workflow, allowing the RNA extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor.
+However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
+Full-length sequencing is possible since the amplification step is carried out in individual wells, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols.
+The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
+
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
+- Allows for full-length transcript coverage.
+- Splicing variants and T/B cell receptor repertoire diversity can be recovered.
+```
+
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+- Only allows for the sequencing of up to 800 cells {cite}`fluidigm`.
+- More expensive per cell than other protocols.
+- Only about 10% of the extracted cells are captured, which makes this protocol unsuitable for rare cell types or low input.
+- The used arrays only capture specific cell sizes, which may bias the captured transcripts.
 ```
 
 #### Summary
