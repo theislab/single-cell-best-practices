@@ -146,6 +146,12 @@ In addition, each chapter should conclude with a few questions that reinforce th
 [Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
 We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb) of which you can view the html output [here](https://www.sc-best-practices.org/template/template.html) (Note the boxes in the text!).
 
+### Helpful links
+
+- [MyST Markdown documentation](https://mystmd.org)
+- [Jupyter Book documentation](https://jupyterbook.org/en/stable/intro.html)
+- [Sphinx documentation](https://www.sphinx-doc.org/en/master/)
+
 ### Rules
 
 - Place each sentence on its own line to make reviewing easier.
