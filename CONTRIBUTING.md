@@ -152,7 +152,7 @@ We’ve also prepared a chapter [template](https://github.com/theislab/single-ce
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``. However, only link the **first occurrence** of each term within the chapter — not every time it appears.
 - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed. In this case, also add the link to this term in the other chapters. If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
 - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``)
-- Use dropdowns whenever possible.
+- Use dropdowns whenever possible so that the reader is not overwhelmed by the content.
 - Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``)
 - Write in American English!
 
