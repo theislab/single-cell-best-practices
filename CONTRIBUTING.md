@@ -136,15 +136,15 @@ Each `.ipynb` notebook should follow this standard structure:
    - Environment Setup
    - Lamin Setup
 3. 📖 **Main Content**
-4. ❓ **Quiz / Flashcards**
-5. 🔗 **See Also** _(Dropdown)_
+4. 🔗 **See Also** _(Dropdown)_
+5. ❓ **Quiz / Flashcards**
 6. 📚 **References**
 7. 👥 **Contributors**
 
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
 [Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
-We’ve also prepared a chapter [template](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb), which you can view in your browser [here](https://nbviewer.org/github/theislab/single-cell-best-practices/blob/main/jupyter-book/cellular_structure/annotation.ipynb) (note: the template is still a work in progress, TODO update links).
+We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb), which you can view in your browser [here](https://www.sc-best-practices.org/template/template.html).
 
 ### Rules
 
@@ -201,7 +201,17 @@ You can create multiple-choice questions or simple flip cards.
 
 ```python
 flip_card("q1", "What is 2 + 2?", "4")
-flip_card("q2", "What is the capital of Germany?", "Berlin")
+multiple_choice_question(
+   "q1",
+   "What is the capital of France?",
+   ["Paris", "London", "Berlin", "Madrid"],
+   "Paris",
+   {
+         "London": "London is the capital of the UK",
+         "Berlin": "Berlin is the capital of Germany",
+         "Madrid": "Madrid is the capital of Spain",
+   }
+)
 ```
 
 3. Run the code cell and it will build the multiple-choice questions or flip cards as output.
