@@ -16,7 +16,7 @@ However, as mentioned [above](#our-philosophy), these recommendations are held t
 If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to discuss your ideas with us.
 We're always eager to learn about the latest developments and will likely have follow-up questions — but we're genuinely excited to collaborate.
 
-We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards)).
+We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards).
 Our collection of self-assessment questions is always growing, and community support in expanding them is greatly appreciated.
 The same applies to these contributions: Just open an issue and let's get in touch!
 
@@ -219,7 +219,7 @@ multiple_choice_question(
 > [!WARNING]
 > Add the cell tag `remove-input` to the code cell to remove the code, when building the book.
 
-You can also customize the font size, etc.
+You can also adjust the font size, text color and much more.
 For detailed information, check out the method descriptions in `jupyter-book/src/lib.py`.
 
 ### Adding changelog entries with `towncrier`
