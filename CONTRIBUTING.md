@@ -144,7 +144,7 @@ Each `.ipynb` notebook should follow this standard structure:
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
 [Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
-We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb), which you can view in your browser [here](https://www.sc-best-practices.org/template/template.html).
+We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb) of which you can view the html output [here](https://www.sc-best-practices.org/template/template.html) (Note the boxes in the text!).
 
 ### Rules
 
