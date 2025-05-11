@@ -469,7 +469,7 @@ Several common strategies are used for cell barcode identification and correctio
 After cell barcode (CB) correction, reads have either been discarded or assigned to a corrected CB.
 Subsequently, we wish to quantify the abundance of each gene within each corrected CB.
 
-Because of the {term}`amplification bias` as discussed in {ref}`exp-data:transcript-quantification`, reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules. Additionally, several other complicating factors present challenges when attempting to perform this estimation.
+Because of the {term}`amplification bias` as discussed in {ref}`exp-data:transcript-quantification`, reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules ({numref}`umi-figure`). Additionally, several other complicating factors present challenges when attempting to perform this estimation.
 
 The UMI deduplication step aims to identify the set of reads and UMIs derived from each original, pre-PCR molecule in each cell captured and sequenced in the experiment.
 The result of this process is to allocate a molecule count to each gene in each cell, which is subsequently used in the downstream analysis as the raw expression estimate for this gene.
@@ -482,6 +482,17 @@ A read can be tagged by only one UMI but may belong to multiple references if it
 Additionally, since molecule barcoding in scRNA-seq is typically isolated and independent for each cell (aside from the previously discussed challenges in resolving cell barcodes), _UMI resolution_ will be explained for a single cell without loss of generality.
 This same procedure is generally applied to all cells independently.
 
+```{figure} ../_static/images/raw_data_processing/UMI.png
+:name: umi-figure
+:alt: Figure UMIs
+:with: 100%
+
+
+UMIs reduce PCR amplification bias by tracking original molecules, but can be affected by different types of errors (blue boxes).
+Nucleotide substitutions in UMI tags may occur during amplification or sequencing.
+Multimapping can arise when reads sharing the same UMI are mapped to different genes (blue and red), when a single read maps to multiple genes (gray), or both.
+```
+
 (raw-proc:need-for-umi-resolution)=
 
 ### The need for UMI resolution
@@ -490,7 +501,7 @@ In the ideal case, where the correct (unaltered) UMIs tag reads, the reads of ea
 Consequently, the UMI deduplication procedure is conceptually straightforward: the reads of a UMI are the PCR duplicates from a single pre-PCR molecule.
 The number of captured and sequenced molecules of each gene is the number of distinct UMIs observed for this gene.
 
-However, the problems encountered in practice make the simple rules described above insufficient for identifying the gene origin of UMIs in general and necessitate the development of more sophisticated models:
+However, the problems encountered in practice make the simple rules described above insufficient for identifying the gene origin of UMIs in general and necessitate the development of more sophisticated models ({numref}`umi-figure`):
 
 - **Errors in UMIs**:
   These occur when the sequenced UMI tag of reads contains errors introduced during PCR or the sequencing process.
