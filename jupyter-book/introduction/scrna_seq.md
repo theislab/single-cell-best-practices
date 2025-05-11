@@ -330,11 +330,24 @@ In the following subsections, we will briefly discuss how they work, their stren
 
 #### Separation in Droplets
 
-The following methods trap cells inside tiny, watery bubbles called droplets.
-Each droplet can hold just one cell, creating a tiny, separate space where we can study that single cell without it mixing with any others.
-These droplets work like mini test tubes, each containing one cell and the chemicals needed to study it.
-The most widely used protocols **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
+##### Most common protocols
+
+The most widely used protocols are **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017`.
+These protocols use microfluids to trap cells in tiny, watery bubbles known as droplets.
+Each droplet forms a separate spaces containing only one cell and the required chemicals (beads).
+The mentioned protocols are able to generate droplets several thousand times per second.
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
+
+```{admonition} Droplets by vortexing
+:class: dropdown, note
+The PIP-seq protocol offers a simplified alternative to traditional microfluidic methods for generating monodispersed water-in-oil droplets.
+Unlike complex microfluidic devices that require specialized equipment and expertise, PIP-seq achieves droplet formation through simple vortexing of the solution.
+This method can be easily scaled by increasing the container volume without being constrained by emulsion time, a common limitation of microfluidics {cite}clark2023microfluidics.
+
+However, despite its simplicity, independent benchmarks indicate that PIP-seq still has limitations compared to well-established methods.
+For instance, PIP-seq achieved approximately 1,500 gene counts, whereas the best 10x Genomics Chromium kit showed around 4,000 gene counts {cite}de2025comprehensive.
+These findings highlight a trade-off between ease of use and performance in the current version of the PIP-seq protocol.
+```
 
 Although all three protocols differ in detail, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
 The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode, and a 4-8b base pairs-long UMI and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer).
@@ -380,8 +393,7 @@ Hence, InDrop is the most flexible of the three protocols.
 - Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
 ```
 
-````{admonition} Nanopore single-cell transcriptome sequencing (combining with DROP)
-:class: note, dropdown
+##### Nanopore sequencing meets droplet technology
 
 Long-read single-cell sequencing approaches rarely use UMI {cite}`Singh2019` or do not perform UMI correction {cite}`Gupta2018` and therefore misassign some reads to novel UMIs.
 Due to the higher sequencing error rate of long-read sequencers, this causes serious issues {cite}`Lebrigand2020`.
@@ -396,12 +408,10 @@ A modified UMI-tools directional network-based method corrects for UMI sequence 
 - Recovers splicing and sequence heterogeneity information
 ```
 
-```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+````{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Nanopore reagents are expensive.
 - High cell barcode recovery error rates.
 - Depending on the protocol, barcode assignment is guided with Illumina data requiring two sequencing assays.
-```
-````
 
 #### Separation in physical compartments:
 
@@ -426,7 +436,7 @@ This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowin
 - Recovers many genes per cell, allowing for a deep characterization.
 - It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
 - Allows for full-length transcript recovery.
-```
+````
 
 ```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
@@ -494,51 +504,6 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 ```
 
 ## New Developments
-
-## How we could categorize
-
-single cell RNA seq
-
-Emulsion/Droplet-based
-
-- Classic methods (Drop-seq, etc.)
-- Vortexing (PiP-seq)
-
-Well-based methods
-
-- individuals wells (Fluidigm C1)
-- Combinatorial indexing
-
-Others
-
-- hydrogel
-- combining Nanopore sequencing with cell barcode and UMI assignment
-
-## for the comparison table
-
-"Run times includes cluster generation, sequencing, and base calling on a NextSeq 1000 or NextSeq 2000 System and NovaSeq 6000 System. Run times include automated onboard cluster generation, sequencing, automated post-run wash, and base calling on the NovaSeq X Systems." [link](https://sapac.illumina.com/systems/sequencing-platforms.html)
-
-what is a run:
-
-- Cluster Generation: Amplifies DNA fragments into clusters.
-- Sequencing: Determines the nucleotide sequence using fluorescence.
-- Base Calling: Converts fluorescence data into a digital sequence.
-  All steps that are involved to come from dna framents to the data of nucleotide seqeunces
-
-maximum output range meaning:
-What Does "Maximum Output" Mean?
-
-Total Data Generated:
-The maximum output is the total amount of DNA sequence data (in gigabases, where 1 Gb = 1 billion base pairs) that a sequencing platform can produce in one run.
-For example, if a platform has a maximum output of 1,000 Gb (1 Tb), it means the instrument can generate up to 1 trillion base pairs of sequence data in a single run.
-
-wiki:
-Comparisons to other sequencing techniques
-Performance values for genome sequencing technologies including Sanger methods and next-generation methods[17][19][20]
-Technology Number of lanes Injection volume (nL) Analysis time Average read length Throughput (including analysis; Mb/h) Gel pouring Lane tracking
-Slab gel 96 500–1000 6–8 hours 700 bp 0.0672 Yes Yes
-Capillary array electrophoresis 96 1–5 1–3 hours 700 bp 0.166 No No
-[link](https://en.wikipedia.org/wiki/Sanger_sequencing)
 
 - I am in general a bit confused by the different terms, which are used (hydrogel based, droplet)
 
