@@ -2,11 +2,8 @@
 
 ## Our philosophy
 
-We aim for this book to become a leading resource for introducing people to the field of single-cell sequencing data analysis.
-To ensure our recommendations reflect best practices, we rely exclusively on external, independent benchmarks (studies conducted by researchers who are not affiliated with the tools being evaluated).
-
-Drawing on our extensive experience in teaching, we've learned that encouraging learners to reflect on their understanding considerably enhances the learning process.
-To support this, we've included numerous short quizzes and flashcards with solutions throughout the book, designed to promote active engagement and support self-directed learning.
+We aim for this book to be a major resource for introducing people to the field of single-cell sequencing data analysis and ensuring that newcomers and experienced analysis do things right.
+To ensure our recommendations reflect best practices, we try to rely exclusively on external and independent benchmarks.
 
 ## How can I contribute?
 
@@ -155,12 +152,15 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 ### Rules
 
 - Place each sentence on its own line to make reviewing easier.
-- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``. However, only link the **first occurrence** of each term within the chapter — not every time it appears.
-- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed. In this case, also add the link to this term in the other chapters. If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
-- To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``)
+- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
+  However, only link the **first occurrence** of each term within the chapter — not every time it appears.
+- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
+  In this case, also add the link to this term in the other chapters.
+  If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
+- To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
 - Use dropdowns whenever possible so that the reader is not overwhelmed by the content.
-- Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``)
-- Write in American English!
+- Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``).
+- Write in American English.
 
 ### Key takeaways, environment and lamin dropdown
 
