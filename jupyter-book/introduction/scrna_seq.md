@@ -252,6 +252,14 @@ But before we can start explaining the intricacies of single-cell RNA sequencing
 
 ### Central dogma in numbers
 
+```{figure} ../_static/images/scrna_seq/central_dogma_in_numbers.png
+:name: central-dogma-in-numbers
+:alt: Central dogma in numbers figure
+:with: 100%
+
+The steps of the central dogma, supported by estimated values. These values are approximations intended to give a general impression and may vary depending on the context or in the future.
+```
+
 #### Measuring "messengers"
 
 At the core of scRNA-Seq lies a fundamental question: What **exactly** are we trying to measure?
