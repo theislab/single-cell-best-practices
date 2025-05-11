@@ -53,7 +53,7 @@ Hooke investigated a thin slice of cork with a very rudimentary microscope and, 
 He named these tiny units "cells".
 
 :::{figure-md} markdown-fig
-<img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
+<img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="100%">
 
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
@@ -89,11 +89,13 @@ Its most crucial innovative accomplishment was the automatic labeling of DNA fra
 This change not only made the method safer to perform but also allowed computers to analyze the acquired data {cite}`Hood1987`.
 
 ```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
+
 - Sanger sequencing is simple and affordable.
 - If done correctly, the error rate is very low (<0.001%).
 ```
 
 ```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+:class: open
 - Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
 - The quality of a Sanger sequence is often poor in the first 15 to 40 bases because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
@@ -140,7 +142,7 @@ Second, the ability to sequence in real-time is another major advancement in thi
 Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
 ```{admonition} A note on sequencing length
-:class: hint, dropdown
+:class: note, dropdown
 - 1 base pair (bp)
 - 1 kilo base pair (kb) = 1,000 bp
 - 1 mega base pair (Mb) = 1,000,000 bp
@@ -164,11 +166,13 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 ```
 
 ```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
-- Some third-generation sequencers exhibit higher error rates than second-generation sequencers.
+- Some third-generation sequencers exhibit higher error rates than second-generation sequencers (Roche's new sequencing by expansion technology, for example, attempts to solve this problem {cite}`Jain2016`
+{cite}`roche`).
 - The reagents are generally more expensive than second-generation sequencing.
 ```
 
-### Comparison of sequencing technologies across generations
+```{admonition} Comparison of sequencing technologies across generations
+:class: note, dropdown
 
 :::{table} Performance comparison of common sequencing techniques sorted for maximum read length. We obtained the numbers for Sanger sequencing from individual sources ([a](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf), [b](https://www.sciencedirect.com/science/article/abs/pii/B9780128154991000132), [c](https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=$500%20per%20megabase.), [d](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)), while all other methods were obtained from {cite:t}`logsdon2020long`.
 :label: table
@@ -185,6 +189,8 @@ The idea of Oxford Nanopore sequencers is to detect changes in the electrical cu
 | Nanopore (MinION/GridION)            | >1,500               | 87–98         | 50-2,000        | 913-109,500          | 3          |
 
 :::
+
+```
 
 ## Overview of the NGS process
 
@@ -242,7 +248,7 @@ A single-cell experiment generally follows similar steps as a bulk RNA-Seq exper
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
-But before we can start explaing the
+But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring mRNA at such a fine resolution.
 
 ### Central dogma in numbers
 
@@ -254,7 +260,7 @@ This molecule is "an unstable intermediate that carries information from genes t
 Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
 Yet, mRNA makes up only a small fraction of a cell’s total RNA.
 Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
-Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
+Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis, Islam2014`.
 This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
 However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
 
@@ -266,7 +272,7 @@ Our journey begins with a gene, a defined region in the DNA that acts as a templ
 While the number of genes can vary slightly between individuals (~70 genes), the average human genome contains roughly 22,000 genes {cite}`pertea2010between`.
 Gene transcription is far from continuous.
 Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
-This is also the reason why we model mRNA transcription with a negative binomial distribution (see dropdown TODO).
+This is also the reason why we model mRNA transcription with a negative binomial distribution.
 
 The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
 This means that a single gene can give rise to multiple distinct mRNA isoforms.
@@ -278,9 +284,9 @@ Finally, this "mature" mRNA is translated into proteins.
 Here, too, the numbers vary dramatically.
 In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 proteins per mRNA {cite}`li2014system`.
 However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
+Ultimately, this process results in approximately one billion proteins within a single human cell {cite}`milo2013total`.
 
 Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
-Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
 
 (exp-data:transcript-quantification)=
 
@@ -342,10 +348,10 @@ This massively parallel process generates very high numbers of droplets for a re
 :class: dropdown, note
 The PIP-seq protocol offers a simplified alternative to traditional microfluidic methods for generating monodispersed water-in-oil droplets.
 Unlike complex microfluidic devices that require specialized equipment and expertise, PIP-seq achieves droplet formation through simple vortexing of the solution.
-This method can be easily scaled by increasing the container volume without being constrained by emulsion time, a common limitation of microfluidics {cite}clark2023microfluidics.
+This method can be easily scaled by increasing the container volume without being constrained by emulsion time, a common limitation of microfluidics {cite}`clark2023microfluidics`.
 
 However, despite its simplicity, independent benchmarks indicate that PIP-seq still has limitations compared to well-established methods.
-For instance, PIP-seq achieved approximately 1,500 gene counts, whereas the best 10x Genomics Chromium kit showed around 4,000 gene counts {cite}de2025comprehensive.
+For instance, PIP-seq achieved approximately 1,500 gene counts, whereas the best 10x Genomics Chromium kit showed around 4,000 gene counts {cite}`de2025comprehensive`.
 These findings highlight a trade-off between ease of use and performance in the current version of the PIP-seq protocol.
 ```
 
@@ -408,12 +414,13 @@ A modified UMI-tools directional network-based method corrects for UMI sequence 
 - Recovers splicing and sequence heterogeneity information
 ```
 
-````{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Nanopore reagents are expensive.
 - High cell barcode recovery error rates.
 - Depending on the protocol, barcode assignment is guided with Illumina data requiring two sequencing assays.
+```
 
-#### Separation in physical compartments:
+#### Separation in physical compartments
 
 (plate-based)=
 
@@ -436,7 +443,7 @@ This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowin
 - Recovers many genes per cell, allowing for a deep characterization.
 - It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
 - Allows for full-length transcript recovery.
-````
+```
 
 ```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
@@ -503,142 +510,63 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
 ```
 
-## New Developments
+### Questions
 
-- I am in general a bit confused by the different terms, which are used (hydrogel based, droplet)
+multiple_choice_question(
+"q1",
+"What is the primary purpose of scRNA-seq?",
+[
+"To sequence the genome of a single cell",
+"To measure gene expression in individual cells",
+"To capture DNA methylation patterns",
+"To determine cell surface markers"
+],
+"To measure gene expression in individual cells",
+)
 
-[link](https://www.nature.com/articles/s41587-023-01685-z)
+multiple_choice_question(
+"q2",
+"What is reverse transcription in the context of scRNA-seq?",
+[
+"Converting cDNA to mRNA",
+"Sequencing the DNA",
+"Converting mRNA to cDNA",
+"Labeling cell surface markers"
+],
+"Converting mRNA to cDNA",
+)
 
-- Cell isolation by: Particle-templated instant partition sequencing (PIP-seq), isolation of cells by vortexing
-- Direct citation: "Schematic of the emulsification process. Barcoded particle templates, cells and lysis reagents are combined with oil and vortexed to generate monodispersed droplets. "
-- They are then used for Illumina seqeuncing
-- monodispered droplets means droplets of same size
-- based to this papaer we have 5 technolgies (Microwells, plates, Microfluidox, combinatorial indexing, pip-seq)
-- easy to use, not need for specialzied devices expertise or hardware. You just need a vortexer.
-- "PIP-seq is a simple, flexible and scalable "
+multiple_choice_question(
+"q3",
+"What is the main difference between single-cell and single-nuclei sequencing?",
+[
+"Single-cell captures whole cells, while single-nuclei captures only nuclei",
+"Single-nuclei sequencing has higher throughput",
+"Single-cell is more accurate",
+"Single-nuclei sequencing is cheaper"
+],
+"Single-cell captures whole cells, while single-nuclei captures only nuclei",
+)
 
-Cell isolation by hydrogel [picture](https://www.explorea.cz/asteria-single-cell-rna-seq-benchtop-kit)
+multiple_choice_question(
+"q4",
+"Which of the following best describes PIP-seq?",
+[
+"A protocol using microfluidics",
+"A plate-based protocol",
+"A simplified droplet-based method using vortexing",
+"A long-read sequencing method"
+],
+"A simplified droplet-based method using vortexing",
+)
 
-- buffer solution with cells and beads
-- buffer become a gel
-- cells are lyzed in the buffer
-- rna stays in the near of the bead so that they can be barcoded
+flip_card("q5", "What are the two main categories we introduced for scRNA-seq protocols?", "Separation in droplets and separation in physical compartments.")
 
-in generell
-[sequencing by expansion](https://www.youtube.com/watch?v=G8ECt04qPos)
-[Roche](https://sequencing.roche.com/global/en/article-listing/sequencing-platform-technologies.html)
+flip_card("q6", "What is the main advantage of droplet-based protocols?", "High throughput")
 
-single cell
+flip_card("q7", "What characterizes Second-Generation sequencing?", "High-throughput, short-read sequencing technologies, like Illumina and Ion Torrent.")
 
-- [Recent overview of scRNA-Seq Methods](https://academic.oup.com/nar/article/53/2/gkae1186/7924191?login=false)
-- [Overview of scRNA-Seq Methods 2023](https://academic.oup.com/stmcls/article/42/1/1/7338616?login=true#435619364)
-
-Other links:
-
-- https://onlinelibrary.wiley.com/doi/full/10.1002/ctm2.694
-- Fluidigim should also be Microfluidig: https://www.researchgate.net/figure/Fluidigm-C1-IFC-Autoprep-System-A-Illustration-of-C1-IFC-left-IFC-with-carrier_fig2_358052347
-- different sc seqeuncing technologies: https://www.nature.com/articles/s41587-020-0469-4
-- [combinatorial indexing](https://www.nature.com/articles/s41587-021-00962-z)
-
-```{dropdown} Why are expression bursts the reason negativ binominal distrubtion
-Evene though there exists a couple of model, we can model gene transciption in a basic two state model to show the basic principle.{cite}`zhang2024transcriptional`
-Either the gene is siwtch ON lading to the production of mRNA or it is switched OFF turning it silent again.
-This is the perfect prereqeuisite for a bernoulli experiment.
-Whenever we observe the activity of a gene we can either have a succes "the genen is switched ON" or failure the gene is siwtched OFF.
-Now, a negative binomianl distribution describes the number of failures in seqeuntailly independet bernoulli experiments (the propabliity of success = p) must accour before we can have r successes.
-So lets a assum cell A and B are livingn in the same environment, which both produce on average 10 bursts an hour.
-Let`s say we measure the state of our target genen every minute, so that probablilty to see an active gene is (p = 10/60 = 1/6).
-Because of stochastic nature transcpiriotn be observe Cell A to produc 3 burst in 10 minute ´ while cell B produce 1 in 10 minutes.
-We could now ask ourselves, What is know the probabliity to obsever the transcipriotn pattern A and B just by chance?
-
-
-Let's say
-
-The  is a stochatic process, which is .
-
-
-Next, this behaviour is random between cell under the same conditions.
-
-This is the reason my mRNA expression is modeleld by negativ binominal distribution (see drop down).
-
-
-
-
-The distribution
-Past of this ranodm might come from missing informations we have from the biological system itself,like biohcmeinal reasons for burstign, but the also might be an important part in the biological system that is completly random.
-
-several models proposed (https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1451461/full)
-
-dropdown mit negative binominal verteilung warum wir das benutzen
-this can be modeled by rnaomdly swithching on and of
-
-
-neg bin in own word
-
-
-sources:
-https://de.wikipedia.org/wiki/Negative_Binomialverteilung
-https://www.datacamp.com/tutorial/negative-binomial-distribution
---> technical and biological variation
-https://www.science.org/doi/10.1126/science.1198817
---> manuel
-https://www.nature.com/articles/ncomms13788
-https://pmc.ncbi.nlm.nih.gov/articles/PMC6310609/#R4
---> both biological explanation for bursts
-
-```
-
-## Central dogma in numbers
-
-In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
-
-### What do we want to measure
-
-Let's start this paragraph with a central question: What exaclty do we want to measure?
-In scRNA-seq we want to measure a cell's messenger RNA ({term}`mRNA`).
-This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
-In fact, only 3-7% of total RNA mass in a cell is mRNA {cite}`palazzo2015non`, while the majority RNA mass in a cell is non-conding RNA, meaning RNA that is not translated into proteins (80-90% ribosomal RNA (rRNA), 10-15% translational RNA (tRNA) and ~1% other RNA's.) [overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)
-As a very rough estimate we can say there a 100,000 to 1,000,000 mRNA molecules in a mammalian cell encoding ~50% of the genes {cite}`velculescu1999analysis` {cite}`Islam2014`.
-This also means that there a lot of genes not transcribed at all within a cell.
-Besides that common methods like 10X genomics are only able to capture ~65% of cells per run and only 14% of cells's mRNA {cite}`aljanahi2018introduction`.
-This makes it very difficult to caputre low expressed genes in sinlge cell experimenets.
-This is a huge range due to many reasons and but lets`s start chornologically.
-
-### from gene to protein
-
-The template for RNA is a certain region in the DNA also called gene.
-Even tough the gene count can vary between different individuals by ~70 genes we can estimate that the human genome consists of around 22,000 genes [Quelle](https://link.springer.com/article/10.1186/gb-2010-11-5-206).
-The transcriptoin of gene is a stochatic process {cite}`zhang2024transcriptional`.
-Cells have shown to transcribe genes only in reanodm and short periods of time called expression bursts.
-A gen for exmpale might stay silent for minutes, then suddenly produce 10 mRNA copies in a burst before going silent again.
-
-Now pre mRNA is underdogingn a processessed called alternative splicing.
-Alternative splicing means combining differents regions in the mRMA to produce different mature mRNA's out of one pre-mRNA.
-
-On average 3.4 isoformsic mRNA are produced from on genen in a human {cite}`lee2015mechanisms`.  
-While all human genes have at least two alternative splicing isoforms, the most exterme example is the
-An extremly large example is the human basonuclin 2 gene having the potential to generate up to 90,000 mRNA isoforms resulting in more than 2000 different proteins {cite}`vanhoutteghem2007human`.
-The final strep is translating the Nucleotide code into AAs.
-The median protein to mRNA ratio might be around has shown to be ~10,000 in mice {cite}`li2014system`.
-But of course this seem to varie greatly between genes, from a few hundrets to close to a million protein translation from one mRNA {cite}`edfors2016gene` in humans.
-
-### Other facotros influencing RNA level
-
-First of all, theoretical thresholds for a gene to be called as active aren't fixed and can influence the number of mRNA experimentally measured, see [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg) {cite}`fagerberg2014analysis`.
-Next to that there a difference due to cell type which can also be seen in [A](https://www.mcponline.org/cms/10.1074/mcp.M113.035600/asset/2ae6c0fe-0035-44b1-8a22-f09b030b8578/main.assets/gr2_lrg.jpg)
-
-Other: Contamination of mRNA (Mitos, Proportion of mitochondrial RNA in the cytosol?)
-
-- Mitos produce much more RNA then nucleus but much of it is degraded fast againg [video](https://www.youtube.com/watch?v=2YCgrx2wWfA)
-
-### END
-
-As you can see: Determining orientational numbers for the amount is difficulit
-Before we can start explaining the methods to measure RNA in individuals cells we need to clarify what we want to measure and to what extend we can measure that with exsiting sequecing methods. Therefore it is importatnt zu vergegenwörtigen whcih amounts exists in a cell. A ...ful/ricth resource for this is (Quelle von lukas), which we recommend to read for a more detailed explaintion and the source for the number we provide in this paragraph. It is a rough estimate to give a Eindrcuk über verhältnisse in einer zelle.
-
-### TODO
-
-- mRNA to glossary
+flip_card("q8", "What is the key advantage of Third-Generation sequencing?", "Long-read sequencing without amplification, as seen in Nanopore and PacBio.")
 
 ## References
 
