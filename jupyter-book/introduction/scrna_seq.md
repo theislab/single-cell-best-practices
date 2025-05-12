@@ -211,6 +211,8 @@ In addition, single-cell sequencing requires cell isolation and a physical separ
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
 But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring mRNA at such a fine resolution.
 
+(introduction-scrna-seq-key-takeaway-4)=
+
 ### Central dogma in numbers
 
 ```{figure} ../_static/images/scrna_seq/central_dogma_in_numbers.png
@@ -291,7 +293,7 @@ This is especially true for sequences that are amplified at a later stage of the
 Although it is computationally possible to detect and remove such sequences by filtering out reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 Using UMIs further allows for normalizing gene counts without a loss of accuracy {cite}`Kivioja2012`.
 
-(introduction-scrna-seq-key-takeaway-4)=
+(introduction-scrna-seq-key-takeaway-5)=
 
 ### Single-cell sequencing protocols
 
