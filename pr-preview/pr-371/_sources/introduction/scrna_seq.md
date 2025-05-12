@@ -24,10 +24,13 @@ In scRNA-Seq, transcript quantification converts the raw data into a table of es
 :::{card}
 :link: introduction-scrna-seq-key-takeaway-4
 :link-type: ref
-ScRNA-Seq protocols vary in their approach to cell isolation and transcript recovery.
-**Droplet-based** methods encapsulate cells into hydrogel droplets.
-**Plate-based** physically separated cells into wells.
-**Fluidigm C1** loads and separates cells into small reaction chambers.
+Transcription takes place in stochastic bursts and leads to a total of 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell.
+:::
+
+:::{card}
+:link: introduction-scrna-seq-key-takeaway-5
+:link-type: ref
+We categorize scRNA-seq techniques into two broad classes based on cell isolation into **droplets** (aqueous bubbles) or **physical compartments** (e.g. wells).
 :::
 
 ```
@@ -244,6 +247,8 @@ In addition, single-cell sequencing requires cell isolation and a physical separ
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
 But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring mRNA at such a fine resolution.
 
+(introduction-scrna-seq-key-takeaway-4)=
+
 ### Central dogma in numbers
 
 ```{figure} ../_static/images/scrna_seq/central_dogma_in_numbers.png
@@ -324,7 +329,7 @@ This is especially true for sequences that are amplified at a later stage of the
 Although it is computationally possible to detect and remove such sequences by filtering out reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 Using UMIs further allows for normalizing gene counts without a loss of accuracy {cite}`Kivioja2012`.
 
-(introduction-scrna-seq-key-takeaway-4)=
+(introduction-scrna-seq-key-takeaway-5)=
 
 ### Single-cell sequencing protocols
 
