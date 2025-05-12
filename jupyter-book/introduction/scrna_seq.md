@@ -456,7 +456,7 @@ This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowin
 ```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
 - Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
-- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects`.
+- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects <batch effect>`.
 ```
 
 ##### Fluidigm C1
