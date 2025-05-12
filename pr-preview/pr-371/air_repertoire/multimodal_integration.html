@@ -1,0 +1,2414 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>44. Integrating AIR and transcriptomics &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'air_repertoire/multimodal_integration';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="45. Paired integration" href="../multimodal_integration/paired_integration.html" />
+    <link rel="prev" title="43. Specificity analysis" href="specificity.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/master/jupyter-book/air_repertoire/multimodal_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fair_repertoire/multimodal_integration.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/air_repertoire/multimodal_integration.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Integrating AIR and transcriptomics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">44.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">44.2. Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">44.3. Uni-modal Analysis with multimodal conditions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">44.3.1. AIR analysis on RNA clusters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">44.3.2. GEX analysis on AIR clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multimodal-integration">44.4. Multimodal Integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-tcr-and-gex">44.4.1. Integrating TCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tessa">44.4.1.1. TESSA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">44.4.1.1.1. Data Preprocessing</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-model">44.4.1.1.2. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#output">44.4.1.1.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#conga">44.4.1.2. CoNGA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">44.4.1.2.1. Data Preparation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-conga">44.4.1.2.2. Executing CoNGA</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">44.4.1.2.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mvtcr">44.4.1.3. mvTCR</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-bcr-and-gex">44.4.2. Integrating BCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#benisse">44.4.2.1. Benisse</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">44.4.2.1.1. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">44.4.2.1.2. Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">44.5. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">44.6. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="integrating-air-and-transcriptomics">
+<h1><span class="section-number">44. </span>Integrating AIR and transcriptomics<a class="headerlink" href="#integrating-air-and-transcriptomics" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">For multimodal datasets of AIR and GEX, typically, one modality is used for grouping the cells to perform standard uni-modal analysis on the other modality (e.g. Sequence analysis on leiden clusters).</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#air-repertoire-multimodal-integration-key-takeaway-1"><span class="std std-ref">Uni-modal Analysis with multimodal conditions</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Cell functionality (determined by AIR) and cell state (observed via GEX) are interlinked.
+It has been shown, that cells with alike AIR sequences can share similar phenotypes.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#air-repertoire-multimodal-integration-key-takeaway-2"><span class="std std-ref">Output</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Due to the inherent structural difference between count matrices (GEX) and amino acid sequences (IR), it is difficult to directly fuse both modalities.
+Therefore, several methods were developed recently, to utilize paired GEX-AIR data for to derive clusters, or an embedding.
+However, these approaches are still novel and not part of a standard analysis pipeline.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#air-repertoire-multimodal-integration-key-takeaway-3"><span class="std std-ref">mvTCR</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+</div>
+</div>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<h2><span class="section-number">44.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>With the development of novel single cell technology, AIRR sequencing is combined often with other omics layers such as with transcriptomics. For B- and T-cells this enables the analysis of various characteristics on a single cell level: while the transcriptome provides insights into the current state of the cell, the AIR is indicative for the cell’s specificity and thereby explains the cell’s fate upon infection or vaccination.</p>
+</section>
+<section id="data-preparation">
+<h2><span class="section-number">44.2. </span>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">#</a></h2>
+<p>First, we will combine the GEX with AIR data. Note, that we can do this also at earlier stages of single cell analysis: e.g. we can fuse both modalities already before preprocessing to filter GEX doublets. When fusing GEX and AIR data, a left join is often performed. I.e., only cells with GEX are kept for analysis. Therefore, the order of fusing and filtering is not of great importance. However, it can be convenient to visualize the AIR information in an GEX UMAP in early stages. E.g. missing AIR information in clusters can help during cell type assignment.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Scirpy changed the format of <a class="reference external" href="https://scirpy.scverse.org/en/latest/data-structure.html#storing-airr-rearrangement-data-in-anndata">its datastructure</a>
+with v0.13. While the overall analysis workflow has not changed, some outputs shown in this chapter might not be accurate anymore.</p>
+<p>See <a class="reference external" href="https://scirpy.scverse.org/en/latest/changelog.html#v0-13-0-new-data-structure-based-on-awkward-arrays">the scirpy release notes</a> for more details about this change.
+Until we update this chapter, please also refer to the <a class="reference external" href="https://scirpy.scverse.org">official scirpy documentation</a>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.*IProgress not found*&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scirpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ir</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DtypeWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_data</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
+<span class="n">path_gex_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_GEX.h5ad&quot;</span>
+<span class="n">path_gex_bcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_00_GEX.h5ad&quot;</span>
+<span class="n">path_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_01_preprocessed.h5ad&quot;</span>
+<span class="n">path_bcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_01_preprocessed.h5ad&quot;</span>
+
+<span class="n">path_tmp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/tmp&quot;</span>
+<span class="n">path_res</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/res&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First we will load the Gene expression data processed by the authors. You can download the full dataset from <a class="reference external" href="https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-10026/E-MTAB-10026.processed.4.zip">https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-10026/E-MTAB-10026.processed.4.zip</a> . Since we are working only with the B- and T-cells of selected donors, we provide a downsampled dataset for you:</p>
+<p>! wget -O $path_bcr_input -nc <a class="reference external" href="https://figshare.com/ndownloader/files/35574338">https://figshare.com/ndownloader/files/35574338</a></p>
+<p>! wget -O $path_bcr_input -nc <a class="reference external" href="https://figshare.com/ndownloader/files/35574338">https://figshare.com/ndownloader/files/35574338</a></p>
+<p>Let’s load the GEX and the previously annotated TCR data. Both AnnData objects can then easily be merged via scirpy into a shared AnnData object, which will store the AIR information in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code> and GEX in <code class="docutils literal notranslate"><span class="pre">adata.X</span></code>. Here a left join is conducted: only AIRs from cells with scRNA data, are added to the AnnData object. Cells with scRNA but without AIR are often kept during analysis, because it can include cells other than B- and T-cells. However, cells with AIR but without scRNA are clearly missing the measurements. Since a majority of downstream analysis is conducted on transcriptomics level, these cells are excluded.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex_tcr</span><span class="p">)</span>
+<span class="n">adata_tcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_tcr</span><span class="p">)</span>
+
+<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">merge_with_ir</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">adata_tcr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s calculate Leiden clustering on the T cell transcriptome.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To get an overview, we will plot the data with cluster assignment as a UMAP visualisation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;has_ir&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b5990455a37baae69a548b32bf1da602b971b2ba65209bdc0349e6830c0bbab0.png" src="../_images/b5990455a37baae69a548b32bf1da602b971b2ba65209bdc0349e6830c0bbab0.png" />
+</div>
+</div>
+<p>Here, we can see, that the majority of cells belong to the CD8+ effector T cells. Also, most of the cells express an TCR. The presence of AIRs can guide cell type annotation to separate clusters of other immune cells from T- and B-cells. Additional, missing AIRs can also be used for quality control: e.g. if the data is sorted for T cells, but large clusters miss TCRs, it should be investigated on a transcriptomic level, whether these cells were wrongly sorted.</p>
+<p>Similar, we merge with the BCR and GEX data for B cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_bc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_gex_bcr</span><span class="p">)</span>
+<span class="n">adata_bcr</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_bcr</span><span class="p">)</span>
+
+<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">merge_with_ir</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">,</span> <span class="n">adata_bcr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_bc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;has_ir&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c677a00066909238335abc362c507ec9b0885a5bc6fcb52114b93ba44ac64e62.png" src="../_images/c677a00066909238335abc362c507ec9b0885a5bc6fcb52114b93ba44ac64e62.png" />
+</div>
+</div>
+<p>In this visualization, we see a clear separation between Plasmablasts and B cells.</p>
+</section>
+<section id="uni-modal-analysis-with-multimodal-conditions">
+<span id="air-repertoire-multimodal-integration-key-takeaway-1"></span><h2><span class="section-number">44.3. </span>Uni-modal Analysis with multimodal conditions<a class="headerlink" href="#uni-modal-analysis-with-multimodal-conditions" title="Link to this heading">#</a></h2>
+<p>While studies often provide paired measurements for both modalities, these are often analyzed individually utilizing only limited shared information. Often one modality (AIRR or transcriptome) is used to provide conditions, on which the other modality is then analyzed. E.g., we can observe how cells from the same clonal lineage adapt to perturbation by DEG analysis of these cells in different points in time.</p>
+<p>Previously, we covered these unimodal analysis in other sections of this book. Here, we will focus, on how we can apply these techniques across AIRR and other modalities, rather than explaining the underlying approaches. To find a more detailed explanation please refer to the corresponding chapters.</p>
+<section id="air-analysis-on-rna-clusters">
+<h3><span class="section-number">44.3.1. </span>AIR analysis on RNA clusters<a class="headerlink" href="#air-analysis-on-rna-clusters" title="Link to this heading">#</a></h3>
+<p>We have shown sequence and diversity analysis of AIRs in chapter <a class="reference internal" href="clonotype.html#air-sequence"><span class="std std-ref">Clonotype analysis</span></a>. When paired AIRR- and transcriptome data is available, we can perform similar analysis on cell clusters defined in the scRNA-space. How these scRNA-clusters are defined, is depending on the study design. Selected ways to define scRNA clusters for AIR analysis may include:</p>
+<ul class="simple">
+<li><p><strong>Leiden Clusters</strong>: Arguably, the easiest way to define subsets of cells within count data, is via clustering algorithms. Usually, Leiden clustering is performed and highly expressed genes of the clusters are used to determine the cells’ state. We can now conduct the AIRR analysis on clusters of interest (e.g. an activated cluster that is likely disease-specific).</p></li>
+<li><p><strong>Marker Genes</strong>: We can select cells based on specific marker genes, that are indicative for specific cell states. Depending on your research questions, you should select your marker genes accordingly (e.g. markers for proliferation, activation, suppression, …). Naturally, this also extends to scores defined on collections of marker genes.</p></li>
+<li><p><strong>Cell Types</strong>: Several sub cell types exist for B- and T-Cells for various degrees of hierarchy. After these cell types are annotated via transcriptome or other modalities, we can investigate how the repertoire composition differs among this label. This analysis can either be performed within sample (how does the repertoire differ between cell types) or within a cell type across samples (e.g. how does the repertoire of CD8<sup>+</sup> effector T-cells change between disease and healthy patients).</p></li>
+</ul>
+<p><strong>Leiden Clusters</strong>: Above we clustered the gene expression data via the Leiden algorithm. We can now use the resulting groups to performance any kind of sequence analysis, e.g. spectratyping. For that, we simply define the group parameter (here: color) with the column name of the Leiden clustering (“leiden”).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ir</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spectratype</span><span class="p">(</span>
+    <span class="n">adata_bc</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">viztype</span><span class="o">=</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span>
+    <span class="n">curve_layout</span><span class="o">=</span><span class="s2">&quot;shifted&quot;</span><span class="p">,</span>
+    <span class="n">fig_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">]},</span>
+    <span class="n">kde_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kde_norm&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;Spectratype of IR_VJ_1_junction_aa by leiden&#39;}, xlabel=&#39;IR_VJ_1_junction_aa length&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/44a64ac98a20c8e9cd4e6c159549eb56eac5e98c4791be17a600568e398270f0.png" src="../_images/44a64ac98a20c8e9cd4e6c159549eb56eac5e98c4791be17a600568e398270f0.png" />
+</div>
+</div>
+<p>The BCR length of most Leiden clusters follows a similar distribution. However, it is clear to see, that cluster 5 and 9 mainly contain BCRs with longer sequence length. These cells stem from a subcluster of Plasmablasts and Plasma cells. A diverging length profile can be caused by an immune reaction. It might therefore be useful to further investigate these clusters. #update interpretation after subsample decision.</p>
+<p><strong>Marker Genes</strong>: Next, we can define our groups based on individual genes. As an example, we here pick Interferon Gamma as a marker for pro-inflammatory immune response. This will provide us with a selection of cells which are currently initiating an immune response.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;IFNG&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a1924f2826a8e60c1a918e797a065c4831b4a02600338ff3c84cf810300d20f1.png" src="../_images/a1924f2826a8e60c1a918e797a065c4831b4a02600338ff3c84cf810300d20f1.png" />
+</div>
+</div>
+<p>When visualizing it, we observe, that it is present in a subset of CD8 effector T cells. Next, we will select cells with high IFNG (arbitrary threshold: 2.5) and annotate this selection in the AnnData object. To use it as category, we will store it as string. We can visualize the selected cells in the UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[:,</span> <span class="s2">&quot;IFNG&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;elevated_IFNG&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/0aa38ee1534f52ce270fcc12ca176754b43b0583339a6a29f1ffa0d3e9a12541.png" src="../_images/0aa38ee1534f52ce270fcc12ca176754b43b0583339a6a29f1ffa0d3e9a12541.png" />
+</div>
+</div>
+<p>Next, we will generate frequency plots to see, whether the TCRs from cells with elevated IFNg expression, follow specific sequence patterns compared to the remaining cells. First, we select all cells with annotated CDR3β, followed by separation into background cells and cells with elevated IFNG. Finally, we construct the motifs and plot them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">palmotif</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_pal_motif</span><span class="p">,</span> <span class="n">svg_logo</span>
+
+<span class="n">df_sequences</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span> <span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">seqs_elevated</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">][</span>
+    <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span>
+<span class="p">]</span>
+<span class="n">seqs_background</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">][</span>
+    <span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span>
+<span class="p">]</span>
+<span class="n">centroid</span> <span class="o">=</span> <span class="n">df_sequences</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">motif_ifng</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_pal_motif</span><span class="p">(</span>
+    <span class="n">seqs</span><span class="o">=</span><span class="n">seqs_elevated</span><span class="p">,</span>
+    <span class="n">centroid</span><span class="o">=</span><span class="n">centroid</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">motif_back</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_pal_motif</span><span class="p">(</span>
+    <span class="n">seqs</span><span class="o">=</span><span class="n">seqs_background</span><span class="p">,</span>
+    <span class="n">centroid</span><span class="o">=</span><span class="n">centroid</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">svg_logo</span><span class="p">(</span><span class="n">motif_ifng</span><span class="p">,</span> <span class="s2">&quot;tmp/motif_ifng.svg&quot;</span><span class="p">)</span>
+<span class="n">svg_logo</span><span class="p">(</span><span class="n">motif_back</span><span class="p">,</span> <span class="s2">&quot;tmp/motif_back.svg&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">SVG</span><span class="p">(</span><span class="s2">&quot;tmp/motif_ifng.svg&quot;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">SVG</span><span class="p">(</span><span class="s2">&quot;tmp/motif_back.svg&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/81b41f6458cd5e604860bd28d8714adfc1c2a6348f166e73917a175ba609126f.svg" src="../_images/81b41f6458cd5e604860bd28d8714adfc1c2a6348f166e73917a175ba609126f.svg" />
+<img alt="../_images/710168d24c4a3eff66a12fe8ea6ee2211ce925d0afee5e51ebe655aa07c75613.svg" src="../_images/710168d24c4a3eff66a12fe8ea6ee2211ce925d0afee5e51ebe655aa07c75613.svg" />
+</div>
+</div>
+<p>While the frequency of amino acids at specific positions changes slightly, no large clear differing motifs can be seen between the two cell sets. Therefore, there doesn’t exist any evidence, that the selected subset of T cells share specificity to the same target epitope.</p>
+<p><strong>Cell Type</strong>: Here, we apply the diversity between different cell types annotated on the transcriptomic level (stored in “full_clustering”). We see, that proliferating and effector CD8<sup>+</sup> T cells have the lowest diversity. Since these cell types contain larger clones, this was to be expected. Such an analysis could be used as a sanity check for the cell type assignment or to compare the diversity of cell types over multiple studies.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: remove clonotype definition once this is handled by clonotype chapter</span>
+<span class="c1"># ir.pl.alpha_diversity(adata_tc, groupby=&quot;full_clustering&quot;, target_col=&quot;clone_id&quot;, figsize=[8, 4])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="gex-analysis-on-air-clusters">
+<h3><span class="section-number">44.3.2. </span>GEX analysis on AIR clusters<a class="headerlink" href="#gex-analysis-on-air-clusters" title="Link to this heading">#</a></h3>
+<p>Similarly, we can perform the standard analysis of transcriptome <a class="reference internal" href="../conditions/differential_gene_expression.html#differential-analysis"><span class="std std-ref">Differential gene expression analysis</span></a>, but on groups derived in the AIR space. E.g.:</p>
+<ul class="simple">
+<li><p><strong>Clonotype</strong>: AIR clonotypes can be used as clusters, if sufficient clonal expansion is present. This is especially intriguing, since the clonotype serves as a proxy for the cells specificity. Cells recognizing the same antigen can therefore be tracked over conditions such as time, treatment, or stimulation to observe their change.</p></li>
+<li><p><strong>Clonotype Network</strong>: To increase the amount of cells to track, we can use networks of clonotypes with similar AIR sequence instead of clonotypes. While these cells are not ancestrally related, they are likely to share the same specificity.</p></li>
+<li><p><strong>Disease Specificity</strong>: We previously queried databases, to detect epitope specific AIRs. We can now use this annotation, to investigate, how B- or T-cells reactive to selected diseases differ from other cells. Here, we must be cautious, since the dataset query provides us only with positive annotation: by same or similar AIR, we identify cells specific to a certain epitope. However, a missing pair of AIR and epitope in a database is not indicative of this binding being impossible.</p></li>
+</ul>
+<p>As for the previous subsection, the selected condition and analysis are highly depended on your research question. In the previous notebooks, we annotated these conditions in <code class="docutils literal notranslate"><span class="pre">adata.obs</span></code>. Since they can, hence, be applied for DEG analysis in the same fashion, we will only showcase DEG by #todo when the rest is unified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># todo change once load clonotype annotated data</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;elevated_IFNG&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Default of the method has been changed to &#39;t-test&#39; from &#39;t-test_overestim_var&#39;
+</pre></div>
+</div>
+<img alt="../_images/e9a7c8dd1f65252ce40c755e08b0e0d26bceb6529cf6ba48f2a518a8a817ce48.png" src="../_images/e9a7c8dd1f65252ce40c755e08b0e0d26bceb6529cf6ba48f2a518a8a817ce48.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO adapt to disease specific cells =&gt; Covid B cells against rest</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="multimodal-integration">
+<h2><span class="section-number">44.4. </span>Multimodal Integration<a class="headerlink" href="#multimodal-integration" title="Link to this heading">#</a></h2>
+<p>In the previous section we have shown, how modality specific analysis is performed on clusters derived from other modalities. However, this underutilizes the additional information provided by paired data, since AIRs and gene expression are interlinked: adaptive immune cells recognizing the same epitopes, will undergo a similar development upon activation. As for other Omics combinations, there has been an interest lately in integrating AIR and GEX for deriving clusters or a shared representation.</p>
+<p>These models are still novel and are not part of a standard “best-practice” analysis pipelines. We assume that these or similar approaches will be increasingly used in the future and therefore want to showcase these integration models as an outlook. However, you should be careful when applying these models, since they are still experimental and not independently evaluated for their strengths and weaknesses.</p>
+<section id="integrating-tcr-and-gex">
+<h3><span class="section-number">44.4.1. </span>Integrating TCR and GEX<a class="headerlink" href="#integrating-tcr-and-gex" title="Link to this heading">#</a></h3>
+<p>Only recently, three methods were developed yet to jointly utilize TCR sequences and transcriptome each aiming at different aspects of analysis:</p>
+<ul class="simple">
+<li><p><strong>TESSA</strong>: applies a Bayesian model on a TCR and GEX embedding for clustering T cells of similar transcriptome and sequences.</p></li>
+<li><p><strong>Conga</strong>: clusters T cell clones through a graph-theoretic approach by distances of GEX and TCR</p></li>
+<li><p><strong>mvTCR</strong>: uses Deep Variational Autoencoders to derive a shared embedding of GEX and TCR.</p></li>
+</ul>
+<p>All multimodal approaches, require paired GEX and AIR data. We will therefore start by filtering all cells without CDR3β.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_tc</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="tessa">
+<h4><span class="section-number">44.4.1.1. </span>TESSA<a class="headerlink" href="#tessa" title="Link to this heading">#</a></h4>
+<p>Zhang et al. developed TCR functional landscape estimation supervised with scRNA-seq analysis (TESSA) <span id="id1">[<a class="reference internal" href="#id530" title="Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. Nature methods, 18(1):92–99, 2021.">Zhang <em>et al.</em>, 2021</a>]</span>, which aims at embedding and clustering T cell clones based on their TCR sequence and transcriptome via Bayesian modelling. The CDR3β sequence is first compressed to a 30-dimensional numeric representation using a pretrained autoencoder. Following, the dimensions are upweighted to correlate the TCR representation with the gene expression of similar TCR-groups, thereby assigning importance of TCR position for explaining the cells’ gene expression. In an interactive process, weights and groups are updated until convergence to reach a maximal alignment between both modalities.</p>
+<p>TESSA produced clusters of high purity when embedding T-cells with known epitope specificity from <span id="id2">[<a class="reference internal" href="#id533" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span>, surpassing the uni-modal model GLIPH <span id="id3">[<a class="reference internal" href="specificity.html#id519" title="Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. Nature, 547(7661):94–98, 2017.">Glanville <em>et al.</em>, 2017</a>]</span>, which is commonly used for clustering TCR sequences. Further, cluster centrality was indicative for higher avidity clones shown by clonal expansion and high ADT counts. Using TESSA on data from <span id="id4">[<a class="reference internal" href="#id531" title="Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. Nature medicine, 25(8):1251–1259, 2019.">Yost <em>et al.</em>, 2019</a>]</span>, the author detected novel clusters of responder T cell in patients undergoing PD-1 blockade.</p>
+<p>The code and instructions for installation can be found <a class="reference external" href="https://github.com/jcao89757/TESSA">here</a>.</p>
+<section id="data-preprocessing">
+<h5><span class="section-number">44.4.1.1.1. </span>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h5>
+<p>TESSA requires several TCR and GEX files in specific format.</p>
+<p>First, we save a “.csv”-File with the following columns:</p>
+<ul class="simple">
+<li><p><strong>contig_id</strong>: cell barcodes as index column</p></li>
+<li><p><strong>cdr3</strong>: CDR3β amino acid sequence trimmed of starting C and ending F</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span>
+<span class="n">df_tcr</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;contig_id&quot;</span>
+
+<span class="c1"># trimm cdr3 sequence</span>
+<span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]]</span>
+
+<span class="c1"># select only columns needed</span>
+<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="p">[[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]]</span>
+
+<span class="n">df_tcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_tcrs.csv&quot;</span><span class="p">)</span>
+<span class="n">df_tcr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cdr3</th>
+    </tr>
+    <tr>
+      <th>contig_id</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>S11_AAACCTGAGATTACCC-1</th>
+      <td>ASSLDARDRGRVTEAF</td>
+    </tr>
+    <tr>
+      <th>S11_AAACCTGGTAATTGGA-1</th>
+      <td>ASSPGTGTYGYT</td>
+    </tr>
+    <tr>
+      <th>S11_AAACCTGGTAGCACGA-1</th>
+      <td>ASSIPGAVHEQY</td>
+    </tr>
+    <tr>
+      <th>S11_AAACCTGGTCTCAACA-1</th>
+      <td>ASSLDARDRGRVTEAF</td>
+    </tr>
+    <tr>
+      <th>S11_AAACCTGTCGCCGTGA-1</th>
+      <td>ASSPQTGVARYGYT</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We will filter the 10% most variable genes, as done in the TESSA publication.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_genes</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">10</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="n">n_genes</span><span class="p">)</span>
+<span class="n">adata_tessa</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[:,</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now store the GEX matrix to a “.csv”-File. TESSA requires the transposed matrix of the adata object. I.e. the rows represent the different genes and the columns indicate a specific cell. For this, we will store the count data in a DataFrame with the right index and column names. Following, we transpose the DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">count_mat</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span>
+<span class="n">df_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_mat</span><span class="p">)</span>
+
+<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_tessa</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span>
+
+<span class="n">df_counts</span> <span class="o">=</span> <span class="n">df_counts</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="n">df_counts</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_gex.csv&quot;</span><span class="p">)</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>S11_AAACCTGAGATTACCC-1</th>
+      <th>S11_AAACCTGGTAATTGGA-1</th>
+      <th>S11_AAACCTGGTAGCACGA-1</th>
+      <th>S11_AAACCTGGTCTCAACA-1</th>
+      <th>S11_AAACCTGTCGCCGTGA-1</th>
+      <th>S11_AAACCTGTCTTATCTG-1</th>
+      <th>S11_AAACGGGCAAGAAAGG-1</th>
+      <th>S11_AAACGGGGTAGCGATG-1</th>
+      <th>S11_AAACGGGGTCGGCACT-1</th>
+      <th>S11_AAACGGGGTTACGGAG-1</th>
+      <th>...</th>
+      <th>S12_TTTGGTTGTCAGAGGT-1</th>
+      <th>S12_TTTGGTTTCAAGAAGT-1</th>
+      <th>S12_TTTGGTTTCTACTATC-1</th>
+      <th>S12_TTTGGTTTCTCGCTTG-1</th>
+      <th>S12_TTTGTCACACGGTAGA-1</th>
+      <th>S12_TTTGTCAGTAGAAAGG-1</th>
+      <th>S12_TTTGTCAGTCCAACTA-1</th>
+      <th>S12_TTTGTCAGTGAGTGAC-1</th>
+      <th>S12_TTTGTCATCCACTCCA-1</th>
+      <th>S12_TTTGTCATCGCATGAT-1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>KLHL17</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.662003</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>HES4</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>ISG15</th>
+      <td>1.845827</td>
+      <td>0.0</td>
+      <td>1.54457</td>
+      <td>2.441434</td>
+      <td>2.430966</td>
+      <td>0.9284</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.64661</td>
+      <td>1.565189</td>
+      <td>...</td>
+      <td>1.210719</td>
+      <td>0.0</td>
+      <td>1.581859</td>
+      <td>1.511785</td>
+      <td>0.000000</td>
+      <td>2.015501</td>
+      <td>0.0</td>
+      <td>2.088418</td>
+      <td>1.611682</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>AGRN</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>TTLL10</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 5281 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="running-the-model">
+<h5><span class="section-number">44.4.1.1.2. </span>Running the model<a class="headerlink" href="#running-the-model" title="Link to this heading">#</a></h5>
+<p>We need to provide different setting options, most of which specify input or output directories. We will summarize them in a dictionary first.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">settings_full</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Input files</span>
+    <span class="s2">&quot;tcr&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_tcrs.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/TESSA_gex.csv&quot;</span><span class="p">,</span>
+    <span class="c1"># TESSA models</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;TESSA/BriseisEncoder/TrainedEncoder.h5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;embeding_vectors&quot;</span><span class="p">:</span> <span class="s2">&quot;TESSA/BriseisEncoder/Atchley_factors.csv&quot;</span><span class="p">,</span>
+    <span class="c1"># Output files</span>
+    <span class="s2">&quot;output_TCR&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_tcr_embedding.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;output_log&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_log.log&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;output_tessa&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;within_sample_networks&quot;</span><span class="p">:</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the next step, we will create the command for running TESSA by specifying the environment and adding the settings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_tessa</span> <span class="o">=</span> <span class="s2">&quot;source ~/.bashrc &amp;&amp;&quot;</span>
+<span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="s2">&quot;conda activate TESSA &amp;&amp; &quot;</span>
+
+<span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="s2">&quot;python TESSA/Tessa_main.py&quot;</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">settings_full</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">cmd_tessa</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; -</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">cmd_tessa</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;source ~/.bashrc &amp;&amp;conda activate TESSA &amp;&amp; python TESSA/Tessa_main.py -tcr ./data/tmp/TESSA_tcrs.csv -exp ./data/tmp/TESSA_gex.csv -model TESSA/BriseisEncoder/TrainedEncoder.h5 -embeding_vectors TESSA/BriseisEncoder/Atchley_factors.csv -output_TCR ./data/res/TESSA_tcr_embedding.csv -output_log ./data/res/TESSA_log.log -output_tessa ./data/res -within_sample_networks FALSE&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we run the model on the specified settings by calling the command. Depending on your compute ressources this might take several minutes. Since the command line output is very verbose, we will silence this cell via the capture line magic.You should remove the first line for debugging.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_tessa</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="output">
+<span id="air-repertoire-multimodal-integration-key-takeaway-2"></span><h5><span class="section-number">44.4.1.1.3. </span>Output<a class="headerlink" href="#output" title="Link to this heading">#</a></h5>
+<p>We now recieve three output files that we can further use for downstream tasks:</p>
+<ul class="simple">
+<li><p><strong>TESSA_tcr_embedding.csv</strong>: Embedding of TCRs (without GEX information)</p></li>
+<li><p><strong>result_meta.csv</strong>: cluster assignment by cell</p></li>
+<li><p><strong>tessa_final.RData</strong>: Containing inferred model parameters (e.g. weighting vector b)</p></li>
+</ul>
+<p>Here, we will use the first two files as embedding and clustering. We will store them in AnnData format for easier handling. To avoid the clustering to be dominated by highly expanded clones, we reduce the cell-level data to a clone-level by removing duplicate TCRs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/TESSA_tcr_embedding.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="n">tessa_obs</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span><span class="o">.</span><span class="n">obs</span>
+<span class="n">tessa_embedding</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">tessa_obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we will add the TESSA cluster assignment to the AnnData object. Since TESSA internally changes the barcode slightly, we will need to adjust for that. Additionally, we drop the duplicate TCRs within a cluster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clustering</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/result_meta.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">clustering</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="n">clustering</span> <span class="o">=</span> <span class="n">clustering</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+<span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clustering</span><span class="p">[</span><span class="s2">&quot;cluster_number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique clones: </span><span class="si">{</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cdr3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique clusters: </span><span class="si">{</span><span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;TESSA_cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Unique clones: 751
+Unique clusters: 134
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can see, that 751 clones were grouped to 144 clusters, which have similar TCR sequences and are likely to be functionally related. For TSNE visualisation, we will highlight the ten largest clusters in the TCR embedding space.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">)</span>
+
+<span class="n">top_10_clusters</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+<span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clusters</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">tsne</span><span class="p">(</span><span class="n">tessa_embedding</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Consider installing the package MulticoreTSNE (https://github.com/DmitryUlyanov/Multicore-TSNE). Even for n_jobs=1 this speeds up the computation considerably and might yield better converged results.
+... storing &#39;TESSA_cluster&#39; as categorical
+... storing &#39;TESSA_cluster_top10&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/a809bf3731309b7fc85567f294b7ced064ef68bcc20f7d1d5c4117e39ba40abe.png" src="../_images/a809bf3731309b7fc85567f294b7ced064ef68bcc20f7d1d5c4117e39ba40abe.png" />
+</div>
+</div>
+<p>For plotting the cluster assignment in the GEX space, we add the assignment to the original adata object. When plotting, we can see that TESSA clusters also share similar phenotypes at GEX level.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">tessa_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span> <span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="p">)</span>
+<span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="n">mapping_dict</span>
+<span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_tc</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;TESSA_cluster_top10&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;cdr3&#39; as categorical
+... storing &#39;TESSA_cluster_top10&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/92d7b055af9c6b9efd1746d801b16d5938ec4174557cdd7582b1563da6b633af.png" src="../_images/92d7b055af9c6b9efd1746d801b16d5938ec4174557cdd7582b1563da6b633af.png" />
+</div>
+</div>
+<p>In both visualisations, we can see that the clusters are related on a TCR and GEX level. However, the full clustering can not directly observed in a single modality. Due to similar TCR and GEX profile, these cells might be specific to the same epitopes. As an example, we could use this annotation for DEG analysis between cell networks as described above.</p>
+</section>
+</section>
+<section id="conga">
+<h4><span class="section-number">44.4.1.2. </span>CoNGA<a class="headerlink" href="#conga" title="Link to this heading">#</a></h4>
+<p>clonotype neighbor graph analysis (CoNGA) <span id="id5">[<a class="reference internal" href="#id532" title="Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). Nature Biotechnology, 40(1):54–63, 2022.">Schattgen <em>et al.</em>, 2022</a>]</span> uses similarity graphs at a clonotype level on GEX and TCR, for which the well known distance metric TCRDist <span id="id6">[<a class="reference internal" href="specificity.html#id516" title="Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. Nature, 547(7661):89–93, 2017.">Dash <em>et al.</em>, 2017</a>]</span> is used. Based on the graph neighborhood, clusters are formed by shared GEX and TCR assignments. These so called “CoNGA clusters” thereby share similar receptor sequences as well as similar gene expression. CoNGA clusters contained clonotypes with highly alike TCRs based on e.g. length and physio-chemical properties and were shown to capture specificity. The following explanation runs the main CoNGA pipeline. Since the different aspects of the pipeline are explained <a class="reference external" href="https://github.com/phbradley/conga/blob/master/colab_conga_pipeline.ipynb">here</a>, the following description is mainly focused on how to transform the data and run the pipeline.</p>
+<section id="id7">
+<h5><span class="section-number">44.4.1.2.1. </span>Data Preparation<a class="headerlink" href="#id7" title="Link to this heading">#</a></h5>
+<p>CoNGA conveniently supports several input types for the gene expression matrix including h5ad-files. For the clonotype information, we need to create a clone_file first by running a preprocessing script on the Cell Ranger output.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_tcr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/TCR_00_read_aligned.csv&quot;</span><span class="p">,</span>
+    <span class="c1"># index_col=&#39;barcode&#39;,</span>
+<span class="p">)</span>
+<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Unnamed: 0&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_tcr</span> <span class="o">=</span> <span class="n">df_tcr</span><span class="p">[</span><span class="n">df_tcr</span><span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+
+<span class="n">path_reduced_tcr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_tcrs.csv&quot;</span>
+<span class="n">df_tcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_reduced_tcr</span><span class="p">)</span>
+
+<span class="n">path_conga_clones</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_clone_file.tsv&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_conga_pp</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;python conga/scripts/setup_10x_for_conga.py &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--filtered_contig_annotations_csvfile </span><span class="si">{</span><span class="n">path_reduced_tcr</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--output_clones_file </span><span class="si">{</span><span class="n">path_conga_clones</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="s2">&quot;--organism human&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_conga_pp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The CoNGA pipeline requires unlogged counts for the gene expression. Since this is not provided in our SARS-CoV-2 dataset, we will revert the log1p transformation by its inverse and save the results to a separate file. If you run the analysis on your own dataset, you can directly link to your raw count data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_conga_gex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/conga_gex.h5ad&quot;</span>
+
+<span class="n">adata_conga</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_conga</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata_conga</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">path_conga_gex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="executing-conga">
+<h5><span class="section-number">44.4.1.2.2. </span>Executing CoNGA<a class="headerlink" href="#executing-conga" title="Link to this heading">#</a></h5>
+<p>We can execute the main CoNGA pipeline via the following command line call, which specifies the input and output directories.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_conga</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2"> &amp;&amp; &quot;</span>
+
+<span class="n">cmd_conga</span> <span class="o">+=</span> <span class="p">(</span>
+    <span class="s2">&quot;python ../../conga/scripts/run_conga.py &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--graph_vs_graph --graph_vs_graph_stats --graph_vs_features --tcr_clumping --find_hotspot_features &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--gex_data ../../</span><span class="si">{</span><span class="n">path_conga_gex</span><span class="si">}</span><span class="s2"> --gex_data_type h5ad &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--clones_file ../../</span><span class="si">{</span><span class="n">path_conga_clones</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;--organism human --outfile_prefix conga&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_conga</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h5><span class="section-number">44.4.1.2.3. </span>Output<a class="headerlink" href="#id8" title="Link to this heading">#</a></h5>
+<p>The results of the pipeline are stored in  <code class="docutils literal notranslate"><span class="pre">./data/res/conga_results_summary.html</span></code> with an explanation for each result. Additional annotation and plots are available under <code class="docutils literal notranslate"><span class="pre">./data/res_conga/</span></code>. Explaining all results, is out of scope of this tutorial. We, therefore, refer to the very detailed explanation in the web summary and the colab notebook.</p>
+</section>
+</section>
+<section id="mvtcr">
+<span id="air-repertoire-multimodal-integration-key-takeaway-3"></span><h4><span class="section-number">44.4.1.3. </span>mvTCR<a class="headerlink" href="#mvtcr" title="Link to this heading">#</a></h4>
+<p>mvTCR by An et al. is a multiview Variational autoencoder that compresses TCR sequence and gene expression into a lower-dimensional representation <span id="id9">[<a class="reference internal" href="#id534" title="Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. bioRxiv, 2021.">An <em>et al.</em>, 2021</a>]</span>. Two deep learning architectures - Transformer and Multi-layer perceptron - extract information from both TCR and GEX, respectively, before they are fused to derive the joint space. Following, the trained models can be used to embed similar data.</p>
+<p>The authors showed, that multi-modal models can better capture antigen specificity, than uni-modal embeddings on the data from <span id="id10">[<a class="reference internal" href="#id533" title="10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. Tech. rep, 2019.">10x Genomics, 2019</a>]</span> for prediction and clustering. Additionally, they showed that cell type and cell functionality are preserved in the embedding space on a SARS-CoV-2 dataset from <span id="id11">[<a class="reference internal" href="#id535" title="David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. Nature communications, 12(1):1–14, 2021.">Fischer <em>et al.</em>, 2021</a>]</span>. Code and further explanations are available <a class="reference external" href="https://github.com/SchubertLab/mvTCR">here</a>.</p>
+<p>mvTCR relies on the AnnData format and we therefore need to prepare our AnnData object for training. For that, the several functions are provided.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mvTCR&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tcr_embedding.utils_training</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tcr_embedding.models.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model_selection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tcr_embedding.utils_preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_tcr</span><span class="p">,</span> <span class="n">group_shuffle_split</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The AnnData object requires a clonotype assignment (see chapter <a class="reference internal" href="clonotype.html#air-sequence"><span class="std std-ref">Clonotype analysis</span></a>). Since mvTCR uses both chains of the primary receptor, we will use this information for defining the clonotype as well. # todo =&gt; use the one provided</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_mvtcr</span> <span class="o">=</span> <span class="n">adata_tc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_tc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># todo delete once data is unified</span>
+<span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">define_clonotypes</span><span class="p">(</span>
+    <span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;clonotype&quot;</span><span class="p">,</span> <span class="n">receptor_arms</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">dual_ir</span><span class="o">=</span><span class="s2">&quot;primary_only&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 728/728 [00:00&lt;00:00, 795.39it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model requires a numeric encoding of the CDR3α and CDR3β chain. For that, we need to provide the columns containing the amino acid sequences. Additional, the pad attribute indicates the maximal length of the sequence. If we do not want to embed additional data afterwards, we can set it to the maximal sequence length.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pad</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+    <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+    <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="n">encode_tcr</span><span class="p">(</span>
+    <span class="n">adata_mvtcr</span><span class="p">,</span>
+    <span class="n">column_cdr3a</span><span class="o">=</span><span class="s2">&quot;IR_VJ_1_junction_aa&quot;</span><span class="p">,</span>
+    <span class="n">column_cdr3b</span><span class="o">=</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">,</span>
+    <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data needs to be divided into a training and validation data. This is done by setting the values <code class="docutils literal notranslate"><span class="pre">train</span></code> or <code class="docutils literal notranslate"><span class="pre">val</span></code> for each cell in <code class="docutils literal notranslate"><span class="pre">adata.obs['set']</span></code>. By choosing the <code class="docutils literal notranslate"><span class="pre">clonotype</span></code> and 0.2, the dataset used to evaluate the model’s performance will contain approximately 20% of unique clonotypes to the training set. This setting can generally be used for data analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">group_shuffle_split</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">group_col</span><span class="o">=</span><span class="s2">&quot;clonotype&quot;</span><span class="p">,</span> <span class="n">val_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span>
+<span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;val&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to provide various information, that are used during training:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_experiment</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;study_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_haniffa&quot;</span><span class="p">,</span>  <span class="c1"># Name that identifies the study</span>
+    <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;moe&quot;</span><span class="p">,</span>  <span class="c1"># Type of mixture model used during training, authors suggest using Mixture of Export (moe)</span>
+    <span class="s2">&quot;balanced_sampling&quot;</span><span class="p">:</span> <span class="s2">&quot;clonotype&quot;</span><span class="p">,</span>  <span class="c1"># Column containing the id for clonotypes</span>
+    <span class="s2">&quot;comet_workspace&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Can be used to log experiments via comet-ml</span>
+    <span class="s2">&quot;save_path&quot;</span><span class="p">:</span> <span class="n">path_res</span><span class="p">,</span>  <span class="c1"># Output path, were the selected models are stored</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>mvTCR runs a hyperparameter optimization to choose the best model architecture. For general analysis, the optimization mode <code class="docutils literal notranslate"><span class="pre">pseudo_metric</span></code> is most suited. Here, the best model is determined by the capability of preserving multiple characteristics of the dataset. In the following, we choose identical TCR sequence (<code class="docutils literal notranslate"><span class="pre">clonotype</span></code>) and cell type (<code class="docutils literal notranslate"><span class="pre">functional.cluster</span></code>) both equally weighted (1 and 1). If after training the model, the latent space is dominated by one modality, we can rerun the model with different weightings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_optimization</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pseudo_metric&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;prediction_labels&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;clonotype&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;full_clustering&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we can run the model selection. Especially for larger datasets an extensive model search was used by the authors. As a showcase, we here only train one model. We recommend using a computer with GPU. Even then, the model will train several minutes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_runs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">run_model_selection</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">params_experiment</span><span class="p">,</span> <span class="n">params_optimization</span><span class="p">,</span> <span class="n">n_runs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">[I 2022-11-17 13:46:07,144]</span> A new study created in RDB with name: test_haniffa
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 200/200 [08:12&lt;00:00,  2.46s/it]
+<span class=" -Color -Color-Green">[I 2022-11-17 13:54:41,499]</span> Trial 0 finished with value: 1.681318287535559 and parameters: {&#39;dropout&#39;: 0.1, &#39;activation&#39;: &#39;linear&#39;, &#39;rna_hidden&#39;: 1500, &#39;hdim&#39;: 200, &#39;shared_hidden&#39;: 100, &#39;rna_num_layers&#39;: 1, &#39;tfmr_encoding_layers&#39;: 4, &#39;loss_weights_kl&#39;: 4.0428727350273357e-07, &#39;loss_weights_tcr&#39;: 0.034702669886504146, &#39;lr&#39;: 1.0994335574766187e-05, &#39;zdim&#39;: 50, &#39;tfmr_embedding_size&#39;: 16, &#39;tfmr_num_heads&#39;: 8, &#39;tfmr_dropout&#39;: 0.15000000000000002}. Best is trial 0 with value: 1.681318287535559.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Study statistics:
+  Number of finished trials: 1
+  Number of pruned trials: 0
+  Number of complete trials: 1
+Best trial: 
+  trial_0
+  Value: 1.681318287535559
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now have a trained model, that we can use to embed data to a representation capturing TCR and GEX, simultaneously. For this, we will load the best model from our studies folder.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_trial</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">path_model</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;../data/res/trial_</span><span class="si">{</span><span class="n">best_trial</span><span class="si">}</span><span class="s2">/best_model_by_metric.pt&quot;</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">path_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a next step, we can now embed this data and assign the annotation to our new embedded AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mvtcr_embedding</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent</span><span class="p">(</span><span class="n">adata_mvtcr</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">adata_mvtcr</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This embedding can now be used for data analysis such as visualization. For this we will select the top 10 most abundant clonotypes within the sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_10_clones</span> <span class="o">=</span> <span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+<span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotypes_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mvtcr_embedding</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clonotype&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clones</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we will be using UMAPs to show cell type assignment and the top 10 clonotypes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mvtcr_embedding</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;full_clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;clonotypes_top10&quot;</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;clonotype&#39; as categorical
+... storing &#39;set&#39; as categorical
+... storing &#39;clonotypes_top10&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/0f0ef6bd2f55863515e93b9abf9ad157ad653e6c60ea627c032283ba468cf742.png" src="../_images/0f0ef6bd2f55863515e93b9abf9ad157ad653e6c60ea627c032283ba468cf742.png" />
+</div>
+</div>
+<p>Here, we visualize the TCR-GEX embedding. It is clear to see, that the data separates by clonotype. However, the data forms additional subclusters and structures within the clones, which is influenced by the GEX. Depending on your analysis, you might need to adjust the weighting between GEX and TCR and run a longer parameter search. Otherwise, different downstream task such as clustering can now be performed on this embedding using Scanpy functions.</p>
+</section>
+</section>
+<section id="integrating-bcr-and-gex">
+<h3><span class="section-number">44.4.2. </span>Integrating BCR and GEX<a class="headerlink" href="#integrating-bcr-and-gex" title="Link to this heading">#</a></h3>
+<p>The three models above were developed TCRs. However, Conga and mvTCR might be applicable for B cells due to similar structures of TCR and BCR. However, both models have not been evaluated for B cells in their publication. TESSA relies on a pre-trained TCR autoencoder and should therefore not be used for BCR-GEX integration. The authors recently published <a class="reference external" href="https://github.com/wooyongc/Benisse">Benisse</a>, which is similar to TESSA but applied on B cells <span id="id12">[<a class="reference internal" href="#id536" title="Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. Nature Machine Intelligence, pages 1–9, 2022.">Zhang <em>et al.</em>, 2022</a>]</span>.</p>
+<p>Similar as for TCR, multimodal BCR integration tools are still novel and have not been used in standard analysis pipelines. Therefore, we recommend caution, when applying these models.</p>
+<section id="benisse">
+<h4><span class="section-number">44.4.2.1. </span>Benisse<a class="headerlink" href="#benisse" title="Link to this heading">#</a></h4>
+<p>Benisse embeds the heavy-chain of the BCR into a numeric embedding using a pre-trained model. The model works on a clonotype level: i.e., GEX of cells with the same BCR are averaged to form representative per clone. Following, Benisse detects clones that are similar on a BCR- and GEX-level by constructing a sparse graph structure.</p>
+<p>Since the model has a similar setup as TESSA, we will follow the same processing steps and only comment, when details differ from above.</p>
+<p>Due to long runtime, we first subsample the B-cell dataset to 1000 cells of one donor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_bc</span><span class="p">[</span><span class="o">~</span><span class="n">adata_bc</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[</span><span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;sample_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MH9143275&quot;</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Amount of cells: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Amount of cells: 1000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_bcr</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span>
+<span class="n">df_bcr</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;contigs&quot;</span>
+
+<span class="n">df_bcr</span> <span class="o">=</span> <span class="n">df_bcr</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;IR_VDJ_1_junction_aa&quot;</span><span class="p">:</span> <span class="s2">&quot;cdr3&quot;</span><span class="p">})</span>
+
+<span class="n">df_bcr</span> <span class="o">=</span> <span class="n">df_bcr</span><span class="p">[[</span><span class="s2">&quot;cdr3&quot;</span><span class="p">]]</span>
+
+<span class="n">df_bcr</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcrs.csv&quot;</span><span class="p">)</span>
+<span class="n">df_bcr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cdr3</th>
+    </tr>
+    <tr>
+      <th>contigs</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>TTCTCAAAGAATTCCC-MH9143275</th>
+      <td>CAGGSQWEVKLDYW</td>
+    </tr>
+    <tr>
+      <th>TATCAGGAGTGAACAT-MH9143275</th>
+      <td>CARPRSLIAAAGAFDIW</td>
+    </tr>
+    <tr>
+      <th>CATCCACCAACGCACC-MH9143275</th>
+      <td>CASEEVTMVRGVMFPYGMDVW</td>
+    </tr>
+    <tr>
+      <th>GTCGTAATCACCGTAA-MH9143275</th>
+      <td>CAREGMVYVDYW</td>
+    </tr>
+    <tr>
+      <th>AACTCTTAGCACCGCT-MH9143275</th>
+      <td>CATQNPGYSSSWDDRGAFDIW</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We will filter the 1,000 most variable genes, as provided in the sample data file in the GitHub repository.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata_benisse</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">adata_benisse</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[:,</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">count_mat</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">A</span>
+<span class="n">df_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_mat</span><span class="p">)</span>
+
+<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span>
+
+<span class="n">df_counts</span> <span class="o">=</span> <span class="n">df_counts</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="n">df_counts</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_gex.csv&quot;</span><span class="p">)</span>
+<span class="n">df_counts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>TTCTCAAAGAATTCCC-MH9143275</th>
+      <th>TATCAGGAGTGAACAT-MH9143275</th>
+      <th>CATCCACCAACGCACC-MH9143275</th>
+      <th>GTCGTAATCACCGTAA-MH9143275</th>
+      <th>AACTCTTAGCACCGCT-MH9143275</th>
+      <th>ACTATCTCACAGGAGT-MH9143275</th>
+      <th>CAGTAACCAGGAATCG-MH9143275</th>
+      <th>ACTGTCCTCTCGGACG-MH9143275</th>
+      <th>TCGGGACCAGCATGAG-MH9143275</th>
+      <th>ATTGGACAGCCATCGC-MH9143275</th>
+      <th>...</th>
+      <th>CACAGTAAGTGTCCAT-MH9143275</th>
+      <th>GTCAAGTCAAGGACTG-MH9143275</th>
+      <th>TAGTGGTAGCGATTCT-MH9143275</th>
+      <th>GTGCAGCGTCTCCCTA-MH9143275</th>
+      <th>CTGGTCTCATCCTTGC-MH9143275</th>
+      <th>CTTTGCGAGCTGCCCA-MH9143275</th>
+      <th>TACACGATCGGGAGTA-MH9143275</th>
+      <th>GGGCACTAGGATGTAT-MH9143275</th>
+      <th>TCACAAGGTGGTGTAG-MH9143275</th>
+      <th>TGCGCAGTCTCAAGTG-MH9143275</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>HES4</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>CPTP</th>
+      <td>0.334078</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.44491</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.565442</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>THAP3</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.225355</td>
+      <td>0.0</td>
+      <td>0.45654</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>VAMP3</th>
+      <td>0.334078</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.565442</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>CASP9</th>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.225355</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.355897</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.291166</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 1000 columns</p>
+</div></div></div>
+</div>
+<p>Unlike TESSA, BENISSE additionally requires an adapted contigs file as specified from the 10x cellranger output. Here, we will filter the original contigs file to contain only the barcodes of the selected donors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_bcr_contigs</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_data</span><span class="si">}</span><span class="s2">/BCR_00_read_aligned.csv&quot;</span>
+<span class="n">df_bcr_contigs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_bcr_contigs</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">df_bcr_contigs</span> <span class="o">=</span> <span class="n">df_bcr_contigs</span><span class="p">[</span><span class="n">df_bcr_contigs</span><span class="p">[</span><span class="s2">&quot;barcode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+<span class="n">df_bcr_contigs</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcr_contigs.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id13">
+<h5><span class="section-number">44.4.2.1.1. </span>Running the model<a class="headerlink" href="#id13" title="Link to this heading">#</a></h5>
+<p>First, we need to embed the BCR sequences via the pre-trained encoder:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">settings_embedding</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;input_data&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcrs.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;output_data&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/BENISSE_encoded_bcrs.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cuda&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_bcr_embedding</span> <span class="o">=</span> <span class="s2">&quot;source ~/.bashrc &amp;&amp; &quot;</span>
+<span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="s2">&quot;conda activate BENISSE &amp;&amp; &quot;</span>
+
+<span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="s2">&quot;python Benisse/AchillesEncoder.py&quot;</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">settings_embedding</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">cmd_bcr_embedding</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; --</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">cmd_bcr_embedding</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;source ~/.bashrc &amp;&amp; conda activate BENISSE &amp;&amp; python Benisse/AchillesEncoder.py --input_data ./data/tmp/BENISSE_bcrs.csv --output_data ./data/res/BENISSE_encoded_bcrs.csv --cuda True&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_bcr_embedding</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Following, we need to create the graph representation. We will use the default values provided by the authors here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">cmd_benisse</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;source ~/.bashrc &amp;&amp;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;conda activate BENISSE &amp;&amp;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;export R_LIBS=$CONDA_PREFIX/lib/R/library &amp;&amp;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Rscript Benisse/Benisse.R&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_gex.csv&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_tmp</span><span class="si">}</span><span class="s2">/BENISSE_bcr_contigs.csv&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/BENISSE_encoded_bcrs.csv&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;1610 1 </span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> 1 1 10 1e-10&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">cmd_benisse</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd_benisse</span><span class="p">)</span>
+<span class="n">cmd_benisse</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;source ~/.bashrc &amp;&amp; conda activate BENISSE &amp;&amp; export R_LIBS=$CONDA_PREFIX/lib/R/library &amp;&amp; Rscript Benisse/Benisse.R ./data/tmp/BENISSE_gex.csv ./data/tmp/BENISSE_bcr_contigs.csv ./data/res/BENISSE_encoded_bcrs.csv ./data/res 1610 1 100 1 1 10 1e-10&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Even with reduced number of iteration, running the code might take several minutes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="err">!$</span><span class="n">cmd_benisse</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id14">
+<h5><span class="section-number">44.4.2.1.2. </span>Output<a class="headerlink" href="#id14" title="Link to this heading">#</a></h5>
+<p>We now receive several output files, which are described in more detail in the authors GitHub repository. In the following, we will examine:</p>
+<ul class="simple">
+<li><p><strong>connectionplot.pdf</strong>: Visualisation of the derived clustering</p></li>
+<li><p><strong>clone_annotation.csv</strong>: cluster assignment by cell</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">IFrame</span>
+
+<span class="n">IFrame</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/connectionplot.pdf&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+        <iframe
+            width="600"
+            height="600"
+            src="./data/res/connectionplot.pdf"
+            frameborder="0"
+            allowfullscreen
+            
+        ></iframe>
+        </div></div>
+</div>
+<p>The connection plot provides us with a visualisation of the graph build by Benisse. Each clonotype is represented by a node in the learned embedding space. These clustering is informed by BCR as well as gene expression similarity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">benisse_clusters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path_res</span><span class="si">}</span><span class="s2">/clone_annotation.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">adata_benisse_out</span> <span class="o">=</span> <span class="n">adata_benisse</span><span class="p">[</span>
+    <span class="n">adata_benisse</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">benisse_clusters</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;benisse_clusters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">benisse_clusters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span>
+<span class="p">][</span><span class="s2">&quot;graph_label&quot;</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">)</span>
+
+<span class="n">top_10_clusters</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;benisse_clusters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+<span class="p">)</span>
+<span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;clusters_top10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_benisse_out</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span>
+    <span class="s2">&quot;benisse_clusters&quot;</span>
+<span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">top_10_clusters</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_benisse_out</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;clusters_top10&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>... storing &#39;benisse_clusters&#39; as categorical
+... storing &#39;clusters_top10&#39; as categorical
+</pre></div>
+</div>
+<img alt="../_images/61bcb31d35d1c46b5b455fdcb1446f5a2c8a981d96cdfac99deb171b667f4750.png" src="../_images/61bcb31d35d1c46b5b455fdcb1446f5a2c8a981d96cdfac99deb171b667f4750.png" />
+</div>
+</div>
+<p>Here, we projected the ten largest clusters upon the transcriptome space. While some clusters follow the same phenotype, other clusters separate in the RNA space. The cluster annotation could be used for downstream analysis (see above) on BCR or transcriptomic site or to infer ancestral relationships between cells (see paper).</p>
+</section>
+</section>
+</section>
+</section>
+<section id="quiz">
+<h2><span class="section-number">44.5. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<div class="cell tag_remove_input docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q1 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q1 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q1:hover .flip-card-inner-q1 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q1, .flip-card-back-q1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q1 {
+            background-color: #3965a3;
+            font-size: 20px;
+        }
+        .flip-card-back-q1 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 20px;
+        }_b
+    </style>
+
+    <div class="flip-card-q1">
+        <div class="flip-card-inner-q1">
+            <div class="flip-card-front-q1">
+                Why could it be useful to integrate AIR sequence information with gene expression?
+            </div>
+            <div class="flip-card-back-q1">
+                GEX can be used to improve AIR sequence reads, both modalities provide different insights into the cell, while still being interdependent, etc.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> Why could it be useful to integrate AIR sequence information with gene expression?</p>
+        <p><strong>Answer:</strong> GEX can be used to improve AIR sequence reads, both modalities provide different insights into the cell, while still being interdependent, etc.</p>
+    </noscript>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q2 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q2:hover .flip-card-inner-q2 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q2, .flip-card-back-q2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q2 {
+            background-color: #3965a3;
+            font-size: 20px;
+        }
+        .flip-card-back-q2 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 20px;
+        }_b
+    </style>
+
+    <div class="flip-card-q2">
+        <div class="flip-card-inner-q2">
+            <div class="flip-card-front-q2">
+                What information provides us the AIR sequence, that is not directly captured in GEX?
+            </div>
+            <div class="flip-card-back-q2">
+                A count matrix between cells and antibody-tagged epitope bindings, the IR sequence can be used for demultiplexing between different donors, etc.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> What information provides us the AIR sequence, that is not directly captured in GEX?</p>
+        <p><strong>Answer:</strong> A count matrix between cells and antibody-tagged epitope bindings, the IR sequence can be used for demultiplexing between different donors, etc.</p>
+    </noscript>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q3 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q3 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q3:hover .flip-card-inner-q3 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q3, .flip-card-back-q3 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q3 {
+            background-color: #3965a3;
+            font-size: 20px;
+        }
+        .flip-card-back-q3 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 15px;
+        }_b
+    </style>
+
+    <div class="flip-card-q3">
+        <div class="flip-card-inner-q3">
+            <div class="flip-card-front-q3">
+                On what premise rely multi-modal integration approaches?
+            </div>
+            <div class="flip-card-back-q3">
+                Cells of same or alike AIRs often have a similar phenotype, information of AIR and GEX provide orthogonal information to each other, since they are independent, etc.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> On what premise rely multi-modal integration approaches?</p>
+        <p><strong>Answer:</strong> Cells of same or alike AIRs often have a similar phenotype, information of AIR and GEX provide orthogonal information to each other, since they are independent, etc.</p>
+    </noscript>
+    </div></div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">44.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id15">
+<div role="list" class="citation-list">
+<div class="citation" id="id533" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>10xG19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
+<p>10x Genomics. A new way of exploring immunity–linking highly multiplexed antigen recognition to immune repertoire and phenotype. <em>Tech. rep</em>, 2019.</p>
+</div>
+<div class="citation" id="id534" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">ADT+21</a><span class="fn-bracket">]</span></span>
+<p>Yang An, Felix Drost, Fabian Theis, Benjamin Schubert, and Mohammad Lotfollahi. Jointly learning t-cell receptor and transcriptomic information to decipher the immune response. <em>bioRxiv</em>, 2021.</p>
+</div>
+<div class="citation" id="id514" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">DFGH+17</a><span class="fn-bracket">]</span></span>
+<p>Pradyot Dash, Andrew J Fiore-Gartland, Tomer Hertz, George C Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, E Bridie Clemens, Thi HO Nguyen, Katherine Kedzierska, and others. Quantifiable predictive features define epitope-specific t cell receptor repertoires. <em>Nature</em>, 547(7661):89–93, 2017.</p>
+</div>
+<div class="citation" id="id535" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">FAW+21</a><span class="fn-bracket">]</span></span>
+<p>David S Fischer, Meshal Ansari, Karolin I Wagner, Sebastian Jarosch, Yiqi Huang, Christoph H Mayr, Maximilian Strunz, Niklas J Lang, Elvira D’Ippolito, Monika Hammel, and others. Single-cell rna sequencing reveals ex vivo signatures of sars-cov-2-reactive t cells through ‘reverse phenotyping’. <em>Nature communications</em>, 12(1):1–14, 2021.</p>
+</div>
+<div class="citation" id="id517" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">GHN+17</a><span class="fn-bracket">]</span></span>
+<p>Jacob Glanville, Huang Huang, Allison Nau, Olivia Hatton, Lisa E Wagar, Florian Rubelt, Xuhuai Ji, Arnold Han, Sheri M Krams, Christina Pettus, and others. Identifying specificity groups in the t cell receptor repertoire. <em>Nature</em>, 547(7661):94–98, 2017.</p>
+</div>
+<div class="citation" id="id532" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">SGC+22</a><span class="fn-bracket">]</span></span>
+<p>Stefan A Schattgen, Kate Guion, Jeremy Chase Crawford, Aisha Souquette, Alvaro Martinez Barrio, Michael JT Stubbington, Paul G Thomas, and Philip Bradley. Integrating t cell receptor sequences and transcriptional profiles by clonotype neighbor graph analysis (conga). <em>Nature Biotechnology</em>, 40(1):54–63, 2022.</p>
+</div>
+<div class="citation" id="id531" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">YSW+19</a><span class="fn-bracket">]</span></span>
+<p>Kathryn E Yost, Ansuman T Satpathy, Daniel K Wells, Yanyan Qi, Chunlin Wang, Robin Kageyama, Katherine L McNamara, Jeffrey M Granja, Kavita Y Sarin, Ryanne A Brown, and others. Clonal replacement of tumor-specific t cells following pd-1 blockade. <em>Nature medicine</em>, 25(8):1251–1259, 2019.</p>
+</div>
+<div class="citation" id="id536" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">ZCW+22</a><span class="fn-bracket">]</span></span>
+<p>Ze Zhang, Woo Yong Chang, Kaiwen Wang, Yuqiu Yang, Xinlei Wang, Chen Yao, Tuoqi Wu, Li Wang, and Tao Wang. Interpreting the b-cell receptor repertoire with single-cell gene expression using benisse. <em>Nature Machine Intelligence</em>, pages 1–9, 2022.</p>
+</div>
+<div class="citation" id="id530" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ZXW+21</a><span class="fn-bracket">]</span></span>
+<p>Ze Zhang, Danyi Xiong, Xinlei Wang, Hongyu Liu, and Tao Wang. Mapping the functional landscape of t cell receptor repertoires by single-t cell transcriptomics. <em>Nature methods</em>, 18(1):92–99, 2021.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./air_repertoire"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="specificity.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">43. </span>Specificity analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../multimodal_integration/paired_integration.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">45. </span>Paired integration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">44.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">44.2. Data Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uni-modal-analysis-with-multimodal-conditions">44.3. Uni-modal Analysis with multimodal conditions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#air-analysis-on-rna-clusters">44.3.1. AIR analysis on RNA clusters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gex-analysis-on-air-clusters">44.3.2. GEX analysis on AIR clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multimodal-integration">44.4. Multimodal Integration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-tcr-and-gex">44.4.1. Integrating TCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tessa">44.4.1.1. TESSA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">44.4.1.1.1. Data Preprocessing</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-model">44.4.1.1.2. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#output">44.4.1.1.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#conga">44.4.1.2. CoNGA</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">44.4.1.2.1. Data Preparation</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#executing-conga">44.4.1.2.2. Executing CoNGA</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">44.4.1.2.3. Output</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mvtcr">44.4.1.3. mvTCR</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-bcr-and-gex">44.4.2. Integrating BCR and GEX</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#benisse">44.4.2.1. Benisse</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">44.4.2.1.1. Running the model</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">44.4.2.1.2. Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">44.5. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">44.6. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
