@@ -30,7 +30,7 @@ Understanding the hereditary information hidden in DNA is key to understanding m
 
 _Sequencing_ is the process of deciphering the order of DNA nucleotides.
 It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate promotor regions.
+DNA _sequencing_ allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate {term}`promotor` regions.
 Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
 DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
 
@@ -183,7 +183,16 @@ RNA sequencing (RNA-Seq) allows scientists to obtain snapshots of cells, tissues
 This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes, and other experimental conditions.
 
 RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
-Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or quantitative reverse transcription PCR, which require probe design to specifically target the regions of interest.
+Microarray-based assays use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
+Quantitative reverse transcription PCR measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
+
+TODO
+add to seealso
+and link to seealso
+[Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
+[Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
+
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
@@ -197,7 +206,7 @@ This results in rich data sets that can be used for exploratory data analysis.
 RNA-Seq can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
 Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell RNA-Seq (scRNA-Seq)
 Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity, such as cell expression profile heterogeneity, which may help answer the question of interest.
-Some drugs or perturbations may affect only specific cell types or interactions between cell types.
+Some drugs or perturbations may affect only specific {term}`cell types <Cell type>` or interactions between cell types.
 For example, in oncology, it is possible to have rare drug-resistant tumor cells causing relapse, which is difficult to identify by simple bulk RNA-Seq, even on cultured cells.
 
 To uncover such relationships, examining gene expression on a single-cell level is vital.
@@ -312,7 +321,7 @@ In the following subsections, we will briefly discuss how they work, their stren
 The most widely used protocols are **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017`.
 These protocols use microfluids to trap cells in tiny, watery bubbles known as droplets.
 Each droplet forms a separate spaces containing only one cell and the required chemicals (beads).
-The mentioned protocols are able to generate droplets several thousand times per second.
+The mentioned protocols can generate droplets thousands of times per second.
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
 
 ```{admonition} Droplets by vortexing
@@ -321,7 +330,7 @@ The PIP-seq protocol offers a simplified alternative to traditional microfluidic
 Unlike complex microfluidic devices that require specialized equipment and expertise, PIP-seq achieves droplet formation through simple vortexing of the solution.
 This method can be easily scaled by increasing the container volume without being constrained by emulsion time, a common limitation of microfluidics {cite}`clark2023microfluidics`.
 
-However, despite its simplicity, independent benchmarks indicate that PIP-seq still has limitations compared to well-established methods.
+However, despite its simplicity, independent {term}`benchmarks <benchmark>` indicate that PIP-seq still has limitations compared to well-established methods.
 For instance, PIP-seq achieved approximately 1,500 gene counts, whereas the best 10x Genomics Chromium kit showed around 4,000 gene counts {cite}`de2025comprehensive`.
 These findings highlight a trade-off between ease of use and performance in the current version of the PIP-seq protocol.
 ```
