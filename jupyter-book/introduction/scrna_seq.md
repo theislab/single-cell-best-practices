@@ -11,40 +11,28 @@ Most definitions of the term life share a common entity - {term}`cells <Cell>`.
 Cells form open systems which maintain homeostasis, have a metabolism, grow, adapt to their environment, reproduce, respond to stimuli, and organize themselves.
 Therefore, cells are the fundamental building blocks of life, and they were first discovered in 1665 by the British scientist Robert Hooke.
 Hooke investigated a thin slice of cork with a very rudimentary microscope and, to his surprise, noticed that the slice appeared to resemble a honeycomb.
-He named these tiny units 'cells'.
+He named these tiny units "cells".
 
 :::{figure-md} markdown-fig
-<img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="800px">
+<img src="../_static/images/scrna_seq/hooke_cork.jpg" alt="Robert Hook cell" class="bg-primary mb-1" width="100%">
 
 Robert Hooke's drawing of cork cells. Image obtained from Micrographia.
 :::
 
 In 1839, Matthias Jakob Schleiden and Theodor Schwann first described Cell Theory, stating that all living organisms are made up of cells.
-Cells act as functional units that by themselves originate from other cells, making them the basic units of reproduction.
-
-Since the early definition of cell theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
+Since the early definition of Cell Theory, researchers have discovered that all cells have almost the same chemical composition and exhibit a dynamic flow of information passing the genetic code from one cell to another in the form of deoxyribonucleic acid ({term}`DNA`).
 Two general types of cells exist: eukaryotes and prokaryotes.
 Eukaryotic cells contain a nucleus, where the nuclear membrane encapsulates the chromosomes; while prokaryotic cells only have a nucleoid region but no nucleus.
 The nucleus hosts the cells' genomic DNA, which is why they are called eukaryotes: _Nucleus_ is Latin for kernel or seed.
-Eukaryotes are organisms composed of a single cell (unicellular) or multiple cells (multicellular), whereas prokaryotes are single-celled organisms.
-Eukaryotic cells are further distinguished from prokaryotic cells by their high degree of compartmentalization, i.e., membrane-bound organelles carry out highly specialized functions and provide crucial support for cells.
-
-Compared to prokaryotic cells, eukaryotic cells have on average about 10,000 times the volume with a rich mix of organelles and a cytoskeleton constituted of microtubules, microfilaments, and intermediate filaments.
 The DNA replication machinery reads the hereditary information that is stored in the DNA in the nucleus to replicate themselves and keep the life cycle going.
 The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
+
 _Sequencing_ is the process of deciphering the order of DNA nucleotides.
 It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify the location and function of genes and regulatory elements in the DNA molecule and the genome and uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate promotor regions.
+DNA _sequencing_ allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate {term}`promotor` regions.
 Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
 DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
-
-A very popular example is sickle cell disease, a group of blood disorders resulting from an abnormality in the oxygen-carrying protein hemoglobin in red blood cells.
-This leads to serious health issues, including pain, anemia, swelling in the hands and feet, bacterial infections, and strokes.
-The cause of sickle cell disease is the inheritance of two abnormal copies of the β-globin gene (HBB) that makes hemoglobin, one from each parent.
-The gene defect is caused by a single nucleotide mutation where a GAG {term}`codon` changes to a GTG codon of the β-globin gene.
-This results in the amino acid glutamate being substituted by valine at position 6 (E6V substitution) and, henceforth, the disease mentioned above.
-Unfortunately, it is not always possible to find such "simple" associations between single nucleotide mutations and diseases because most diseases are caused by, for example, complex regulatory processes.
 
 (introduction-scrna-seq-key-takeaway-1)=
 
@@ -61,18 +49,20 @@ In 1987, Leroy Hood and Michael Hunkapiller developed the ABI 370, an instrument
 Its most crucial innovative accomplishment was the automatic labeling of DNA fragments with fluorescent dyes instead of radioactive molecules.
 This change not only made the method safer to perform but also allowed computers to analyze the acquired data {cite}`Hood1987`.
 
-Strengths:
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 
 - Sanger sequencing is simple and affordable.
 - If done correctly, the error rate is very low (<0.001%).
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+:class: open
 - Sanger methods can only sequence short pieces of DNA of about 300 to 1000 base pairs.
 - The quality of a Sanger sequence is often poor in the first 15 to 40 bases because this is where the primers bind.
 - Sequencing degrades after 700 to 900 bases.
 - If the sequenced DNA fragment has been cloned, some of the cloning vector sequence (a DNA carrier for copying, storing, and amplifying genes) may find its way into the final sequence.
 - Sanger sequencing is more expensive than second or third-generation sequencing per sequenced base.
+```
 
 ### Second-generation sequencing
 
@@ -87,20 +77,20 @@ Life Technologies introduced several other platforms, including SOLiD in 2007 (a
 In general, sequencing-by-synthesis involves adding single nucleotides to a growing DNA strand and detecting each addition.
 At the same time, sequencing-by-ligation relies on detecting the joining of short DNA probes to the fragment to determine the sequence.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Second-generation sequencing is often the cheapest option concerning required chemicals.
 - Sparse material can still be used as input.
 - High sensitivity to detect low-frequency variants and comprehensive genome coverage.
 - High capacity with sample multiplexing.
 - Ability to sequence thousands of genes simultaneously.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - The sequencing machines are expensive and often must be shared with colleagues.
 - Second-generation sequencers are big, stationary machines that are not designed for fieldwork.
 - Generally, second-generation sequencing results in many short sequencing fragments (reads) that are hard to use for novel genomes.
 - The quality of the sequencing result depends on the reference genome.
+```
 
 ### Third-generation sequencing
 
@@ -113,6 +103,7 @@ Second, the ability to sequence in real-time is another major advancement in thi
 Combined with portable sequencers, which are small in size and do not require further complex machines for the chemistry, sequencing is now "field-ready" and can be used even far away from laboratory facilities to collect samples.
 
 ```{admonition} A note on sequencing length
+:class: note, dropdown
 - 1 base pair (bp)
 - 1 kilo base pair (kb) = 1,000 bp
 - 1 mega base pair (Mb) = 1,000,000 bp
@@ -128,17 +119,39 @@ Oxford Nanopore Technologies introduced the GridION in 2012. The GridION and its
 Notably, such a sequencing device even fits into a single human hand.
 The idea of Oxford Nanopore sequencers is to detect changes in the electrical current as nucleic acids migrate through protein nanopores {cite}`Jain2016`.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Long reads will allow for the assembly of large novel genomes.
 - Sequencers are portable, making them ideal for fieldwork.
 - Possibility to directly detect epigenetic modifications of DNA and RNA sequences.
 - Speed! Third-generation sequencers are fast.
+```
 
-Limitations:
-
-- Some third-generation sequencers exhibit higher error rates than second-generation sequencers.
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+- Some third-generation sequencers exhibit higher error rates than second-generation sequencers (Roche's new sequencing by expansion technology, for example, attempts to solve this problem {cite}`Jain2016`
+{cite}`roche`).
 - The reagents are generally more expensive than second-generation sequencing.
+```
+
+```{admonition} Comparison of sequencing technologies across generations
+:class: note, dropdown
+
+:::{table} Performance comparison of common sequencing techniques sorted for maximum read length. We obtained the numbers for Sanger sequencing from individual sources ([a](https://assets.thermofisher.com/TFS-Assets/GSD/brochures/sanger-sequencing-workflow-brochure.pdf), [b](https://www.sciencedirect.com/science/article/abs/pii/B9780128154991000132), [c](https://www.base4.co.uk/cost-comparison-of-dna-sequencing-technologies/#:~:text=$500%20per%20megabase.), [d](https://www.thermofisher.com/de/de/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/dna-sequencing-history.html#:~:text=Although%20DNA%20sequencers%20using%20Sanger,base%20pairs)), while all other methods were obtained from {cite:t}`logsdon2020long`.
+:label: table
+:align: center
+
+| Name                                 | Max read length (kb) | Accuracy (%)  | Cost ($/Gb)     | Throughput (Mb/year) | Generation |
+| ------------------------------------ | -------------------- | ------------- | --------------- | -------------------- | ---------- |
+| Illumina NextSeq 550                 | 0.15                 | >99.9         | >47,782         | 50-63                | 2          |
+| Illumina NovaSeq 6000                | 0.25                 | >99.9         | 10-35           | >1,194,545           | 2          |
+| Sanger sequecing (e.g. ThermoFisher) | 1{sup}`b`            | 99.99{sup}`a` | 500,000{sup}`c` | 0.73{sup}`d`         | 1          |
+| PacBio (Sequel II, HiFi)             | >20                  | >99           | 43–86           | 10,220               | 3          |
+| PacBio (Sequel II, CLR)              | >200                 | 87–92         | 13-26           | 93,440               | 3          |
+| Nanopore (PromethION)                | >1,000               | 87–98         | 21-42           | 3,153,600            | 3          |
+| Nanopore (MinION/GridION)            | >1,500               | 87–98         | 50-2,000        | 913-109,500          | 3          |
+
+:::
+
+```
 
 ## Overview of the NGS process
 
@@ -166,19 +179,21 @@ The differences lie primarily in the chemistry of the respective sequencing tech
 
 So far, we have only introduced sequencing with the unmentioned assumption that the DNA is being sequenced.
 However, knowing the DNA sequence of an organism and the positions of its regulatory elements tells us very little about a cell's dynamic and real-time processes.
-For example, by combining different splicing sites and exons from the same mRNA precursor, one gene can code for multiple proteins.
-This alternative splicing event is a natural phenomenon that occurs frequently in eukaryotes.
-In some cases, however, this could also lead to a non-functioning enzyme and an induced disease state.
-This is where RNA sequencing (RNA-Seq) comes into play.
-
-RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
-
-Sequencing RNA allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
+RNA sequencing (RNA-Seq) allows scientists to obtain snapshots of cells, tissues, or organisms at the time of sequencing in the form of expression profiles of genes.
 This information can be used to detect changes in disease states in response to therapeutics, environmental factors, genotypes, and other experimental conditions.
 
-Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or {term}`RT-qPCR`, which require probe design to specifically target the regions of interest.
-The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
+RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
+Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or quantitative reverse transcription PCR, which require probe design to specifically target the regions of interest.
+Microarray-based assays use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
+Quantitative reverse transcription PCR measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
 
+TODO
+add to seealso
+and link to seealso
+[Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
+[Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
+
+The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
 This results in rich data sets that can be used for exploratory data analysis.
 
@@ -186,16 +201,16 @@ This results in rich data sets that can be used for exploratory data analysis.
 
 ## Single-cell RNA sequencing
 
-### Overview
+### Bulk sequencing vs single-cell RNA sequencing
 
-RNA sequencing can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
-Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell sequencing.
+RNA-Seq can be mainly conducted in two ways: Either by sequencing the mixed RNA from the source of interest across cells ({term}`bulk sequencing <Bulk RNA sequencing>`) or by sequencing the transcriptomes of the cells individually (single-cell sequencing).
+Mixing the RNA of all cells is, in most cases, cheaper and easier than experimentally complex single-cell RNA-Seq (scRNA-Seq)
 Bulk RNA-Seq results in cell-averaged expression profiles, which are generally easier to analyze, but also hide some of the complexity, such as cell expression profile heterogeneity, which may help answer the question of interest.
-Some drugs or perturbations may affect only specific cell types or interactions between cell types.
+Some drugs or perturbations may affect only specific {term}`cell types <Cell type>` or interactions between cell types.
 For example, in oncology, it is possible to have rare drug-resistant tumor cells causing relapse, which is difficult to identify by simple bulk RNA-Seq, even on cultured cells.
 
 To uncover such relationships, examining gene expression on a single-cell level is vital.
-Single-cell RNA-Seq (scRNA-Seq) does, however, come with several caveats.
+ScRNA-Seq does, however, come with several caveats.
 First, single-cell experiments are generally more expensive and more difficult to properly conduct.
 Second, the {term}`downstream analysis` becomes more complex due to the increased resolution, and it is easier to draw false conclusions.
 
@@ -203,7 +218,55 @@ A single-cell experiment generally follows similar steps as a bulk RNA-Seq exper
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
-Before explaining how the different approaches to sequencing work, we will now discuss transcript quantification more closely.
+But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring mRNA at such a fine resolution.
+
+(introduction-scrna-seq-key-takeaway-4)=
+
+### Central dogma in numbers
+
+```{figure} ../_static/images/scrna_seq/central_dogma_in_numbers.png
+:name: central-dogma-in-numbers
+:alt: Central dogma in numbers figure
+:with: 100%
+
+The steps of the central dogma, supported by estimated values. These values are approximations intended to give a general impression and may vary depending on the context or in the future.
+```
+
+#### Measuring "messengers"
+
+At the core of scRNA-Seq lies a fundamental question: What **exactly** are we trying to measure?
+In RNA-seq experiments, our focus is on quantifying messenger RNA ({term}`mRNA`) within individual cells.
+This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
+Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
+Yet, mRNA makes up only a small fraction of a cell’s total RNA.
+Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
+Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis, Islam2014`.
+This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
+However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
+
+Understanding the central dogma through these numerical lenses reveals not only the biological complexity but also the limitations of our tools. To appreciate this more deeply, let’s walk step by step from gene to protein.
+
+#### From Gene to Protein
+
+Our journey begins with a gene, a defined region in the DNA that acts as a template for mRNA synthesis.
+While the number of genes can vary slightly between individuals (~70 genes), the average human genome contains roughly 22,000 genes {cite}`pertea2010between`.
+Gene transcription is far from continuous.
+Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
+This is also the reason why we model mRNA transcription with a negative binomial distribution.
+
+The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
+This means that a single gene can give rise to multiple distinct mRNA isoforms.
+On average, each human gene produces about 3.4 mRNA isoforms {cite}`lee2015mechanisms`.
+While all human genes have at least two alternative isoforms, some push the limits of complexity.
+The human basonuclin 2 gene, for instance, has the potential to generate up to 90,000 mRNA isoforms, resulting in over 2,000 different proteins {cite}`vanhoutteghem2007human`.
+In some cases, however, alternative splicing could also lead to a non-functioning enzyme and an induced disease state.
+Finally, this "mature" mRNA is translated into proteins.
+Here, too, the numbers vary dramatically.
+In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 proteins per mRNA {cite}`li2014system`.
+However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
+Ultimately, this process results in approximately one billion proteins within a single human cell {cite}`milo2013total`.
+
+Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
 
 (exp-data:transcript-quantification)=
 
@@ -239,37 +302,56 @@ This is especially true for sequences that are amplified at a later stage of the
 Although it is computationally possible to detect and remove such sequences by filtering out reads with identical alignment coordinates, it is generally advised to always design the experiment with UMIs, if possible.
 Using UMIs further allows for normalizing gene counts without a loss of accuracy {cite}`Kivioja2012`.
 
-(introduction-scrna-seq-key-takeaway-4)=
+(introduction-scrna-seq-key-takeaway-5)=
 
 ### Single-cell sequencing protocols
 
-Currently, three types of single-cell sequencing protocols exist, which are grouped primarily by their cell isolation protocols:
+Numerous protocols exist for sequencing the transcriptomes of individual cells. However, the terminology can often be ambiguous, especially for those new to the field. To clarify, we categorize these techniques into two broad classes based on how cells are isolated:
 
-- microfluidic device-based strategies where cells are encapsulated into hydrogel droplets
-- well plate-based protocols where cells are physically separated into wells and
-- the commercial Fluidigm C1 microfluidic chip-based solution that loads and separates cells into small reaction chambers.
+- **Separation in droplets**: These methods encapsulate individual cells into tiny droplets within an emulsion, enabling high-throughput processing.
+- **Separation in physical compartments**: These techniques isolate cells into distinct physical compartments, often referred to as wells.
 
-These three approaches differ in their ability to recover transcripts, the number of sequenced cells, and many other aspects. In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
+Each approach differs in the ability to recover transcripts, the number of sequenced cells, and many other aspects.
+In the following subsections, we will briefly discuss how they work, their strengths and weaknesses, and possible biases that data analysts should be aware of regarding the respective protocols.
 
-#### Microfluidic device-based protocols
+#### Separation in Droplets
 
-Microfluidic device-based single-cell strategies trap cells inside hydrogel droplets, allowing for compartmentalization into single-cell reaction chambers.
-The most widely used protocols **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017` are able to generate such droplets several thousand times per second.
+##### Most common protocols
+
+The most widely used protocols are **inDrop** {cite}`Klein2015`, **Drop-seq** {cite}`exp:Macosko2015` and the commercially available **10x Genomics Chromium** {cite}`exp:Zheng2017`.
+These protocols use microfluids to trap cells in tiny, watery bubbles known as droplets.
+Each droplet forms a separate spaces containing only one cell and the required chemicals (beads).
+The mentioned protocols can generate droplets thousands of times per second.
 This massively parallel process generates very high numbers of droplets for a relatively low cost.
+
+```{admonition} Droplets by vortexing
+:class: dropdown, note
+The PIP-seq protocol offers a simplified alternative to traditional microfluidic methods for generating monodispersed water-in-oil droplets.
+Unlike complex microfluidic devices that require specialized equipment and expertise, PIP-seq achieves droplet formation through simple vortexing of the solution.
+This method can be easily scaled by increasing the container volume without being constrained by emulsion time, a common limitation of microfluidics {cite}`clark2023microfluidics`.
+
+However, despite its simplicity, independent {term}`benchmarks <benchmark>` indicate that PIP-seq still has limitations compared to well-established methods.
+For instance, PIP-seq achieved approximately 1,500 gene counts, whereas the best 10x Genomics Chromium kit showed around 4,000 gene counts {cite}`de2025comprehensive`.
+These findings highlight a trade-off between ease of use and performance in the current version of the PIP-seq protocol.
+```
 
 Although all three protocols differ in detail, nanoliter-sized droplets containing encapsulated cells are always designed to capture beads and cells simultaneously.
 The encapsulation process is conducted with specialized microbeads with on-bead primers containing a PCR handle, a cell barcode, and a 4-8b base pairs-long UMI and a poly-T tail (or in the case of a 5' kit, there will be a poly-T primer).
 Upon lysis, the cell's mRNA is instantaneously released and captured by the barcoded oligonucleotides that are attached to the beads.
 Next, the droplets are collected and broken to release single-cell transcriptomes attached to microparticles (STAMPs).
 This is followed by PCR and reverse transcription to capture and amplify the transcripts.
-Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached. This process results in sequencing libraries that are ready for sequencing, as described above. In microfluidic-based protocols, only about 10% of cell transcripts are recovered {cite}`Islam2014`.
+Finally, tagmentation takes place where the transcripts are randomly cut and sequencing adaptors get attached.
+This process results in sequencing libraries that are ready for sequencing, as described above.
+In droplet-based protocols, only about 10% of cell transcripts are recovered {cite}`Islam2014`.
 Notably, this low sequencing is sufficient for a robust identification of cell types.
 
-All three microfluidic device-based methods result in characteristic biases.
-The material of the used beads differs between the protocols. {term}`Drop-seq` uses brittle resin for the bead.
+All three methods result in characteristic biases.
+The material of the used beads differs between the protocols.
+{term}`Drop-seq` uses brittle resin for the bead.
 Therefore, the beads are encapsulated with a {term}`Poisson distribution`, whereas the {term}`InDrop` and 10X Genomics beads are deformable resulting in bead occupancies of over 80% {cite}`Zhang2019`.
 
-Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq. InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
+Moreover, capture efficiency is likely influenced by the use of surface-tethered primers in Drop-Seq.
+InDrop uses primers that are released with photocleavage, and 10X genomics dissolves the beads.
 This disparity also affects the location of the reverse transcription process.
 In Drop-seq, reverse transcription occurs after the beads are released from the droplets, while reverse transcription takes place inside the droplets for the InDrop and 10X genomics protocols {cite}`Zhang2019`.
 
@@ -287,64 +369,17 @@ Moreover, except the beads, Drop-seq is open-source and the protocol can more ea
 InDrop is completely open-source, where even the beads can be manufactured and modified in labs.
 Hence, InDrop is the most flexible of the three protocols.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Allows for the cost-efficient sequencing of cells in large quantities to identify the overall composition of a tissue and characterize rare cell types.
 - UMIs can be incorporated.
+```
 
-Limitations:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Low detection rates of transcripts compared to other methods.
 - Captures only 3' ends (or 5' ends, depending on kit) and not full transcripts.
+```
 
-(plate-based)=
-
-#### Plate-based protocols
-
-Typically, plate-based protocols physically separate the cells into microwell plates.
-The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
-The selected cells are then placed into individual wells containing cell lysis buffers.
-A reverse transcription is then carried out in these wells.
-This allows several hundred cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
-
-Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq. Generally speaking, the protocols differ in their multiplexing ability.
-For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities. SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
-A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
-This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type annotation.
-
-Strengths:
-
-- Recovers many genes per cell, allowing for a deep characterization.
-- It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
-- Allows for full-length transcript recovery.
-
-Limitations:
-
-- The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
-- Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
-- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and batch effects.
-
-#### Fluidigm C1
-
-The commercial Fluidigm C1 system is a microfluidic chip that loads and separates cells into small reaction chambers in an automated manner.
-The CEL-seq2 and SMART-seq (version 1) protocols use the Fluidigm C1 chips in their workflow, allowing the RNA extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor.
-However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
-Full-length sequencing is possible since the amplification step is carried out in individual wells, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols.
-The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
-
-Strengths:
-
-- Allows for full-length transcript coverage.
-- Splicing variants and T/B cell receptor repertoire diversity can be recovered.
-
-Limitations:
-
-- Only allows for the sequencing of up to 800 cells {cite}`fluidigm`.
-- More expensive per cell than other protocols.
-- Only about 10% of the extracted cells are captured, which makes this protocol unsuitable for rare cell types or low input.
-- The used arrays only capture specific cell sizes, which may bias the captured transcripts.
-
-#### Nanopore single-cell transcriptome sequencing
+##### Nanopore sequencing meets droplet technology
 
 Long-read single-cell sequencing approaches rarely use UMI {cite}`Singh2019` or do not perform UMI correction {cite}`Gupta2018` and therefore misassign some reads to novel UMIs.
 Due to the higher sequencing error rate of long-read sequencers, this causes serious issues {cite}`Lebrigand2020`.
@@ -355,15 +390,66 @@ ScCOLOR-seq computationally identifies barcodes without errors using nucleotide 
 These barcodes are then used as guides to correct the remaining erroneous barcodes {cite}`Philpott2021`.
 A modified UMI-tools directional network-based method corrects for UMI sequence duplication.
 
-Strengths:
-
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
 - Recovers splicing and sequence heterogeneity information
+```
 
-Weaknesses:
-
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
 - Nanopore reagents are expensive.
 - High cell barcode recovery error rates.
 - Depending on the protocol, barcode assignment is guided with Illumina data requiring two sequencing assays.
+```
+
+#### Separation in physical compartments
+
+(plate-based)=
+
+##### Plate-based protocols
+
+Typically, plate-based protocols physically separate the cells into microwell plates.
+The first step entails cell sorting by, for example, fluorescent-activated cell sorting (FACS), where cells are sorted according to specific cell surface markers; or by micro pipetting.
+The selected cells are then placed into individual wells containing cell lysis buffers.
+A reverse transcription is then carried out in these wells.
+This allows several hundred cells to be analyzed in a single experiment with 5000 to 10000 captured genes each.
+
+Plate-based sequencing protocols include but are not limited to, SMART-seq2, MARS-seq, QUARTZ-seq, and SRCB-seq.
+Generally speaking, the protocols differ in their multiplexing ability.
+For example, MARS-seq allows for three barcode levels, namely molecular, cellular, and plate-level tags, for robust multiplexing capabilities.
+SMART-seq2, on the contrary, does not allow for early multiplexing, limiting cell numbers.
+A systematic comparison of protocols by Mereu et al. in 2020 revealed that QUARTZ-seq2 can capture more genes than SMART-seq2, MARS-seq, or SRCB-seq per cell {cite}`Mereu2020`.
+This means QUARTZ-seq2 can capture cell-type specific marker genes well, allowing for confident cell-type annotation.
+
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
+- Recovers many genes per cell, allowing for a deep characterization.
+- It is possible to gather information before the library preparation, e.g., through FACS sorting to associate information such as cell size and the intensity of any used labels with good coordinates.
+- Allows for full-length transcript recovery.
+```
+
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+- The scale of plate-based experiments is limited by the lower throughput of their individual processing units.
+- Fragmentation step eliminates strand-specific information {cite}`Hrdlickova2017`.
+- Depending on the protocol, plate-based protocols might be labor-intensive with many required pipetting steps, leading to potential technical noise and {term}`batch effects <batch effect>`.
+```
+
+##### Fluidigm C1
+
+The commercial Fluidigm C1 system is a microfluidic chip that loads and separates cells into small reaction chambers in an automated manner.
+The CEL-seq2 and SMART-seq (version 1) protocols use the Fluidigm C1 chips in their workflow, allowing the RNA extraction and library preparation steps to be conducted together, thereby decreasing the required manual labor.
+However, the Fluidigm C1 requires rather homogeneous cell mixtures since the cells will reach different locations on the microfluidic chip based on their size, which could introduce potential location bias.
+Full-length sequencing is possible since the amplification step is carried out in individual wells, effectively reducing the 3' bias of many other single-cell RNA-seq sequencing protocols.
+The protocol is generally also more expensive and is therefore primarily useful for an extensive examination of a specific cell population.
+
+```{dropdown} <i class="fa-solid fa-thumbs-up"></i>   Strengths
+- Allows for full-length transcript coverage.
+- Splicing variants and T/B cell receptor repertoire diversity can be recovered.
+```
+
+```{dropdown} <i class="fa-solid fa-thumbs-down"></i></i>   Limitations
+- Only allows for the sequencing of up to 800 cells {cite}`fluidigm`.
+- More expensive per cell than other protocols.
+- Only about 10% of the extracted cells are captured, which makes this protocol unsuitable for rare cell types or low input.
+- The used arrays only capture specific cell sizes, which may bias the captured transcripts.
+```
 
 #### Summary
 
@@ -403,6 +489,64 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Benchmarking single-cell RNA-sequencing protocols for cell atlas projects {cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
 ```
+
+### Questions
+
+multiple_choice_question(
+"q1",
+"What is the primary purpose of scRNA-seq?",
+[
+"To sequence the genome of a single cell",
+"To measure gene expression in individual cells",
+"To capture DNA methylation patterns",
+"To determine cell surface markers"
+],
+"To measure gene expression in individual cells",
+)
+
+multiple_choice_question(
+"q2",
+"What is reverse transcription in the context of scRNA-seq?",
+[
+"Converting cDNA to mRNA",
+"Sequencing the DNA",
+"Converting mRNA to cDNA",
+"Labeling cell surface markers"
+],
+"Converting mRNA to cDNA",
+)
+
+multiple_choice_question(
+"q3",
+"What is the main difference between single-cell and single-nuclei sequencing?",
+[
+"Single-cell captures whole cells, while single-nuclei captures only nuclei",
+"Single-nuclei sequencing has higher throughput",
+"Single-cell is more accurate",
+"Single-nuclei sequencing is cheaper"
+],
+"Single-cell captures whole cells, while single-nuclei captures only nuclei",
+)
+
+multiple_choice_question(
+"q4",
+"Which of the following best describes PIP-seq?",
+[
+"A protocol using microfluidics",
+"A plate-based protocol",
+"A simplified droplet-based method using vortexing",
+"A long-read sequencing method"
+],
+"A simplified droplet-based method using vortexing",
+)
+
+flip_card("q5", "What are the two main categories we introduced for scRNA-seq protocols?", "Separation in droplets and separation in physical compartments.")
+
+flip_card("q6", "What is the main advantage of droplet-based protocols?", "High throughput")
+
+flip_card("q7", "What characterizes Second-Generation sequencing?", "High-throughput, short-read sequencing technologies, like Illumina and Ion Torrent.")
+
+flip_card("q8", "What is the key advantage of Third-Generation sequencing?", "Long-read sequencing without amplification, as seen in Nanopore and PacBio.")
 
 ## References
 

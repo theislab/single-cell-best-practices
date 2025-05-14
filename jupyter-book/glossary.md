@@ -73,7 +73,7 @@ Complementary DNA (cDNA)
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes <Barcode>`.
 
-directed graph
+Directed graph
     A directed graph (or digraph) is a graph consisting of a set of nodes (vertices) connected by edges (arcs), where each edge has a direction indicating a one-way relationship between nodes.
 
 DNA
@@ -173,9 +173,6 @@ RNA velocity
     RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-mRNA) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
     This ratio provides insight into whether genes are being actively transcribed (increasing expression) or degraded (decreasing expression), allowing researchers to predict the future state of cells.
     The concept leverages the fact that pre-mRNA signals indicate new transcription while mature mRNA levels reflect steady-state expression, enabling inference of cellular trajectory and developmental dynamics.
-
-RT-qPCR
-    Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
 
 SAM
     SAM (Sequence Alignment/Map) files are tab-delimited text files that store sequencing alignment data, showing how sequencing reads map to a reference genome.
