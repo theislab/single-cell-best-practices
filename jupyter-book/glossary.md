@@ -136,6 +136,9 @@ Locus
     In sequencing, loci refer to the potential origins of a read or fragment, such as a gene, exon, or intergenic region.
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
 
+Messenger RNA (mRNA)
+    A nucleotide sequence that has been read from a gene and serves as a blueprint for a protein.
+
 MuData
     A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
     The primary data structure in the scverse ecosystem for multimodal data.
@@ -178,14 +181,17 @@ SAM
     SAM (Sequence Alignment/Map) files are tab-delimited text files that store sequencing alignment data, showing how sequencing reads map to a reference genome.
     Each line in a SAM file contains information about a single read alignment, including the read sequence, base quality scores, mapping position, and mapping quality.
 
-scanpy
+Scanpy
     A Python package for single-cell analysis in Python by scverse.
 
-scverse
+Scverse
     A consortium for fundamental single-cell tools in the life sciences that are maintaining computational analysis tools like scanpy, muon and scvi-tools.
     See: https://scverse.org/
 
-signal-to-noise ratio
+Sequencing
+    Sequencing is the process of deciphering the order of DNA nucleotides.
+
+Signal-to-noise ratio
     A measure of the clarity of a signal relative to background noise.
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
