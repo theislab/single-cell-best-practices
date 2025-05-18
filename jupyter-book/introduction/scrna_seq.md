@@ -247,6 +247,7 @@ While the number of genes can vary slightly between individuals (~70 genes), the
 Gene transcription is far from continuous.
 Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
 This is also the reason why we model mRNA transcription with a negative binomial distribution.
+This distribution is ideal because it models event counts (mRNA) while capturing overdispersion (variance exceeding the mean) caused by transcriptional bursts {cite}`ren2020negative,love2015deseq2`.
 
 The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
 This means that a single gene can give rise to multiple distinct mRNA isoforms.
@@ -486,6 +487,8 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 
 (videos)=
 Videos
+
+TODO (link does not work)
 [Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
 [Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
 
