@@ -220,8 +220,8 @@ This information can be used to detect changes in disease states in response to 
 
 RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or quantitative reverse transcription PCR, which require probe design to specifically target the regions of interest.
-{ref}`Microarray-based assays <videos>` use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
-{ref}`Quantitative reverse transcription PCR <videos>` measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
+{ref}`Microarray-based assays <seealso>` use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
+{ref}`Quantitative reverse transcription PCR <seealso>` measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
 
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
@@ -252,14 +252,14 @@ But before we can start explaining the intricacies of single-cell RNA sequencing
 
 (introduction-scrna-seq-key-takeaway-4)=
 
-### Central dogma in numbers
+### Quantifying gene expression
 
-```{figure} ../_static/images/scrna_seq/central_dogma_in_numbers.png
-:name: central-dogma-in-numbers
-:alt: Central dogma in numbers figure
+```{figure} ../_static/images/scrna_seq/quantifying_gene_expression.png
+:name: quantifying-gene-expression
+:alt: Quantifying gene expression from transcriptional bursts to protein production
 :with: 100%
 
-The steps of the central dogma, supported by estimated values. These values are approximations intended to give a general impression and may vary depending on the context or in the future.
+Quantifying gene expression from transcriptional bursts to protein production. These values are approximations intended to give a general impression and may vary depending on the context or in the future.
 ```
 
 #### Measuring "messengers"
@@ -267,14 +267,17 @@ The steps of the central dogma, supported by estimated values. These values are 
 At the core of scRNA-Seq lies a fundamental question: What **exactly** are we trying to measure?
 In RNA-seq experiments, our focus is on quantifying messenger RNA (mRNA) within individual cells.
 This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
-Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
+Therefore, mRNA serves as the crucial link between DNA and protein production.
 Yet, mRNA makes up only a small fraction of a cell’s total RNA.
 Roughly 3–7% of RNA mass is mRNA, while the overwhelming majority is non-coding RNA: 80–90% ribosomal RNA (rRNA), 10–15% transfer RNA (tRNA), and ~1% other non-coding species {cite}`palazzo2015non` ([overview of none coding RNA](https://www.bio-rad.com/de-de/applications-technologies/coding-non-coding-rna?ID=Q1070M70KWE7)).
 Estimates suggest there are between 100,000 to 1,000,000 mRNA molecules in a typical mammalian cell, covering up to ~50% of all genes {cite}`velculescu1999analysis, Islam2014`.
 This means that a notable number of genes are not transcribed at all in any given cell — a reflection of the cell’s specific identity and function.
-However, technical limitations in current scRNA-seq technologies further complicate measurement. For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`. These constraints make it especially challenging to detect weakly expressed genes.
+However, technical limitations in current scRNA-seq technologies further complicate measurement.
+For example, popular platforms like 10X Genomics capture only up to 65% of cells per run and recover just ~14% of each cell’s mRNA {cite}`aljanahi2018introduction`.
+These constraints make it especially challenging to detect weakly expressed genes.
 
-Understanding the central dogma through these numerical lenses reveals not only the biological complexity but also the limitations of our tools. To appreciate this more deeply, let’s walk step by step from gene to protein.
+Understanding the gene expression through these numerical lenses reveals not only the biological complexity but also the limitations of our tools ({numref}`quantifying-gene-expression`).
+To appreciate this more deeply, let’s walk step by step from gene to protein.
 
 #### From Gene to Protein
 
@@ -297,7 +300,8 @@ In mammels, the median protein-to-mRNA ratio is estimated to be around 10,000 pr
 However, this can range from just a few hundred to nearly a million proteins per transcript, depending on the gene, cell type and many other factors {cite}`edfors2016gene`.
 Ultimately, this process results in approximately one billion proteins within a single human cell {cite}`milo2013total`.
 
-Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how the central dogma is not just a static pathway, but a dynamic and probabilistic system. Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
+Understanding these layers — from transcriptional bursts and alternative splicing to protein translation — highlights how gene expression is not just a static pathway, but a dynamic and probabilistic system.
+Measuring it at single-cell resolution offers profound insights, but also reveals the challenges and limits of our current technologies.
 
 (exp-data:transcript-quantification)=
 
@@ -510,7 +514,10 @@ Data analysis, however, should be aware of the fact that dissociation ability wi
 Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
 
 ```{seealso}
+:name: seealso
+:label: seealso
 :class: dropdown
+
 To get a more elaborate understanding of the experimental assays, we recommend the following papers:
 
 - Comparative Analysis of Single-Cell RNA Sequencing Methods {cite}`Ziegenhain2017`
