@@ -38,7 +38,7 @@ We categorize scRNA-seq techniques into two broad classes based on cell isolatio
 
 This chapter briefly introduces the most widely used single-cell ribonucleic acid ({term}`RNA`) sequencing assays and associated basic molecular biology concepts.
 {term}`Multimodal <Modalities>` or spatial assays are not covered here but are introduced in the respective advanced chapters.
-All sequencing assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
+All {term}`sequencing` assays have individual strengths and limitations, which must be known by data analysts to be aware of possible biases in the data.
 
 ## The building block of life
 
@@ -64,9 +64,9 @@ The DNA replication machinery reads the hereditary information that is stored in
 The eukaryotic DNA is divided into several linear bundles called chromosomes, which are separated by the microtubular spindle during nuclear division.
 Understanding the hereditary information hidden in DNA is key to understanding many evolutionary and disease-related processes.
 
-_Sequencing_ is the process of deciphering the order of DNA nucleotides.
+Sequencing is the process of deciphering the order of DNA nucleotides.
 It is primarily used to unveil the genetic information that is carried by a specific DNA segment, a complete genome, or even a complex microbiome.
-DNA _sequencing_ allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORFs) or {term}`CpG` islands, which indicate {term}`promotor` regions.
+DNA sequencing allows researchers to identify a gene's location, function, and regulation. For example, it uncovers genetic features such as open reading frames (ORF), the protein-coding sequences between start & stop codons, or {term}`CpG` islands, which indicate {term}`promotor` regions.
 Another widespread application area is evolutionary analysis, where homologous DNA sequences from different organisms are compared.
 DNA sequencing can additionally be applied for the associations between mutations and diseases or sometimes even disease resistance, deeming it one of the most valuable applications.
 
@@ -220,14 +220,8 @@ This information can be used to detect changes in disease states in response to 
 
 RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or quantitative reverse transcription PCR, which require probe design to specifically target the regions of interest.
-Microarray-based assays use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
-Quantitative reverse transcription PCR measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
-
-TODO
-add to seealso
-and link to seealso
-[Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
-[Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
+{ref}`Microarray-based assays <videos>` use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
+{ref}`Quantitative reverse transcription PCR <videos>` measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
 
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
@@ -254,7 +248,7 @@ A single-cell experiment generally follows similar steps as a bulk RNA-Seq exper
 Like bulk sequencing, single-cell sequencing requires lysis, reverse transcription, amplification, and eventual sequencing.
 In addition, single-cell sequencing requires cell isolation and a physical separation into smaller reaction chambers or another form of cell labeling to be able to map the obtained transcriptomes back to the cells of origin later on.
 Hence, these are also the steps where most single-cell assays differ: single-cell isolation, transcript amplification, and sequencing, depending on the sequencing machine.
-But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring mRNA at such a fine resolution.
+But before we can start explaining the intricacies of single-cell RNA sequencing, it’s essential to understand the biological and technical challenges that arise when measuring {term}`mRNA <Messenger RNA (mRNA)>` at such a fine resolution.
 
 (introduction-scrna-seq-key-takeaway-4)=
 
@@ -271,7 +265,7 @@ The steps of the central dogma, supported by estimated values. These values are 
 #### Measuring "messengers"
 
 At the core of scRNA-Seq lies a fundamental question: What **exactly** are we trying to measure?
-In RNA-seq experiments, our focus is on quantifying messenger RNA ({term}`mRNA`) within individual cells.
+In RNA-seq experiments, our focus is on quantifying messenger RNA (mRNA) within individual cells.
 This molecule is "an unstable intermediate that carries information from genes to ribosomes for protein synthesis" as Brenner, Jacob and Meselson described it in 1961 and thus coined the term "messenger" {cite}`brenner1961unstable`.
 Therefore, mRNA serves as the crucial link between DNA and protein production — the very essence of the central dogma of molecular biology.
 Yet, mRNA makes up only a small fraction of a cell’s total RNA.
@@ -289,6 +283,7 @@ While the number of genes can vary slightly between individuals (~70 genes), the
 Gene transcription is far from continuous.
 Instead, it occurs in stochastic bursts — short, irregular periods of activity during which a gene might suddenly produce multiple mRNA transcripts before returning to silence {cite}`suter2011mammalian`.
 This is also the reason why we model mRNA transcription with a negative binomial distribution.
+This distribution is ideal because it models event counts (mRNA) while capturing overdispersion (variance exceeding the mean) caused by transcriptional bursts {cite}`ren2020negative,love2015deseq2`.
 
 The initial RNA transcript, known as pre-mRNA, then undergoes alternative splicing, a process that allows different regions (called introns and exons) of the transcript to be joined in multiple ways.
 This means that a single gene can give rise to multiple distinct mRNA isoforms.
@@ -524,6 +519,15 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Guidelines for the experimental design of single-cell RNA sequencing studies {cite}`Lafzi2018`
 - Benchmarking single-cell RNA-sequencing protocols for cell atlas projects {cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
+
+
+(videos)=
+Videos
+
+TODO (link does not work)
+[Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
+[Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
+
 ```
 
 ### Questions
