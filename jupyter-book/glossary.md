@@ -73,7 +73,7 @@ Complementary DNA (cDNA)
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes <Barcode>`.
 
-directed graph
+Directed graph
     A directed graph (or digraph) is a graph consisting of a set of nodes (vertices) connected by edges (arcs), where each edge has a direction indicating a one-way relationship between nodes.
 
 DNA
@@ -90,7 +90,7 @@ Downstream analysis
 
 Dropout
     A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type <Cell type>`.
-    The reason for dropouts are commonly low amounts of mRNA expression in cells and the general stochasticity of mRNA expression.
+    The reason for dropouts are commonly low amounts of {term}`mRNA <Messenger RNA (mRNA)>` expression in cells and the general stochasticity of mRNA expression.
     Dropouts are one of the reasons why scRNA-seq data is sparse.
 
 Drop-seq
@@ -136,6 +136,9 @@ Locus
     In sequencing, loci refer to the potential origins of a read or fragment, such as a gene, exon, or intergenic region.
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
 
+Messenger RNA (mRNA)
+    A nucleotide sequence that has been read from a gene and serves as a blueprint for a protein.
+
 MuData
     A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
     The primary data structure in the scverse ecosystem for multimodal data.
@@ -158,7 +161,7 @@ Poisson distribution
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
 
 Promoter
-    Sequence of DNA to which proteins bind to initiate and control transcription.
+    Sequence of DNA to which proteins bind (e.g. RNA polymerase and transcription factors) to initiate and control transcription.
 
 Pseudotime
     Latent and therefore unobserved dimension reflecting cells' progression through transitions.
@@ -166,29 +169,29 @@ Pseudotime
 
 RNA
     Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
-    Unlike DNA, RNA can be highly dynamic, acting as a messenger (mRNA) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
+    Unlike DNA, RNA can be highly dynamic, acting as a messenger ({term}`mRNA <Messenger RNA (mRNA)>`) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
     RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
 RNA velocity
-    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-mRNA) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
+    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-{term}`mRNA <Messenger RNA (mRNA)>`) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
     This ratio provides insight into whether genes are being actively transcribed (increasing expression) or degraded (decreasing expression), allowing researchers to predict the future state of cells.
     The concept leverages the fact that pre-mRNA signals indicate new transcription while mature mRNA levels reflect steady-state expression, enabling inference of cellular trajectory and developmental dynamics.
-
-RT-qPCR
-    Quantitative reverse transcription {term}`PCR` (RT-qPCR) monitors the amplification of a targeted {term}`DNA` molecule during the PCR.
 
 SAM
     SAM (Sequence Alignment/Map) files are tab-delimited text files that store sequencing alignment data, showing how sequencing reads map to a reference genome.
     Each line in a SAM file contains information about a single read alignment, including the read sequence, base quality scores, mapping position, and mapping quality.
 
-scanpy
+Scanpy
     A Python package for single-cell analysis in Python by scverse.
 
-scverse
+Scverse
     A consortium for fundamental single-cell tools in the life sciences that are maintaining computational analysis tools like scanpy, muon and scvi-tools.
     See: https://scverse.org/
 
-signal-to-noise ratio
+Sequencing
+    Sequencing is the process of deciphering the order of DNA nucleotides.
+
+Signal-to-noise ratio
     A measure of the clarity of a signal relative to background noise.
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
@@ -199,7 +202,7 @@ Spike-in RNA
 
 Splice Junctions
     Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
-    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
+    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA <Messenger RNA (mRNA)>`.
 
 Trajectory inference
     Also known as pseudotemporal ordering.
@@ -210,6 +213,6 @@ Unique Molecular Identifier (UMI)
     This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias <Amplification bias>`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
-    A segment of an mRNA transcript that is transcribed but not translated into protein.
+    A segment of an {term}`mRNA <Messenger RNA (mRNA)>` transcript that is transcribed but not translated into protein.
     UTRs are located at both ends of the coding sequence.
 ```
