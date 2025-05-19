@@ -223,7 +223,8 @@ But before we can start explaining the intricacies of single-cell RNA sequencing
 :alt: Quantifying gene expression from transcriptional bursts to protein production
 :with: 100%
 
-Quantifying gene expression from transcriptional bursts to protein production. These values are approximations intended to give a general impression and may vary depending on the context or in the future.
+Quantifying gene expression from transcriptional bursts to protein production.
+These values are approximations intended to give a general impression and may vary depending on the context or in the future.
 ```
 
 #### Measuring "messengers"
@@ -305,7 +306,9 @@ Using UMIs further allows for normalizing gene counts without a loss of accuracy
 
 ### Single-cell sequencing protocols
 
-Numerous protocols exist for sequencing the transcriptomes of individual cells. However, the terminology can often be ambiguous, especially for those new to the field. To clarify, we categorize these techniques into two broad classes based on how cells are isolated:
+Numerous protocols exist for sequencing the transcriptomes of individual cells.
+However, the terminology can often be ambiguous, especially for those new to the field.
+To clarify, we categorize these techniques into two broad classes based on how cells are isolated:
 
 - **Separation in droplets**: These methods encapsulate individual cells into tiny droplets within an emulsion, enabling high-throughput processing.
 - **Separation in physical compartments**: These techniques isolate cells into distinct physical compartments, often referred to as wells.
