@@ -32,7 +32,7 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 
 ## Motivation
 
-Raw data processing in single-cell sequencing converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
+Raw data processing in single-cell {term}`sequencing` converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
 This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
 :::{figure-md} raw-proc-fig-overview
