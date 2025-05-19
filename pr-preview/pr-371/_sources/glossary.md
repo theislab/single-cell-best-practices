@@ -161,7 +161,7 @@ Poisson distribution
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
 
 Promoter
-    Sequence of DNA to which proteins bind to initiate and control transcription.
+    Sequence of DNA to which proteins bind (e.g. RNA polymerase and transcription factors) to initiate and control transcription.
 
 Pseudotime
     Latent and therefore unobserved dimension reflecting cells' progression through transitions.
@@ -173,7 +173,7 @@ RNA
     RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
 RNA velocity
-    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-{term}`mRNA`) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
+    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-{term}`mRNA <Messenger RNA (mRNA)>`) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
     This ratio provides insight into whether genes are being actively transcribed (increasing expression) or degraded (decreasing expression), allowing researchers to predict the future state of cells.
     The concept leverages the fact that pre-mRNA signals indicate new transcription while mature mRNA levels reflect steady-state expression, enabling inference of cellular trajectory and developmental dynamics.
 
@@ -202,7 +202,7 @@ Spike-in RNA
 
 Splice Junctions
     Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
-    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA`.
+    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA <Messenger RNA (mRNA)>`.
 
 Trajectory inference
     Also known as pseudotemporal ordering.
@@ -213,6 +213,6 @@ Unique Molecular Identifier (UMI)
     This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias <Amplification bias>`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
-    A segment of an {term}`mRNA` transcript that is transcribed but not translated into protein.
+    A segment of an {term}`mRNA <Messenger RNA (mRNA)>` transcript that is transcribed but not translated into protein.
     UTRs are located at both ends of the coding sequence.
 ```
