@@ -184,8 +184,8 @@ This information can be used to detect changes in disease states in response to 
 
 RNA-Seq largely follows the DNA sequencing protocols but includes a reverse transcription step where {term}`complementary DNA (cDNA)` is synthesized from the RNA template.
 Modern RNA sequencing allows for an unbiased sampling of transcripts in contrast to, for example, microarray-based assays or quantitative reverse transcription PCR, which require probe design to specifically target the regions of interest.
-{ref}`Microarray-based assays <seealso>` use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
-{ref}`Quantitative reverse transcription PCR <seealso>` measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
+{ref}`Microarray-based assays <seealso-dropdown>` use probes, complementary sequences, to detect specific sequences (e.g. genes) of interest.
+{ref}`Quantitative reverse transcription PCR <seealso-dropdown>` measures the amount of target RNA by monitoring the amplification of a complementary DNA (cDNA) molecule during PCR.
 
 The obtained gene expression profiles further enable the detection of gene isoforms, gene fusions, single nucleotide variants, and many other interesting properties.
 Modern RNA sequencing is not limited by prior knowledge and allows for the capture of both known and novel features.
@@ -477,13 +477,11 @@ The choice of single-cell versus single-nuclei in the experimental design is mos
 Data analysis, however, should be aware of the fact that dissociation ability will have a strong effect on the potentially observable cell types.
 Therefore, we strongly encourage discussions between wet lab and dry lab scientists concerning the experimental design.
 
+(seealso-dropdown)=
+
 ```{seealso}
-:name: seealso
-:label: seealso
 :class: dropdown
-
 To get a more elaborate understanding of the experimental assays, we recommend the following papers:
-
 - Comparative Analysis of Single-Cell RNA Sequencing Methods {cite}`Ziegenhain2017`
 - Power analysis of single-cell RNA-sequencing experiments {cite}`Svensson2017`
 - Single-nucleus and single-cell transcriptomes compared in matched cortical cell types {cite}`Bakken2018`
@@ -491,14 +489,12 @@ To get a more elaborate understanding of the experimental assays, we recommend t
 - Benchmarking single-cell RNA-sequencing protocols for cell atlas projects {cite}`Mereu2020`
 - Direct Comparative Analyses of 10X Genomics Chromium and Smart-seq2 {cite}`Wang2021`
 
+Videos for laboratory methods:
+- [Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
+- [Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
 
-(videos)=
-Videos
-
-TODO (link does not work)
-[Microarray-based assays](https://www.youtube.com/watch?v=NgRfc6atXQ8)
-[Quantitative reverse transcription PCR](https://www.youtube.com/watch?v=XH6vIBLwC2M)
-
+Others:
+- [Biological numbers](https://bionumbers.hms.harvard.edu/search.aspx)
 ```
 
 ### Questions

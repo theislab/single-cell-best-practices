@@ -90,7 +90,7 @@ Downstream analysis
 
 Dropout
     A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type <Cell type>`.
-    The reason for dropouts are commonly low amounts of mRNA expression in cells and the general stochasticity of mRNA expression.
+    The reason for dropouts are commonly low amounts of {term}`mRNA <Messenger RNA (mRNA)>` expression in cells and the general stochasticity of mRNA expression.
     Dropouts are one of the reasons why scRNA-seq data is sparse.
 
 Drop-seq
@@ -169,11 +169,11 @@ Pseudotime
 
 RNA
     Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
-    Unlike DNA, RNA can be highly dynamic, acting as a messenger (mRNA) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
+    Unlike DNA, RNA can be highly dynamic, acting as a messenger ({term}`mRNA <Messenger RNA (mRNA)>`) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
     RNA plays a central role in transcription, translation, and cellular responses, making it essential for understanding gene regulation, development, and disease.
 
 RNA velocity
-    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-mRNA) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
+    RNA velocity measures the rate of change in gene expression by comparing the ratio of unspliced (pre-{term}`mRNA`) to spliced (mature) mRNA transcripts in single-cell RNA sequencing data.
     This ratio provides insight into whether genes are being actively transcribed (increasing expression) or degraded (decreasing expression), allowing researchers to predict the future state of cells.
     The concept leverages the fact that pre-mRNA signals indicate new transcription while mature mRNA levels reflect steady-state expression, enabling inference of cellular trajectory and developmental dynamics.
 
@@ -202,7 +202,7 @@ Spike-in RNA
 
 Splice Junctions
     Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
-    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional mRNA.
+    These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA`.
 
 Trajectory inference
     Also known as pseudotemporal ordering.
@@ -213,6 +213,6 @@ Unique Molecular Identifier (UMI)
     This, for example, enables the estimation of PCR duplication rates (see {term}`amplification bias <Amplification bias>`), which leads to error correction and increases accuracy.
 
 Untranslated Region (UTR)
-    A segment of an mRNA transcript that is transcribed but not translated into protein.
+    A segment of an {term}`mRNA` transcript that is transcribed but not translated into protein.
     UTRs are located at both ends of the coding sequence.
 ```
