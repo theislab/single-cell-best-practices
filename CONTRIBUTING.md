@@ -153,6 +153,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 
 - Place each sentence on its own line to make reviewing easier.
 - Use dropdowns whenever possible so that the reader is not overwhelmed by the content.
+- To reduce noise, we should aim to write clean code that avoids generating warnings, and also filter out any non-informative warnings at the start of the notebook.
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
   - Only link the **first occurrence** of each term within the chapter — not every time it appears.
   - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
