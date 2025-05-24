@@ -141,25 +141,27 @@ Each `.ipynb` notebook should follow this standard structure:
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
 [Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
-We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb) of which you can view the html output [here](https://www.sc-best-practices.org/template/template.html) (Note the boxes in the text!).
+We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb) with which you can quickly and effectively create a chapter for our book.
 
 ### Helpful links
 
-- [MyST Markdown documentation](https://mystmd.org)
 - [Jupyter Book documentation](https://jupyterbook.org/en/stable/intro.html)
+- [MyST Markdown documentation](https://mystmd.org)
 - [Sphinx documentation](https://www.sphinx-doc.org/en/master/)
 
 ### Rules
 
 - Place each sentence on its own line to make reviewing easier.
-- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
-  However, only link the **first occurrence** of each term within the chapter — not every time it appears.
-- Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
-  In this case, also add the link to this term in the other chapters.
-  If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
-- To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
 - Use dropdowns whenever possible so that the reader is not overwhelmed by the content.
+- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
+  - Only link the **first occurrence** of each term within the chapter — not every time it appears.
+  - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
+    In this case, also add the link to this term in the other chapters.
+    If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
+  - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
+  - Don't link terms in the key takeaways!
 - Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``).
+- References should always contain `doi` and `url`.
 - Write in American English.
 
 ### Key takeaways, environment and lamin dropdown
@@ -227,6 +229,31 @@ multiple_choice_question(
 
 You can also adjust the font size, text color and much more.
 For detailed information, check out the method descriptions in `jupyter-book/src/lib.py`.
+
+### Pre commit
+
+Pre-commit is a tool that automatically checks your markdown and code for mistakes before you commit it.
+
+1. Please install `pre-commit`:
+
+```bash
+pip install pre-commit
+```
+
+2. Next, activate it in the root of the repository:
+
+```bash
+pre-commit install
+```
+
+3. Afterwards, you can always manually run it:
+
+```bash
+pre-commit run -a
+```
+
+If you try to commit changes, they are automatically checked for errors and adjusted if possible.
+Simply add these changes to your commit with `git add`.
 
 ### Adding changelog entries with `towncrier`
 
