@@ -204,13 +204,12 @@ signal-to-noise ratio
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
     Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
 
-Sparse
-    Refers to data that is mostly "empty" or filled with zeros.
-    For example, in a dataset, if most of the values are zeros, the data is considered sparse.
+Sparse data
+    Refers to data that mostly measures zeros and rarely other values ([sparse data vs. missing data](https://medium.com/biased-algorithms/sparse-data-vs-missing-data-38bc2c7af7c6)).
     This is common in gene expression data, where many genes are not expressed in most cells.
 
 Sparse matrix
-    A way to store data that has lots of zeros (see {term}`sparse`).
+    A way to store {term}`sparse data`.
     Instead of keeping all the zeros, it only saves the non-zero values and their positions, saving space and making calculations faster.
     Useful for large datasets with mostly empty values, like gene expression data.
 
