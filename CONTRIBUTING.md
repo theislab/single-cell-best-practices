@@ -2,7 +2,7 @@
 
 ## Our philosophy
 
-We aim for this book to be a major resource for introducing people to the field of single-cell sequencing data analysis and ensuring that newcomers and experienced analysis do things right.
+We aim for this book to be a resource for introducing people to single-cell and spatial data analysis while ensuring that newcomers and experienced analysts alike do things properly.
 To ensure our recommendations reflect best practices, we try to rely exclusively on external and independent benchmarks.
 
 ## How can I contribute?
@@ -10,12 +10,10 @@ To ensure our recommendations reflect best practices, we try to rely exclusively
 We warmly welcome contributions, especially those that help us keep our best practices up to date!
 However, as mentioned [above](#our-philosophy), these recommendations are held to high standards.
 
-If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to discuss your ideas with us.
-We're always eager to learn about the latest developments and will likely have follow-up questions — but we're genuinely excited to collaborate.
-
+If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to talk about your ideas with us.
+We're always eager to learn about the latest developments and are happy to discuss the current state of best practices.
 We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards).
-Our collection of self-assessment questions is always growing, and community support in expanding them is greatly appreciated.
-The same applies to these contributions: Just open an issue and let's get in touch!
+For all types of contributions: Just open an issue and let's get in touch!
 
 [![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
