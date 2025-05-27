@@ -193,9 +193,9 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 > We recommend discarding these changes immediately after running the command using `git restore .`.
 > Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
-### LaminDB
+### Lamindb
 
-LaminDB is an open-source data framework to enable learning at scale in computational biology.
+Lamindb is an open-source data framework to enable learning at scale in computational biology.
 We use lamindb to store, share, and load datasets and notebooks using the [theislab/sc-best-practices](https://lamin.ai/theislab/sc-best-practices) instance.
 We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 
@@ -203,14 +203,14 @@ When making contributions that got merged, ask us to be added to the `theislab/s
 Then, ensure that all used datasets are loaded directly from the instance.
 If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
 You can use the existing notebooks in the [`scripts`](/scripts/) folder as a guide.
-Finally, use `ln.track()` and `ln.finish()` while rerunning the notebook, and we have the latest version also in the instance.
+Finally, use `ln.track()` and `ln.finish()` while re-running the notebook to have the latest version in the instance as well.
 The [template](/jupyter-book/template/template.ipynb) shows the basic steps for tracking a notebook!
 
 > [!Note]
 >
 > 1. **Create a lamin account**
 >
->    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
+>    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in).
 >    - Ask us to be added to the `theislab/sc-best-practices` instance.
 >
 > 2. **Install lamindb**
