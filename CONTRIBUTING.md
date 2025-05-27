@@ -343,8 +343,3 @@ This will update `CHANGELOG.md` and remove the `changelog.d/` directory.
 mkdir changelog.d
 touch changelog.d/.gitkeep
 ```
-
-## Data access
-
-We are currently still working on making all datasets accessible.
-The problem here isn't data protection or other terrible reasons, but rather the requirement to host them somewhere and ensuring that the correct versions are used per notebook.
