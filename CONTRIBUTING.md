@@ -193,6 +193,43 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 > We recommend discarding these changes immediately after running the command using `git restore .`.
 > Ensure you’ve staged your wanted changes (`git add`) beforehand.
 
+### LaminDB
+
+LaminDB is an open-source data framework to enable learning at scale in computational biology.
+We use lamindb to store, share, and load datasets and notebooks using the [theislab/sc-best-practices](https://lamin.ai/theislab/sc-best-practices) instance.
+We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
+
+When making contributions that got merged, ask us to be added to the `theislab/sc-best-practices` instance.
+Then, ensure that all used datasets are loaded directly from the instance.
+If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
+Finally, rerun the notebook, and we have the latest version also in the instance.
+
+1. **Install lamindb**
+
+   - Install the lamindb Python package:
+
+   ```bash
+   pip install lamindb[bionty,jupyter,zarr]
+   ```
+
+2. **Create a lamin account**
+
+   - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
+   - Ask us to be added to the `theislab/sc-best-practices` instance.
+
+3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
+
+   - Run the `lamin connect` command:
+
+   ```bash
+   lamin connect theislab/sc-best-practices
+   ```
+
+You should now see `→ connected lamindb: theislab/sc-best-practices`.
+The [template](/jupyter-book/template/template.ipynb) also shows the basic steps for tracking a notebook!
+
+Start using
+
 ### Create custom quizzes and flashcards
 
 To build quizzes or flashcards, use the helper functions in `jupyter-book/src/lib.py`.
