@@ -208,29 +208,29 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 
 > [!Note]
 >
-> 1. **Create a lamin account**
+> 1.  **Create a lamin account**
 >
->    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
->    - Ask us to be added to the `theislab/sc-best-practices` instance.
+> - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
+>   - Ask us to be added to the `theislab/sc-best-practices` instance.
 >
 > 2. **Install lamindb**
 >
->    - Install the lamindb Python package in your environment:
+> - Install the lamindb Python package in your environment:
 >
->    ```bash
->    pip install lamindb[bionty,jupyter,zarr]
->    ```
+> ```bash
+> pip install lamindb[bionty,jupyter,zarr]
+> ```
 >
 > 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
 >
->    - Run the `lamin connect` command:
+> - Run the `lamin connect` command:
 >
->    ```bash
->    lamin connect theislab/sc-best-practices
->    ```
+>   ```bash
+>   lamin connect theislab/sc-best-practices
+>   ```
 >
->    - You should now see `→ connected lamindb: theislab/sc-best-practices`.
->    - You are ready to use lamindb in your notebook!
+>   - You should now see `→ connected lamindb: theislab/sc-best-practices`.
+>   - You are ready to use lamindb in your notebook!
 
 ### Create custom quizzes and flashcards
 
