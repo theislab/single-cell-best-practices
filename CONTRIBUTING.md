@@ -13,13 +13,13 @@ However, as mentioned [above](#our-philosophy), these recommendations are held t
 If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to talk about your ideas with us.
 We're always eager to learn about the latest developments and are happy to discuss the current state of best practices.
 We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards).
-For all types of contributions: Just open an issue and let's get in touch!
+Whatever proposal you have: Just open an issue and let's get in touch!
 
 [![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
 ## Book architecture
 
-The structure of the book is organized within the `jupyter_book` folder.
+The `jupyter_book` folder contains the source content and configuration for the book.
 In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
 Each section contains the relevant notebooks along with their [associated files](#essential-files-for-every-chapter).
 
@@ -150,7 +150,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 ### Rules
 
 - Place each sentence on its own line to make reviewing easier.
-- Use dropdowns whenever possible so that the reader is not overwhelmed by the content.
+- Use dropdowns so that the reader is not overwhelmed by the content.
 - To reduce noise, we should aim to write clean code that avoids generating warnings, and also filter out any non-informative warnings at the start of the notebook.
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
   - Only link the **first occurrence** of each term within the chapter — not every time it appears.
