@@ -202,33 +202,35 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 When making contributions that got merged, ask us to be added to the `theislab/sc-best-practices` instance.
 Then, ensure that all used datasets are loaded directly from the instance.
 If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
-Finally, rerun the notebook, and we have the latest version also in the instance.
+You can use the existing notebooks in the [`scripts`](/scripts/) folder as a guide.
+Finally, use `ln.track()` and `ln.finish()` while rerunning the notebook, and we have the latest version also in the instance.
+The [template](/jupyter-book/template/template.ipynb) shows the basic steps for tracking a notebook!
 
-1. **Install lamindb**
-
-   - Install the lamindb Python package:
-
-   ```bash
-   pip install lamindb[bionty,jupyter,zarr]
-   ```
-
-2. **Create a lamin account**
-
-   - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
-   - Ask us to be added to the `theislab/sc-best-practices` instance.
-
-3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
-
-   - Run the `lamin connect` command:
-
-   ```bash
-   lamin connect theislab/sc-best-practices
-   ```
-
-You should now see `→ connected lamindb: theislab/sc-best-practices`.
-The [template](/jupyter-book/template/template.ipynb) also shows the basic steps for tracking a notebook!
-
-Start using
+> [!Note]
+>
+> 1. **Create a lamin account**
+>
+>    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in)
+>    - Ask us to be added to the `theislab/sc-best-practices` instance.
+>
+> 2. **Install lamindb**
+>
+>    - Install the lamindb Python package in your environment:
+>
+>    ```bash
+>    pip install lamindb[bionty,jupyter,zarr]
+>    ```
+>
+> 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
+>
+>    - Run the `lamin connect` command:
+>
+>    ```bash
+>    lamin connect theislab/sc-best-practices
+>    ```
+>
+>    - You should now see `→ connected lamindb: theislab/sc-best-practices`.
+>    - You are ready to use lamindb in your notebook!
 
 ### Create custom quizzes and flashcards
 
