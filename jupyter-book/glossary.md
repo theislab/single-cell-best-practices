@@ -136,6 +136,10 @@ Locus
     In sequencing, loci refer to the potential origins of a read or fragment, such as a gene, exon, or intergenic region.
     Accurate identification of loci is critical for mapping reads and understanding the genomic or transcriptomic context of the data.
 
+Marker gene
+    A gene whose expression is used as an indicator of a particular cell type, biological process, or cellular state.
+    Marker genes are commonly used in single-cell and bulk transcriptomics to identify or classify cells based on their function or identity.
+
 MuData
     A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
     The primary data structure in the scverse ecosystem for multimodal data.
