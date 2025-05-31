@@ -195,7 +195,7 @@ For testing, you can insert the dropdowns locally by calling `make dropdown` bef
 
 ### Lamindb
 
-Lamindb is an open-source data framework to enable learning at scale in computational biology.
+[Lamindb](https://github.com/laminlabs/lamindb) is an open-source data framework to enable learning at scale in computational biology.
 We use lamindb to store, share, and load datasets and notebooks using the [theislab/sc-best-practices](https://lamin.ai/theislab/sc-best-practices) instance.
 We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 
