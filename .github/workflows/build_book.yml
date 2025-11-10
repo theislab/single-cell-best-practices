@@ -40,17 +40,21 @@ jobs:
 
       # - name: Build the JupyterBook
       #   run: make
+      - name: Install Jupyter Book deps
+        run: |
+          python -V
+          python -m pip install --upgrade pip
+          pip install jupyter-book jupytext beautifulsoup4
+          # prove it's installed
+          python -c "import jupyter_book, sys; print('jupyter_book', jupyter_book.__version__, 'at', sys.executable)"
 
       - name: Build Jupyter Book (explicit)
         run: |
           set -euo pipefail
-          python -V
-          which jb || true
-          jb --version || true
-          # If your Makefile used to do this, call JB directly so failures bubble up:
-          jb build jupyter-book/ --keep-going
-          # Prove output exists (hard fail if not)
-          test -d jupyter-book/_build/html || (echo "ERROR: JB build wrote no html"; exit 1)
+          which jupyter-book || true
+          jupyter-book --version
+          jupyter-book build jupyter-book/ --keep-going
+          test -d jupyter-book/_build/html || (echo 'ERROR: JB build wrote no html'; exit 1)
 
       - name: Verify that build output exists
         run: |
