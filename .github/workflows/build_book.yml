@@ -45,8 +45,8 @@ jobs:
           python -V
           python -m pip install --upgrade pip
           pip install jupyter-book jupytext beautifulsoup4
-          # prove it's installed
-          python -c "import jupyter_book, sys; print('jupyter_book', jupyter_book.__version__, 'at', sys.executable)"
+          # show the installed CLI version
+          jupyter-book --version
 
       - name: Build Jupyter Book (explicit)
         run: |
@@ -54,14 +54,14 @@ jobs:
           which jupyter-book || true
           jupyter-book --version
           jupyter-book build jupyter-book/ --keep-going
+          # hard fail if output missing
           test -d jupyter-book/_build/html || (echo 'ERROR: JB build wrote no html'; exit 1)
 
-      - name: Verify that build output exists
+      - name: 🔎 Verify that build output exists
+        if: always()
         run: |
-          echo "Checking build output..."
           ls -la jupyter-book/_build || true
           ls -la jupyter-book/_build/html || true
-          test -d jupyter-book/_build/html || (echo "ERROR: expected folder missing"; exit 1)
 
       - name: Deploy PR preview
         id: preview-step
