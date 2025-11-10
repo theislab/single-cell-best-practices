@@ -21,7 +21,7 @@ jobs:
       - name: Setup environment
         run: |
           pip install uv
-          uv pip install --system jupyter-book jupytext beautifulsoup4
+          uv pip install --system "jupyter-book==1.0.4.post1" jupytext beautifulsoup4
 
       - name: Cache jupyter-cache folder
         uses: actions/cache@v4
@@ -38,30 +38,8 @@ jobs:
       - name: Insert env-setup dropdown to all chapters
         run: make dropdown
 
-      # - name: Build the JupyterBook
-      #   run: make
-      - name: Install Jupyter Book deps
-        run: |
-          python -V
-          python -m pip install --upgrade pip
-          pip install jupyter-book jupytext beautifulsoup4
-          # show the installed CLI version
-          jupyter-book --version
-
-      - name: Build Jupyter Book (explicit)
-        run: |
-          set -euo pipefail
-          which jupyter-book || true
-          jupyter-book --version
-          jupyter-book build jupyter-book/
-          # hard fail if output missing
-          test -d jupyter-book/_build/html || (echo 'ERROR: JB build wrote no html'; exit 1)
-
-      - name: 🔎 Verify that build output exists
-        if: always()
-        run: |
-          ls -la jupyter-book/_build || true
-          ls -la jupyter-book/_build/html || true
+      - name: Build the JupyterBook
+        run: make
 
       - name: Deploy PR preview
         id: preview-step
