@@ -41,6 +41,13 @@ jobs:
       - name: Build the JupyterBook
         run: make
 
+      - name: Verify that build output exists
+        run: |
+          echo "Checking build output..."
+          ls -la jupyter-book/_build || true
+          ls -la jupyter-book/_build/html || true
+          test -d jupyter-book/_build/html || (echo "ERROR: expected folder missing"; exit 1)
+
       - name: Deploy PR preview
         id: preview-step
         uses: rossjrw/pr-preview-action@v1
