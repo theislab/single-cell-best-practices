@@ -38,8 +38,19 @@ jobs:
       - name: Insert env-setup dropdown to all chapters
         run: make dropdown
 
-      - name: Build the JupyterBook
-        run: make
+      # - name: Build the JupyterBook
+      #   run: make
+
+      - name: Build Jupyter Book (explicit)
+        run: |
+          set -euo pipefail
+          python -V
+          which jb || true
+          jb --version || true
+          # If your Makefile used to do this, call JB directly so failures bubble up:
+          jb build jupyter-book/ --keep-going
+          # Prove output exists (hard fail if not)
+          test -d jupyter-book/_build/html || (echo "ERROR: JB build wrote no html"; exit 1)
 
       - name: Verify that build output exists
         run: |
