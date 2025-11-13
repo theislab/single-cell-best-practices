@@ -1,0 +1,2273 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5. Interoperability &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'introduction/interoperability';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. Quality Control" href="../preprocessing_visualization/quality_control.html" />
+    <link rel="prev" title="4. Analysis frameworks and tools" href="analysis_tools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/introduction/interoperability.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fintroduction/interoperability.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/introduction/interoperability.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Interoperability</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">5.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nomenclature">5.2. Nomenclature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disk-based-interoperability">5.3. Disk-based interoperability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-formats">5.3.1. Simple formats</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hdf5-based-formats">5.3.2. HDF5-based formats</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#h5ad">5.3.2.1. H5AD</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-bioconductor">5.3.2.1.1. Reading/writing H5AD with Bioconductor</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-seurat">5.3.2.1.2. Reading/writing H5AD with <strong>{Seurat}</strong></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-anndata">5.3.2.1.3. Reading/writing H5AD with <strong>{anndata}</strong></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#loom">5.3.2.2. Loom</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rds-files">5.3.3. RDS files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-on-disk-formats">5.3.4. New on-disk formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-memory-interoperability">5.4. In-memory interoperability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-between-r-ecosystems">5.4.1. Interoperability between R ecosystems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-r-from-python">5.4.2. Accessing R from Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-python-from-r">5.4.3. Accessing Python from R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-for-multimodal-data">5.5. Interoperability for multimodal data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">5.5.1. Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r">5.5.2. R</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bioconductor">5.5.2.1. Bioconductor</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seurat">5.5.2.2. Seurat</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-with-other-languages">5.6. Interoperability with other languages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#julia">5.6.1. Julia</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#javascript">5.6.2. JavaScript</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rust">5.6.3. Rust</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-information">5.7. Session information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8. Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.9. R</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">5.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">5.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">5.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">5.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="interoperability">
+<h1><span class="section-number">5. </span>Interoperability<a class="headerlink" href="#interoperability" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Interoperabilty between languages allows analysts to take advantage of the strengths of different ecosystems.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-interoperability-key-takeaway-1"><span class="std std-ref">Motivation</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">On-disk interoperability uses standard file formats to transfer data and is typically more reliable.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-interoperability-key-takeaway-2"><span class="std std-ref">Simple formats</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">In-memory interoperabilty transfers data directly between parallel sessions and is convenient for interactive analysis.</p>
+</div>
+<span class="sd-stretched-link sd-hide-link-text">introduction-interoperability-key-takeaway-3</span></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">While interoperability is currently possible developers continue to improve the experience.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-interoperability-key-takeaway-4"><span class="std std-ref">Motivation</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interoperability</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::python=3.12.9</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scanpy=1.11.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anndata2ri=1.3.2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconductor-basilisk=1.14.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconductor-mudata=1.6.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconductor-scuttle=1.12.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconductor-singlecellexperiment=1.24.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconductor-zellkonverter=1.12.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mudata=0.3.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-base=4.3.3</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-hdf5r=1.3.12</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-remotes=2.5.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-reticulate=1.40.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-sessioninfo=1.2.3</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-seurat=5.2.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r-seuratobject=5.0.2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rpy2=3.5.11</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session-info=1.0.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lamindb[bionty,jupyter]</span>
+<span class="w">  </span><span class="c1"># Additional R packages installed manually using {remotes}</span>
+<span class="w">  </span><span class="c1"># remotes::install_github(&quot;mojaveazure/seurat-disk@9b89970eac2a3bd770e744f63c7763419486b14c&quot;)</span>
+<span class="w">  </span><span class="c1"># remotes::install_github(&quot;cellgeni/sceasy@v0.0.7&quot;)</span>
+<span class="w">  </span><span class="c1"># remotes::install_github(&quot;PMBio/MuDataSeurat@e34e908&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-database"></i>   Get data and notebooks</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">This book uses <a class="reference external" href="https://github.com/laminlabs/lamindb">lamindb</a> to store, share, and load datasets and notebooks using the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices">theislab/sc-best-practices instance</a>.
+We acknowledge free hosting from <a class="reference external" href="https://lamin.ai/">Lamin Labs</a>.</p>
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install lamindb</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Install the lamindb Python package:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lamindb<span class="o">[</span>bionty,jupyter,zarr<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text"><strong>Optionally create a lamin account</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Sign up and log in following <a class="reference external" href="https://docs.lamin.ai/setup#sign-up-log-in">the instructions</a></p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Connect to the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices">theislab/sc-best-practices instance</a></strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Run the <code class="docutils literal notranslate"><span class="pre">lamin</span> <span class="pre">connect</span></code> command:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lamin<span class="w"> </span>connect<span class="w"> </span>theislab/sc-best-practices
+</pre></div>
+</div>
+</li>
+</ol>
+<p class="sd-card-text">You should now see <code class="docutils literal notranslate"><span class="pre">→</span> <span class="pre">connected</span> <span class="pre">lamindb:</span> <span class="pre">theislab/sc-best-practices</span></code>.</p>
+<ol class="arabic" start="4">
+<li><p class="sd-card-text"><strong>Verify your setup</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Run the <code class="docutils literal notranslate"><span class="pre">lamin</span> <span class="pre">connect</span></code> command:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+
+<span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">You should now see up to 100 of the stored datasets.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing datasets (Artifacts)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the datasets on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/artifacts">Artifacts page</a></p></li>
+<li><p class="sd-card-text">Load an Artifact and the corresponding object:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;key_of_dataset&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># or ln.Artifact(&quot;SOMEID&quot;).get()</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The object is now accessible in memory and is ready for analysis.
+Adapt the <code class="docutils literal notranslate"><span class="pre">ln.Artifact(&quot;SOMEID&quot;).get()</span></code> suffix to get older versions like <code class="docutils literal notranslate"><span class="pre">ln.Artifact(&quot;SOMEID0001&quot;).get()</span></code> to get the second uploaded version.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing notebooks (Transforms)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the notebook on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/transforms">Transforms page</a></p></li>
+<li><p class="sd-card-text">Load the notebook:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lamin<span class="w"> </span>load<span class="w"> </span>&lt;notebook<span class="w"> </span>url&gt;
+</pre></div>
+</div>
+<p class="sd-card-text">which will download the notebook to the current working directory.
+Analogously to <code class="docutils literal notranslate"><span class="pre">Artifacts</span></code>, you can adapt the suffix ID to get older versions.</p>
+</li>
+<li><p class="sd-card-text"><strong>On <code class="docutils literal notranslate"><span class="pre">ln.track()</span></code> and <code class="docutils literal notranslate"><span class="pre">ln.finish()</span></code></strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">These functions are currently only available for users with write access and may error. Please comment them out for now.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<span id="introduction-interoperability-key-takeaway-4"></span><span id="introduction-interoperability-key-takeaway-1"></span><h2><span class="section-number">5.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>As we have discussed in the <a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a>, there are three main ecosystems for single-cell analysis: the <a class="reference external" href="https://bioconductor.org/">Bioconductor</a> and <a class="reference external" href="https://satijalab.org/seurat/index.html">Seurat</a> ecosystems in R and the Python-based <a class="reference external" href="https://scverse.org/">scverse</a> ecosystem.
+A common question from new analysts is which ecosystem they should focus on learning and using.
+While it makes sense to focus on one to start with, and a successful standard analysis can be performed in any ecosystem, we promote the idea that competent analysts should be familiar with all three ecosystems and comfortable moving between them.
+This approach allows analysts to use the best-performing tools and methods regardless of their implementation.
+When analysts are not comfortable moving between ecosystems, they often tend to use packages that are easy to access, even when they have been shown to have shortcomings compared to packages in another ecosystem.
+The ability of analysts to move between ecosystems allows developers to take advantage of the different strengths of programming languages.
+For example, R has strong built-in support for complex statistical modeling, while most deep-learning libraries focus on Python.
+By supporting common on-disk data formats and in-memory data structures, developers can be confident that analysts can access their packages and use the platform most appropriate for their method.
+Another motivation for being comfortable with multiple ecosystems is the accessibility and availability of data, results, and documentation.
+Data or results are often only made available in one format, and analysts will need to be familiar with that format to access it.
+A basic understanding of other ecosystems is also necessary to understand package documentation and tutorials when deciding which methods to use.</p>
+<p>While we encourage analysts to be comfortable with all the major ecosystems, moving between them is only possible when they are interoperable.
+Thankfully, much work has been done in this area, and using standard packages is now relatively simple in most cases.
+In this chapter, we discuss the various ways data can be moved between ecosystems via disk or memory, their differences, and their advantages.
+We focus on single-modality data and moving between R and Python, as these are the most common cases, but we also touch on multimodal data and other languages.</p>
+<p>We first import all required Python packages before going through the chapter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rpy2.robjects</span>
+
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+
+<span class="k">assert</span> <span class="n">ln</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">slug</span> <span class="o">==</span> <span class="s2">&quot;theislab/sc-best-practices&quot;</span>
+
+<span class="n">ln</span><span class="o">.</span><span class="n">track</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>→ connected lamindb: theislab/sc-best-practices
+→ created Transform(&#39;QaILJZMpZyJ40000&#39;), started new Run(&#39;1YEGroVZ...&#39;) at 2025-03-26 12:58:46 UTC
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nomenclature">
+<h2><span class="section-number">5.2. </span>Nomenclature<a class="headerlink" href="#nomenclature" title="Link to this heading">#</a></h2>
+<p>Because talking about different languages can get confusing we try to use the following conventions:</p>
+<ul class="simple">
+<li><p><strong>{package}</strong> - An R package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">package::function()</span></code> - A function in an R package</p></li>
+<li><p><strong>package</strong> - A Python package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">package.function()</span></code> - A function in a Python package</p></li>
+<li><p><strong>Emphasised</strong> - Some other important concept</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">code</span></code> - Other parts of code including objects, variables etc. This is also used for files or directories.</p></li>
+</ul>
+</section>
+<section id="disk-based-interoperability">
+<h2><span class="section-number">5.3. </span>Disk-based interoperability<a class="headerlink" href="#disk-based-interoperability" title="Link to this heading">#</a></h2>
+<p>The first approach to moving between languages is via disk-based interoperability.
+This involves writing a file to disk in one language and then reading that file into a second language.
+In many cases, this approach is simpler, more reliable and scalable than in-memory interoperability (which we discuss below).
+Still, it comes at the cost of greater storage requirements and reduced interactivity.
+Disk-based interoperability tends to work particularly well when there are established processes for each stage of analysis and you want to pass objects from one to the next (especially as part of a pipeline developed using a workflow manager such as <a class="reference external" href="https://www.nextflow.io/index.html">Nextflow</a> or <a class="reference external" href="https://snakemake.readthedocs.io/en/stable/">snakemake</a>).
+However, disk-based interoperability is less convenient for interactive steps such as data exploration or experimenting with methods, as you need to write a new file whenever you want to move between languages.</p>
+<section id="simple-formats">
+<span id="introduction-interoperability-key-takeaway-2"></span><h3><span class="section-number">5.3.1. </span>Simple formats<a class="headerlink" href="#simple-formats" title="Link to this heading">#</a></h3>
+<p>Before discussing file formats specifically developed for single-cell data we want to briefly mention that common simple text file formats (such as CSV, TSV, JSON etc.) can often be the answer to transferring data between languages.
+They work well in cases where some analysis has been performed, and what you want to transfer is a subset of the information about an experiment.
+For example, you may want to transfer only the cell metadata but do not require the feature metadata, expression matrices etc.
+The advantage of using simple text formats is that they are well supported by almost any language and do not require single-cell specific packages.
+However, they can quickly become impractical as what you want to transfer becomes more complex.</p>
+</section>
+<section id="hdf5-based-formats">
+<h3><span class="section-number">5.3.2. </span>HDF5-based formats<a class="headerlink" href="#hdf5-based-formats" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.hdfgroup.org/solutions/hdf5/">Hierarchical Data Format version 5</a> (HDF5) is the most common open-source file format for storing single-cell data.
+It is designed for large, complex, and heterogeneous datasets, using a directory-like structure similar to a computer’s file system.
+This allows multiple types of data to be stored within a single file in an organized hierarchy. While HDF5 is highly flexible, interacting with it requires knowledge of how data is structured within the file.
+To standardize this process, specific guidelines have been developed for storing single-cell data in HDF5 files.</p>
+<section id="h5ad">
+<h4><span class="section-number">5.3.2.1. </span>H5AD<a class="headerlink" href="#h5ad" title="Link to this heading">#</a></h4>
+<p>The H5AD format is the HDF5 disk representation of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object used by scverse packages and is commonly used to share single-cell datasets.
+As it is part of the scverse ecosystem, reading and writing these files from Python is well-supported and is part of the core functionality of the <a class="reference external" href="https://anndata.readthedocs.io/en/latest/index.html"><strong>anndata</strong> package</a> (read more about the format <a class="reference external" href="https://anndata.readthedocs.io/en/latest/fileformat-prose.html">here</a>).</p>
+<p>To demonstrate interoperability, we will load a small, randomly generated dataset that has gone through some of the steps of a standard analysis workflow to populate the various slots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;introduction/interoperability_adata.h5ad&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 100 × 2000
+    obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will write this mock object to disk as a H5AD file to demonstrate how those files can be read from R.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span>
+<span class="n">h5ad_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;example.h5ad&quot;</span><span class="p">)</span>
+
+<span class="n">adata</span><span class="o">.</span><span class="n">write_h5ad</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Several R packages support reading and writing H5AD files.
+However, they typically wrap the Python <strong>anndata</strong> package for file handling, using an in-memory conversion step to bridge data between R and Python.</p>
+<section id="reading-writing-h5ad-with-bioconductor">
+<h5><span class="section-number">5.3.2.1.1. </span>Reading/writing H5AD with Bioconductor<a class="headerlink" href="#reading-writing-h5ad-with-bioconductor" title="Link to this heading">#</a></h5>
+<p>The <a class="reference external" href="https://bioconductor.org/packages/zellkonverter/">Bioconductor <strong>{zellkonverter}</strong> package</a> simplifies H5AD file handling by using the <a class="reference external" href="https://bioconductor.org/packages/basilisk/"><strong>{basilisk}</strong> package</a> to manage a compatible Python environment.
+In other words, it enables Bioconductor users to read and write H5AD files seamlessly, without needing any Python knowledge.</p>
+<p>Unfortunately, because of the way this book is made, we are unable to run the code directly here. Instead, we will show the code and what the output looks like when run in an R session:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">sce</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">zellkonverter</span><span class="o">::</span><span class="nf">readH5AD</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ℹ Using the Python reader
+ℹ Using anndata version 0.8.0
+✔ Read /.../luke.zappia/Downloads/example.h5ad [113ms]
+✔ uns$hvg$flavor converted [17ms]
+✔ uns$hvg converted [50ms]
+✔ uns$log1p converted [25ms]
+✔ uns$neighbors converted [18ms]
+✔ uns$pca$params$use_highly_variable converted [16ms]
+✔ uns$pca$params$zero_center converted [16ms]
+✔ uns$pca$params converted [80ms]
+✔ uns$pca$variance converted [17ms]
+✔ uns$pca$variance_ratio converted [16ms]
+✔ uns$pca converted [184ms]
+✔ uns$umap$params$a converted [16ms]
+✔ uns$umap$params$b converted [16ms]
+✔ uns$umap$params converted [80ms]
+✔ uns$umap converted [112ms]
+✔ uns converted [490ms]
+✔ Converting uns to metadata ... done
+✔ X matrix converted to assay [29ms]
+✔ layers$counts converted [27ms]
+✔ Converting layers to assays ... done
+✔ var converted to rowData [25ms]
+✔ obs converted to colData [24ms]
+✔ varm$PCs converted [18ms]
+✔ varm converted [47ms]
+✔ Converting varm to rowData$varm ... done
+✔ obsm$X_pca converted [15ms]
+✔ obsm$X_umap converted [16ms]
+✔ obsm converted [80ms]
+✔ Converting obsm to reducedDims ... done
+ℹ varp is empty and was skipped
+✔ obsp$connectivities converted [22ms]
+✔ obsp$distances converted [23ms]
+✔ obsp converted [92ms]
+✔ Converting obsp to colPairs ... done
+✔ SingleCellExperiment constructed [164ms]
+ℹ Skipping conversion of raw
+✔ Converting AnnData to SingleCellExperiment ... done
+</pre></div>
+</div>
+<p>Because we have turned on the verbose output you can see how <strong>{zellkonverter}</strong> reads the file using Python and converts each part of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object to a Bioconductor <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> object. We can see what the result looks like:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">sce</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">class</span><span class="p">:</span> <span class="n">SingleCellExperiment</span>
+<span class="n">dim</span><span class="p">:</span> <span class="mi">2000</span> <span class="mi">100</span>
+<span class="n">metadata</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="n">hvg</span> <span class="n">log1p</span> <span class="n">neighbors</span> <span class="n">pca</span> <span class="n">umap</span>
+<span class="n">assays</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span> <span class="n">X</span> <span class="n">counts</span>
+<span class="n">rownames</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span> <span class="n">Gene_0</span> <span class="n">Gene_1</span> <span class="o">...</span> <span class="n">Gene_1998</span> <span class="n">Gene_1999</span>
+<span class="n">rowData</span> <span class="n">names</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span> <span class="n">n_cells_by_counts</span> <span class="n">mean_counts</span> <span class="o">...</span> <span class="n">dispersions_norm</span>
+  <span class="n">varm</span>
+<span class="n">colnames</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span> <span class="n">Cell_0</span> <span class="n">Cell_1</span> <span class="o">...</span> <span class="n">Cell_98</span> <span class="n">Cell_99</span>
+<span class="n">colData</span> <span class="n">names</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span> <span class="n">n_genes_by_counts</span> <span class="n">log1p_n_genes_by_counts</span> <span class="o">...</span>
+  <span class="n">pct_counts_in_top_200_genes</span> <span class="n">pct_counts_in_top_500_genes</span>
+<span class="n">reducedDimNames</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span> <span class="n">X_pca</span> <span class="n">X_umap</span>
+<span class="n">mainExpName</span><span class="p">:</span> <span class="n">NULL</span>
+<span class="n">altExpNames</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>This object can then be used as normal by any Bioconductor package. If we want to write a new H5AD file we can use the <code class="docutils literal notranslate"><span class="pre">writeH5AD()</span></code> function:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">zellkonverter_h5ad_file</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tempfile</span><span class="p">(</span><span class="n">fileext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.h5ad&quot;</span><span class="p">)</span>
+<span class="n">zellkonverter</span><span class="o">::</span><span class="nf">writeH5AD</span><span class="p">(</span><span class="n">sce</span><span class="p">,</span><span class="w"> </span><span class="n">zellkonverter_h5ad_file</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ℹ Using anndata version 0.8.0
+ℹ Using the &#39;X&#39; assay as the X matrix
+✔ Selected X matrix [29ms]
+✔ assays$X converted to X matrix [50ms]
+✔ additional assays converted to layers [30ms]
+✔ rowData$varm converted to varm [28ms]
+✔ reducedDims converted to obsm [68ms]
+✔ metadata converted to uns [24ms]
+ℹ rowPairs is empty and was skipped
+✔ Converting AnnData to SingleCellExperiment ... done
+✔ Wrote &#39;/.../.../rj/.../T/.../file102cfa97cc51.h5ad &#39; [133ms]
+</pre></div>
+</div>
+<p>We can then read this file in Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scanpy</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">zellkonverter_h5ad_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 100 × 2000
+    obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;X_name&#39;, &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+<p>If you’re running a <strong>{zellkonverter}</strong> function for the first time, it will create a special Conda environment, which may take some time.
+Once created, this environment is reused for subsequent function calls.
+<strong>{zellkonverter}</strong> also offers options such as selectively reading or writing parts of an object.
+For more details, refer to the package documentation.</p>
+<p>Similar functionality for writing a<code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> object to an H5AD file is available in the <a class="reference external" href="https://github.com/cellgeni/sceasy"><strong>{sceasy}</strong> package</a>.
+While these packages are effective, wrapping Python introduces some overhead, which future native R H5AD writers/readers may help optimize.</p>
+</section>
+<section id="reading-writing-h5ad-with-seurat">
+<h5><span class="section-number">5.3.2.1.2. </span>Reading/writing H5AD with <strong>{Seurat}</strong><a class="headerlink" href="#reading-writing-h5ad-with-seurat" title="Link to this heading">#</a></h5>
+<p>While <code class="docutils literal notranslate"><span class="pre">h5ad_file</span></code> is a <code class="docutils literal notranslate"><span class="pre">Path</span></code> object, the way we use R in this notebook expects a string, so we convert it into a <code class="docutils literal notranslate"><span class="pre">string</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h5ad_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Converting between a <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> object and an H5AD file is a two-step process <a class="reference external" href="https://mojaveazure.github.io/seurat-disk/articles/convert-anndata.html">as suggested by this tutorial</a>.
+First, the H5AD file is converted to an H5Seurat file—a custom HDF5 format for <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> objects—using the <a class="reference external" href="https://mojaveazure.github.io/seurat-disk/"><strong>{SeuratDisk}</strong> package</a>.
+The H5Seurat file is then read as a <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i h5ad_file
+
+message(&quot;Converting H5AD to H5Seurat...&quot;)
+SeuratDisk::Convert(h5ad_file, dest = &quot;h5seurat&quot;, overwrite = TRUE)
+message(&quot;Reading H5Seurat...&quot;)
+h5seurat_file &lt;- gsub(&quot;.h5ad&quot;, &quot;.h5seurat&quot;, h5ad_file)
+seurat &lt;- SeuratDisk::LoadH5Seurat(h5seurat_file, assays = &quot;RNA&quot;)
+message(&quot;Read Seurat object:&quot;)
+seurat
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Converting H5AD to H5Seurat...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    WARNING: The R package &quot;reticulate&quot; only fixed recently
+    an issue that caused a segfault when used with rpy2:
+    https://github.com/rstudio/reticulate/pull/1188
+    Make sure that you use a version of that package that includes
+    the fix.
+    
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Registered S3 method overwritten by &#39;SeuratDisk&#39;:
+  method            from  
+  as.sparse.H5Group Seurat
+
+R[write to console]: 경고:
+R[write to console]:  Unknown file type: h5ad
+
+R[write to console]: 경고:
+R[write to console]:  &#39;assay&#39; not set, setting to &#39;RNA&#39;
+
+R[write to console]: Creating h5Seurat file for version 3.1.5.9900
+
+R[write to console]: Adding X as data
+
+R[write to console]: Adding X as counts
+
+R[write to console]: Adding meta.features from var
+
+R[write to console]: Adding X_pca as cell embeddings for pca
+
+R[write to console]: Adding X_umap as cell embeddings for umap
+
+R[write to console]: Adding PCs as feature loadings fpr pca
+
+R[write to console]: Adding miscellaneous information for pca
+
+R[write to console]: Adding standard deviations for pca
+
+R[write to console]: Adding miscellaneous information for umap
+
+R[write to console]: Adding hvg to miscellaneous data
+
+R[write to console]: Adding log1p to miscellaneous data
+
+R[write to console]: Adding layer counts as data in assay counts
+
+R[write to console]: Adding layer counts as counts in assay counts
+
+R[write to console]: Reading H5Seurat...
+
+R[write to console]: Validating h5Seurat file
+
+R[write to console]: 경고:
+R[write to console]:  Feature names cannot have underscores (&#39;_&#39;), replacing with dashes (&#39;-&#39;)
+
+R[write to console]: Initializing RNA with data
+
+R[write to console]: Adding counts for RNA
+
+R[write to console]: Adding feature-level metadata for RNA
+
+R[write to console]: Adding reduction pca
+
+R[write to console]: Adding cell embeddings for pca
+
+R[write to console]: Adding feature loadings for pca
+
+R[write to console]: Adding miscellaneous information for pca
+
+R[write to console]: Adding reduction umap
+
+R[write to console]: Adding cell embeddings for umap
+
+R[write to console]: Adding miscellaneous information for umap
+
+R[write to console]: Adding command information
+
+R[write to console]: Adding cell-level metadata
+
+R[write to console]: Read Seurat object:
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+2000 features across 100 samples within 1 assay 
+Active assay: RNA (2000 features, 0 variable features)
+ 2 layers present: counts, data
+ 2 dimensional reductions calculated: pca, umap
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that converting a <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> object is more complex compared to <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> or <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> due to structural differences.
+For more details, refer to the <a class="reference external" href="https://mojaveazure.github.io/seurat-disk/reference/Convert.html">conversion function documentation</a>.</p>
+<p>The <strong>{sceasy}</strong> package allows direct reading of H5AD files into <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> or <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> objects.
+Unlike <strong>{zellkonverter}</strong>, which relies on a dedicated Python environment, <strong>{sceasy}</strong> wraps Python functions without requiring a special setup.
+However, this means you must manually configure the environment, ensure R can locate it, and install the necessary packages.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">sceasy_seurat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sceasy</span><span class="o">::</span><span class="nf">convertFormat</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">,</span><span class="w"> </span><span class="n">from</span><span class="o">=</span><span class="s">&quot;anndata&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">to</span><span class="o">=</span><span class="s">&quot;seurat&quot;</span><span class="p">)</span>
+<span class="n">sceasy_seurat</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">Warning</span><span class="p">:</span> <span class="n">Feature</span> <span class="n">names</span> <span class="n">cannot</span> <span class="n">have</span> <span class="n">underscores</span> <span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="n">replacing</span> <span class="k">with</span> <span class="n">dashes</span> <span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">-&gt;</span> <span class="n">counts</span>
+<span class="n">An</span> <span class="nb">object</span> <span class="n">of</span> <span class="k">class</span><span class="w"> </span><span class="nc">Seurat</span>
+<span class="mi">2000</span> <span class="n">features</span> <span class="n">across</span> <span class="mi">100</span> <span class="n">samples</span> <span class="n">within</span> <span class="mi">1</span> <span class="n">assay</span>
+<span class="n">Active</span> <span class="n">assay</span><span class="p">:</span> <span class="n">RNA</span> <span class="p">(</span><span class="mi">2000</span> <span class="n">features</span><span class="p">,</span> <span class="mi">0</span> <span class="n">variable</span> <span class="n">features</span><span class="p">)</span>
+ <span class="mi">2</span> <span class="n">dimensional</span> <span class="n">reductions</span> <span class="n">calculated</span><span class="p">:</span> <span class="n">pca</span><span class="p">,</span> <span class="n">umap</span>
+</pre></div>
+</div>
+</section>
+<section id="reading-writing-h5ad-with-anndata">
+<h5><span class="section-number">5.3.2.1.3. </span>Reading/writing H5AD with <strong>{anndata}</strong><a class="headerlink" href="#reading-writing-h5ad-with-anndata" title="Link to this heading">#</a></h5>
+<p>The R <a class="reference external" href="https://anndata.dynverse.org/index.html"><strong>{anndata}</strong> package</a> can also be used to read H5AD files.
+However, unlike the packages above, it does not convert to a native R object.
+Instead it provides an R interface to the Python object.
+This is useful for accessing the data but few analysis packages will accept this as input, so further in-memory conversion is usually required.</p>
+</section>
+</section>
+<section id="loom">
+<h4><span class="section-number">5.3.2.2. </span>Loom<a class="headerlink" href="#loom" title="Link to this heading">#</a></h4>
+<p>The <a class="reference external" href="http://loompy.org/">Loom file format</a> is an older HDF5-based specification for omics data.
+While similar in structure to <code class="docutils literal notranslate"><span class="pre">AnnData</span> <span class="pre">and</span> <span class="pre">SingleCellExperiment</span></code>, it is not tied to a specific analysis ecosystem like H5AD.
+Loom format support is available in both <a class="reference external" href="https://github.com/mojaveazure/loomR">R</a> and <a class="reference external" href="https://pypi.org/project/loompy/">Python</a>, as well as through the <a class="reference external" href="https://bioconductor.org/packages/LoomExperiment/">Bioconductor package</a> for writing Loom files.
+However, it is often more convenient to use the higher-level interfaces provided by core ecosystem packages.
+Beyond dataset sharing, Loom files are commonly encountered when analyzing spliced and unspliced reads using <a class="reference external" href="http://velocyto.org/">velocyto</a> for <a class="reference internal" href="../trajectories/rna_velocity.html#trajectories-rna-velocity"><span class="std std-ref">RNA velocity analysis</span></a>.</p>
+</section>
+</section>
+<section id="rds-files">
+<h3><span class="section-number">5.3.3. </span>RDS files<a class="headerlink" href="#rds-files" title="Link to this heading">#</a></h3>
+<p>Another file format you may see used to share single-cell datasets is the RDS format.
+This is a binary format used to serialize arbitrary <code class="docutils literal notranslate"><span class="pre">R</span></code> objects (similar to Python Pickle files).
+As <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> and <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> objects did not always have matching on-disk representations, RDS files are sometimes used to share the results from R analyses.
+While this is ok within an analysis project, we discourage its use for sharing data publicly or with collaborators due to the lack of interoperability with other ecosystems.
+Instead, we recommend using one of the HDF5 formats mentioned above that can be read from multiple languages.</p>
+</section>
+<section id="new-on-disk-formats">
+<h3><span class="section-number">5.3.4. </span>New on-disk formats<a class="headerlink" href="#new-on-disk-formats" title="Link to this heading">#</a></h3>
+<p>While HDF5-based formats are currently the standard for on-disk representations of single-cell data, other newer technologies such as <a class="reference external" href="https://zarr.dev/">Zarr</a> and <a class="reference external" href="https://tiledb.com/">TileDB</a> have some advantages, particularly for very large datasets and other modalities.
+We expect specifications to be developed for these formats in the future, which may be adopted by the community (<strong>anndata</strong> already provides support for Zarr files).</p>
+<div class="admonition-key-point admonition">
+<p class="admonition-title">Key point</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code>: Bioconductor standard for single-cell data in R. Conversion between <code class="docutils literal notranslate"><span class="pre">Anndata</span></code> and <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> can be done by <code class="docutils literal notranslate"><span class="pre">zellkonverter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Seurat</span></code>: Single-cell analysis framework in R. It can read/write <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> via <code class="docutils literal notranslate"><span class="pre">SeuratDisk</span></code> or convert via <code class="docutils literal notranslate"><span class="pre">sceasy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AnnData</span></code>: Standard format for single-cell data in Python</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="in-memory-interoperability">
+<h2><span class="section-number">5.4. </span>In-memory interoperability<a class="headerlink" href="#in-memory-interoperability" title="Link to this heading">#</a></h2>
+<p>The second approach to interoperability is to work on in-memory representations of an object.
+This approach involves active sessions from two programming languages running at the same time and either accessing the same object from both or converting between them as needed.
+Usually, one language acts as the main environment, and there is an interface to the other language.
+This can be very useful for interactive analysis as it allows an analyst to work in two languages simultaneously.
+It is also often used when creating documents that use multiple languages (such as this book).
+However, in-memory interoperability has some drawbacks.
+Analysts must be familiar with setting up and using both environments, complex objects may not be fully supported across languages, and data duplication increases memory overhead, making it less suitable for large datasets.</p>
+<section id="interoperability-between-r-ecosystems">
+<h3><span class="section-number">5.4.1. </span>Interoperability between R ecosystems<a class="headerlink" href="#interoperability-between-r-ecosystems" title="Link to this heading">#</a></h3>
+<p>Before we look at in-memory interoperability between R and Python, let’s consider the simpler case of converting between the two R ecosystems.
+The <strong>{Seurat}</strong> package provides functions for performing this conversion <a class="reference external" href="https://satijalab.org/seurat/articles/conversion_vignette.html">as described in this vignette</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+sce_from_seurat &lt;- Seurat::as.SingleCellExperiment(seurat)
+sce_from_seurat
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>class: SingleCellExperiment 
+dim: 2000 100 
+metadata(0):
+assays(2): counts logcounts
+rownames(2000): Gene-0 Gene-1 ... Gene-1998 Gene-1999
+rowData names(0):
+colnames(100): Cell_0 Cell_1 ... Cell_98 Cell_99
+colData names(9): n_genes_by_counts log1p_n_genes_by_counts ...
+  pct_counts_in_top_500_genes ident
+reducedDimNames(2): PCA UMAP
+mainExpName: RNA
+altExpNames(0):
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+seurat_from_sce &lt;- Seurat::as.Seurat(sce_from_seurat)
+seurat_from_sce
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+2000 features across 100 samples within 1 assay 
+Active assay: RNA (2000 features, 0 variable features)
+ 2 layers present: counts, data
+ 2 dimensional reductions calculated: PCA, UMAP
+</pre></div>
+</div>
+</div>
+</div>
+<p>The difficult part here is due to the differences between the structures of the two objects.
+It is important to make sure the arguments are set correctly so that the conversion functions know which information to convert and where to place it.</p>
+<p>In many cases it may not be necessary to convert a <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> object to a <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code>.
+This is because many of the core Bioconductor packages for single-cell analysis have been designed to accept a matrix as input as well.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+# Calculate Counts Per Million using the Bioconductor scuttle package
+# with a matrix in a Seurat object
+cpm &lt;- scuttle::calculateCPM(Seurat::GetAssayData(seurat, slot = &quot;counts&quot;))
+cpm[1:10, 1:10]
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 x 10 sparse Matrix of class &quot;dgCMatrix&quot;
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]:   [[ suppressing 10 column names ‘Cell_0’, ‘Cell_1’, ‘Cell_2’ ... ]]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                      
+Gene-0 594.0456    .     984.0238  610.329 964.4394 616.4169    .     
+Gene-1 594.0456 1168.519 622.6029    .     608.7911   .         .     
+Gene-2   .         .     984.0238    .     608.7911 973.2674 1205.5970
+Gene-3 594.0456    .     622.6029  610.329 964.4394 616.4169    .     
+Gene-4 594.0456    .     622.6029  966.820 964.4394   .         .     
+Gene-5 594.0456  580.157 622.6029  610.329 608.7911   .       601.7422
+Gene-6   .         .     622.6029  610.329   .      616.4169  601.7422
+Gene-7 594.0456  580.157 622.6029  966.820 608.7911 616.4169    .     
+Gene-8 594.0456  580.157   .      1219.608 608.7911 973.2674    .     
+Gene-9 942.9097    .       .         .     964.4394   .       954.8014
+                                    
+Gene-0  576.0808  619.7236  604.3937
+Gene-1  918.4111 1234.7593  958.4625
+Gene-2    .       619.7236 1209.8233
+Gene-3    .       619.7236  958.4625
+Gene-4  576.0808  979.8761  604.3937
+Gene-5    .       619.7236  958.4625
+Gene-6    .      1234.7593    .     
+Gene-7    .       619.7236  604.3937
+Gene-8 1162.8180  979.8761  958.4625
+Gene-9    .      1234.7593    .     
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, it is important to be sure you are accessing the right information and storing any results in the correct place if needed.</p>
+</section>
+<section id="accessing-r-from-python">
+<h3><span class="section-number">5.4.2. </span>Accessing R from Python<a class="headerlink" href="#accessing-r-from-python" title="Link to this heading">#</a></h3>
+<p>The Python interface to R is provided by the <a class="reference external" href="https://rpy2.github.io/doc/latest/html/index.html"><strong>rpy2</strong> package</a>.
+This allows you to access R functions and objects from Python.
+For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_mat</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">localconverter</span><span class="p">(</span><span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">numpy2ri</span><span class="o">.</span><span class="n">converter</span><span class="p">):</span>
+    <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">globalenv</span><span class="p">[</span><span class="s2">&quot;counts_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts_mat</span>
+
+<span class="n">cpm</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s2">&quot;scuttle::calculateCPM(counts_mat)&quot;</span><span class="p">)</span>
+<span class="n">cpm</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+        <span>FloatMatrix with 200000 elements.</span>
+        <table>
+        <tbody>
+          <tr>
+          
+            <td>
+            494.804552
+            </td>
+          
+            <td>
+            494.804552
+            </td>
+          
+            <td>
+            0.000000
+            </td>
+          
+            <td>
+            ...
+            </td>
+          
+            <td>
+            519.750520
+            </td>
+          
+            <td>
+            519.750520
+            </td>
+          
+            <td>
+            0.000000
+            </td>
+          
+          </tr>
+        </tbody>
+        </table>
+        </div></div>
+</div>
+<p>Common Python objects (lists, matrices, <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>s etc.) can also be passed to R.</p>
+<p>If you are using a Jupyter notebook (as we are for this book) you can use the IPython magic interface to create cells with native R code (passing objects as required).
+For example, starting a cell with <code class="docutils literal notranslate"><span class="pre">%%R</span> <span class="pre">-i</span> <span class="pre">input</span> <span class="pre">-o</span> <span class="pre">output</span></code> says to take <code class="docutils literal notranslate"><span class="pre">input</span></code> as input, run R code and then return <code class="docutils literal notranslate"><span class="pre">output</span></code> as output.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i counts_mat -o magic_cpm
+# R code running using IPython magic
+magic_cpm &lt;- scuttle::calculateCPM(counts_mat)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python code accessing the results</span>
+<span class="n">magic_cpm</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 494.8045522 ,    0.        , 1027.2213662 , ...,    0.        ,
+           0.        ,  519.75051975],
+       [ 494.8045522 , 1445.78313253,  513.6106831 , ...,    0.        ,
+         499.5004995 ,  519.75051975],
+       [   0.        ,    0.        , 1027.2213662 , ...,  485.90864917,
+         499.5004995 ,    0.        ],
+       ...,
+       [ 494.8045522 ,    0.        ,  513.6106831 , ...,    0.        ,
+           0.        ,  519.75051975],
+       [ 989.6091044 ,  481.92771084,    0.        , ...,    0.        ,
+         499.5004995 ,  519.75051975],
+       [2474.02276101,  963.85542169,  513.6106831 , ...,  485.90864917,
+         999.000999  ,    0.        ]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is the approach you will most commonly see in later chapters.
+For more information about using <strong>rpy2</strong> please refer to <a class="reference external" href="https://rpy2.github.io/doc/latest/html/index.html">the documentation</a>.</p>
+<p>To work with single-cell data in this way, the <a class="reference external" href="https://icb-anndata2ri.readthedocs-hosted.com/en/latest/"><strong>anndata2ri</strong> package</a> is particularly useful.
+As an extension of <strong>rpy2</strong>, it allows R to recognize <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> objects as <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> objects, eliminating unnecessary conversion and enabling seamless execution of R code on Python objects.
+Additionally, it facilitates the conversion of sparse <strong>scipy</strong> matrices.</p>
+<p>In this example, in order to pass an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object in the Python session to R, we have to first convert it to <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">localconverter</span><span class="p">(</span><span class="n">anndata2ri</span><span class="o">.</span><span class="n">converter</span><span class="p">):</span>
+    <span class="n">r_adata</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can pass it to R.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i r_adata
+qc &lt;- scuttle::perCellQCMetrics(r_adata)
+head(qc)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DataFrame with 6 rows and 3 columns
+             sum  detected     total
+       &lt;numeric&gt; &lt;integer&gt; &lt;numeric&gt;
+Cell_0      2021      1297      2021
+Cell_1      2075      1314      2075
+Cell_2      1947      1233      1947
+Cell_3      1986      1250      1986
+Cell_4      1987      1255      1987
+Cell_5      1930      1266      1930
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that you will still run into issues if an object (or part of it) cannot be interfaced correctly (for example if there is an unsupported data type).
+In that case, you may need to modify your object before it can be accessed.</p>
+</section>
+<section id="accessing-python-from-r">
+<h3><span class="section-number">5.4.3. </span>Accessing Python from R<a class="headerlink" href="#accessing-python-from-r" title="Link to this heading">#</a></h3>
+<p>Accessing Python from an R session is similar to accessing R from Python but here the interface is provided by the <a class="reference external" href="https://rstudio.github.io/reticulate/"><strong>{reticulate}</strong> package</a>.
+Once it is loaded we can access Python functions and objects from R.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+reticulate_list &lt;- reticulate::r_to_py(LETTERS)
+print(reticulate_list)
+py_builtins &lt;- reticulate::import_builtins()
+py_builtins$zip(letters, LETTERS)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>List (26 items)
+&lt;zip object at 0x15d0dc6c0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you are working in an <a class="reference external" href="https://rmarkdown.rstudio.com/">RMarkdown</a> or <a class="reference external" href="https://quarto.org/">Quarto</a> document you can also write native Python chunks using the <strong>{reticulate}</strong> Python engine.
+When we do this we can use the magic <code class="docutils literal notranslate"><span class="pre">r</span></code> and <code class="docutils literal notranslate"><span class="pre">py</span></code> variables to access objects in the other language (the following code is an example that is not run).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```{r}
+# An R chunk that accesses a Python object
+print(py$py_object)
+```
+
+```{python}
+# A Python chunk that accesses an R object
+print(r$r_object)
+```
+</pre></div>
+</div>
+<p>Unlike <strong>anndata2ri</strong>, there are no R packages that provide a direct interface for Python to view <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> or <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> objects as <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> objects.
+However, we can still access most parts of an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> using <strong>{reticulate}</strong> (this code is not run).</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print an AnnData object in a Python environment</span>
+<span class="n">py</span><span class="o">$</span><span class="n">adata</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 100 × 2000
+    obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternatively use the Python anndata package to read a H5AD file</span>
+<span class="n">anndata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">reticulate</span><span class="o">::</span><span class="nf">import</span><span class="p">(</span><span class="s">&quot;anndata&quot;</span><span class="p">)</span>
+<span class="n">anndata</span><span class="o">$</span><span class="nf">read_h5ad</span><span class="p">(</span><span class="n">h5ad_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 100 × 2000
+    obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Access the obs slot, pandas DataFrames are automatically converted to R data.frames</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">adata</span><span class="o">$</span><span class="n">obs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="n">n_genes_by_counts</span> <span class="n">log1p_n_genes_by_counts</span> <span class="n">total_counts</span>
+<span class="n">Cell_0</span>              <span class="mi">1246</span>                <span class="mf">7.128496</span>         <span class="mi">1965</span>
+<span class="n">Cell_1</span>              <span class="mi">1262</span>                <span class="mf">7.141245</span>         <span class="mi">2006</span>
+<span class="n">Cell_2</span>              <span class="mi">1262</span>                <span class="mf">7.141245</span>         <span class="mi">1958</span>
+<span class="n">Cell_3</span>              <span class="mi">1240</span>                <span class="mf">7.123673</span>         <span class="mi">1960</span>
+<span class="n">Cell_4</span>              <span class="mi">1296</span>                <span class="mf">7.167809</span>         <span class="mi">2027</span>
+<span class="n">Cell_5</span>              <span class="mi">1231</span>                <span class="mf">7.116394</span>         <span class="mi">1898</span>
+       <span class="n">log1p_total_counts</span> <span class="n">pct_counts_in_top_50_genes</span>
+<span class="n">Cell_0</span>           <span class="mf">7.583756</span>                  <span class="mf">10.025445</span>
+<span class="n">Cell_1</span>           <span class="mf">7.604396</span>                   <span class="mf">9.521436</span>
+<span class="n">Cell_2</span>           <span class="mf">7.580189</span>                   <span class="mf">9.959142</span>
+<span class="n">Cell_3</span>           <span class="mf">7.581210</span>                   <span class="mf">9.183673</span>
+<span class="n">Cell_4</span>           <span class="mf">7.614805</span>                   <span class="mf">9.718796</span>
+<span class="n">Cell_5</span>           <span class="mf">7.549083</span>                  <span class="mf">10.168599</span>
+       <span class="n">pct_counts_in_top_100_genes</span> <span class="n">pct_counts_in_top_200_genes</span>
+<span class="n">Cell_0</span>                    <span class="mf">17.65903</span>                    <span class="mf">30.89059</span>
+<span class="n">Cell_1</span>                    <span class="mf">16.99900</span>                    <span class="mf">29.71087</span>
+<span class="n">Cell_2</span>                    <span class="mf">17.62002</span>                    <span class="mf">30.28601</span>
+<span class="n">Cell_3</span>                    <span class="mf">16.83673</span>                    <span class="mf">30.45918</span>
+<span class="n">Cell_4</span>                    <span class="mf">17.11889</span>                    <span class="mf">30.04440</span>
+<span class="n">Cell_5</span>                    <span class="mf">18.07165</span>                    <span class="mf">30.29505</span>
+       <span class="n">pct_counts_in_top_500_genes</span>
+<span class="n">Cell_0</span>                    <span class="mf">61.42494</span>
+<span class="n">Cell_1</span>                    <span class="mf">59.62114</span>
+<span class="n">Cell_2</span>                    <span class="mf">60.92952</span>
+<span class="n">Cell_3</span>                    <span class="mf">61.07143</span>
+<span class="n">Cell_4</span>                    <span class="mf">59.64480</span>
+<span class="n">Cell_5</span>                    <span class="mf">61.48577</span>
+</pre></div>
+</div>
+<p>As mentioned above the R <strong>{anndata}</strong> package provides an R interface for <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> objects but it is not currently used by many analysis packages.</p>
+<p>For more complex analyses that require working with an entire object, it may be necessary to fully convert an object between R and Python
+While this approach is not memory-efficient due to data duplication, it grants access to a broader range of packages.</p>
+<p>The <strong>{zellkonverter}</strong> package provides a function for this conversion.
+Unlike its function for reading H5AD files, this process uses the standard Python environment rather than a specially created one (code not run).</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert an AnnData to a SingleCellExperiment</span>
+<span class="n">sce</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">zellkonverter</span><span class="o">::</span><span class="nf">AnnData2SCE</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">sce</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✔ uns$hvg$flavor converted [21ms]
+✔ uns$hvg converted [62ms]
+✔ uns$log1p converted [22ms]
+✔ uns$neighbors converted [21ms]
+✔ uns$pca$params$use_highly_variable converted [22ms]
+✔ uns$pca$params$zero_center converted [31ms]
+✔ uns$pca$params converted [118ms]
+✔ uns$pca$variance converted [17ms]
+✔ uns$pca$variance_ratio converted [17ms]
+✔ uns$pca converted [224ms]
+✔ uns$umap$params$a converted [15ms]
+✔ uns$umap$params$b converted [17ms]
+✔ uns$umap$params converted [80ms]
+✔ uns$umap converted [115ms]
+✔ uns converted [582ms]
+✔ Converting uns to metadata ... done
+✔ X matrix converted to assay [44ms]
+✔ layers$counts converted [29ms]
+✔ Converting layers to assays ... done
+✔ var converted to rowData [37ms]
+✔ obs converted to colData [23ms]
+✔ varm$PCs converted [18ms]
+✔ varm converted [49ms]
+✔ Converting varm to rowData$varm ... done
+✔ obsm$X_pca converted [17ms]
+✔ obsm$X_umap converted [17ms]
+✔ obsm converted [80ms]
+✔ Converting obsm to reducedDims ... done
+ℹ varp is empty and was skipped
+✔ obsp$connectivities converted [21ms]
+✔ obsp$distances converted [22ms]
+✔ obsp converted [89ms]
+✔ Converting obsp to colPairs ... done
+✔ SingleCellExperiment constructed [241ms]
+ℹ Skipping conversion of raw
+✔ Converting AnnData to SingleCellExperiment ... done
+class: SingleCellExperiment
+dim: 2000 100
+metadata(5): hvg log1p neighbors pca umap
+assays(2): X counts
+rownames(2000): Gene_0 Gene_1 ... Gene_1998 Gene_1999
+rowData names(11): n_cells_by_counts mean_counts ... dispersions_norm
+  varm
+colnames(100): Cell_0 Cell_1 ... Cell_98 Cell_99
+colData names(8): n_genes_by_counts log1p_n_genes_by_counts ...
+  pct_counts_in_top_200_genes pct_counts_in_top_500_genes
+reducedDimNames(2): X_pca X_umap
+mainExpName: NULL
+altExpNames(0):
+</pre></div>
+</div>
+<p>The same can also be done in reverse:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">adata2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">zellkonverter</span><span class="o">::</span><span class="nf">SCE2AnnData</span><span class="p">(</span><span class="n">sce</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">adata2</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ℹ Using the &#39;X&#39; assay as the X matrix
+✔ Selected X matrix [27ms]
+✔ assays$X converted to X matrix [38ms]
+✔ additional assays converted to layers [31ms]
+✔ rowData$varm converted to varm [15ms]
+✔ reducedDims converted to obsm [63ms]
+✔ metadata converted to uns [23ms]
+ℹ rowPairs is empty and was skipped
+✔ Converting AnnData to SingleCellExperiment ... done
+AnnData object with n_obs × n_vars = 100 × 2000
+    obs: &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;n_cells_by_counts&#39;, &#39;mean_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;total_counts&#39;, &#39;log1p_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;X_name&#39;, &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;counts&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="interoperability-for-multimodal-data">
+<h2><span class="section-number">5.5. </span>Interoperability for multimodal data<a class="headerlink" href="#interoperability-for-multimodal-data" title="Link to this heading">#</a></h2>
+<p>The complexity of multimodal data presents additional challenges for interoperability.
+Both <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> (via “alternative experiments,” which must share the same column dimension for cells) and <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> (using “assays”) support multiple modalities.
+However, <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> is limited to unimodal data.</p>
+<p>To address this limitation, the <code class="docutils literal notranslate"><span class="pre">MuData</span></code> object (introduced in the [analysis frameworks and tools chapter](<a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a>) was developed as as an extension of <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> for multimodal datasets.
+The developers have considered interoperability in their design.
+While the main platform for MuData is Python, the authors have provided the <a class="reference external" href="https://pmbio.github.io/MuDataSeurat/">MuDataSeurat R package</a> for reading the on-disk H5MU format as <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> objects and the <a class="reference external" href="https://bioconductor.org/packages/MuData/">MuData R package</a> for doing the same with Bioconductor <code class="docutils literal notranslate"><span class="pre">MultiAssayExperiment</span></code> objects. This official support is very useful but there are still some inconsistencies due to differences between the objects. The MuData authors also provide a <a class="reference external" href="https://docs.juliahub.com/Muon/QfqCh/0.1.1/objects/">Julia implementation</a> of <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> and <code class="docutils literal notranslate"><span class="pre">MuData</span></code>.</p>
+<p>Below is an example of reading and writing a small example <code class="docutils literal notranslate"><span class="pre">MuData</span></code> dataset using the Python and R packages.</p>
+<p>To address this, the <code class="docutils literal notranslate"><span class="pre">MuData</span></code> object—introduced in the [analysis frameworks and tools chapter](<a class="reference internal" href="analysis_tools.html#introduction-analysis-frameworks"><span class="std std-ref">analysis frameworks and tools chapter</span></a>)—extends <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> for multimodal datasets.
+Designed with interoperability in mind, <code class="docutils literal notranslate"><span class="pre">MuData</span></code> is primarily a Python-based framework, but the authors have provided the <a class="reference external" href="https://pmbio.github.io/MuDataSeurat/">MuDataSeurat R package</a>.
+This enables reading the on-disk H5MU format as <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> objects, while the <a class="reference external" href="https://bioconductor.org/packages/MuData/">MuData R package</a> allows conversion to <code class="docutils literal notranslate"><span class="pre">MultiAssayExperiment</span></code> objects.
+While this official support is very useful, there are still some inconsistencies due to differences between the objects.
+The <code class="docutils literal notranslate"><span class="pre">MuData</span></code> authors also provide a <a class="reference external" href="https://docs.juliahub.com/Muon/QfqCh/0.1.1/objects/">Julia implementation</a> of <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> and <code class="docutils literal notranslate"><span class="pre">MuData</span></code>.</p>
+<p>Below is an example of reading and writing a small example <code class="docutils literal notranslate"><span class="pre">MuData</span></code> dataset using the Python and R packages.</p>
+<section id="python">
+<h3><span class="section-number">5.5.1. </span>Python<a class="headerlink" href="#python" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read file</span>
+<span class="n">af_mudata</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;introduction/interoperability_mdata.h5mu&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">mdata</span> <span class="o">=</span> <span class="n">af_mudata</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1531: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
+  self._update_attr(&quot;var&quot;, axis=0, join_common=join_common)
+/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/mudata/_core/mudata.py:1429: FutureWarning: From 0.4 .update() will not pull obs/var columns from individual modalities by default anymore. Set mudata.set_options(pull_on_update=False) to adopt the new behaviour, which will become the default. Use new pull_obs/pull_var and push_obs/push_var methods for more flexibility.
+  self._update_attr(&quot;obs&quot;, axis=1, join_common=join_common)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MuData object with n_obs × n_vars = 1000 × 150
+  var:	&#39;dummy_var&#39;
+  2 modalities
+    A:	1000 x 100
+      obs:	&#39;dummy_obs&#39;
+      var:	&#39;dummy_var&#39;
+    B:	1000 x 50
+      obs:	&#39;dummy_obs&#39;
+      var:	&#39;dummy_var&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="r">
+<h3><span class="section-number">5.5.2. </span>R<a class="headerlink" href="#r" title="Link to this heading">#</a></h3>
+<section id="bioconductor">
+<h4><span class="section-number">5.5.2.1. </span>Bioconductor<a class="headerlink" href="#bioconductor" title="Link to this heading">#</a></h4>
+<p>Read/write from/to a <code class="docutils literal notranslate"><span class="pre">MultiAssayExperiment</span></code> object</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Save MuData file locally for R</span>
+<span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">local_path</span> <span class="o">=</span> <span class="n">af_mudata</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span><span class="o">.</span><span class="n">path</span>
+
+<span class="n">target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;interoperability_mdata.h5mu&quot;</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File copied to: </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File copied to: data/interoperability_mdata.h5mu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+mae &lt;- MuData::readH5MU(&quot;data/interoperability_mdata.h5mu&quot;)
+print(mae)
+
+bioc_h5mu_file &lt;- tempfile(fileext = &quot;.h5mu&quot;)
+MuData::writeH5MU(mae, bioc_h5mu_file)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A MultiAssayExperiment object of 2 listed
+ experiments with user-defined names and respective classes.
+ Containing an ExperimentList class object of length 2:
+ [1] A: SingleCellExperiment with 100 rows and 1000 columns
+ [2] B: SingleCellExperiment with 50 rows and 1000 columns
+Functionality:
+ experiments() - obtain the ExperimentList instance
+ colData() - the primary/phenotype DataFrame
+ sampleMap() - the sample coordination DataFrame
+ `$`, `[`, `[[` - extract colData columns, subset, or experiment
+ *Format() - convert into a long or wide DataFrame
+ assays() - convert ExperimentList to a SimpleList of matrices
+ exportClass() - save data to flat files
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="seurat">
+<h4><span class="section-number">5.5.2.2. </span>Seurat<a class="headerlink" href="#seurat" title="Link to this heading">#</a></h4>
+<p>Read/write from/to a <code class="docutils literal notranslate"><span class="pre">Seurat</span></code> object</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+seurat &lt;- MuDataSeurat::ReadH5MU(&quot;data/interoperability_mdata.h5mu&quot;)
+print(seurat)
+
+seurat_h5mu_file &lt;- tempfile(fileext = &quot;.h5mu&quot;)
+MuDataSeurat::WriteH5MU(seurat, seurat_h5mu_file)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>An object of class Seurat 
+150 features across 1000 samples within 2 assays 
+Active assay: A (100 features, 0 variable features)
+ 2 layers present: counts, data
+ 1 other assay present: B
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="interoperability-with-other-languages">
+<h2><span class="section-number">5.6. </span>Interoperability with other languages<a class="headerlink" href="#interoperability-with-other-languages" title="Link to this heading">#</a></h2>
+<p>Here we briefly list some resources and tools for the interoperability of single-cell data with languages other than R and Python.</p>
+<section id="julia">
+<h3><span class="section-number">5.6.1. </span>Julia<a class="headerlink" href="#julia" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.juliahub.com/Muon/QfqCh/0.1.1/objects/">Muon.jl</a> provides Julia implementations of <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> and <code class="docutils literal notranslate"><span class="pre">MuData</span></code> objects, as well as IO for the H5AD and H5MU formats</p></li>
+<li><p><a class="reference external" href="https://github.com/maren-ha/scVI.jl">scVI.jl</a> provides a Julia implementation of <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> as well as IO for the H5AD format</p></li>
+</ul>
+</section>
+<section id="javascript">
+<h3><span class="section-number">5.6.2. </span>JavaScript<a class="headerlink" href="#javascript" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://vitessce.io/">Vitessce</a> contains loaders from <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> objects stored using the Zarr format</p></li>
+<li><p>The <a class="reference external" href="https://github.com/jkanche/kana">kana family</a> supports reading H5AD files and <code class="docutils literal notranslate"><span class="pre">SingleCellExperiment</span></code> objects saved as RDS files</p></li>
+</ul>
+</section>
+<section id="rust">
+<h3><span class="section-number">5.6.3. </span>Rust<a class="headerlink" href="#rust" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/kaizhang/anndata-rs">anndata-rs</a> provides a Rust implementation of AnnData as well as advanced IO support for the H5AD format</p></li>
+</ul>
+</section>
+</section>
+<section id="session-information">
+<h2><span class="section-number">5.7. </span>Session information<a class="headerlink" href="#session-information" title="Link to this heading">#</a></h2>
+</section>
+<section id="id1">
+<h2><span class="section-number">5.8. </span>Python<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">session_info</span>
+
+<span class="n">session_info</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/session_info/main.py:213: UserWarning: The &#39;__version__&#39; attribute is deprecated and will be removed in MarkupSafe 3.1. Use feature detection, or `importlib.metadata.version(&quot;markupsafe&quot;)`, instead.
+  mod_version = _find_version(mod.__version__)
+</pre></div>
+</div>
+<div class="output text_html"><details>
+<summary>Click to view session information</summary>
+<pre>
+-----
+anndata             0.11.3
+anndata2ri          1.3.2
+lamindb             1.3.0
+lamindb_setup       1.3.2
+mudata              0.3.1
+numpy               2.1.3
+rpy2                3.5.11
+scanpy              1.11.0
+scipy               1.14.1
+session_info        1.0.0
+-----
+</pre>
+<details>
+<summary>Click to view modules imported as dependencies</summary>
+<pre>
+PIL                 11.1.0
+aiobotocore         2.21.1
+aiohappyeyeballs    2.6.1
+aiohttp             3.11.14
+aioitertools        0.12.0
+aiosignal           1.3.2
+annotated_types     0.7.0
+anyio               NA
+appdirs             1.4.4
+appnope             0.1.4
+argcomplete         NA
+asgiref             3.8.1
+asttokens           NA
+attr                25.3.0
+bionty              1.1.2
+botocore            1.37.1
+certifi             2025.01.31
+chardet             5.2.0
+charset_normalizer  3.4.1
+click               8.1.8
+colorama            0.4.6
+comm                0.2.2
+cycler              0.12.1
+cython_runtime      NA
+dateutil            2.9.0.post0
+debugpy             1.8.13
+decorator           5.2.1
+defusedxml          0.7.1
+deprecation         2.1.0
+dj_database_url     NA
+django              5.1.7
+dotenv              NA
+executing           2.1.0
+fastobo             0.13.0
+filelock            3.17.0
+frozenlist          1.5.0
+fsspec              2025.2.0
+gotrue              2.11.4
+h11                 0.14.0
+h2                  4.2.0
+h5py                3.13.0
+hpack               4.1.0
+httpcore            1.0.7
+httpx               0.28.1
+hyperframe          6.1.0
+idna                3.10
+importlib_metadata  NA
+ipykernel           6.29.5
+jedi                0.19.2
+jinja2              3.1.5
+jmespath            1.0.1
+joblib              1.4.2
+kiwisolver          1.4.8
+lamin_utils         0.13.11
+legacy_api_wrap     NA
+llvmlite            0.44.0
+markupsafe          3.0.2
+matplotlib          3.10.0
+mpl_toolkits        NA
+multidict           6.2.0
+mypy_extensions     NA
+natsort             8.4.0
+nbproject           0.10.6
+numba               0.61.0
+orjson              3.10.15
+packaging           24.2
+pandas              2.2.3
+pandera             0.0.0+dev0
+parso               0.8.4
+platformdirs        4.3.6
+postgrest           0.19.3
+prompt_toolkit      3.0.50
+pronto              2.7.0
+propcache           0.3.0
+psutil              7.0.0
+psycopg2            2.9.10 (dt dec pq3 ext lo64)
+pure_eval           0.2.3
+pyarrow             19.0.1
+pydantic            2.10.6
+pydantic_core       2.27.2
+pydantic_settings   2.8.1
+pydev_ipython       NA
+pydevconsole        NA
+pydevd              3.2.3
+pydevd_file_utils   NA
+pydevd_plugins      NA
+pydevd_tracing      NA
+pygments            2.19.1
+pyparsing           3.2.1
+pytz                2024.1
+realtime            2.4.1
+requests            2.32.3
+rich                NA
+rpycall             NA
+rpytools            NA
+s3fs                2025.2.0
+six                 1.17.0
+sklearn             1.5.2
+sniffio             1.3.1
+sqlparse            0.5.3
+stack_data          0.6.3
+storage3            0.11.3
+supabase            2.11.0
+supafunc            NA
+threadpoolctl       3.5.0
+tornado             6.4.2
+traitlets           5.14.3
+typeguard           NA
+typing_extensions   NA
+typing_inspect      NA
+tzlocal             NA
+upath               0.2.6
+urllib3             1.26.20
+vscode              NA
+wcwidth             0.2.13
+websockets          14.2
+wrapt               1.17.2
+yaml                6.0.2
+yarl                1.18.3
+zipp                NA
+zmq                 26.3.0
+</pre>
+</details> <!-- seems like this ends pre, so might as well be explicit -->
+<pre>
+-----
+IPython             9.0.2
+jupyter_client      8.6.3
+jupyter_core        5.7.2
+-----
+Python 3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:45:25) [Clang 18.1.8 ]
+macOS-15.3.2-x86_64-i386-64bit
+-----
+Session information updated at 2025-03-26 14:24
+</pre>
+</details></div></div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">5.9. </span>R<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+sessioninfo::session_info()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>─ Session info ───────────────────────────────────────────────────────────────
+ setting  value
+ version  R version 4.3.3 (2024-02-29)
+ os       macOS 15.3.2
+ system   x86_64, darwin13.4.0
+ ui       unknown
+ language (EN)
+ collate  C
+ ctype    UTF-8
+ tz       Europe/Berlin
+ date     2025-03-26
+ pandoc   3.6.3 @ /Users/seohyon/miniconda3/envs/interoperability/bin/pandoc
+ quarto   NA
+
+─ Packages ───────────────────────────────────────────────────────────────────
+ package              * version    date (UTC) lib source
+ abind                  1.4-8      2024-09-12 [1] CRAN (R 4.3.3)
+ beachmat               2.18.0     2023-10-24 [1] Bioconductor
+ Biobase              * 2.62.0     2023-10-24 [1] Bioconductor
+ BiocGenerics         * 0.48.1     2023-11-01 [1] Bioconductor
+ BiocParallel           1.36.0     2023-10-24 [1] Bioconductor
+ bit                    4.6.0      2025-03-06 [1] CRAN (R 4.3.3)
+ bit64                  4.6.0-1    2025-01-16 [1] CRAN (R 4.3.3)
+ bitops                 1.0-9      2024-10-03 [1] CRAN (R 4.3.3)
+ cli                    3.6.4      2025-02-13 [1] CRAN (R 4.3.3)
+ cluster                2.1.8      2024-12-11 [1] CRAN (R 4.3.3)
+ codetools              0.2-20     2024-03-31 [1] CRAN (R 4.3.3)
+ colorspace             2.1-1      2024-07-26 [1] CRAN (R 4.3.3)
+ cowplot                1.1.3      2024-01-22 [1] CRAN (R 4.3.3)
+ crayon                 1.5.3      2024-06-20 [1] CRAN (R 4.3.3)
+ data.table             1.17.0     2025-02-22 [1] CRAN (R 4.3.3)
+ DelayedArray           0.28.0     2023-10-24 [1] Bioconductor
+ DelayedMatrixStats     1.24.0     2023-10-24 [1] Bioconductor
+ deldir                 2.0-4      2024-02-28 [1] CRAN (R 4.3.3)
+ digest                 0.6.37     2024-08-19 [1] CRAN (R 4.3.3)
+ dotCall64              1.2        2024-10-04 [1] CRAN (R 4.3.3)
+ dplyr                  1.1.4      2023-11-17 [1] CRAN (R 4.3.3)
+ farver                 2.1.2      2024-05-13 [1] CRAN (R 4.3.3)
+ fastDummies            1.7.5      2025-01-20 [1] CRAN (R 4.3.3)
+ fastmap                1.2.0      2024-05-15 [1] CRAN (R 4.3.3)
+ fitdistrplus           1.2-2      2025-01-07 [1] CRAN (R 4.3.3)
+ future                 1.34.0     2024-07-29 [1] CRAN (R 4.3.3)
+ future.apply           1.11.3     2024-10-27 [1] CRAN (R 4.3.3)
+ generics               0.1.3      2022-07-05 [1] CRAN (R 4.3.3)
+ GenomeInfoDb         * 1.38.1     2023-11-08 [1] Bioconductor
+ GenomeInfoDbData       1.2.11     2025-02-21 [1] Bioconductor
+ GenomicRanges        * 1.54.1     2023-10-29 [1] Bioconductor
+ ggplot2                3.5.1      2024-04-23 [1] CRAN (R 4.3.3)
+ ggrepel                0.9.6      2024-09-07 [1] CRAN (R 4.3.3)
+ ggridges               0.5.6      2024-01-23 [1] CRAN (R 4.3.3)
+ globals                0.16.3     2024-03-08 [1] CRAN (R 4.3.3)
+ glue                   1.8.0      2024-09-30 [1] CRAN (R 4.3.3)
+ goftest                1.2-3      2021-10-07 [1] CRAN (R 4.3.3)
+ gridExtra              2.3        2017-09-09 [1] CRAN (R 4.3.3)
+ gtable                 0.3.6      2024-10-25 [1] CRAN (R 4.3.3)
+ hdf5r                  1.3.12     2025-01-20 [1] CRAN (R 4.3.3)
+ htmltools              0.5.8.1    2024-04-04 [1] CRAN (R 4.3.3)
+ htmlwidgets            1.6.4      2023-12-06 [1] CRAN (R 4.3.3)
+ httpuv                 1.6.15     2024-03-26 [1] CRAN (R 4.3.3)
+ httr                   1.4.7      2023-08-15 [1] CRAN (R 4.3.3)
+ ica                    1.0-3      2022-07-08 [1] CRAN (R 4.3.3)
+ igraph                 2.1.4      2025-01-23 [1] CRAN (R 4.3.3)
+ IRanges              * 2.36.0     2023-10-24 [1] Bioconductor
+ irlba                  2.3.5.1    2022-10-03 [1] CRAN (R 4.3.3)
+ jsonlite               1.9.1      2025-03-03 [1] CRAN (R 4.3.3)
+ KernSmooth             2.23-26    2025-01-01 [1] CRAN (R 4.3.3)
+ later                  1.4.1      2024-11-27 [1] CRAN (R 4.3.3)
+ lattice                0.22-6     2024-03-20 [1] CRAN (R 4.3.3)
+ lazyeval               0.2.2      2019-03-15 [1] CRAN (R 4.3.3)
+ lifecycle              1.0.4      2023-11-07 [1] CRAN (R 4.3.3)
+ listenv                0.9.1      2024-01-29 [1] CRAN (R 4.3.3)
+ lmtest                 0.9-40     2022-03-21 [1] CRAN (R 4.3.3)
+ magrittr               2.0.3      2022-03-30 [1] CRAN (R 4.3.3)
+ MASS                   7.3-60.0.1 2024-01-13 [1] CRAN (R 4.3.3)
+ Matrix               * 1.6-5      2024-01-11 [1] CRAN (R 4.3.3)
+ MatrixGenerics       * 1.14.0     2023-10-24 [1] Bioconductor
+ matrixStats          * 1.5.0      2025-01-07 [1] CRAN (R 4.3.3)
+ mime                   0.12       2021-09-28 [1] CRAN (R 4.3.3)
+ miniUI                 0.1.1.1    2018-05-18 [1] CRAN (R 4.3.3)
+ MuData                 0.99.9     2025-03-13 [1] Bioconductor
+ MuDataSeurat           0.0.0.9000 2025-03-13 [1] Github (PMBio/MuDataSeurat@e34e908)
+ MultiAssayExperiment   1.28.0     2023-10-24 [1] Bioconductor
+ munsell                0.5.1      2024-04-01 [1] CRAN (R 4.3.3)
+ nlme                   3.1-167    2025-01-27 [1] CRAN (R 4.3.3)
+ parallelly             1.42.0     2025-01-30 [1] CRAN (R 4.3.3)
+ patchwork              1.3.0      2024-09-16 [1] CRAN (R 4.3.3)
+ pbapply                1.7-2      2023-06-27 [1] CRAN (R 4.3.3)
+ pillar                 1.10.1     2025-01-07 [1] CRAN (R 4.3.3)
+ pkgconfig              2.0.3      2019-09-22 [1] CRAN (R 4.3.3)
+ plotly                 4.10.4     2024-01-13 [1] CRAN (R 4.3.3)
+ plyr                   1.8.9      2023-10-02 [1] CRAN (R 4.3.3)
+ png                    0.1-8      2022-11-29 [1] CRAN (R 4.3.3)
+ polyclip               1.10-7     2024-07-23 [1] CRAN (R 4.3.3)
+ progressr              0.15.1     2024-11-22 [1] CRAN (R 4.3.3)
+ promises               1.3.2      2024-11-28 [1] CRAN (R 4.3.3)
+ purrr                  1.0.4      2025-02-05 [1] CRAN (R 4.3.3)
+ R6                     2.6.1      2025-02-15 [1] CRAN (R 4.3.3)
+ RANN                   2.6.2      2024-08-25 [1] CRAN (R 4.3.3)
+ RColorBrewer           1.1-3      2022-04-03 [1] CRAN (R 4.3.3)
+ Rcpp                   1.0.14     2025-01-12 [1] CRAN (R 4.3.3)
+ RcppAnnoy              0.0.22     2024-01-23 [1] CRAN (R 4.3.3)
+ RcppHNSW               0.6.0      2024-02-04 [1] CRAN (R 4.3.3)
+ RCurl                  1.98-1.16  2024-07-11 [1] CRAN (R 4.3.3)
+ reshape2               1.4.4      2020-04-09 [1] CRAN (R 4.3.3)
+ reticulate             1.41.0.1   2025-03-09 [1] CRAN (R 4.3.3)
+ rhdf5                  2.46.1     2023-11-29 [1] Bioconductor 3.18 (R 4.3.3)
+ rhdf5filters           1.14.1     2023-11-06 [1] Bioconductor
+ Rhdf5lib               1.24.0     2023-10-24 [1] Bioconductor
+ rlang                  1.1.5      2025-01-17 [1] CRAN (R 4.3.3)
+ ROCR                   1.0-11     2020-05-02 [1] CRAN (R 4.3.3)
+ RSpectra               0.16-2     2024-07-18 [1] CRAN (R 4.3.3)
+ Rtsne                  0.17       2023-12-07 [1] CRAN (R 4.3.3)
+ S4Arrays               1.2.0      2023-10-24 [1] Bioconductor
+ S4Vectors            * 0.40.2     2023-11-23 [1] Bioconductor 3.18 (R 4.3.3)
+ scales                 1.3.0      2023-11-28 [1] CRAN (R 4.3.3)
+ scattermore            1.2        2023-06-12 [1] CRAN (R 4.3.3)
+ sctransform            0.4.1      2023-10-19 [1] CRAN (R 4.3.3)
+ scuttle                1.12.0     2023-10-24 [1] Bioconductor
+ sessioninfo            1.2.3      2025-02-05 [1] CRAN (R 4.3.3)
+ Seurat                 5.2.1      2025-01-24 [1] CRAN (R 4.3.3)
+ SeuratDisk             0.0.0.9021 2025-03-13 [1] Github (mojaveazure/seurat-disk@877d4e1)
+ SeuratObject           5.0.2      2024-05-08 [1] CRAN (R 4.3.3)
+ shiny                  1.10.0     2024-12-14 [1] CRAN (R 4.3.3)
+ SingleCellExperiment * 1.24.0     2023-10-24 [1] Bioconductor
+ sp                     2.2-0      2025-02-01 [1] CRAN (R 4.3.3)
+ spam                   2.11-1     2025-01-20 [1] CRAN (R 4.3.3)
+ SparseArray            1.2.2      2023-11-07 [1] Bioconductor
+ sparseMatrixStats      1.14.0     2023-10-24 [1] Bioconductor
+ spatstat.data          3.1-4      2024-11-15 [1] CRAN (R 4.3.3)
+ spatstat.explore       3.3-4      2025-01-08 [1] CRAN (R 4.3.3)
+ spatstat.geom          3.3-5      2025-01-18 [1] CRAN (R 4.3.3)
+ spatstat.random        3.3-2      2024-09-18 [1] CRAN (R 4.3.3)
+ spatstat.sparse        3.1-0      2024-06-21 [1] CRAN (R 4.3.3)
+ spatstat.univar        3.1-2      2025-03-05 [1] CRAN (R 4.3.3)
+ spatstat.utils         3.1-2      2025-01-08 [1] CRAN (R 4.3.3)
+ stringi                1.8.4      2024-05-06 [1] CRAN (R 4.3.3)
+ stringr                1.5.1      2023-11-14 [1] CRAN (R 4.3.3)
+ SummarizedExperiment * 1.32.0     2023-10-24 [1] Bioconductor
+ survival               3.8-3      2024-12-17 [1] CRAN (R 4.3.3)
+ tensor                 1.5        2012-05-05 [1] CRAN (R 4.3.3)
+ tibble                 3.2.1      2023-03-20 [1] CRAN (R 4.3.3)
+ tidyr                  1.3.1      2024-01-24 [1] CRAN (R 4.3.3)
+ tidyselect             1.2.1      2024-03-11 [1] CRAN (R 4.3.3)
+ uwot                   0.2.3      2025-02-24 [1] CRAN (R 4.3.3)
+ vctrs                  0.6.5      2023-12-01 [1] CRAN (R 4.3.3)
+ viridisLite            0.4.2      2023-05-02 [1] CRAN (R 4.3.3)
+ withr                  3.0.2      2024-10-28 [1] CRAN (R 4.3.3)
+ xtable                 1.8-4      2019-04-21 [1] CRAN (R 4.3.3)
+ XVector                0.42.0     2023-10-24 [1] Bioconductor
+ zlibbioc               1.48.0     2023-10-24 [1] Bioconductor
+ zoo                    1.8-13     2025-02-22 [1] CRAN (R 4.3.3)
+
+ [1] /Users/seohyon/miniconda3/envs/interoperability/lib/R/library
+ * ── Packages attached to the search path.
+
+─ Python configuration ───────────────────────────────────────────────────────
+ python:         /Users/seohyon/miniconda3/envs/interoperability/bin/python
+ libpython:      /Users/seohyon/miniconda3/envs/interoperability/bin/python3.12
+ pythonhome:     /Users/seohyon/miniconda3/envs/interoperability:/Users/seohyon/miniconda3/envs/interoperability
+ version:        3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:45:25) [Clang 18.1.8 ]
+ numpy:          /Users/seohyon/miniconda3/envs/interoperability/lib/python3.12/site-packages/numpy
+ numpy_version:  2.1.3
+ 
+ NOTE: Python version was forced by the current process
+
+──────────────────────────────────────────────────────────────────────────────
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">5.10. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<span class="target" id="id3"></span></section>
+<section id="contributors">
+<h2><span class="section-number">5.11. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">5.11.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Luke Zappia</p></li>
+<li><p>Seo H. Kim</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">5.11.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+<li><p>Isaac Virshup</p></li>
+<li><p>Anastasia Litinetskaya</p></li>
+<li><p>Ludwig Geistlinger</p></li>
+<li><p>Peter Hickey</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./introduction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="analysis_tools.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Analysis frameworks and tools</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../preprocessing_visualization/quality_control.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Quality Control</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">5.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nomenclature">5.2. Nomenclature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disk-based-interoperability">5.3. Disk-based interoperability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-formats">5.3.1. Simple formats</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hdf5-based-formats">5.3.2. HDF5-based formats</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#h5ad">5.3.2.1. H5AD</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-bioconductor">5.3.2.1.1. Reading/writing H5AD with Bioconductor</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-seurat">5.3.2.1.2. Reading/writing H5AD with <strong>{Seurat}</strong></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-writing-h5ad-with-anndata">5.3.2.1.3. Reading/writing H5AD with <strong>{anndata}</strong></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#loom">5.3.2.2. Loom</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rds-files">5.3.3. RDS files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-on-disk-formats">5.3.4. New on-disk formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-memory-interoperability">5.4. In-memory interoperability</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-between-r-ecosystems">5.4.1. Interoperability between R ecosystems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-r-from-python">5.4.2. Accessing R from Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-python-from-r">5.4.3. Accessing Python from R</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-for-multimodal-data">5.5. Interoperability for multimodal data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">5.5.1. Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r">5.5.2. R</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bioconductor">5.5.2.1. Bioconductor</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seurat">5.5.2.2. Seurat</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interoperability-with-other-languages">5.6. Interoperability with other languages</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#julia">5.6.1. Julia</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#javascript">5.6.2. JavaScript</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rust">5.6.3. Rust</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#session-information">5.7. Session information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">5.8. Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">5.9. R</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">5.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">5.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">5.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">5.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
