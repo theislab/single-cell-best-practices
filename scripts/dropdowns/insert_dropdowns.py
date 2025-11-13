@@ -10,11 +10,7 @@ black_list_files_lamin = [
     # IPYNB files
     "introduction",
     "gene_regulatory_networks_atac",
-    "quality_control",
     "muon_to_seurat",
-    "feature_selection",
-    "normalization",
-    "dimensionality_reduction",
     "cell_cell_communication",
     "gene_regulatory_networks",
     "clonotype",
