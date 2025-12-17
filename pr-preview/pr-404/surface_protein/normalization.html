@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>33. Normalization &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'surface_protein/normalization';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="34. Doublet detection" href="doublet_detection.html" />
+    <link rel="prev" title="32. Quality control" href="quality_control.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/surface_protein/normalization.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fsurface_protein/normalization.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/surface_protein/normalization.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Normalization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">33.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">33.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">33.3. Loading the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dsb-normalization">33.4. DSB normalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#centered-log-ratio-normalization">33.5. Centered Log-Ratio normalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">33.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">33.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">33.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">33.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="normalization">
+<h1><span class="section-number">33. </span>Normalization<a class="headerlink" href="#normalization" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">ADT data in CITE-seq requires normalization methods like CLR or DSB to address noise and biases, with DSB removing ambient and technical noise using background controls.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#surface-protein-normalization-key-takeaway-1"><span class="std std-ref">Motivation</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">surface-protein</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scanpy=1.9.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">muon=0.1.5</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harmonypy=0.0.9</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glob2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leidenalg</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numba&gt;=0.56.4</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pooch=1.7.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-database"></i>   Get data and notebooks</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">This book uses <a class="reference external" href="https://github.com/laminlabs/lamindb">lamindb</a> to store, share, and load datasets and notebooks using the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices">theislab/sc-best-practices instance</a>.
+We acknowledge free hosting from <a class="reference external" href="https://lamin.ai/">Lamin Labs</a>.</p>
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install lamindb</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Install the lamindb Python package:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lamindb
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text"><strong>Optionally create a lamin account</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Sign up and log in following <a class="reference external" href="https://docs.lamin.ai/setup#sign-up-log-in">the instructions</a></p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify your setup</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Run the <code class="docutils literal notranslate"><span class="pre">lamin</span> <span class="pre">connect</span></code> command:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+
+<span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">You should now see up to 100 of the stored datasets.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing datasets (Artifacts)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the datasets on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/artifacts">Artifacts page</a></p></li>
+<li><p class="sd-card-text">Load an Artifact and the corresponding object:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;key_of_dataset&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The object is now accessible in memory and is ready for analysis.
+Adapt the <code class="docutils literal notranslate"><span class="pre">ln.Artifact.connect(&quot;theislab/sc-best-practices&quot;).get(&quot;SOMEIDXXXX&quot;)</span></code> suffix to get respective versions.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing notebooks (Transforms)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the notebook on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/transforms">Transforms page</a></p></li>
+<li><p class="sd-card-text">Load the notebook:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lamin<span class="w"> </span>load<span class="w"> </span>&lt;notebook<span class="w"> </span>url&gt;
+</pre></div>
+</div>
+<p class="sd-card-text">which will download the notebook to the current working directory.
+Analogously to <code class="docutils literal notranslate"><span class="pre">Artifacts</span></code>, you can adapt the suffix ID to get older versions.</p>
+</li>
+</ol>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<span id="surface-protein-normalization-key-takeaway-1"></span><h2><span class="section-number">33.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Contrary to the negative binomial distribution of UMI counts, ADT data is less sparse with a negative peak for non-specific antibody binding and a positive peak resembling enrichment of specific cell surface proteins<span id="id1">[<a class="reference internal" href="quality_control.html#id489" title="Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. bioRxiv, 2022. URL: https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989, arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf, doi:10.1101/2022.04.29.489989.">Zheng <em>et al.</em>, 2022</a>]</span>.
+The capture efficiency varies from cell to cell due to difference in biophysical properties. Since CITE-seq experiments enrich for a priori selected features, compositional biases are more severe.
+Analogously to scRNA-seq data, many approaches to normalization exist.
+We cover the two most widely used ideas methods that require different input data and starting points.</p>
+<p>ADT data can be normalized using Centered Log-Ratio (CLR) transformation <span id="id2">[<a class="reference internal" href="#id402" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865-868, Sep 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>. Nevertheless, a new low-level normalization method tailored to dealing with the challenges this modality poses now exists: DSB (denoised and scaled by background). DSB normalization removes two kinds of noise. First, it uses the empty droplets to estimate a background noise and remove the ambient noise. Secondly, it uses the background population mean and isotypes (antibodies that bind non-specifically to the cells) to define and remove cell-to-cell technical noise<span id="id3">[<a class="reference internal" href="#id474" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span></p>
+</section>
+<section id="environment-setup">
+<h2><span class="section-number">33.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-the-data">
+<h2><span class="section-number">33.3. </span>Loading the data<a class="headerlink" href="#loading-the-data" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cite_quality_control</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://figshare.com/ndownloader/files/41452449&quot;</span><span class="p">,</span>
+    <span class="n">fname</span><span class="o">=</span><span class="s2">&quot;cite_quality_control.h5mu&quot;</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="n">known_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We are simply loading the saved MuData object from the quality control chapter back in.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;cite_quality_control.h5mu&quot;</span><span class="p">)</span>
+<span class="n">mdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 118563 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	118563 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	118563 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata_raw</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;cite_raw.h5mu&quot;</span><span class="p">)</span>
+<span class="n">mdata_raw</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 24807643 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	24807643 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	24807643 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;</pre></div></div>
+</div>
+</section>
+<section id="dsb-normalization">
+<h2><span class="section-number">33.4. </span>DSB normalization<a class="headerlink" href="#dsb-normalization" title="Link to this heading">#</a></h2>
+<p>We are ready to normalize the data. In this case, we can use the raw data’s distribution as background. We also have isotype controls to define and remove cell-to-cell technical variations.</p>
+<p>Isotype contols are antibodies that bind to the cells present in this study non-specifically, meaning you would not expect a significant abundance difference between the cells. Thus, we can use the
+values of the isotype controls to normalize technical differences.</p>
+<p>We are calling the normalization function <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.dsb</span></code> with the filtered and raw mudata object as well as the names of the isotype controls.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">isotype_controls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mouse-IgG1&quot;</span><span class="p">,</span> <span class="s2">&quot;Mouse-IgG2a&quot;</span><span class="p">,</span> <span class="s2">&quot;Mouse-IgG2b&quot;</span><span class="p">,</span> <span class="s2">&quot;Rat-IgG2b&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">prot</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">dsb</span><span class="p">(</span><span class="n">mdata</span><span class="p">,</span> <span class="n">mdata_raw</span><span class="p">,</span> <span class="n">isotype_controls</span><span class="o">=</span><span class="n">isotype_controls</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s have a look at counts before denoising and normalization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">][:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0      1090
+0.0      1045
+2.0       918
+3.0       691
+4.0       581
+         ... 
+350.0       1
+706.0       1
+296.0       1
+970.0       1
+763.0       1
+Name: count, Length: 524, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>See after denoise and normalization the range changed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;prot&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 0.311677    2
+-1.002554    1
+ 2.573147    1
+ 1.804169    1
+-0.403206    1
+            ..
+ 0.142890    1
+ 0.268634    1
+-0.078150    1
+ 0.258447    1
+-0.271008    1
+Name: count, Length: 9999, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="centered-log-ratio-normalization">
+<h2><span class="section-number">33.5. </span>Centered Log-Ratio normalization<a class="headerlink" href="#centered-log-ratio-normalization" title="Link to this heading">#</a></h2>
+<p>If you don’t have the unfiltered data available, you can also normalize the ADT data with <code class="docutils literal notranslate"><span class="pre">mu.prot.pp.clr</span></code>, implementing <strong>C</strong>entered <strong>L</strong>og-<strong>R</strong>atio normalization. There is no denoising in this type of normalization. We instead assume that the geometric mean is a good reference to make all else relative to (divide by)<span id="id4">[<a class="reference internal" href="#id484" title="Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. Bioinformatics, 34(16):2870–2878, Aug 2018. doi:10.1093/bioinformatics/bty175.">Quinn <em>et al.</em>, 2018</a>]</span>. We are in fact taking the natural log ratio of each protein in each cell relative to either other proteins or other cells, depending on the implementation. At first, it was done across proteins, but then it was changed to across cells. This change made the normalization less dependent on the antibody panel<span id="id5">[<a class="reference internal" href="#id474" title="Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. Nature Communications, 13(11):2099, Apr 2022. doi:10.1038/s41467-022-29356-8.">Mulè <em>et al.</em>, 2022</a>]</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 118563 × 36741
+  var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+  2 modalities
+    rna:	118563 x 36601
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;
+    prot:	118563 x 140
+      obs:	&#x27;donor&#x27;, &#x27;batch&#x27;, &#x27;n_genes_by_counts&#x27;, &#x27;log1p_n_genes_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;, &#x27;n_counts&#x27;, &#x27;outliers&#x27;
+      var:	&#x27;gene_ids&#x27;, &#x27;feature_types&#x27;, &#x27;n_cells_by_counts&#x27;, &#x27;mean_counts&#x27;, &#x27;log1p_mean_counts&#x27;, &#x27;pct_dropout_by_counts&#x27;, &#x27;total_counts&#x27;, &#x27;log1p_total_counts&#x27;
+      layers:	&#x27;counts&#x27;</pre></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;cite_normalization.h5mu&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">33.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id6">
+<div role="list" class="citation-list">
+<div class="citation" id="id474" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>MMT22<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p>Matthew P. Mulè, Andrew J. Martins, and John S. Tsang. Normalizing and denoising protein expression data from droplet-based single cell profiling. <em>Nature Communications</em>, 13(11):2099, Apr 2022. <a class="reference external" href="https://doi.org/10.1038/s41467-022-29356-8">doi:10.1038/s41467-022-29356-8</a>.</p>
+</div>
+<div class="citation" id="id484" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">QERC18</a><span class="fn-bracket">]</span></span>
+<p>Thomas P Quinn, Ionas Erb, Mark F Richardson, and Tamsyn M Crowley. Understanding sequencing data as compositions: an outlook and review. <em>Bioinformatics</em>, 34(16):2870–2878, Aug 2018. <a class="reference external" href="https://doi.org/10.1093/bioinformatics/bty175">doi:10.1093/bioinformatics/bty175</a>.</p>
+</div>
+<div class="citation" id="id402" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">SHS+17</a><span class="fn-bracket">]</span></span>
+<p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, Sep 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
+</div>
+<div class="citation" id="id481" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">ZJT+22</a><span class="fn-bracket">]</span></span>
+<p>Ye Zheng, Seong-Hwan Jun, Yuan Tian, Mair Florian, and Raphael Gottardo. Robust normalization and integration of single-cell protein expression across cite-seq datasets. <em>bioRxiv</em>, 2022. URL: <a class="reference external" href="https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989">https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf">arXiv:https://www.biorxiv.org/content/early/2022/05/01/2022.04.29.489989.full.pdf</a>, <a class="reference external" href="https://doi.org/10.1101/2022.04.29.489989">doi:10.1101/2022.04.29.489989</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">33.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">33.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Daniel Strobl</p></li>
+<li><p>Ciro Ramírez-Suástegui</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">33.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+<li><p>Anna Schaar</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "cite"
+        },
+        kernelOptions: {
+            name: "cite",
+            path: "./surface_protein"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'cite'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quality_control.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">32. </span>Quality control</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="doublet_detection.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">34. </span>Doublet detection</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">33.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">33.2. Environment setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">33.3. Loading the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dsb-normalization">33.4. DSB normalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#centered-log-ratio-normalization">33.5. Centered Log-Ratio normalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">33.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">33.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">33.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">33.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2287 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>19. Perturbation modeling &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'conditions/perturbation_modeling';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="20. Gene regulatory networks" href="../mechanisms/gene_regulatory_networks.html" />
+    <link rel="prev" title="18. Gene set enrichment and pathway analysis" href="gsea_pathway.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/conditions/perturbation_modeling.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fconditions/perturbation_modeling.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/conditions/perturbation_modeling.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Perturbation modeling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">19.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditions-perturbation-modeling-key-takeaway-1">19.2. Identifying the cell types most affected by perturbations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">19.2.1. Motivation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-augur">19.2.2. Limitations of Augur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-cell-type-prioritization-for-ifn-stimulation">19.2.3. Predicting cell type prioritization for IFN-β stimulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#determining-the-most-important-genes-for-the-prioritization">19.2.4. Determining the most important genes for the prioritization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#differential-prioritization">19.2.5. Differential prioritization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-ifn-response-for-cd4-t-cells">19.3. Predicting IFN-β response for CD4-T cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-kang-dataset-for-scgen">19.3.1. Setting up the Kang dataset for scGen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-construction-and-training">19.3.2. Model construction and training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-cd4t-responses-to-ifn-stimulation">19.3.3. Predicting CD4T responses to IFN-β stimulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-the-predicted-ifn-response">19.3.4. Evaluating the predicted IFN-β response</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysing-single-pooled-crispr-screens">19.4. Analysing single-pooled CRISPR screens</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">19.4.1. Preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-exploration">19.4.2. Data exploration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-local-perturbation-signatures">19.4.3. Calculating local perturbation signatures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-cells-with-no-detectable-perturbation">19.4.4. Identifying cells with no detectable perturbation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-perturbation-responses-with-linear-discriminant-analysis">19.4.5. Visualizing perturbation responses with Linear Discriminant Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">19.5. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">19.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">19.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">19.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">19.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="perturbation-modeling">
+<h1><span class="section-number">19. </span>Perturbation modeling<a class="headerlink" href="#perturbation-modeling" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">When applying Augur ensure that the cell types can be confidently labeled.
+Use differential abundance tests to find confounding effects and differential gene expression to find gene-level sources of perturbation effects.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#conditions-perturbation-modeling-key-takeaway-1"><span class="std std-ref">Identifying the cell types most affected by perturbations</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Predicting perturbation responses with tools such as scGen works well for highly expressed genes, but is challenging for lowly expressed genes.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#conditions-perturbation-modeling-key-takeaway-2"><span class="std std-ref">Predicting IFN-β response for CD4-T cells</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">The linear discriminant analysis step of the Mixscape pipeline primarily aids with visualization.
+Distances in UMAPs should be interpreted with caution and therefore similarities and differences between knockouts cannot always be inferred at a glance.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#conditions-perturbation-modeling-key-takeaway-3"><span class="std std-ref">Visualizing perturbation responses with Linear Discriminant Analysis</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">perturbation_modeling</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::python=3.11.8</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab=3.5.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pertpy==0.7.0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_info</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<h2><span class="section-number">19.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Advances in single-cell experimental protocols allow for massively multiplexed experiments to measure hundreds of thousands of cells under thousands of unique conditions.
+These are commonly termed “perturbations”, which are temporary or permanent changes caused by an external influence <span id="id1">[<a class="reference internal" href="#id410" title="Sanjay R Srivatsan, José L McFaline-Figueroa, Vijay Ramani, Lauren Saunders, Junyue Cao, Jonathan Packer, Hannah A Pliner, Dana L Jackson, Riza M Daza, Lena Christiansen, and others. Massively multiplex chemical transcriptomics at single-cell resolution. Science, 367(6473):45–51, 2020.">Srivatsan <em>et al.</em>, 2020</a>]</span>. Recently, such technologies have been adapted to profile CRISPR-Cas9 with multimodal readouts <span id="id2">[<a class="reference internal" href="#id411" title="Chris J Frangieh, Johannes C Melms, Pratiksha I Thakore, Kathryn R Geiger-Schuller, Patricia Ho, Adrienne M Luoma, Brian Cleary, Livnat Jerby-Arnon, Shruti Malu, Michael S Cuoco, and others. Multimodal pooled perturb-cite-seq screens in patient models define mechanisms of cancer immune evasion. Nature genetics, 53(3):332–341, 2021.">Frangieh <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id425" title="Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. Nature Genetics, 53(3):322-331, Mar 2021. URL: https://doi.org/10.1038/s41588-021-00778-2, doi:10.1038/s41588-021-00778-2.">Papalexi <em>et al.</em>, 2021</a>]</span>, genome-wide perturbations <span id="id3">[<a class="reference internal" href="#id412" title="Joseph M Replogle, Reuben A Saunders, Angela N Pogson, Jeffrey A Hussmann, Alexander Lenail, Alina Guna, Lauren Mascibroda, Eric J Wagner, Karen Adelman, Jessica L Bonnar, and others. Mapping information-rich genotype-phenotype landscapes with genome-scale perturb-seq. bioRxiv, 2021.">Replogle <em>et al.</em>, 2021</a>]</span>, and combinatorial perturbations <span id="id4">[<a class="reference internal" href="#id413" title="Hans-Hermann Wessels, Alejandro Méndez-Mancilla, Efthymia Papalexi, William M Mauck, Lu Lu, John A Morris, Eleni Mimitou, Peter Smibert, Neville E Sanjana, and Rahul Satija. Efficient combinatorial targeting of term`rna` transcripts in single cells with cas13 rna perturb-seq. bioRxiv, 2022.">Wessels <em>et al.</em>, 2022</a>]</span>. Despite experimental advances, exploring the massive perturbation space of combinatorial gene knock-outs or drug combinations remains challenging. The vast exploration space motivated the development of computational approaches for modeling single-cell perturbation responses <span id="id5">[<a class="reference internal" href="#id414" title="Yuge Ji, Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Machine learning for perturbational single-cell omics. Cell Systems, 12(6):522–537, 2021.">Ji <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Perturbation modeling entails areas<span id="id6">[<a class="reference internal" href="#id414" title="Yuge Ji, Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Machine learning for perturbational single-cell omics. Cell Systems, 12(6):522–537, 2021.">Ji <em>et al.</em>, 2021</a>]</span>:</p>
+<ol class="arabic simple">
+<li><p><strong>Perturbation responses</strong>: Predicting omics signatures after a perturbation given information about the control and treatment conditions. Predictions can be evaluated by the correlation of predicted features with respect to the true values. It is further possible to predict phenotypic measurements such as IC50 values, area under the dose response curve, toxicity and viability.</p></li>
+<li><p><strong>Targets and mechanisms</strong>: Predicting targets and mechanisms of perturbation using omics measurements. Drug mode of actions can be identified with perturbation modeling even for uncharacterized compounds.</p></li>
+<li><p><strong>Perturbation interactions</strong>: Predicting combinatorial effects of perturbations to gain an understanding of interlinked effects between genetics and drugs or combinations of drugs.</p></li>
+<li><p><strong>Chemical properties</strong>: Predicting chemical properties of perturbations using omics measurements such as molecular fingerprints, R groups, pharmacophores or even complete compounds.</p></li>
+</ol>
+<p>Robust and accessible tooling for all of these steps is still under development. Hence, we will solely introduce three approaches for a subset of these tasks that can be tackled with single-cell perturbation data in the following sections:</p>
+<ol class="arabic simple">
+<li><p>Finding the cell types that were most affected by perturbations using <a class="reference external" href="https://github.com/neurorestore/Augur">Augur</a> applied to Kang 2018 <span id="id7">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>.</p></li>
+<li><p>Predicting the transcriptional response of single cells to perturbations using <a class="reference external" href="https://github.com/theislab/scgen">scGen</a> applied to Kang 2018 <span id="id8">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>.</p></li>
+<li><p>Quantifying the sensitivity of genetic CRISPR perturbations using <a class="reference external" href="https://github.com/satijalab/seurat/blob/master/R/mixscape.R">Mixscape</a> applied to Papalexi 2021 <span id="id9">[<a class="reference internal" href="#id425" title="Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. Nature Genetics, 53(3):322-331, Mar 2021. URL: https://doi.org/10.1038/s41588-021-00778-2, doi:10.1038/s41588-021-00778-2.">Papalexi <em>et al.</em>, 2021</a>]</span>.</p></li>
+</ol>
+</section>
+<section id="conditions-perturbation-modeling-key-takeaway-1">
+<span id="identifying-the-cell-types-most-affected-by-perturbations"></span><h2><span class="section-number">19.2. </span>Identifying the cell types most affected by perturbations<a class="headerlink" href="#conditions-perturbation-modeling-key-takeaway-1" title="Link to this heading">#</a></h2>
+<section id="id10">
+<h3><span class="section-number">19.2.1. </span>Motivation<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>Perturbations rarely have the same effect on all cells. In particular, different cell types or cells in different states in their cell cycle can be affected to varying degrees. Here we will leverage <a class="reference external" href="https://github.com/neurorestore/Augur">Augur</a> by Skinnider et al. <span id="id11">[<a class="reference internal" href="#id422" title="Michael A. Skinnider, Jordan W. Squair, Claudia Kathe, Mark A. Anderson, Matthieu Gautier, Kaya J. E. Matson, Marco Milano, Thomas H. Hutson, Quentin Barraud, Aaron A. Phillips, Leonard J. Foster, Gioele La Manno, Ariel J. Levine, and Grégoire Courtine. Cell type prioritization in single-cell data. Nature Biotechnology, 39(1):30-34, Jan 2021. URL: https://doi.org/10.1038/s41587-020-0605-1, doi:10.1038/s41587-020-0605-1.">Skinnider <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>, which provides one way of quantifying the degree of response, for this purpose.</p>
+<div class="admonition-augur-model admonition">
+<p class="admonition-title">Augur model</p>
+<p>Augur aims to rank or prioritize cell types according to their response to experimental perturbations given single-cell gene expression data. The basic idea is that in the space of molecular measurements, cells reacting heavily to induced perturbations are more easily separated into perturbed and unperturbed groups than cell types with little or no response. This separability is quantified by measuring how well experimental labels (for example, treatment and control) can be predicted within each cell type. Augur trains a machine learning model predicting experimental labels for each cell type in multiple cross-validation runs and then prioritizes cell type response according to metric scores measuring the accuracy of the model. For categorical data the area under the curve is the default metric and for numerical data the concordance correlation coefficient is used as a proxy for model accuracy, which in turn approximates perturbation response.</p>
+</div>
+</section>
+<section id="limitations-of-augur">
+<h3><span class="section-number">19.2.2. </span>Limitations of Augur<a class="headerlink" href="#limitations-of-augur" title="Link to this heading">#</a></h3>
+<p>Since Augur determines the degree of perturbation responses, it requires distinct cell types. If cell type labeling is challenging due to ongoing continuous, smooth processes or trajectories of gene expression such as cell differentiation, Augur might not allow for fine-grained enough rankings. Constructing a clustering tree describing the relationships of different clusters, which were used for cell type annotation, and applying Augur to all possible clustering resolutions, could determine the most suitable resolution and therefore annotation for the perturbation of interest <span id="id12">[<a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Further, cell types mediating tissue- or organism-level responses to specific perturbations might themselves comprise subpopulations of responder and non-responder cells. The assignment of cells into responder and non-responder cells itself can be inaccurate because cells of a given cell type could fall along a continuous trajectory of perturbation response intensity. However, Augur does not decipher the individual cells’ perturbation responses and simply aggregates them as averages for the cell types <span id="id13">[<a class="reference internal" href="#id429" title="Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. Nature Communications, 12(1):5692, Sep 2021. URL: https://doi.org/10.1038/s41467-021-25960-2, doi:10.1038/s41467-021-25960-2.">Squair <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Some perturbation effects might originate primarily from a change in relative abundance of a particular cell type. The subsampling procedure in Augur, however, discards any information about the relative abundances. In fact, Augur samples equal numbers of cells from each condition prior to cross-validation. Any change in the abundance of a particular cell type could be accompanied by changes in the intrinsic transcriptional profile of that cell type. Strong perturbations could even lead to scenarios where specific cell types are depleted completely or suddenly arise only when perturbed. Hence, it is advisable to perform differential abundance tests for every cell type to help contextualize the Augur analysis results <span id="id14">[<a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>.</p>
+<p>Here, we will use a fast reimplementation of the original R implementation of <a class="reference external" href="https://github.com/neurorestore/Augur">Augur</a> using the perturbation analysis toolbox <a class="reference external" href="https://github.com/theislab/pertpy/">pertpy</a>. pertpy leverages the scverse ecosystem and is therefore fully compatible with <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> in the Python ecosystem.</p>
+</section>
+<section id="predicting-cell-type-prioritization-for-ifn-stimulation">
+<h3><span class="section-number">19.2.3. </span>Predicting cell type prioritization for IFN-β stimulation<a class="headerlink" href="#predicting-cell-type-prioritization-for-ifn-stimulation" title="Link to this heading">#</a></h3>
+<p>To demonstrate Augur, we will use the Kang dataset, which is a 10x droplet-based scRNA-seq peripheral blood mononuclear cell (PBMC) dataset from 8 Lupus patients before and after 6h-treatment with INF-β (16 samples in total)<span id="id15">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>.</p>
+<p>Our goal here is to decipher which cell types were most affected by INF-β treatment.</p>
+<p>First, we import pertpy and scanpy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="c1"># This is required to catch warnings when the multiprocessing module is used</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYTHONWARNINGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ignore&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pertpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>pertpy provides a convenient data loader to access the Kang dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">kang_2018</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We rename <code class="docutils literal notranslate"><span class="pre">label</span></code> to <code class="docutils literal notranslate"><span class="pre">condition</span></code> and the conditions themselves for improved readability.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s2">&quot;ctrl&quot;</span><span class="p">:</span> <span class="s2">&quot;control&quot;</span><span class="p">,</span> <span class="s2">&quot;stim&quot;</span><span class="p">:</span> <span class="s2">&quot;stimulated&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This dataset contains PBMCs <span id="id16">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span> across seven different cell-types.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cell_type
+CD4 T cells          11238
+CD14+ Monocytes       5697
+B cells               2651
+NK cells              1716
+CD8 T cells           1621
+FCGR3A+ Monocytes     1089
+Dendritic cells        529
+Megakaryocytes         132
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now create an Augur object using pertpy based on our estimator of interest to measure how predictable the perturbation labels for each cell type in the dataset are. The options for the estimator are <code class="docutils literal notranslate"><span class="pre">random_forest_classifier</span></code> or <code class="docutils literal notranslate"><span class="pre">logistic_regression_classifier</span></code> for categorical data and <code class="docutils literal notranslate"><span class="pre">random_forest_regressor</span></code> for numerical data. All estimators make use of a <code class="docutils literal notranslate"><span class="pre">Params</span></code> class to define further parameters. Here, we will use a <code class="docutils literal notranslate"><span class="pre">random_forest_classifier</span></code> which is generally a solid and fast choice and suits our categorical data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ag_rfc</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">Augur</span><span class="p">(</span><span class="s2">&quot;random_forest_classifier&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we need to load the AnnData object into a format that Augur is comfortable with. This can be easily done with the <a class="reference external" href="https://pertpy.readthedocs.io/en/development/usage/tools/pertpy.tools.Augur.html#load">load</a> function of our Augur object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">loaded_data</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">label_col</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="n">cell_type_col</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">)</span>
+<span class="n">loaded_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 24673 × 15706
+    obs: &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;tsne1&#39;, &#39;tsne2&#39;, &#39;label&#39;, &#39;cluster&#39;, &#39;cell_type&#39;, &#39;replicate&#39;, &#39;nCount_SCT&#39;, &#39;nFeature_SCT&#39;, &#39;integrated_snn_res.0.4&#39;, &#39;seurat_clusters&#39;, &#39;y_&#39;
+    var: &#39;name&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>This allows us to run Augur with the <code class="docutils literal notranslate"><span class="pre">predict</span></code> function. Generally, Augur can be run in two modes:</p>
+<ol class="arabic simple">
+<li><p>A feature selection based on the original Augur implementation (<code class="docutils literal notranslate"><span class="pre">select_variance_feature=True</span></code>) that is also the default. This approach removes features with little cell-to-cell variation within that cell type. We refer to the Augur Nature Protocols paper for more details<span id="id17">[<a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>. When this feature selection is chosen the results are very similar to the Augur implementation in R.</p></li>
+<li><p>A feature selection based on <code class="docutils literal notranslate"><span class="pre">scanpy.pp.highly_variable_genes</span></code>. This feature selection reduces the number of genes that are taken into account for model training and might result in inflated Augur scores, because the highly variable genes are very useful to separate cell types. However, this mode is faster and recovers effects of perturbations on cell types very well. We recommend it for very large datasets with perturbations that are expected to have a strong effect on specific cell types.</p></li>
+</ol>
+<p>Since we do not expect INF-β to have an exceptional effect on specific cell types, we run Augur with the original Augur feature selection. To further increase the resolution, we set the <code class="docutils literal notranslate"><span class="pre">subsample_size</span></code> to 20 (default: 50) which corresponds to the number of cells to randomly draw per cell type.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v_adata</span><span class="p">,</span> <span class="n">v_results</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">loaded_data</span><span class="p">,</span> <span class="n">subsample_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">select_variance_features</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">span</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="n">v_results</span><span class="p">[</span><span class="s2">&quot;summary_metrics&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set smaller span value in the case of a `segmentation fault` error.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set larger span in case of svddc or other near singularities error.</span>
+</pre>
+</div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a27f17fbc05c4894b8547ffc2eb4549d", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CD14+ Monocytes</th>
+      <th>CD4 T cells</th>
+      <th>Dendritic cells</th>
+      <th>NK cells</th>
+      <th>CD8 T cells</th>
+      <th>B cells</th>
+      <th>FCGR3A+ Monocytes</th>
+      <th>Megakaryocytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>mean_augur_score</th>
+      <td>0.920476</td>
+      <td>0.669376</td>
+      <td>0.847007</td>
+      <td>0.673299</td>
+      <td>0.626247</td>
+      <td>0.783628</td>
+      <td>0.888934</td>
+      <td>0.512619</td>
+    </tr>
+    <tr>
+      <th>mean_auc</th>
+      <td>0.920476</td>
+      <td>0.669376</td>
+      <td>0.847007</td>
+      <td>0.673299</td>
+      <td>0.626247</td>
+      <td>0.783628</td>
+      <td>0.888934</td>
+      <td>0.512619</td>
+    </tr>
+    <tr>
+      <th>mean_accuracy</th>
+      <td>0.817033</td>
+      <td>0.601172</td>
+      <td>0.744249</td>
+      <td>0.610330</td>
+      <td>0.575714</td>
+      <td>0.674505</td>
+      <td>0.780330</td>
+      <td>0.510513</td>
+    </tr>
+    <tr>
+      <th>mean_precision</th>
+      <td>0.835072</td>
+      <td>0.630593</td>
+      <td>0.779699</td>
+      <td>0.642700</td>
+      <td>0.587059</td>
+      <td>0.742801</td>
+      <td>0.792996</td>
+      <td>0.526175</td>
+    </tr>
+    <tr>
+      <th>mean_f1</th>
+      <td>0.806636</td>
+      <td>0.564695</td>
+      <td>0.735157</td>
+      <td>0.591230</td>
+      <td>0.552114</td>
+      <td>0.633906</td>
+      <td>0.780933</td>
+      <td>0.406510</td>
+    </tr>
+    <tr>
+      <th>mean_recall</th>
+      <td>0.826349</td>
+      <td>0.575714</td>
+      <td>0.756032</td>
+      <td>0.616984</td>
+      <td>0.580000</td>
+      <td>0.622540</td>
+      <td>0.816508</td>
+      <td>0.388413</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The result table contains several evaluation metrics for the fitted model. For the interpretation of the cell type prioritization of the IFN-β response, only the <code class="docutils literal notranslate"><span class="pre">mean_augur_score</span></code> is relevant, which corresponds to the <code class="docutils literal notranslate"><span class="pre">mean_auc</span></code>. The higher the value, the easier it is for the fitted model to discern between control and perturbed cell states. Hence, the perturbation effect was stronger for this cell type. Let’s visualize this effect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lollipop</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">plot_lollipop</span><span class="p">(</span><span class="n">v_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/869c8d392ea8ed19db7d830d39b5d21a669578cde0f0f3522d04947a07992a89.png" src="../_images/869c8d392ea8ed19db7d830d39b5d21a669578cde0f0f3522d04947a07992a89.png" />
+</div>
+</div>
+<p>As observed, CD14+ Monocytes were the most affected by IFN-β whereas Megakaryocytes were the least affected. This corresponds roughly to the number of differentially expressed genes in the original publication for the respective cell types <span id="id18">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span>.</p>
+<p>The corresponding <code class="docutils literal notranslate"><span class="pre">mean_augur_score</span></code> is also saved in <code class="docutils literal notranslate"><span class="pre">v_adata.obs</span></code> and can be plotted in a UMAP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">v_adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">v_adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">v_adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;augur_score&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/72fa1ce85e1aab00fce21de7d3298f18dedee9d9efcda1971c2d2567b9a14fff.png" src="../_images/72fa1ce85e1aab00fce21de7d3298f18dedee9d9efcda1971c2d2567b9a14fff.png" />
+</div>
+</div>
+</section>
+<section id="determining-the-most-important-genes-for-the-prioritization">
+<h3><span class="section-number">19.2.4. </span>Determining the most important genes for the prioritization<a class="headerlink" href="#determining-the-most-important-genes-for-the-prioritization" title="Link to this heading">#</a></h3>
+<p>The genes that contribute the most to the prioritization, as reflected by the augur score, correspond to the feature importances of our model. These feature importances are saved in the results object and can be easily plotted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">important_features</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">plot_important_features</span><span class="p">(</span><span class="n">v_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ada1594de48b48f449d1035e909e106ecec1dd58156ad7057ba25635e902e996.png" src="../_images/ada1594de48b48f449d1035e909e106ecec1dd58156ad7057ba25635e902e996.png" />
+</div>
+</div>
+<p>These genes could now be further explored concerning, for example, their role in pathways or other gene sets. However, since Augur performs inference on the cell type level, it does not directly determine the individual genes that are involved in the perturbation response. The authors of Augur themselves suggest using differential gene expression tests to be both conceptually and pragmatically a more appropriate approach to the inference at the level of individual genes <span id="id19">[<a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>.</p>
+</section>
+<section id="differential-prioritization">
+<h3><span class="section-number">19.2.5. </span>Differential prioritization<a class="headerlink" href="#differential-prioritization" title="Link to this heading">#</a></h3>
+<p>Augur is also able to perform differential prioritization by executing a permutation test to identify cell types with statistically significant differences in area under the curve (AUC) between two different rounds of cell type prioritization (for example a response to drugs A and B compared to untreated control).</p>
+<p>Bhattacherjee et al. offered mice cocaine, and took samples of the prefrontal cortex for scRNA-seq at 48 hours and 15 days post withdrawal<span id="id20">[<a class="reference internal" href="#id424" title="Aritra Bhattacherjee, Mohamed Nadhir Djekidel, Renchao Chen, Wenqiang Chen, Luis M. Tuesta, and Yi Zhang. Cell type-specific transcriptional programs in mouse prefrontal cortex during adolescence and addiction. Nature Communications, 10(1):4169, Sep 2019. URL: https://doi.org/10.1038/s41467-019-12054-3, doi:10.1038/s41467-019-12054-3.">Bhattacherjee <em>et al.</em>, 2019</a>]</span>.</p>
+<p>We will now evaluate the effect of the <code class="docutils literal notranslate"><span class="pre">withdraw_15d_Cocaine</span></code> and <code class="docutils literal notranslate"><span class="pre">withdraw_48h_Cocaine</span></code> conditions compared to <code class="docutils literal notranslate"><span class="pre">Maintenance_Cocaine</span></code>. Basically, differential prioritization is obtained through a <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation_test">permutation test</a> of the difference in AUC between two sets of cell-type prioritizations, compared with the expected AUC difference between the same two prioritizations after random permutation of sample labels<span id="id21">[<a class="reference internal" href="#id423" title="Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. Nature Protocols, 16(8):3836-3873, Aug 2021. URL: https://doi.org/10.1038/s41596-021-00561-x, doi:10.1038/s41596-021-00561-x.">Squair <em>et al.</em>, 2021</a>]</span>. In this procedure, the user first performs cell-type prioritization on drug A (<code class="docutils literal notranslate"><span class="pre">withdraw_15d_Cocaine</span></code>) and drug B (<code class="docutils literal notranslate"><span class="pre">withdraw_48h_Cocaine</span></code>) separately, then calculates the AUC difference between drug A and drug B. To compute the statistical significance of the AUC difference , an empirical null distribution of AUC differences is then calculated for each cell type by permuting the sample labels, then repeating cell-type prioritization in the permuted data. Permutation P-values are then calculated. This procedure thus enables the identification of statistically significant differences in cell-type prioritization between conditions, as well as the condition in which the cell type is more transcriptionally separable.</p>
+<p>Each variation is run once in <code class="docutils literal notranslate"><span class="pre">default</span></code> mode and once in <code class="docutils literal notranslate"><span class="pre">permute</span></code> mode to allow us to perform the <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation_test">permutation test</a>. As a first step, we fetch the <code class="docutils literal notranslate"><span class="pre">bhattacherjee</span></code> dataset using pertpy and create an Augur object that again uses a random forest classifier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bhattacherjee_adata</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">bhattacherjee</span><span class="p">()</span>
+<span class="n">ag_rfc</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">Augur</span><span class="p">(</span><span class="s2">&quot;random_forest_classifier&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we run Augur on <code class="docutils literal notranslate"><span class="pre">Maintenance_Cocaine</span></code> and <code class="docutils literal notranslate"><span class="pre">withdraw_15d_Cocaine</span></code> using both <code class="docutils literal notranslate"><span class="pre">augur_mode=default</span></code> and <code class="docutils literal notranslate"><span class="pre">augur_mode=permute</span></code> as previously described. Note that we log normalize the dataset for a simple normalization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">bhattacherjee_adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default mode</span>
+<span class="n">bhattacherjee_15</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+    <span class="n">bhattacherjee_adata</span><span class="p">,</span>
+    <span class="n">condition_label</span><span class="o">=</span><span class="s2">&quot;Maintenance_Cocaine&quot;</span><span class="p">,</span>
+    <span class="n">treatment_label</span><span class="o">=</span><span class="s2">&quot;withdraw_15d_Cocaine&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">bhattacherjee_adata_15</span><span class="p">,</span> <span class="n">bhattacherjee_results_15</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">bhattacherjee_15</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span>
+<span class="p">)</span>
+<span class="n">bhattacherjee_results_15</span><span class="p">[</span><span class="s2">&quot;summary_metrics&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;mean_augur_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Filtering samples with Maintenance_Cocaine and withdraw_15d_Cocaine labels.
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set smaller span value in the case of a `segmentation fault` error.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set larger span in case of svddc or other near singularities error.</span>
+</pre>
+</div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "fe4f7cb19fe24795be6fd090eb473f91", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Oligo         0.801417
+Astro         0.769116
+Microglia     0.743707
+OPC           0.743605
+Inhibitory    0.656202
+NF Oligo      0.625692
+Excitatory    0.623923
+Endo          0.588481
+Name: mean_augur_score, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Permute mode</span>
+<span class="n">bhattacherjee_adata_15_permute</span><span class="p">,</span> <span class="n">bhattacherjee_results_15_permute</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">bhattacherjee_15</span><span class="p">,</span>
+    <span class="n">augur_mode</span><span class="o">=</span><span class="s2">&quot;permute&quot;</span><span class="p">,</span>
+    <span class="n">n_subsamples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set smaller span value in the case of a `segmentation fault` error.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set larger span in case of svddc or other near singularities error.</span>
+</pre>
+</div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "1f29a06145b54ff897573926d43af502", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div></div>
+</div>
+<p>Now let’s do the same for <code class="docutils literal notranslate"><span class="pre">Maintenance_Cocaine</span></code> and <code class="docutils literal notranslate"><span class="pre">withdraw_48h_Cocaine</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default mode</span>
+<span class="n">bhattacherjee_48</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+    <span class="n">bhattacherjee_adata</span><span class="p">,</span>
+    <span class="n">condition_label</span><span class="o">=</span><span class="s2">&quot;Maintenance_Cocaine&quot;</span><span class="p">,</span>
+    <span class="n">treatment_label</span><span class="o">=</span><span class="s2">&quot;withdraw_48h_Cocaine&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">bhattacherjee_adata_48</span><span class="p">,</span> <span class="n">bhattacherjee_results_48</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">bhattacherjee_48</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span>
+<span class="p">)</span>
+
+<span class="n">bhattacherjee_results_48</span><span class="p">[</span><span class="s2">&quot;summary_metrics&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;mean_augur_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Filtering samples with Maintenance_Cocaine and withdraw_48h_Cocaine labels.
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set smaller span value in the case of a `segmentation fault` error.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set larger span in case of svddc or other near singularities error.</span>
+</pre>
+</div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "225cf6bf8b0f4731a38888a891674e0e", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Astro         0.624898
+OPC           0.598050
+NF Oligo      0.592619
+Microglia     0.587789
+Inhibitory    0.560000
+Oligo         0.557630
+Endo          0.540272
+Excitatory    0.527143
+Name: mean_augur_score, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Permute mode</span>
+<span class="n">bhattacherjee_adata_48_permute</span><span class="p">,</span> <span class="n">bhattacherjee_results_48_permute</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">bhattacherjee_48</span><span class="p">,</span>
+    <span class="n">augur_mode</span><span class="o">=</span><span class="s2">&quot;permute&quot;</span><span class="p">,</span>
+    <span class="n">n_subsamples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set smaller span value in the case of a `segmentation fault` error.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #808000; text-decoration-color: #808000; font-weight: bold">Set larger span in case of svddc or other near singularities error.</span>
+</pre>
+</div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c0259b70d3704c608927ef6f5fdb1635", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">Skipping NF Oligo cell type - </span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">79</span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold"> samples is less than min_cells </span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">100</span><span style="color: #800000; text-decoration-color: #800000; font-weight: bold">.</span>
+</pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div></div>
+</div>
+<p>This allows us to take a look at the augur scores of the two runs in a scatterplot. The diagonal line is the identity function. If the values were the same they would be on the line.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scatter</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">plot_scatterplot</span><span class="p">(</span><span class="n">bhattacherjee_results_15</span><span class="p">,</span> <span class="n">bhattacherjee_results_48</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/50971b2093f53d954fd8d72cd581a2ef40dfcb8a03d98042dbcd9b0e83961201.png" src="../_images/50971b2093f53d954fd8d72cd581a2ef40dfcb8a03d98042dbcd9b0e83961201.png" />
+</div>
+</div>
+<p>To figure out which cell type was most affected when comparing <code class="docutils literal notranslate"><span class="pre">withdraw_48h_Cocaine</span></code> and <code class="docutils literal notranslate"><span class="pre">withdraw_15d_Cocaine</span></code> we can run differential prioritization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pvals</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">predict_differential_prioritization</span><span class="p">(</span>
+    <span class="n">augur_results1</span><span class="o">=</span><span class="n">bhattacherjee_results_15</span><span class="p">,</span>
+    <span class="n">augur_results2</span><span class="o">=</span><span class="n">bhattacherjee_results_48</span><span class="p">,</span>
+    <span class="n">permuted_results1</span><span class="o">=</span><span class="n">bhattacherjee_results_15_permute</span><span class="p">,</span>
+    <span class="n">permuted_results2</span><span class="o">=</span><span class="n">bhattacherjee_results_48_permute</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">pvals</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cell_type</th>
+      <th>mean_augur_score1</th>
+      <th>mean_augur_score2</th>
+      <th>delta_augur</th>
+      <th>b</th>
+      <th>m</th>
+      <th>z</th>
+      <th>pval</th>
+      <th>padj</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Astro</td>
+      <td>0.769116</td>
+      <td>0.624898</td>
+      <td>-0.144218</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-10.058451</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Microglia</td>
+      <td>0.743707</td>
+      <td>0.587789</td>
+      <td>-0.155918</td>
+      <td>974</td>
+      <td>1000</td>
+      <td>-9.252930</td>
+      <td>0.053946</td>
+      <td>0.053946</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Endo</td>
+      <td>0.588481</td>
+      <td>0.540272</td>
+      <td>-0.048209</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-3.010936</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Oligo</td>
+      <td>0.801417</td>
+      <td>0.557630</td>
+      <td>-0.243787</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-15.904970</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Inhibitory</td>
+      <td>0.656202</td>
+      <td>0.560000</td>
+      <td>-0.096202</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-6.018999</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>OPC</td>
+      <td>0.743605</td>
+      <td>0.598050</td>
+      <td>-0.145556</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-8.786800</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Excitatory</td>
+      <td>0.623923</td>
+      <td>0.527143</td>
+      <td>-0.096780</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td>-7.399583</td>
+      <td>0.001998</td>
+      <td>0.002331</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The p-value, following the R Augur implementation is calculated using <code class="docutils literal notranslate"><span class="pre">b</span></code>, the number of times permuted values are larger than original values and <code class="docutils literal notranslate"><span class="pre">m</span></code>, the number of permutations run. Since <code class="docutils literal notranslate"><span class="pre">b</span></code> is the same for all cells but Microglia, the p-value is the same for these as well.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="n">ag_rfc</span><span class="o">.</span><span class="n">plot_dp_scatter</span><span class="p">(</span><span class="n">pvals</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7e345229ac211484c0a5faf6ff8dbc3e43e7e909fc08bd6cce01b7f51f2c31f8.png" src="../_images/7e345229ac211484c0a5faf6ff8dbc3e43e7e909fc08bd6cce01b7f51f2c31f8.png" />
+</div>
+</div>
+<p>In this case the cell type “Inhibitory” is not very different between the two compared cell types which may indicate that permanent damage was inflicted.</p>
+</section>
+</section>
+<section id="predicting-ifn-response-for-cd4-t-cells">
+<span id="conditions-perturbation-modeling-key-takeaway-2"></span><h2><span class="section-number">19.3. </span>Predicting IFN-β response for CD4-T cells<a class="headerlink" href="#predicting-ifn-response-for-cd4-t-cells" title="Link to this heading">#</a></h2>
+<p>Many perturbation response modeling methods aim to forecast transcriptomic responses to stimuli, be it drugs, genetic knock-outs, or disease, for unseen populations where the perturbation response has not been measured, to help facilitate experimental design and hypothesis generation. The failure to capture cells treated with a perturbation could happen when a specific population could not be measured due to experimental or sample failure (e.g., failed cell sorting), high experimental costs prohibiting exploring all possibilities, and rare frequency of discovery for some cell types. In all scenarios above, an in-silico prediction of the missing population can lead to an informed decision about conducting new experiments or not.</p>
+<p>Multiple methods for perturbation response modeling have been developed based on autoencoders (AE)<span id="id22">[<a class="reference internal" href="#id420" title="Matthew Amodio, David van Dijk, Ruth Montgomery, Guy Wolf, and Smita Krishnaswamy. Out-of-sample extrapolation with neuron editing. arXiv preprint arXiv:1805.12198, 2018.">Amodio <em>et al.</em>, 2018</a>, <a class="reference internal" href="#id416" title="Mohammad Lotfollahi, Mohsen Naghipourfar, Fabian J Theis, and F Alexander Wolf. Conditional out-of-distribution generation for unpaired data using transfer vae. Bioinformatics, 36(Supplement_2):i610–i617, 2020.">Lotfollahi <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id417" title="Mohammad Lotfollahi, Anna Klimovskaia Susmelj, Carlo De Donno, Yuge Ji, Ignacio L Ibarra, F Alexander Wolf, Nafissa Yakubova, Fabian J Theis, and David Lopez-Paz. Learning interpretable cellular responses to complex perturbations in high-throughput screens. bioRxiv, 2021.">Lotfollahi <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id415" title="Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Scgen predicts single-cell perturbation responses. Nature methods, 16(8):715–721, 2019.">Lotfollahi <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id418" title="Nikolai Russkikh, Denis Antonets, Dmitry Shtokalo, Alexander Makarov, Yuri Vyatkin, Alexey Zakharov, and Evgeny Terentyev. Style transfer with variational autoencoders is a promising approach to term`rna`-seq data harmonization and analysis. Bioinformatics, 36(20):5076–5085, 2020.">Russkikh <em>et al.</em>, 2020</a>, <a class="reference internal" href="#id421" title="Xiajie Wei, Jiayi Dong, and Fei Wang. Scpregan, a deep generative model for predicting the response of single cell expression to perturbation. Bioinformatics, 2022.">Wei <em>et al.</em>, 2022</a>, <a class="reference internal" href="#id419" title="Bo Yuan, Ciyue Shen, Augustin Luna, Anil Korkut, Debora S Marks, John Ingraham, and Chris Sander. Cellbox: interpretable machine learning for perturbation biology with application to the design of cancer combination therapy. Cell systems, 12(2):128–140, 2021.">Yuan <em>et al.</em>, 2021</a>]</span>, a deep learning architecture to learn a low-dimensional representation of the data.</p>
+<div class="admonition-variational-autoencoders admonition">
+<p class="admonition-title">Variational autoencoders</p>
+<p>The fundamental principle of autoencoders is that they are composed of two parts, an encoder and a decoder. The encoder tries to learn a latent space of the input data (usually gene expression) which can be decoded with minimal reconstruction error by the decoder. The latent space is usually of a lower dimension than the input space.
+An extension of AEs are variational autoencoders (VAE) that address the issue of non-regularized latent spaces of AEs by providing generative capability to the entire space. A non-regularized latent space only really provides strong sampling capability for the distinct classes that formed clusters. The famous MNIST dataset of handwritten digits would only allow the sampling of the digits 0-9 in any of the determined 10 clusters. However, it would result in garbage input if sampling were attempted outside the clusters. Whereas, the encoder in AEs outputs latent vectors, the encoder in VAEs outputs parameters of a pre-defined distribution in the latent space for every input. The latent space gets regularized by the VAE enforcing a normally distributed latent distribution.</p>
+</div>
+<p>Here, we demonstrate the application of scGen <span id="id23">[<a class="reference internal" href="#id415" title="Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Scgen predicts single-cell perturbation responses. Nature methods, 16(8):715–721, 2019.">Lotfollahi <em>et al.</em>, 2019</a>]</span>, a variational autoencoder combined with vector arithmetics. The model learns a latent representation of the data in which it estimates a difference vector between control (untreated) and perturbed (treated) cells. The estimated difference vector is then added to control cells for the cell type or population of interest to predict the gene expression response for each single cell. Here, we apply scGen to predict the response to IFN-β for a population of CD4-T cells that are artificially held out (unseen) during training to simulate one of the aforementioned real-world scenarios. We again leverage a dataset that contains peripheral blood mononuclear cells (PBMCs) from eight patients with Lupus treated with IFN-β or left untreated from <span id="id24">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span> across seven different cell-types.</p>
+<p>As a first step, we import <code class="docutils literal notranslate"><span class="pre">scanpy</span></code> and <code class="docutils literal notranslate"><span class="pre">scgen</span></code> to allow us to work with AnnData objects and employ scGen.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pertpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="setting-up-the-kang-dataset-for-scgen">
+<h3><span class="section-number">19.3.1. </span>Setting up the Kang dataset for scGen<a class="headerlink" href="#setting-up-the-kang-dataset-for-scgen" title="Link to this heading">#</a></h3>
+<p>We will again use <a class="reference external" href="https://github.com/theislab/pertpy/">pertpy</a> to get the Kang dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">kang_2018</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>scGen works best with log transformed data. Highly variable gene selection can speed up computations due to the reduced feature space.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We rename <code class="docutils literal notranslate"><span class="pre">label</span></code> to <code class="docutils literal notranslate"><span class="pre">condition</span></code> and the conditions themselves for improved readability.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s2">&quot;ctrl&quot;</span><span class="p">:</span> <span class="s2">&quot;control&quot;</span><span class="p">,</span> <span class="s2">&quot;stim&quot;</span><span class="p">:</span> <span class="s2">&quot;stimulated&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This dataset contains PBMCs <span id="id25">[<a class="reference internal" href="#id428" title="Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. Nature biotechnology, 36(1):89–94, 2018.">Kang <em>et al.</em>, 2018</a>]</span> across seven different cell-types.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">cell_type</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cell_type
+CD4 T cells          11238
+CD14+ Monocytes       5697
+B cells               2651
+NK cells              1716
+CD8 T cells           1621
+FCGR3A+ Monocytes     1089
+Dendritic cells        529
+Megakaryocytes         132
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We remove all CD4T cells from the training data (<code class="docutils literal notranslate"><span class="pre">adata_t</span></code>) to simulate a real-world scenario of not capturing a specific population during an experiment.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_t</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="o">~</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD4 T cells&quot;</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;stimulated&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">cd4t_stim</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="p">(</span>
+        <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD4 T cells&quot;</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;stimulated&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>scGen requires the data to be in a particular format which is facilitated through <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> and the <code class="docutils literal notranslate"><span class="pre">setup_anndata</span></code> function. It requires the key of the sample, the <code class="docutils literal notranslate"><span class="pre">batch_key</span></code> (in our case, <code class="docutils literal notranslate"><span class="pre">&quot;condition&quot;</span></code>) and the cell type label key, the <code class="docutils literal notranslate"><span class="pre">labels_key</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;cell_type&quot;</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pt</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">SCGEN</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span><span class="n">adata_t</span><span class="p">,</span> <span class="n">batch_key</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="n">labels_key</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="model-construction-and-training">
+<h3><span class="section-number">19.3.2. </span>Model construction and training<a class="headerlink" href="#model-construction-and-training" title="Link to this heading">#</a></h3>
+<p>scGen requires the modified <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object (<code class="docutils literal notranslate"><span class="pre">adata_t</span></code>) to construct the model object, which can be used to train the model. This function receives multiple user inputs, including the number of nodes in each hidden layer (<code class="docutils literal notranslate"><span class="pre">n_hidden</span></code>) of the model before the bottleneck layer (the middle layer of the network) and also the number of such layers (<code class="docutils literal notranslate"><span class="pre">n_layers</span></code>). Additionally, the user can adapt the dimension of the bottleneck layer, which is used to calculate the difference vector between perturbed cells and control cells. The default parameters used here are taken from the original publication. In practice, wider hidden layers lead to better reconstruction accuracy, which is essential for our aim to predict the perturbation response across many genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">SCGEN</span><span class="p">(</span><span class="n">adata_t</span><span class="p">,</span> <span class="n">n_hidden</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">n_latent</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>scGen is a neural network with thousands of parameters to learn a low-dimensional data representation. Here, we use <code class="docutils literal notranslate"><span class="pre">train</span></code> method to estimate these parameters using the training data. There are multiple parameters here, <code class="docutils literal notranslate"><span class="pre">max_epochs</span></code> is the maximum number of iterations the model is allowed to update its parameters which are set to 100 here. The higher values training epochs will take more computation time but might help better results. The <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> is the number of samples (individual cells) the model sees to update its parameters. Lower numbers usually lead to better results in the case of scGen. Finally, there is <code class="docutils literal notranslate"><span class="pre">early_stopping</span></code>, which enables the model to stop the training if its results are not improved after <code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code> training epochs. The early stopping mechanism prevents potential overfitting of the training data, which can lead to poor generalization to unseen populations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">25</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">INFO    </span> Jax module moved to TFRT_CPU_0.Note: Pytorch lightning will show GPU is not being used for the Trainer.   
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 26/100:  26%|██▌       | 26/100 [1:28:13&lt;4:11:07, 203.61s/it, v_num=1, train_loss_step=1.06e+3, train_loss_epoch=4.52e+3]
+Monitored metric elbo_validation did not improve in the last 25 records. Best score: 479.507. Signaling Trainer to stop.
+</pre></div>
+</div>
+</div>
+</div>
+<p>To visualize the learned representation of data by the model, we plot the latent representation of the model using the UMAP algorithm. The <code class="docutils literal notranslate"><span class="pre">get_latent_representation()</span></code>  returns a 100-dimensional vector for each cell. We store the latent representations in the <code class="docutils literal notranslate"><span class="pre">.obsm</span></code> slot of the AnnData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_t</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;scgen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent_representation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we recalculate the neighbors graph and the UMAP embedding using the calculated latent representation to finally visualize the new embedding in a UMAP plot.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_t</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;scgen&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_t</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_t</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">],</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b3ce131c86be90a5df057eb6857adc1714ab04d5860e03bd82fc146decd8b0c3.png" src="../_images/b3ce131c86be90a5df057eb6857adc1714ab04d5860e03bd82fc146decd8b0c3.png" />
+</div>
+</div>
+<p>As observed above, the IFN-β stimulation induced strong transcriptional changes across all cell-types</p>
+</section>
+<section id="predicting-cd4t-responses-to-ifn-stimulation">
+<h3><span class="section-number">19.3.3. </span>Predicting CD4T responses to IFN-β stimulation<a class="headerlink" href="#predicting-cd4t-responses-to-ifn-stimulation" title="Link to this heading">#</a></h3>
+<p>After the model is trained, we can ask the model to simulate the effect of IFN-β response for each control CD4T cell present in the training data. The prediction is made possible via the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method, which receives the corresponding labels (<code class="docutils literal notranslate"><span class="pre">ctrl_key</span></code> and <code class="docutils literal notranslate"><span class="pre">stim_key</span></code> below) in the <code class="docutils literal notranslate"><span class="pre">condition</span></code> (as provided earlier by the user) column of the <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object to estimate a global the difference vector in the latent space between ‘control’ and ‘stimulated’ cells. This vector is then added to each single-cell present specified in <code class="docutils literal notranslate"><span class="pre">celltype_to_predict</span></code> (here CD4T).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span><span class="p">,</span> <span class="n">delta</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">ctrl_key</span><span class="o">=</span><span class="s2">&quot;control&quot;</span><span class="p">,</span> <span class="n">stim_key</span><span class="o">=</span><span class="s2">&quot;stimulated&quot;</span><span class="p">,</span> <span class="n">celltype_to_predict</span><span class="o">=</span><span class="s2">&quot;CD4 T cells&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># we annotate the predicted cells to distinguish them later from ground truth cells.</span>
+<span class="n">pred</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;predicted stimulated&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">INFO    </span> Received view of anndata, making copy.                                                                    
+<span class=" -Color -Color-Blue">INFO    </span> Input AnnData not setup with scvi-tools. attempting to transfer AnnData setup                             
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">INFO    </span> Received view of anndata, making copy.                                                                    
+<span class=" -Color -Color-Blue">INFO    </span> Input AnnData not setup with scvi-tools. attempting to transfer AnnData setup                             
+<span class=" -Color -Color-Blue">INFO    </span> Received view of anndata, making copy.                                                                    
+<span class=" -Color -Color-Blue">INFO    </span> Input AnnData not setup with scvi-tools. attempting to transfer AnnData setup                             
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluating-the-predicted-ifn-response">
+<h3><span class="section-number">19.3.4. </span>Evaluating the predicted IFN-β response<a class="headerlink" href="#evaluating-the-predicted-ifn-response" title="Link to this heading">#</a></h3>
+<p>In previous sections, we predicted the response to IFN-β for each CD4T cell present among the control population. Since single-cell sequencing is destructive, meaning that cells can not be measured before and after a particular perturbation, it is impossible to directly evaluate the prediction for the same cell after IFN-β stimulation. However, we have a group of cells in the data treated with IFN-β, which we can use to measure how well the predicted cell population aligns with ground truth cells. To pursue this, we evaluate predictions qualitatively by looking at the embedding of control, predicted, and actual CD4T IFN-β cells in principal component analysis (PCA) space. Additionally, we also quantitatively measure the correlation between mean gene expression of predicted cells and IFN-β across all genes and differentially expressed genes after IFN-β stimulaton.</p>
+<p>First, we construct an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object containing control, predicted stimulated, and actual stimulated cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl_adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD4 T cells&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;control&quot;</span><span class="p">))</span>
+<span class="p">]</span>
+<span class="c1"># concatenate pred, control and real CD4 T cells in to one object</span>
+<span class="n">eval_adata</span> <span class="o">=</span> <span class="n">ctrl_adata</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">cd4t_stim</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eval_adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>condition
+stimulated              5678
+control                 5560
+predicted stimulated    5560
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We first look at the PCA co-embedding of control, IFN-β stimulated and predicted CD4T cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">eval_adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">eval_adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/45ea8c77b8df1e7df34e5574b9d68329418d5971353f97a42b43d67f4681e0fc.png" src="../_images/45ea8c77b8df1e7df34e5574b9d68329418d5971353f97a42b43d67f4681e0fc.png" />
+</div>
+</div>
+<p>As observed above, the predicted stimulated cells were moved towards the CD4T stimulated cells with IFN-β. Yet we should also look at differentially expressed genes (DEGs) to verify whether the most striking DE genes are also present in the predicted stimulated cells. Below, we look at the overall mean correlation between predicted and real cells. Before that, we extract DEGs between control and stimulated cells:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cd4t_adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD4 T cells&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We estimate DEGs using scanpy’s implementation of the Wilcoxon test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">cd4t_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;wilcoxon&quot;</span><span class="p">)</span>
+<span class="n">diff_genes</span> <span class="o">=</span> <span class="n">cd4t_adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;rank_genes_groups&quot;</span><span class="p">][</span><span class="s2">&quot;names&quot;</span><span class="p">][</span><span class="s2">&quot;stimulated&quot;</span><span class="p">]</span>
+<span class="n">diff_genes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;ISG15&#39;, &#39;IFI6&#39;, &#39;ISG20&#39;, ..., &#39;EEF1A1&#39;, &#39;FTH1&#39;, &#39;RGCC&#39;],
+      dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<p>scGen features a <code class="docutils literal notranslate"><span class="pre">reg_mean_plot</span></code> that calculates the R² correlation between mean gene expression of predicted and existing IFN-β cells. The higher the R² (max is 1), the more faithful is the prediction compared to the ground truths. The highlighted genes in red are the top 10 upregulated DEGs after IFN-β stimulation, which are essential for a successful prediction. As observed, the model did a good job for genes with higher mean values, while it failed for some genes with a mean expression between 0-1. We also measure accuracy across non-DEGs because the model should not change genes not affected by the perturbation while changing the expression of DEGs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r2_value</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">plot_reg_mean_plot</span><span class="p">(</span>
+    <span class="n">eval_adata</span><span class="p">,</span>
+    <span class="n">condition_key</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+    <span class="n">axis_keys</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;predicted stimulated&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;stimulated&quot;</span><span class="p">},</span>
+    <span class="n">gene_list</span><span class="o">=</span><span class="n">diff_genes</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span>
+    <span class="n">top_100_genes</span><span class="o">=</span><span class="n">diff_genes</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;predicted&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;ground truth&quot;</span><span class="p">},</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c13951402ec7c4dadbdea7c79624c1234d638395f6a40771f81cad1a22860c39.png" src="../_images/c13951402ec7c4dadbdea7c79624c1234d638395f6a40771f81cad1a22860c39.png" />
+</div>
+</div>
+<p>We can additionally look at the distribution of the top upregulated genes by IFN-β. For example, we plotted the distribution of expression in <code class="docutils literal notranslate"><span class="pre">ISG15</span></code>, a well-known gene induced after IFN stimulation. As observed, the model identified that this gene should be upregulated after stimulation with IFN-β, and it indeed shifted values to a similar range in ground-truth (stimulated) cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span><span class="n">eval_adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="s2">&quot;ISG15&quot;</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bc6ccb6608bb81a7f7b1fbadd109dcafeaae6c088be2326d2e4f65eadd12a5d6.png" src="../_images/bc6ccb6608bb81a7f7b1fbadd109dcafeaae6c088be2326d2e4f65eadd12a5d6.png" />
+</div>
+</div>
+<p>Overall, we demonstrated the application of scGen as an example of perturbation response models in predicting gene expression of the unseen population under desired perturbations. While perturbation response models provide in silico predictions, they cannot replace performing actual experiments. It is also unclear how much of the predicted response is attributed to cell type specific responses or across cell types. However, as observed in the case of scGen, it can predict the overall response for highly expressed genes yet provide poorer predictions for lowly expressed genes, which requires further optimization and motivation for developing more sophisticated and robust approaches.</p>
+</section>
+</section>
+<section id="analysing-single-pooled-crispr-screens">
+<h2><span class="section-number">19.4. </span>Analysing single-pooled CRISPR screens<a class="headerlink" href="#analysing-single-pooled-crispr-screens" title="Link to this heading">#</a></h2>
+<p>Expanded CRISPR-compatible CITE-seq (ECCITE-seq) enables the capture of single guide RNA (sgRNA) sequences together with transcriptome and surface protein measurements in the form of antibody-derived tags (ADTs). This allows for the application of many genetic perturbations together with transcriptomics readouts for effect exploration and validation of the perturbations through protein expression, making this assay very powerful. However, this power comes not only with great responsibility, but also with complexity.</p>
+<figure class="align-default" id="eccite-seq">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/eccite.png"><img alt="ECCITE-seq Overview" class="bg-primary mb-1" src="../_images/eccite.png" style="width: 800px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 19.1 </span><span class="caption-text">ECCITE-seq overview. <a class="reference internal" href="../glossary.html#term-Messenger-RNA-mRNA"><span class="xref std std-term">mRNA</span></a> is measured together with surface protein expression using antibody derived tags. Biological replicates are resolved through hashtag-derived oligonucleotides. The assignment of the guide RNAs is done using guide-derived oligonucleotides. Image obtained from (<a class="reference external" href="https://cite-seq.com/eccite-seq">https://cite-seq.com/eccite-seq</a>).</span><a class="headerlink" href="#eccite-seq" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>For the purpose of this analysis we will be using the Papalexi 2021 dataset <span id="id26">[<a class="reference internal" href="#id425" title="Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. Nature Genetics, 53(3):322-331, Mar 2021. URL: https://doi.org/10.1038/s41588-021-00778-2, doi:10.1038/s41588-021-00778-2.">Papalexi <em>et al.</em>, 2021</a>]</span>. This dataset contains about 20000 stimulated THP-1 cells that used 111 gRNAs. THP-1 cells stimulated with a combination of IFN-y, decitabine (DAC) and transforming growth factor (TGF)-β1 results in an induction of three immune checkpoints: programmed death-ligand 1 (PD-L1), PD-L2 and CD86. The goal of the ECCITE-seq experiment was to investigate molecular networks that regulate PD-L1 expression, because it is frequently observed in human cancers and can suppress T-cell-mediated immune responses <span id="id27">[<a class="reference internal" href="#id425" title="Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. Nature Genetics, 53(3):322-331, Mar 2021. URL: https://doi.org/10.1038/s41588-021-00778-2, doi:10.1038/s41588-021-00778-2.">Papalexi <em>et al.</em>, 2021</a>]</span>.</p>
+<p>For this specific analysis, we want to:</p>
+<ol class="arabic simple">
+<li><p>Remove confounding sources of variation such as cell cycle effects or batch effects.</p></li>
+<li><p>Determine which cells were affected by the desired perturbations and which cells escaped.</p></li>
+<li><p>Visualize perturbation responses.</p></li>
+</ol>
+<p>To conduct this analysis we will again use pertpy which implements the Mixscape pipeline for the scverse ecosystem about 5-10x faster. This pipeline was originally developed for the Seurat ecosystem, and we largely follow the accompanying Seurat Vignette (<a class="reference external" href="https://satijalab.org/seurat/articles/mixscape_vignette.html">https://satijalab.org/seurat/articles/mixscape_vignette.html</a>).</p>
+<p>We start by importing pertpy, scanpy and muon, which we will require for the preprocessing of the protein data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">muon</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pertpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As a first step we fetch the dataset using pertpy. The return type of the dataloader is a MuData object containing the transcriptomics measurements, the ADT measurements and guide RNA counts.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">papalexi_2021</span><span class="p">()</span>
+<span class="n">mdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><pre>MuData object with n_obs × n_vars = 20729 × 18776
+  4 modalities
+    rna:	20729 x 18649
+      obs:	&#x27;orig.ident&#x27;, &#x27;nCount_RNA&#x27;, &#x27;nFeature_RNA&#x27;, &#x27;nCount_HTO&#x27;, &#x27;nFeature_HTO&#x27;, &#x27;nCount_GDO&#x27;, &#x27;nCount_ADT&#x27;, &#x27;nFeature_ADT&#x27;, &#x27;percent.mito&#x27;, &#x27;MULTI_ID&#x27;, &#x27;HTO_classification&#x27;, &#x27;guide_ID&#x27;, &#x27;gene_target&#x27;, &#x27;NT&#x27;, &#x27;perturbation&#x27;, &#x27;replicate&#x27;, &#x27;S.Score&#x27;, &#x27;G2M.Score&#x27;, &#x27;Phase&#x27;
+      var:	&#x27;name&#x27;
+    adt:	20729 x 4
+      obs:	&#x27;orig.ident&#x27;, &#x27;nCount_RNA&#x27;, &#x27;nFeature_RNA&#x27;, &#x27;nCount_HTO&#x27;, &#x27;nFeature_HTO&#x27;, &#x27;nCount_GDO&#x27;, &#x27;nCount_ADT&#x27;, &#x27;nFeature_ADT&#x27;, &#x27;percent.mito&#x27;, &#x27;MULTI_ID&#x27;, &#x27;HTO_classification&#x27;, &#x27;guide_ID&#x27;, &#x27;gene_target&#x27;, &#x27;NT&#x27;, &#x27;perturbation&#x27;, &#x27;replicate&#x27;, &#x27;S.Score&#x27;, &#x27;G2M.Score&#x27;, &#x27;Phase&#x27;
+      var:	&#x27;name&#x27;
+    hto:	20729 x 12
+      obs:	&#x27;orig.ident&#x27;, &#x27;nCount_RNA&#x27;, &#x27;nFeature_RNA&#x27;, &#x27;nCount_HTO&#x27;, &#x27;nFeature_HTO&#x27;, &#x27;nCount_GDO&#x27;, &#x27;nCount_ADT&#x27;, &#x27;nFeature_ADT&#x27;, &#x27;percent.mito&#x27;, &#x27;MULTI_ID&#x27;, &#x27;HTO_classification&#x27;, &#x27;guide_ID&#x27;, &#x27;gene_target&#x27;, &#x27;NT&#x27;, &#x27;perturbation&#x27;, &#x27;replicate&#x27;, &#x27;S.Score&#x27;, &#x27;G2M.Score&#x27;, &#x27;Phase&#x27;
+      var:	&#x27;name&#x27;
+    gdo:	20729 x 111
+      obs:	&#x27;orig.ident&#x27;, &#x27;nCount_RNA&#x27;, &#x27;nFeature_RNA&#x27;, &#x27;nCount_HTO&#x27;, &#x27;nFeature_HTO&#x27;, &#x27;nCount_GDO&#x27;, &#x27;nCount_ADT&#x27;, &#x27;nFeature_ADT&#x27;, &#x27;percent.mito&#x27;, &#x27;MULTI_ID&#x27;, &#x27;HTO_classification&#x27;, &#x27;guide_ID&#x27;, &#x27;gene_target&#x27;, &#x27;NT&#x27;, &#x27;perturbation&#x27;, &#x27;replicate&#x27;, &#x27;S.Score&#x27;, &#x27;G2M.Score&#x27;, &#x27;Phase&#x27;
+      var:	&#x27;name&#x27;</pre></div></div>
+</div>
+<p>The original Seurat object contained four assays which were transformed into individual AnnData objects to then create the here downloaded MuData object. The individual modalities are:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">adt</span></code>: A count matrix of the four captured antibody-derived tags (CD86, PDL1, PDL2, CD366) which are also commonly simply referred to as “proteins” in this setting.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gdo</span></code>: The 111 used guide RNAs (gRNA). To assign a gRNA identity to each cell, guide-derived oligonucleotide (GDO) counts were examined. If a cell had less than five counts for all gRNA sequences, it was classified as negative. For all other cells, the gRNA with the highest number of counts was assigned to that cell. Cells that had high counts for more than one gRNA were classified as doublets.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hto</span></code>: To keep track of the identity of each biological replicate, the samples were hashed using hashtag-derived oligonucleotides (HTO) following the cell hashing protocol <span id="id28">[<a class="reference internal" href="#id426" title="Marlon Stoeckius, Shiwei Zheng, Brian Houck-Loomis, Stephanie Hao, Bertrand Z. Yeung, William M. Mauck, Peter Smibert, and Rahul Satija. Cell hashing with barcoded antibodies enables multiplexing and doublet detection for single cell genomics. Genome Biology, 19(1):224, Dec 2018. URL: https://doi.org/10.1186/s13059-018-1603-1, doi:10.1186/s13059-018-1603-1.">Stoeckius <em>et al.</em>, 2018</a>]</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rna</span></code>: This corresponds to the transcriptome measurements for all cells and is the usual cells by genes count matrix.</p></li>
+</ol>
+<section id="preprocessing">
+<h3><span class="section-number">19.4.1. </span>Preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading">#</a></h3>
+<p>We keep the preprocessing of the RNA and ADTs simple. First, we normalize the RNA using scanpy’s <code class="docutils literal notranslate"><span class="pre">normalize_total</span></code> followed by log transformation and highly variable gene selection. To normalize the ADTs we apply centered log ration transformation <span id="id29">[<a class="reference internal" href="../surface_protein/normalization.html#id402" title="Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. Nature Methods, 14(9):865-868, Sep 2017. URL: https://doi.org/10.1038/nmeth.4380, doi:10.1038/nmeth.4380.">Stoeckius <em>et al.</em>, 2017</a>]</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">])</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">])</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">subset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="o">.</span><span class="n">prot</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">clr</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;adt&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-exploration">
+<h3><span class="section-number">19.4.2. </span>Data exploration<a class="headerlink" href="#data-exploration" title="Link to this heading">#</a></h3>
+<p>To get a feeling for our dataset we visualize the replicates, cell-cycle phases and perturbations in a UMAP embedding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We calculate neighbors with the cosine distance similarly to the original Seurat implementation</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;Phase&quot;</span><span class="p">,</span> <span class="s2">&quot;perturbation&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/feb13920f609ddacffe5d600c258bcde95f6938634e5177d6c83da05d79c8a65.png" src="../_images/feb13920f609ddacffe5d600c258bcde95f6938634e5177d6c83da05d79c8a65.png" />
+</div>
+</div>
+<p>When glancing at the UMAPs we identify two clearly visible issues:</p>
+<ol class="arabic simple">
+<li><p>Many cells are separated by replicate ID. This is a common sign of a batch effect.</p></li>
+<li><p>The cell cycle phase is a confounder in the embedding.</p></li>
+</ol>
+<p>Hence, we now try to project our cells into a perturbation space by calculating local perturbation signatures to mitigate these identified issues.</p>
+</section>
+<section id="calculating-local-perturbation-signatures">
+<h3><span class="section-number">19.4.3. </span>Calculating local perturbation signatures<a class="headerlink" href="#calculating-local-perturbation-signatures" title="Link to this heading">#</a></h3>
+<p>To alleviate the aforementioned issues, we will calculate local perturbation signatures. The core idea is that by subtracting the averaged expression of the <code class="docutils literal notranslate"><span class="pre">k</span></code> nearest cells from the control pool (=NT) from every cell, we retrieve the component of every cell that solely reflects the genetic perturbation. The <code class="docutils literal notranslate"><span class="pre">k</span></code> nearest neighbors must be in a biological state matching the target cell, but are not allowed to have been targeted by any gRNA. The obtained component is denoted as the local perturbation signature. By default, the number of neighbors <code class="docutils literal notranslate"><span class="pre">k</span></code> is set to 20. Following the recommendations of Papalexi et al., we recommend setting from the range of 20 &lt; <code class="docutils literal notranslate"><span class="pre">k</span></code> 30. A <code class="docutils literal notranslate"><span class="pre">k</span></code> that is too small or too large is unlikely to remove any technical variation from the dataset <span id="id30">[<a class="reference internal" href="#id425" title="Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. Nature Genetics, 53(3):322-331, Mar 2021. URL: https://doi.org/10.1038/s41588-021-00778-2, doi:10.1038/s41588-021-00778-2.">Papalexi <em>et al.</em>, 2021</a>]</span>.</p>
+<p>We now create a Mixscape object using pertpy and calculate the perturbation signature.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">Mixscape</span><span class="p">()</span>
+
+<span class="n">ms</span><span class="o">.</span><span class="n">perturbation_signature</span><span class="p">(</span>
+    <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span>
+    <span class="n">pert_key</span><span class="o">=</span><span class="s2">&quot;perturbation&quot;</span><span class="p">,</span>
+    <span class="n">control</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span>
+    <span class="n">split_by</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span><span class="p">,</span>
+    <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We create a copy of the object to recalculate the PCA.</span>
+<span class="c1"># Alternatively we could replace the X of the RNA part of our MuData object with the `X_pert` layer.</span>
+<span class="n">adata_pert</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_pert</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_pert</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;X_pert&quot;</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_pert</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_pert</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_pert</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_pert</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;replicate&quot;</span><span class="p">,</span> <span class="s2">&quot;Phase&quot;</span><span class="p">,</span> <span class="s2">&quot;perturbation&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bdace5ff378657287656c8a6c6ef11261a22de36338e065b09ac0244926c7b66.png" src="../_images/bdace5ff378657287656c8a6c6ef11261a22de36338e065b09ac0244926c7b66.png" />
+</div>
+</div>
+<p>Using the perturbation signature to calculate the neighbors graph and the eventual embedding removes technical variation and reveals one additional perturbation-specific cluster. Now that our data is mostly free of confounding effects, we need to determine for which targeted cells (=perturbed) the perturbation was successful (=KO) or not (=NP).</p>
+</section>
+<section id="identifying-cells-with-no-detectable-perturbation">
+<h3><span class="section-number">19.4.4. </span>Identifying cells with no detectable perturbation<a class="headerlink" href="#identifying-cells-with-no-detectable-perturbation" title="Link to this heading">#</a></h3>
+<p>The primary assumption that we make is that every target gene class is a mixture of two Gaussian distributions. One of these represents the successful knockouts (KO) and the other the non-perturbed (NP) cells. The distribution of the NP cells should then be identical to the cells expressing non-targeting gRNAs (NT). After having estimated the distribution of the KO cells, Mixscape calculates the posterior probability that a cell belongs to the KO distribution and classifies cells with a probability of more than 0.5 as KOs. Applying this to all 11 target gene classes allows us to identify all KO cells while evaluating the targeting efficacy of the different gRNAs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">mixscape</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">control</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;gene_target&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;X_pert&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now plot the class distributions for all 111 gRNAs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">plot_barplot</span><span class="p">(</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">guide_rna_column</span><span class="o">=</span><span class="s2">&quot;guide_ID&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8b422ff2a4a2b76b3a023543cd092a02417500965cd79cd17dea4c4e0c6e5756.png" src="../_images/8b422ff2a4a2b76b3a023543cd092a02417500965cd79cd17dea4c4e0c6e5756.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;UBE2L6&#39;}, xlabel=&#39;sgRNA&#39;, ylabel=&#39;% of cells&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We detect variation in gRNA targeting efficiency within each class. For example gRNA 4 for STAT1 did not seem to be very effective, but gRNA 1-3 were.</p>
+<p>Let’s inspect the perturbation scores of an example target gene (IFNGR2).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">plot_perturbscore</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;gene_target&quot;</span><span class="p">,</span> <span class="n">target_gene</span><span class="o">=</span><span class="s2">&quot;IFNGR2&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/af0bf0d783039f3557aa831acea5f7a94616f33b5bfba0b1b877b94db642d5a0.png" src="../_images/af0bf0d783039f3557aa831acea5f7a94616f33b5bfba0b1b877b94db642d5a0.png" />
+</div>
+</div>
+<p>As expected, the distributions of the NT and IFNGR2 NP classes match rather well, whereas the IFGNR2 KO distribution is clearly shifted. This should also be reflected in the posterior probabilities.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">plot_violin</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span>
+    <span class="n">target_gene_idents</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="s2">&quot;IFNGR2 NP&quot;</span><span class="p">,</span> <span class="s2">&quot;IFNGR2 KO&quot;</span><span class="p">],</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;mixscape_class&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/79d050ed2175aec80349d6066a6c3a96cdc6665bb94d436e231c8e2db84f855d.png"><img alt="../_images/79d050ed2175aec80349d6066a6c3a96cdc6665bb94d436e231c8e2db84f855d.png" src="../_images/79d050ed2175aec80349d6066a6c3a96cdc6665bb94d436e231c8e2db84f855d.png" style="width: 823px; height: 668px;" />
+</a>
+</div>
+</div>
+<p>The posterior probabilities clearly separate the two classes highlighting very few unclear cases. This can be further highlighted by running a simple DE test between the mixscape classes and visualizing the results on a heatmap by ordering the posterior probabilities.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">plot_heatmap</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;gene_target&quot;</span><span class="p">,</span>
+    <span class="n">target_gene</span><span class="o">=</span><span class="s2">&quot;IFNGR2&quot;</span><span class="p">,</span>
+    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;X_pert&quot;</span><span class="p">,</span>
+    <span class="n">control</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: dendrogram data not found (using key=dendrogram_mixscape_class). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.
+WARNING: Groups are not reordered because the `groupby` categories and the `var_group_labels` are different.
+categories: IFNGR2 KO, IFNGR2 NP, NT
+var_group_labels: NT
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/c84476ec56dc82175ac986af8c0a3dc5ab021047f065f4f947551ac1cc57f6c5.png"><img alt="../_images/c84476ec56dc82175ac986af8c0a3dc5ab021047f065f4f947551ac1cc57f6c5.png" src="../_images/c84476ec56dc82175ac986af8c0a3dc5ab021047f065f4f947551ac1cc57f6c5.png" style="width: 599px; height: 474px;" />
+</a>
+</div>
+</div>
+<p>Up to this point we have only been working with the transcriptomics data, but we can now leverage the measured proteins to demonstrate that only IFGN pathway KO cells have a reduction in PDL1 expression.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;adt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mixscape_class_global&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mixscape_class_global&quot;</span><span class="p">]</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">plot_violin</span><span class="p">(</span>
+    <span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;adt&quot;</span><span class="p">],</span>
+    <span class="n">target_gene_idents</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="s2">&quot;JAK2&quot;</span><span class="p">,</span> <span class="s2">&quot;STAT1&quot;</span><span class="p">,</span> <span class="s2">&quot;IFNGR1&quot;</span><span class="p">,</span> <span class="s2">&quot;IFNGR2&quot;</span><span class="p">,</span> <span class="s2">&quot;IRF1&quot;</span><span class="p">],</span>
+    <span class="n">keys</span><span class="o">=</span><span class="s2">&quot;PDL1&quot;</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;gene_target&quot;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;mixscape_class_global&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f8cf3ea7659cf164a3bdefc12504f3e4835bc7fb4a5dadfdda6a3aa1fc00929d.png"><img alt="../_images/f8cf3ea7659cf164a3bdefc12504f3e4835bc7fb4a5dadfdda6a3aa1fc00929d.png" src="../_images/f8cf3ea7659cf164a3bdefc12504f3e4835bc7fb4a5dadfdda6a3aa1fc00929d.png" style="width: 823px; height: 668px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="visualizing-perturbation-responses-with-linear-discriminant-analysis">
+<span id="conditions-perturbation-modeling-key-takeaway-3"></span><h3><span class="section-number">19.4.5. </span>Visualizing perturbation responses with Linear Discriminant Analysis<a class="headerlink" href="#visualizing-perturbation-responses-with-linear-discriminant-analysis" title="Link to this heading">#</a></h3>
+<p>The final step in the Mixscape pipeline is to calculate and visualize perturbation-specific clusters. This is done by applying linear discriminant analysis (LDA) and recalculating the UMAP using the determined results. LDA attempts to maximize the separability of known labels, which are the mixscape classes in our case, using both gene expression and the labels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">lda</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">control</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;gene_target&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;X_pert&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">plot_lda</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">mdata</span><span class="p">[</span><span class="s2">&quot;rna&quot;</span><span class="p">],</span> <span class="n">control</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1e5d5ed8d613e606a0c1433e0649d63d370e56af97fd2b1eb23321e616da7ef4.png"><img alt="../_images/1e5d5ed8d613e606a0c1433e0649d63d370e56af97fd2b1eb23321e616da7ef4.png" src="../_images/1e5d5ed8d613e606a0c1433e0649d63d370e56af97fd2b1eb23321e616da7ef4.png" style="width: 768px; height: 661px;" />
+</a>
+</div>
+</div>
+<p>The LDA highlights at least two major types of perturbations as evident by the two islands. However, we want to emphasize that only more stringent analyses, such as pathway analysis followed by biological validation, could determine that several knockouts have similar effects.</p>
+</section>
+</section>
+<section id="quiz">
+<h2><span class="section-number">19.5. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<div class="cell tag_remove_input docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q1 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q1 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q1:hover .flip-card-inner-q1 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q1, .flip-card-back-q1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q1 {
+            background-color: #3965a3;
+            font-size: 20px;
+        }
+        .flip-card-back-q1 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 15px;
+        }_b
+    </style>
+
+    <div class="flip-card-q1">
+        <div class="flip-card-inner-q1">
+            <div class="flip-card-front-q1">
+                Why is it required to have confident cell type labels when applying Augur?
+            </div>
+            <div class="flip-card-back-q1">
+                Confident cell type labels are essential when applying Augur because it prioritizes cell types based on their molecular response to perturbations; inaccurate labels can mislead the analysis.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> Why is it required to have confident cell type labels when applying Augur?</p>
+        <p><strong>Answer:</strong> Confident cell type labels are essential when applying Augur because it prioritizes cell types based on their molecular response to perturbations; inaccurate labels can mislead the analysis.</p>
+    </noscript>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q2 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q2:hover .flip-card-inner-q2 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q2, .flip-card-back-q2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q2 {
+            background-color: #3965a3;
+            font-size: 20px;
+        }
+        .flip-card-back-q2 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 15px;
+        }_b
+    </style>
+
+    <div class="flip-card-q2">
+        <div class="flip-card-inner-q2">
+            <div class="flip-card-front-q2">
+                Why should scGen primarily only be applied to highly expressed genes?
+            </div>
+            <div class="flip-card-back-q2">
+                scGen should primarily be applied to highly expressed genes, as predicting perturbation responses for lowly expressed genes is challenging due to increased noise and variability.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> Why should scGen primarily only be applied to highly expressed genes?</p>
+        <p><strong>Answer:</strong> scGen should primarily be applied to highly expressed genes, as predicting perturbation responses for lowly expressed genes is challenging due to increased noise and variability.</p>
+    </noscript>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q3 {
+            background-color: transparent;
+            width: 350px;
+            height: 200px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            padding: 10px;
+        }
+        .flip-card-inner-q3 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q3:hover .flip-card-inner-q3 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q3, .flip-card-back-q3 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q3 {
+            background-color: #3965a3;
+            font-size: 15px;
+        }
+        .flip-card-back-q3 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 13px;
+        }_b
+    </style>
+
+    <div class="flip-card-q3">
+        <div class="flip-card-inner-q3">
+            <div class="flip-card-front-q3">
+                The mixscape pipeline results in clusters of genetic perturbations. Why must the distances in the UMAPs be interpreted with caution? What does it mean when ome genetic perturbations are close or distant in the UMAP embedding?
+            </div>
+            <div class="flip-card-back-q3">
+                In the Mixscape pipeline, distances in UMAP embeddings should be interpreted with caution because they primarily aid visualization; proximity or distance between genetic perturbations in UMAP space doesn't necessarily reflect true biological similarities or differences.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> The mixscape pipeline results in clusters of genetic perturbations. Why must the distances in the UMAPs be interpreted with caution? What does it mean when ome genetic perturbations are close or distant in the UMAP embedding?</p>
+        <p><strong>Answer:</strong> In the Mixscape pipeline, distances in UMAP embeddings should be interpreted with caution because they primarily aid visualization; proximity or distance between genetic perturbations in UMAP space doesn't necessarily reflect true biological similarities or differences.</p>
+    </noscript>
+    </div></div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">19.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id31">
+<div role="list" class="citation-list">
+<div class="citation" id="id420" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoAvDM+18</a><span class="fn-bracket">]</span></span>
+<p>Matthew Amodio, David van Dijk, Ruth Montgomery, Guy Wolf, and Smita Krishnaswamy. Out-of-sample extrapolation with neuron editing. <em>arXiv preprint arXiv:1805.12198</em>, 2018.</p>
+</div>
+<div class="citation" id="id424" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">pemoBDC+19</a><span class="fn-bracket">]</span></span>
+<p>Aritra Bhattacherjee, Mohamed Nadhir Djekidel, Renchao Chen, Wenqiang Chen, Luis M. Tuesta, and Yi Zhang. Cell type-specific transcriptional programs in mouse prefrontal cortex during adolescence and addiction. <em>Nature Communications</em>, 10(1):4169, Sep 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-019-12054-3">https://doi.org/10.1038/s41467-019-12054-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-019-12054-3">doi:10.1038/s41467-019-12054-3</a>.</p>
+</div>
+<div class="citation" id="id411" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">pemoFMT+21</a><span class="fn-bracket">]</span></span>
+<p>Chris J Frangieh, Johannes C Melms, Pratiksha I Thakore, Kathryn R Geiger-Schuller, Patricia Ho, Adrienne M Luoma, Brian Cleary, Livnat Jerby-Arnon, Shruti Malu, Michael S Cuoco, and others. Multimodal pooled perturb-cite-seq screens in patient models define mechanisms of cancer immune evasion. <em>Nature genetics</em>, 53(3):332–341, 2021.</p>
+</div>
+<div class="citation" id="id414" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>pemoJLWT21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Yuge Ji, Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Machine learning for perturbational single-cell omics. <em>Cell Systems</em>, 12(6):522–537, 2021.</p>
+</div>
+<div class="citation" id="id428" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>pemoKST+18<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id8">2</a>,<a role="doc-backlink" href="#id15">3</a>,<a role="doc-backlink" href="#id16">4</a>,<a role="doc-backlink" href="#id18">5</a>,<a role="doc-backlink" href="#id24">6</a>,<a role="doc-backlink" href="#id25">7</a>)</span>
+<p>Hyun Min Kang, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, Simon Wong, Lauren Byrnes, Cristina M Lanata, and others. Multiplexed droplet single-cell term`rna`-sequencing using natural genetic variation. <em>Nature biotechnology</em>, 36(1):89–94, 2018.</p>
+</div>
+<div class="citation" id="id416" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoLNTW20</a><span class="fn-bracket">]</span></span>
+<p>Mohammad Lotfollahi, Mohsen Naghipourfar, Fabian J Theis, and F Alexander Wolf. Conditional out-of-distribution generation for unpaired data using transfer vae. <em>Bioinformatics</em>, 36(Supplement_2):i610–i617, 2020.</p>
+</div>
+<div class="citation" id="id417" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoLSDD+21</a><span class="fn-bracket">]</span></span>
+<p>Mohammad Lotfollahi, Anna Klimovskaia Susmelj, Carlo De Donno, Yuge Ji, Ignacio L Ibarra, F Alexander Wolf, Nafissa Yakubova, Fabian J Theis, and David Lopez-Paz. Learning interpretable cellular responses to complex perturbations in high-throughput screens. <em>bioRxiv</em>, 2021.</p>
+</div>
+<div class="citation" id="id415" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>pemoLWT19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id22">1</a>,<a role="doc-backlink" href="#id23">2</a>)</span>
+<p>Mohammad Lotfollahi, F Alexander Wolf, and Fabian J Theis. Scgen predicts single-cell perturbation responses. <em>Nature methods</em>, 16(8):715–721, 2019.</p>
+</div>
+<div class="citation" id="id425" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>pemoPMB+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id9">2</a>,<a role="doc-backlink" href="#id26">3</a>,<a role="doc-backlink" href="#id27">4</a>,<a role="doc-backlink" href="#id30">5</a>)</span>
+<p>Efthymia Papalexi, Eleni P. Mimitou, Andrew W. Butler, Samantha Foster, Bernadette Bracken, William M. Mauck, Hans-Hermann Wessels, Yuhan Hao, Bertrand Z. Yeung, Peter Smibert, and Rahul Satija. Characterizing the molecular regulation of inhibitory immune checkpoints with multimodal single-cell screens. <em>Nature Genetics</em>, 53(3):322–331, Mar 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41588-021-00778-2">https://doi.org/10.1038/s41588-021-00778-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41588-021-00778-2">doi:10.1038/s41588-021-00778-2</a>.</p>
+</div>
+<div class="citation" id="id412" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">pemoRSP+21</a><span class="fn-bracket">]</span></span>
+<p>Joseph M Replogle, Reuben A Saunders, Angela N Pogson, Jeffrey A Hussmann, Alexander Lenail, Alina Guna, Lauren Mascibroda, Eric J Wagner, Karen Adelman, Jessica L Bonnar, and others. Mapping information-rich genotype-phenotype landscapes with genome-scale perturb-seq. <em>bioRxiv</em>, 2021.</p>
+</div>
+<div class="citation" id="id418" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoRAS+20</a><span class="fn-bracket">]</span></span>
+<p>Nikolai Russkikh, Denis Antonets, Dmitry Shtokalo, Alexander Makarov, Yuri Vyatkin, Alexey Zakharov, and Evgeny Terentyev. Style transfer with variational autoencoders is a promising approach to term`rna`-seq data harmonization and analysis. <em>Bioinformatics</em>, 36(20):5076–5085, 2020.</p>
+</div>
+<div class="citation" id="id422" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">pemoSSK+21</a><span class="fn-bracket">]</span></span>
+<p>Michael A. Skinnider, Jordan W. Squair, Claudia Kathe, Mark A. Anderson, Matthieu Gautier, Kaya J. E. Matson, Marco Milano, Thomas H. Hutson, Quentin Barraud, Aaron A. Phillips, Leonard J. Foster, Gioele La Manno, Ariel J. Levine, and Grégoire Courtine. Cell type prioritization in single-cell data. <em>Nature Biotechnology</em>, 39(1):30–34, Jan 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-020-0605-1">https://doi.org/10.1038/s41587-020-0605-1</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-020-0605-1">doi:10.1038/s41587-020-0605-1</a>.</p>
+</div>
+<div class="citation" id="id429" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">pemoSGK+21</a><span class="fn-bracket">]</span></span>
+<p>Jordan W. Squair, Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, Taha Qaiser, Kaya J. E. Matson, Quentin Barraud, Ariel J. Levine, Gioele La Manno, Michael A. Skinnider, and Grégoire Courtine. Confronting false discoveries in single-cell differential expression. <em>Nature Communications</em>, 12(1):5692, Sep 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">https://doi.org/10.1038/s41467-021-25960-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-021-25960-2">doi:10.1038/s41467-021-25960-2</a>.</p>
+</div>
+<div class="citation" id="id423" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>pemoSSG+21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id11">1</a>,<a role="doc-backlink" href="#id12">2</a>,<a role="doc-backlink" href="#id14">3</a>,<a role="doc-backlink" href="#id17">4</a>,<a role="doc-backlink" href="#id19">5</a>,<a role="doc-backlink" href="#id21">6</a>)</span>
+<p>Jordan W. Squair, Michael A. Skinnider, Matthieu Gautier, Leonard J. Foster, and Grégoire Courtine. Prioritization of cell types responsive to biological perturbations in single-cell data with augur. <em>Nature Protocols</em>, 16(8):3836–3873, Aug 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41596-021-00561-x">https://doi.org/10.1038/s41596-021-00561-x</a>, <a class="reference external" href="https://doi.org/10.1038/s41596-021-00561-x">doi:10.1038/s41596-021-00561-x</a>.</p>
+</div>
+<div class="citation" id="id410" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">pemoSMFR+20</a><span class="fn-bracket">]</span></span>
+<p>Sanjay R Srivatsan, José L McFaline-Figueroa, Vijay Ramani, Lauren Saunders, Junyue Cao, Jonathan Packer, Hannah A Pliner, Dana L Jackson, Riza M Daza, Lena Christiansen, and others. Massively multiplex chemical transcriptomics at single-cell resolution. <em>Science</em>, 367(6473):45–51, 2020.</p>
+</div>
+<div class="citation" id="id427" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id29">pemoSHS+17</a><span class="fn-bracket">]</span></span>
+<p>Marlon Stoeckius, Christoph Hafemeister, William Stephenson, Brian Houck-Loomis, Pratip K. Chattopadhyay, Harold Swerdlow, Rahul Satija, and Peter Smibert. Simultaneous epitope and transcriptome measurement in single cells. <em>Nature Methods</em>, 14(9):865–868, Sep 2017. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">https://doi.org/10.1038/nmeth.4380</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4380">doi:10.1038/nmeth.4380</a>.</p>
+</div>
+<div class="citation" id="id426" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id28">pemoSZHL+18</a><span class="fn-bracket">]</span></span>
+<p>Marlon Stoeckius, Shiwei Zheng, Brian Houck-Loomis, Stephanie Hao, Bertrand Z. Yeung, William M. Mauck, Peter Smibert, and Rahul Satija. Cell hashing with barcoded antibodies enables multiplexing and doublet detection for single cell genomics. <em>Genome Biology</em>, 19(1):224, Dec 2018. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-018-1603-1">https://doi.org/10.1186/s13059-018-1603-1</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-018-1603-1">doi:10.1186/s13059-018-1603-1</a>.</p>
+</div>
+<div class="citation" id="id421" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoWDW22</a><span class="fn-bracket">]</span></span>
+<p>Xiajie Wei, Jiayi Dong, and Fei Wang. Scpregan, a deep generative model for predicting the response of single cell expression to perturbation. <em>Bioinformatics</em>, 2022.</p>
+</div>
+<div class="citation" id="id413" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">pemoWMendezMP+22</a><span class="fn-bracket">]</span></span>
+<p>Hans-Hermann Wessels, Alejandro Méndez-Mancilla, Efthymia Papalexi, William M Mauck, Lu Lu, John A Morris, Eleni Mimitou, Peter Smibert, Neville E Sanjana, and Rahul Satija. Efficient combinatorial targeting of term`rna` transcripts in single cells with cas13 rna perturb-seq. <em>bioRxiv</em>, 2022.</p>
+</div>
+<div class="citation" id="id419" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">pemoYSL+21</a><span class="fn-bracket">]</span></span>
+<p>Bo Yuan, Ciyue Shen, Augustin Luna, Anil Korkut, Debora S Marks, John Ingraham, and Chris Sander. Cellbox: interpretable machine learning for perturbation biology with application to the design of cancer combination therapy. <em>Cell systems</em>, 12(2):128–140, 2021.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">19.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">19.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+<li><p>Mohammad Lotfollahi</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">19.7.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Yuge Ji</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./conditions"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gsea_pathway.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">18. </span>Gene set enrichment and pathway analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../mechanisms/gene_regulatory_networks.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">20. </span>Gene regulatory networks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">19.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditions-perturbation-modeling-key-takeaway-1">19.2. Identifying the cell types most affected by perturbations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">19.2.1. Motivation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-augur">19.2.2. Limitations of Augur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-cell-type-prioritization-for-ifn-stimulation">19.2.3. Predicting cell type prioritization for IFN-β stimulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#determining-the-most-important-genes-for-the-prioritization">19.2.4. Determining the most important genes for the prioritization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#differential-prioritization">19.2.5. Differential prioritization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-ifn-response-for-cd4-t-cells">19.3. Predicting IFN-β response for CD4-T cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-kang-dataset-for-scgen">19.3.1. Setting up the Kang dataset for scGen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-construction-and-training">19.3.2. Model construction and training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-cd4t-responses-to-ifn-stimulation">19.3.3. Predicting CD4T responses to IFN-β stimulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-the-predicted-ifn-response">19.3.4. Evaluating the predicted IFN-β response</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysing-single-pooled-crispr-screens">19.4. Analysing single-pooled CRISPR screens</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">19.4.1. Preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-exploration">19.4.2. Data exploration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-local-perturbation-signatures">19.4.3. Calculating local perturbation signatures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-cells-with-no-detectable-perturbation">19.4.4. Identifying cells with no detectable perturbation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-perturbation-responses-with-linear-discriminant-analysis">19.4.5. Visualizing perturbation responses with Linear Discriminant Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">19.5. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">19.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">19.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">19.7.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">19.7.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

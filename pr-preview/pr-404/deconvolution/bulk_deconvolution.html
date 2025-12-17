@@ -1,0 +1,2669 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>22. Bulk deconvolution &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'deconvolution/bulk_deconvolution';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="23. Single-cell ATAC sequencing" href="../chromatin_accessibility/introduction.html" />
+    <link rel="prev" title="21. Cell-cell communication" href="../mechanisms/cell_cell_communication.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks using chromatin accessibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">43. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">44. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">45. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">46. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">47. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">48. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">49. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/deconvolution/bulk_deconvolution.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fdeconvolution/bulk_deconvolution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/deconvolution/bulk_deconvolution.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bulk deconvolution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">22.1. Background</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approaches">22.2. Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deconvolving-bulk-covid-19-whole-blood-samples">22.3. Deconvolving bulk COVID-19 whole blood samples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">22.3.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">22.3.2. Loading Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">22.3.3. Data preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-single-cell-data">22.3.4. Visualization of single-cell data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deconvolving-using-music">22.3.5. Deconvolving using MuSiC</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-r">22.3.5.1. Loading R</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-music">22.3.5.2. Running MuSiC</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs-and-validations">22.3.5.3. Outputs and Validations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-and-traps">22.4. Limitations and traps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">22.5. New directions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.7.1. Authors</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bulk-deconvolution">
+<h1><span class="section-number">22. </span>Bulk deconvolution<a class="headerlink" href="#bulk-deconvolution" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Use unbiased reference data with no missing cell type.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-1"><span class="std std-ref">Background</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Normalize the reference data using library size normalization.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-2"><span class="std std-ref">Visualization of single-cell data</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Feature selection prior deconvolution improves the accuracy of the results particularly for linear deconvolution methods.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-3"><span class="std std-ref">Limitations and traps</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Deconvolution is a challenging task (see limitations and traps). Therefore, we recommend the users to try more than one deconvolution method and select one after assessing the results biologically.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#deconvolution-bulk-deconvolution-key-takeaway-4"><span class="std std-ref">Limitations and traps</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+</div>
+</div>
+</div>
+</details><!-- END DROPDOWNS -->
+<p><em>TL;DR We provide a brief overview over basic concepts of cell type deconvolution including input structure, data preprocessing and analysis of the output data.</em></p>
+<section id="background">
+<span id="deconvolution-bulk-deconvolution-key-takeaway-1"></span><h2><span class="section-number">22.1. </span>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<p>Studying differences in cell type compositions within a bulk tissue is important for several reasons. First, interactions between cell types play a major role in disease progression and recovery. Second, molecular patterns (such as gene expression and protein abundance) are often directly associated with the cell types compositions within the tissue. Understanding these compositions is crucial for studying the underlying molecular mechanisms of a biological condition such as disease. Third, uncovering disease-specific cell type patterns allow for better therapeutic targeting, providing an important clinical utility.</p>
+<p>Cell type deconvolution is a computational framework designed for inferring the compositions of cell populations within a bulk heterogeneous tissue <span id="id1">[<a class="reference internal" href="#id465" title="Rose Du, Vince Carey, and Scott T. Weiss. Deconvseq: deconvolution of cell mixture distribution in sequencing data. Bioinformatics, 35(24):5095–5102, Dec 2019. URL: https://doi.org/10.1093/bioinformatics/btz444, doi:10.1093/bioinformatics/btz444.">Du <em>et al.</em>, 2019</a>, <a class="reference internal" href="#id463" title="Alexandre Kuhn, Azad Kumar, Alexandra Beilina, Allissa Dillman, Mark R. Cookson, and Andrew B. Singleton. Cell population-specific expression analysis of human cerebellum. BMC Genomics, 13(610):1471-2164, Nov 2012. URL: https://doi.org/10.1186/1471-2164-13-610, doi:10.1186/1471-2164-13-610.">Kuhn <em>et al.</em>, 2012</a>, <a class="reference internal" href="#id464" title="Stanley E. Schwartz, Russell Shackney. Applying unmixing to gene expression data for tumor phylogeny inference. BMC Bioinformatics, Jan 2010. URL: https://doi.org/10.1186/1471-2105-11-42, doi:10.1186/1471-2105-11-42.">Schwartz, 2010</a>, <a class="reference internal" href="#id466" title="Konstantin Zaitsev, Monika Bambouskova, Amanda Swain, and Maxim N. Artyomov. Complete deconvolution of cellular mixtures based on linearity of transcriptional signatures. Nature Communications, May 2019. URL: https://doi.org/10.1038/s41467-019-09990-5, doi:10.1038/s41467-019-09990-5.">Zaitsev <em>et al.</em>, 2019</a>]</span>. As measuring these compositions experimentally is time-consuming and expensive, deconvolution methods allow large scale analysis of cell populations based on molecular data. Deconvolution methods usually follow linear regression defined as:</p>
+<p><span class="math notranslate nohighlight">\(y = bX\)</span></p>
+<p>where, <span class="math notranslate nohighlight">\(y\)</span> refers to a mixture of heterogeneous gene expression profile using common molecular pipelines (e.g. microarray or RNA-seq), <span class="math notranslate nohighlight">\(X\)</span> is a signature matrix containing homogeneous cell type-specific profiles, and <span class="math notranslate nohighlight">\(b\)</span> is the vector of cellular proportions in the mixture data inferred by the deconvolution method <span id="id2">[<a class="reference internal" href="#id467" title="Maayan Baron, Adrian Veres, Samuel L. Wolock, Aubrey L. Faust, Renaud Gaujoux, Amedeo Vetere, Jennifer Hyoje Ryu, Bridget K. Wagner, Shai S. Shen-Orr, Allon M. Klein, Douglas A. Melton, and Itai Yanai. A single-cell transcriptomic map of the human and mouse pancreas reveals inter- and intra-cell population structure. Bioinformatics, 3(4):346–360, Oct 2016. URL: https://doi.org/10.1016/j.cels.2016.08.011, doi:10.1016/j.cels.2016.08.011.">Baron <em>et al.</em>, 2016</a>]</span>. To select an optimal deconvolution method suitable for the targeted biological conditions, the impact of several technical and biological factors should be considered including: the deconvolution method, reference data with missing or rare cell types, data normalization and the selection of features (markers).</p>
+<p>The signature matrix <span class="math notranslate nohighlight">\(X\)</span>, used to infer cellular compositions, reflects our best knowledge of cellular heterogeneity within the tissue and highly influences the success of the deconvolution process <span id="id3">[<a class="reference internal" href="#id468" title="Hananeh Aliee and Fabian J. Theis. Autogenes: automatic gene selection using multi-objective optimization for rna-seq deconvolution. Cell Systems, 12(7):706–715, Jul 2021. URL: https://doi.org/10.1016/j.cels.2021.05.006, doi:10.1016/j.cels.2021.05.006.">Aliee and Theis, 2021</a>]</span>. Originally, signature matrices were generated by profiling sorting cells from a heterogeneous tissue (using FACS or CyTOF), suffering from internal biases due to the pre-selection of cell type panels and the absence of appropriate antibodies <span id="id4">[<a class="reference internal" href="#id460" title="Dvir Aran, Zicheng Hu, and Atul J. Butte. xCell: digitally portraying the tissue cellular heterogeneity landscape. Genome Biology, 11 2017. URL: https://doi.org/10.1186/s13059-017-1349-1, doi:10.1186/s13059-017-1349-1.">Aran <em>et al.</em>, 2017</a>, <a class="reference internal" href="#id470" title="Gianni Monaco, Bernett Lee, Weili Xu, Seri Mustafah, You Yi Hwang, Christophe Carré, Nicolas Burdin, Lucian Visan, Michele Ceccarelli, Michael Poidinger, Alfred Zippelius, João Pedro de Magalhães, and Anis Larbi. Rna-seq signatures normalized by mrna abundance allow absolute deconvolution of human immune cell types. Cell Reports, 26(6):1627–1640, Feb 2019. URL: https://doi.org/10.1016/j.celrep.2019.01.041, doi:10.1016/j.celrep.2019.01.041.">Monaco <em>et al.</em>, 2019</a>]</span>. Today, these matrices are mainly generated as unbiased profiles using single cell technologies, allowing the generation of signature matrices across different organisms, tissues and biological conditions <span id="id5">[<a class="reference internal" href="#id468" title="Hananeh Aliee and Fabian J. Theis. Autogenes: automatic gene selection using multi-objective optimization for rna-seq deconvolution. Cell Systems, 12(7):706–715, Jul 2021. URL: https://doi.org/10.1016/j.cels.2021.05.006, doi:10.1016/j.cels.2021.05.006.">Aliee and Theis, 2021</a>, <a class="reference internal" href="#id471" title="Aaron M. Newman, Chloé B. Steen, Chih Long Liu, Andrew J. Gentles, Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, Mohammad S. Esfahani, Bogdan A. Luca, David Steiner, Maximilian Diehn, and Ash A. Alizadeh. Determining cell type abundance and expression from bulk tissues with digital cytometry. Nature Biotechnology, 37:773–782, May 2019. URL: https://doi.org/10.1038/s41587-019-0114-2, doi:10.1038/s41587-019-0114-2.">Newman <em>et al.</em>, 2019</a>]</span>.</p>
+</section>
+<section id="approaches">
+<h2><span class="section-number">22.2. </span>Approaches<a class="headerlink" href="#approaches" title="Link to this heading">#</a></h2>
+<p>Bulk deconvolution approaches can be divided into linear regression based methods, enrichment based methods, non-linear deep-learning based methods and others.</p>
+<p>The most common type of cell type deconvolution methods are linear regression-based. These methods try to directly solve the <span class="math notranslate nohighlight">\(y = bX\)</span> equation using different regularizations and relying on a relatively high number of features. Examples of such tools are <strong>CIBERSORTx</strong> <span id="id6">[<a class="reference internal" href="#id471" title="Aaron M. Newman, Chloé B. Steen, Chih Long Liu, Andrew J. Gentles, Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, Mohammad S. Esfahani, Bogdan A. Luca, David Steiner, Maximilian Diehn, and Ash A. Alizadeh. Determining cell type abundance and expression from bulk tissues with digital cytometry. Nature Biotechnology, 37:773–782, May 2019. URL: https://doi.org/10.1038/s41587-019-0114-2, doi:10.1038/s41587-019-0114-2.">Newman <em>et al.</em>, 2019</a>]</span>, <strong>MuSiC</strong> <span id="id7">[]</span>, <strong>dtangle</strong> <span id="id8">[]</span> and <strong>DWLS</strong> <span id="id9">[]</span>.</p>
+<p>Enrichment based tools on the other hand calculate an enrichment score for each cell type separately, based on a gene set that represents this cell type. The enrichment scores for all cell types are then combined and transformed to compositions by a method-specific transformation function. As these methods only consider a single cell type at a time, tend to provide meaningful insights in simple cases, but are less accurate when reference data includes many cell types. <strong>xCell</strong> <span id="id10">[<a class="reference internal" href="#id460" title="Dvir Aran, Zicheng Hu, and Atul J. Butte. xCell: digitally portraying the tissue cellular heterogeneity landscape. Genome Biology, 11 2017. URL: https://doi.org/10.1186/s13059-017-1349-1, doi:10.1186/s13059-017-1349-1.">Aran <em>et al.</em>, 2017</a>]</span> is an example of an enrichment based tool.</p>
+<p>The third option pose non-linear deep learning methods that emerged with the promise of improving deconvolution accuracy, while still attempting to maintain high biological interpretability. It is still early to say whether these methods can be better than other types of methods. <strong>Scaden</strong> <span id="id11">[<a class="reference internal" href="#id461" title="Kevin Menden, Mohamed Marouf, Sergio Oller, Anupriya Dalmia, Daniel Sumner Magruder, Karin Kloiber, Peter Heutink, and Stefan Bonn. Deep learning&amp;#x2013;based cell composition analysis from tissue expression profiles. Science Advances, 6(30):eaba2619, 2020. URL: https://www.science.org/doi/abs/10.1126/sciadv.aba2619, arXiv:https://www.science.org/doi/pdf/10.1126/sciadv.aba2619, doi:10.1126/sciadv.aba2619.">Menden <em>et al.</em>, 2020</a>]</span> is an example of such a deep-learning based method.</p>
+<p>Bulk deconvolution methods have been benchmarked extensively and the results are overall quite consistent <span id="id12">[<a class="reference internal" href="#id462" title="Brian B Nadel, Meritxell Oliva, Benjamin L Shou, Keith Mitchell, Feiyang Ma, Dennis J Montoya, Alice Mouton, Sarah Kim-Hellmuth, Barbara E Stranger, Matteo Pellegrini, and Serghei Mangul. Systematic evaluation of transcriptomics-based deconvolution methods and references using thousands of clinical samples. Briefings in Bioinformatics, 08 2021. bbab265. URL: https://doi.org/10.1093/bib/bbab265, arXiv:https://academic.oup.com/bib/article-pdf/22/6/bbab265/42242154/bbab265.pdf, doi:10.1093/bib/bbab265.">Nadel <em>et al.</em>, 2021</a>, <a class="reference internal" href="#id459" title="Shai S Shen-Orr and Renaud Gaujoux. Computational deconvolution: extracting cell type-specific information from heterogeneous samples. Current Opinion in Immunology, 25(5):571-578, 2013. Special section: Systems biology and bioinformatics / Immunogenetics and transplantation. URL: https://www.sciencedirect.com/science/article/pii/S0952791513001507, doi:https://doi.org/10.1016/j.coi.2013.09.015.">Shen-Orr and Gaujoux, 2013</a>]</span>. Methods using single-cell RNA-seq data show good performance whereas semi-supervised approaches show higher error rates. Failing to include cell types in the reference that are present in the bulk mixture lead to worse results in any case <span id="id13">[]</span>. Cobos et al. recommend that (1) the input data should be in linear scale, (2) Avoid row scaling, column min-max, column z-score or quantile normalization, (3) regression bulk deconvolution methods like CIBERSORTx or FARDEEP <span id="id14">[]</span> perform well and if scRNA-seq data is available DWLS, MuSiC or SCDC <span id="id15">[]</span> should also be applied for result comparisons, (4) a stringent marker selection strategy that focuses on the differences between the first and second cell types with highest expression values should be used, (5) a comprehensive reference matrix that includes all relevant cell types that are present in the mixture should be used <span id="id16">[]</span>.
+The effect of the normalization strategy is unclear with Li et al. <span id="id17">[]</span> suggesting that it has a strong effect on the results which was not confirmed by Cobos et al. <span id="id18">[]</span>.</p>
+<p>Since many bulk deconvolution tools, including the well-performing CIBERSORTx, are only available as web tools, we opt to demonstrate a use-case with MuSic.</p>
+<p>It is important to note that MuSiC requires multiple single-cell samples including the same cell types. In practice, our reference profile might not include more than a single sample or some cell types might be missing across the samples. In these cases, MuSiC fails and another deconvolution method should be selected.</p>
+</section>
+<section id="deconvolving-bulk-covid-19-whole-blood-samples">
+<h2><span class="section-number">22.3. </span>Deconvolving bulk COVID-19 whole blood samples<a class="headerlink" href="#deconvolving-bulk-covid-19-whole-blood-samples" title="Link to this heading">#</a></h2>
+<p>In the following use-case we deconvolve 49 bulk whole blood RNA-seq samples collected from 39 COVID-19 patients and 10 healthy controls <span id="id19">[]</span> using MuSiC. As single-cell reference dataset we’ll use whole blood single-cell RNA-seq data of patients with COVID-19 <span id="id20">[<a class="reference internal" href="#id353" title="Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. Cell, 182(6):1419-1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: https://doi.org/10.1016/j.cell.2020.08.001, doi:10.1016/j.cell.2020.08.001.">Schulte-Schrepping <em>et al.</em>, 2020</a>]</span>.</p>
+<section id="environment-setup">
+<h3><span class="section-number">22.3.1. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sci</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-data">
+<h3><span class="section-number">22.3.2. </span>Loading Data<a class="headerlink" href="#loading-data" title="Link to this heading">#</a></h3>
+<p>We start by reading the single-cell and bulk data. We do not scale the data as it has been shown that deconvolution methods using scRNA-seq data as reference, perform best when applied to data in linear scale with improved accuracy after library size normalization <span id="id21">[]</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_file</span> <span class="o">=</span> <span class="s2">&quot;/storage/groups/ml01/workspace/amit.frishberg/OriginalData/&quot;</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;seurat_COVID19_freshWB_PBMC_cohort2_incl_raw.h5ad&quot;</span><span class="p">)</span>
+
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Whole_blood&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 89883 × 33417
+    obs: &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nCount_HTO&#39;, &#39;nFeature_HTO&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;HTO_maxID&#39;, &#39;HTO_secondID&#39;, &#39;HTO_margin&#39;, &#39;HTO_classification&#39;, &#39;HTO_classification.global&#39;, &#39;hash.ID&#39;, &#39;demultID&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;date_of_sampling&#39;, &#39;experiment&#39;, &#39;cartridge&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;diagnosis&#39;, &#39;oxygen&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;primary_complaint&#39;, &#39;RNA_snn_res.0.8&#39;, &#39;cluster_labels_res.0.8&#39;, &#39;new.order&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;
+    var: &#39;vst.mean&#39;, &#39;vst.variance&#39;, &#39;vst.variance.expected&#39;, &#39;vst.variance.standardized&#39;, &#39;vst.variable&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Neutrophils_1             22714
+Neutrophils_2             18675
+Neutrophils_3              9986
+CD4_T_cells_1              6278
+CD14_Monocytes_1           5362
+Neutrophils_4              4710
+CD8_T_cells                3255
+Megakaryocytes             3180
+NK_cells                   2916
+B_cells_1                  2561
+CD4_T_cells_2              1917
+Mixed_cells                1727
+Immature Neutrophils_1     1317
+CD16_Monocytes              983
+Immature Neutrophils_2      981
+CD14_Monocytes_3            632
+Eosinophils                 579
+CD14_Monocytes_2            556
+CD4_T_cells_3               409
+Plasmablast                 390
+Prol. cells                 247
+mDC                         235
+B_cells_2                   138
+pDC                          86
+CD34+ GATA2+ cells           49
+Name: cluster_labels_res.0.8, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bulk</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;BulkSmall.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_file</span> <span class="o">+</span> <span class="s2">&quot;annoSmall.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bulk</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-preprocessing">
+<h3><span class="section-number">22.3.3. </span>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h3>
+<p>After reading the data, we need to remove <em>undefined</em> cells from our single-cell reference data. Here, we remove mixed and proliferating cells which are not limited to a single cell type.</p>
+<p><strong>Note</strong> Quality control by means of removing low quality cells and genes has already been perform on the single-cell data. So, we skip that.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Mixed_cells&quot;</span><span class="p">,</span> <span class="s2">&quot;Prol. cells&quot;</span><span class="p">])</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ct_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Neutrophils_1             22714
+Neutrophils_2             18675
+Neutrophils_3              9986
+CD4_T_cells_1              6278
+CD14_Monocytes_1           5362
+Neutrophils_4              4710
+CD8_T_cells                3255
+Megakaryocytes             3180
+NK_cells                   2916
+B_cells_1                  2561
+CD4_T_cells_2              1917
+Immature Neutrophils_1     1317
+CD16_Monocytes              983
+Immature Neutrophils_2      981
+CD14_Monocytes_3            632
+Eosinophils                 579
+CD14_Monocytes_2            556
+CD4_T_cells_3               409
+Plasmablast                 390
+mDC                         235
+B_cells_2                   138
+pDC                          86
+CD34+ GATA2+ cells           49
+Name: cluster_labels_res.0.8, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>It has been shown that deconvolution methods commonly fail to predict the proportion of rare cells <span id="id22">[]</span>. In case that you want to remove rare cell types, you can limiting cell types to be above <code class="docutils literal notranslate"><span class="pre">cellTypeNumCutOff</span></code> cells. This cutoff is user-defined and should be selected based on the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># removing very rare cells</span>
+<span class="n">rare_ct_cut_off</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># This is a user-specific parameter based on the data</span>
+<span class="n">ct_to_keep</span> <span class="o">=</span> <span class="n">ct_counts</span><span class="p">[</span><span class="n">ct_counts</span> <span class="o">&gt;</span> <span class="n">rare_ct_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ct_to_keep</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Neutrophils_1             22714
+Neutrophils_2             18675
+Neutrophils_3              9986
+CD4_T_cells_1              6278
+CD14_Monocytes_1           5362
+Neutrophils_4              4710
+CD8_T_cells                3255
+Megakaryocytes             3180
+NK_cells                   2916
+B_cells_1                  2561
+CD4_T_cells_2              1917
+Immature Neutrophils_1     1317
+CD16_Monocytes              983
+Immature Neutrophils_2      981
+CD14_Monocytes_3            632
+Eosinophils                 579
+CD14_Monocytes_2            556
+CD4_T_cells_3               409
+Plasmablast                 390
+mDC                         235
+B_cells_2                   138
+pDC                          86
+Name: cluster_labels_res.0.8, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to filter for the shared genes across bulk and single-cell data before selecting highly variable genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bulk_sc_genes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">bulk</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">bulk</span> <span class="o">=</span> <span class="n">bulk</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bulk_sc_genes</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">bulk_sc_genes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization-of-single-cell-data">
+<span id="deconvolution-bulk-deconvolution-key-takeaway-2"></span><h3><span class="section-number">22.3.4. </span>Visualization of single-cell data<a class="headerlink" href="#visualization-of-single-cell-data" title="Link to this heading">#</a></h3>
+<p>For visualization of single-cell data, we first normalize the counts, select highly-variable genes and log transform the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">counts_per_cell_after</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;cell_ranger&quot;</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">adata_log</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>  <span class="c1"># logged counts are only used for visualisation (can also work with layers)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then reduce the dimensionality using PCA and visualize the data using UMAP:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_log</span><span class="p">)</span>
+<span class="n">adata_log</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_pca&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># multiply by -1 to match Seurat</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata_log</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_log</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_log</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cc15b4ebe38bcc73aaab5123a6723b4e1b0754915d49bc165b6c2663a4b0aecd.png" src="../_images/cc15b4ebe38bcc73aaab5123a6723b4e1b0754915d49bc165b6c2663a4b0aecd.png" />
+</div>
+</div>
+</section>
+<section id="deconvolving-using-music">
+<h3><span class="section-number">22.3.5. </span>Deconvolving using MuSiC<a class="headerlink" href="#deconvolving-using-music" title="Link to this heading">#</a></h3>
+<section id="loading-r">
+<h4><span class="section-number">22.3.5.1. </span>Loading R<a class="headerlink" href="#loading-r" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># R interface</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata2ri</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rpy2.robjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">pandas2ri</span>
+
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">anndata2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Shennor\.conda\envs\eharpy\lib\site-packages\rpy2\robjects\packages.py:365: UserWarning: The symbol &#39;quartz&#39; is not in this R namespace/package.
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<p>To use the R scripts, we need to convert the data from Python to R. In some cases, this requires sub-sampling of the data to avoid memory limitations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">downSamplingSize</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">downSamplingIndexes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">currCell</span> <span class="o">==</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">downSamplingSize</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">currCell</span> <span class="o">==</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])]</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">currCell</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">])</span>
+<span class="p">]</span>
+<span class="n">downSamplingIndexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">downSamplingIndexes</span><span class="p">))</span>
+
+<span class="n">adata_r</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">downSamplingIndexes</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_r</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 1809 × 26807
+    obs: &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nCount_HTO&#39;, &#39;nFeature_HTO&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;HTO_maxID&#39;, &#39;HTO_secondID&#39;, &#39;HTO_margin&#39;, &#39;HTO_classification&#39;, &#39;HTO_classification.global&#39;, &#39;hash.ID&#39;, &#39;demultID&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;date_of_sampling&#39;, &#39;experiment&#39;, &#39;cartridge&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;diagnosis&#39;, &#39;oxygen&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;primary_complaint&#39;, &#39;RNA_snn_res.0.8&#39;, &#39;cluster_labels_res.0.8&#39;, &#39;new.order&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;
+    var: &#39;vst.mean&#39;, &#39;vst.variance&#39;, &#39;vst.variance.expected&#39;, &#39;vst.variance.standardized&#39;, &#39;vst.variable&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>If sub-sampling is not required (data is relatively small), one can simply convert the entire AnnData to an R object</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_r</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata_r</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 87860 × 26807
+    obs: &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;nCount_HTO&#39;, &#39;nFeature_HTO&#39;, &#39;percent.mito&#39;, &#39;percent.hb&#39;, &#39;HTO_maxID&#39;, &#39;HTO_secondID&#39;, &#39;HTO_margin&#39;, &#39;HTO_classification&#39;, &#39;HTO_classification.global&#39;, &#39;hash.ID&#39;, &#39;demultID&#39;, &#39;donor&#39;, &#39;onset_of_symptoms&#39;, &#39;days_after_onset&#39;, &#39;sampleID&#39;, &#39;date_of_sampling&#39;, &#39;experiment&#39;, &#39;cartridge&#39;, &#39;platform&#39;, &#39;purification&#39;, &#39;cells&#39;, &#39;age&#39;, &#39;sex&#39;, &#39;group_per_sample&#39;, &#39;who_per_sample&#39;, &#39;disease_stage&#39;, &#39;diagnosis&#39;, &#39;oxygen&#39;, &#39;outcome&#39;, &#39;comorbidities&#39;, &#39;COVID.19.related_medication_and_anti.microbials&#39;, &#39;primary_complaint&#39;, &#39;RNA_snn_res.0.8&#39;, &#39;cluster_labels_res.0.8&#39;, &#39;new.order&#39;, &#39;hpca.labels&#39;, &#39;blueprint.labels&#39;, &#39;monaco.labels&#39;, &#39;immune.labels&#39;, &#39;dmap.labels&#39;, &#39;hemato.labels&#39;, &#39;n_counts&#39;
+    var: &#39;vst.mean&#39;, &#39;vst.variance&#39;, &#39;vst.variance.expected&#39;, &#39;vst.variance.standardized&#39;, &#39;vst.variable&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;hvg&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;
+    layers: &#39;counts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-music">
+<h4><span class="section-number">22.3.5.2. </span>Running MuSiC<a class="headerlink" href="#running-music" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span>
+library(MuSiC)
+library(Biobase)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We will first gather all the remaining inputs needed for running MuSiC:
+<br>1. adata_r - contains the single cell matrix which will used as a reference.
+<br>2. cell_subsets_r - cell type identities.
+<br>3. bulk - the bulk samples which the deconvolution process will be conducted on.
+<br>4. sc_genes - gene markers used in the MuSiC analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cell_subsets_r</span> <span class="o">=</span> <span class="n">adata_r</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cluster_labels_res.0.8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc_genes</span> <span class="o">=</span> <span class="n">adata_r</span><span class="o">.</span><span class="n">var_names</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>MuSiC runs the deconvolution framework one sample at a time. Here, 9*** are sample names.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">R</span> -i adata_r,cell_subsets_r,bulk,sc_genes -o musicRes
+df = data.frame(cellNames = cell_subsets_r, Sample = factor(rep(1, dim(adata_r@colData)[1])))
+row.names(df) = row.names(adata_r@colData)
+df = new(&quot;AnnotatedDataFrame&quot;, data = df) # Cell type identities are stored as an AnnotatedDataFrame
+
+# Creating an ExpressionSet from the single cell matrix
+scDataMatrix = Matrix::as.matrix(adata_r@assays@data@listData[[1]])
+row.names(scDataMatrix) = sc_genes
+scDataMatrix = scDataMatrix[rowSums(scDataMatrix)&gt;0,] # Removing genes with no reads
+SCDataES &lt;- Biobase::ExpressionSet(assayData=scDataMatrix,phenoData = df, protocolData = df)
+
+bulkDataES &lt;- Biobase::ExpressionSet(assayData=as.matrix(bulk)) # Creating an ExpressionSet from the bulk matrix
+musicRes = MuSiC::music_prop(bulk.eset = bulkDataES, sc.eset = SCDataES, clusters = &#39;cellNames&#39;) # Running MuSiC
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Creating Relative Abundance Matrix...
+
+R[write to console]: Creating Variance Matrix...
+
+R[write to console]: Creating Library Size Matrix...
+
+R[write to console]: Used 20407 common genes...
+
+R[write to console]: Used 23 cell types in deconvolution...
+
+R[write to console]: 9088 has common genes 18250 ...
+
+R[write to console]: 9089 has common genes 17774 ...
+
+R[write to console]: 9091 has common genes 18598 ...
+
+R[write to console]: 9092 has common genes 16184 ...
+
+R[write to console]: 9093 has common genes 18585 ...
+
+R[write to console]: 9094 has common genes 18701 ...
+
+R[write to console]: 9095 has common genes 18646 ...
+
+R[write to console]: 9096 has common genes 17247 ...
+
+R[write to console]: 9097 has common genes 17922 ...
+
+R[write to console]: 9098 has common genes 17987 ...
+
+R[write to console]: 9099 has common genes 18223 ...
+
+R[write to console]: 9100 has common genes 18786 ...
+
+R[write to console]: 9101 has common genes 16458 ...
+
+R[write to console]: 9102 has common genes 17604 ...
+
+R[write to console]: 9103 has common genes 17429 ...
+
+R[write to console]: 9104 has common genes 18118 ...
+
+R[write to console]: 9105 has common genes 15286 ...
+
+R[write to console]: 9106 has common genes 17237 ...
+
+R[write to console]: 9107 has common genes 15735 ...
+
+R[write to console]: 9108 has common genes 17387 ...
+
+R[write to console]: 9109 has common genes 16863 ...
+
+R[write to console]: 9110 has common genes 17736 ...
+
+R[write to console]: 9112 has common genes 17513 ...
+
+R[write to console]: 9113 has common genes 14950 ...
+
+R[write to console]: 9114 has common genes 17318 ...
+
+R[write to console]: 9116 has common genes 14518 ...
+
+R[write to console]: 9117 has common genes 13708 ...
+
+R[write to console]: 9118 has common genes 17526 ...
+
+R[write to console]: 9119 has common genes 17274 ...
+
+R[write to console]: 9120 has common genes 16520 ...
+
+R[write to console]: 9121 has common genes 15434 ...
+
+R[write to console]: 9165 has common genes 16907 ...
+
+R[write to console]: 9166 has common genes 16534 ...
+
+R[write to console]: 9167 has common genes 17115 ...
+
+R[write to console]: 9168 has common genes 16621 ...
+
+R[write to console]: 9169 has common genes 17251 ...
+
+R[write to console]: 9170 has common genes 17353 ...
+
+R[write to console]: 9171 has common genes 14603 ...
+
+R[write to console]: 9172 has common genes 14141 ...
+
+R[write to console]: 9122 has common genes 17865 ...
+
+R[write to console]: 9123 has common genes 18009 ...
+
+R[write to console]: 9124 has common genes 18390 ...
+
+R[write to console]: 9125 has common genes 17235 ...
+
+R[write to console]: 9126 has common genes 18432 ...
+
+R[write to console]: 9127 has common genes 17662 ...
+
+R[write to console]: 9128 has common genes 16875 ...
+
+R[write to console]: 9129 has common genes 17396 ...
+
+R[write to console]: 9130 has common genes 19469 ...
+
+R[write to console]: 9131 has common genes 18756 ...
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the final output matrix</span>
+<span class="n">music_frac</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">musicRes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">music_frac</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">bulk</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cell_subsets_r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="outputs-and-validations">
+<h4><span class="section-number">22.3.5.3. </span>Outputs and Validations<a class="headerlink" href="#outputs-and-validations" title="Link to this heading">#</a></h4>
+<p>The main output of all cell type deconvolution methods is a NxM matrix, where:
+<br>N (rows) - number of samples
+<br>M (columns) - the number of cell types
+<br>The values of each cell in the matrix represents the cell type composition of a specific cell type within a specific sample. In most cases, cell type compositions in a sample with be shown as fractions therefore, non-negative values, summing to one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">music_frac</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>B_cells_1</th>
+      <th>B_cells_2</th>
+      <th>CD14_Monocytes_1</th>
+      <th>CD14_Monocytes_2</th>
+      <th>CD14_Monocytes_3</th>
+      <th>CD16_Monocytes</th>
+      <th>CD34+ GATA2+ cells</th>
+      <th>CD4_T_cells_1</th>
+      <th>CD4_T_cells_2</th>
+      <th>CD4_T_cells_3</th>
+      <th>...</th>
+      <th>Immature Neutrophils_2</th>
+      <th>Megakaryocytes</th>
+      <th>NK_cells</th>
+      <th>Neutrophils_1</th>
+      <th>Neutrophils_2</th>
+      <th>Neutrophils_3</th>
+      <th>Neutrophils_4</th>
+      <th>Plasmablast</th>
+      <th>mDC</th>
+      <th>pDC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9088</th>
+      <td>0.025266</td>
+      <td>0.000007</td>
+      <td>0.009212</td>
+      <td>0.007646</td>
+      <td>0.004111</td>
+      <td>0.000000</td>
+      <td>0.021343</td>
+      <td>0.055596</td>
+      <td>0.0</td>
+      <td>0.022603</td>
+      <td>...</td>
+      <td>0.004530</td>
+      <td>0.037775</td>
+      <td>0.035206</td>
+      <td>0.181982</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.096936</td>
+      <td>0.007348</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9089</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.011156</td>
+      <td>0.013301</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.011891</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000594</td>
+      <td>0.012610</td>
+      <td>0.000000</td>
+      <td>0.402237</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.117283</td>
+      <td>0.000086</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9091</th>
+      <td>0.000091</td>
+      <td>0.000000</td>
+      <td>0.005645</td>
+      <td>0.005848</td>
+      <td>0.000309</td>
+      <td>0.000247</td>
+      <td>0.003656</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.063919</td>
+      <td>0.011228</td>
+      <td>0.343444</td>
+      <td>0.000000</td>
+      <td>0.002390</td>
+      <td>0.155726</td>
+      <td>0.000936</td>
+      <td>0.0</td>
+      <td>0.000003</td>
+    </tr>
+    <tr>
+      <th>9092</th>
+      <td>0.004650</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.002024</td>
+      <td>0.000000</td>
+      <td>0.003379</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.091188</td>
+      <td>0.004478</td>
+      <td>0.294886</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.175727</td>
+      <td>0.001784</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9093</th>
+      <td>0.008431</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.032441</td>
+      <td>0.000000</td>
+      <td>0.004801</td>
+      <td>0.020848</td>
+      <td>0.0</td>
+      <td>0.001814</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.025210</td>
+      <td>0.033820</td>
+      <td>0.100954</td>
+      <td>0.090013</td>
+      <td>0.000000</td>
+      <td>0.276946</td>
+      <td>0.000504</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9094</th>
+      <td>0.099594</td>
+      <td>0.000000</td>
+      <td>0.000425</td>
+      <td>0.003925</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.016660</td>
+      <td>0.016462</td>
+      <td>0.0</td>
+      <td>0.027290</td>
+      <td>...</td>
+      <td>0.002317</td>
+      <td>0.000000</td>
+      <td>0.029776</td>
+      <td>0.020330</td>
+      <td>0.082443</td>
+      <td>0.000000</td>
+      <td>0.128015</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9095</th>
+      <td>0.001680</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.048237</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.006444</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.017268</td>
+      <td>0.017518</td>
+      <td>0.278576</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.217223</td>
+      <td>0.000744</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9096</th>
+      <td>0.019351</td>
+      <td>0.000000</td>
+      <td>0.000785</td>
+      <td>0.028895</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.007645</td>
+      <td>0.015595</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.003820</td>
+      <td>0.060052</td>
+      <td>0.277122</td>
+      <td>0.061254</td>
+      <td>0.000000</td>
+      <td>0.026074</td>
+      <td>0.002298</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9097</th>
+      <td>0.015769</td>
+      <td>0.000000</td>
+      <td>0.000399</td>
+      <td>0.031298</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.009512</td>
+      <td>0.028784</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.005165</td>
+      <td>0.061176</td>
+      <td>0.275073</td>
+      <td>0.036719</td>
+      <td>0.000000</td>
+      <td>0.056550</td>
+      <td>0.005490</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9098</th>
+      <td>0.015624</td>
+      <td>0.000000</td>
+      <td>0.015810</td>
+      <td>0.011449</td>
+      <td>0.004735</td>
+      <td>0.000000</td>
+      <td>0.011961</td>
+      <td>0.038063</td>
+      <td>0.0</td>
+      <td>0.007417</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.012727</td>
+      <td>0.051597</td>
+      <td>0.230531</td>
+      <td>0.002209</td>
+      <td>0.000000</td>
+      <td>0.022288</td>
+      <td>0.013302</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9099</th>
+      <td>0.015419</td>
+      <td>0.000000</td>
+      <td>0.000125</td>
+      <td>0.009149</td>
+      <td>0.026507</td>
+      <td>0.000000</td>
+      <td>0.013332</td>
+      <td>0.088082</td>
+      <td>0.0</td>
+      <td>0.022198</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.013670</td>
+      <td>0.043131</td>
+      <td>0.073787</td>
+      <td>0.085893</td>
+      <td>0.000000</td>
+      <td>0.084937</td>
+      <td>0.001153</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9100</th>
+      <td>0.038787</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.006566</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.014090</td>
+      <td>0.035495</td>
+      <td>0.0</td>
+      <td>0.002291</td>
+      <td>...</td>
+      <td>0.000648</td>
+      <td>0.000000</td>
+      <td>0.038413</td>
+      <td>0.170412</td>
+      <td>0.044578</td>
+      <td>0.000000</td>
+      <td>0.078720</td>
+      <td>0.008307</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9101</th>
+      <td>0.003037</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.025247</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.002739</td>
+      <td>0.000516</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.063421</td>
+      <td>0.000801</td>
+      <td>0.360854</td>
+      <td>0.005524</td>
+      <td>0.000000</td>
+      <td>0.111516</td>
+      <td>0.000328</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9102</th>
+      <td>0.008490</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.025538</td>
+      <td>0.000577</td>
+      <td>0.000000</td>
+      <td>0.010780</td>
+      <td>0.028101</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000156</td>
+      <td>0.025812</td>
+      <td>0.037690</td>
+      <td>0.284248</td>
+      <td>0.054286</td>
+      <td>0.000000</td>
+      <td>0.014266</td>
+      <td>0.001326</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9103</th>
+      <td>0.018500</td>
+      <td>0.013523</td>
+      <td>0.000000</td>
+      <td>0.013188</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.008010</td>
+      <td>0.079577</td>
+      <td>0.0</td>
+      <td>0.022855</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.001177</td>
+      <td>0.058535</td>
+      <td>0.160046</td>
+      <td>0.053514</td>
+      <td>0.000065</td>
+      <td>0.028745</td>
+      <td>0.000483</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9104</th>
+      <td>0.035979</td>
+      <td>0.000430</td>
+      <td>0.000000</td>
+      <td>0.021775</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.028406</td>
+      <td>0.039231</td>
+      <td>0.0</td>
+      <td>0.014846</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.046156</td>
+      <td>0.097204</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.005464</td>
+      <td>0.0</td>
+      <td>0.000370</td>
+    </tr>
+    <tr>
+      <th>9105</th>
+      <td>0.029334</td>
+      <td>0.000000</td>
+      <td>0.012962</td>
+      <td>0.000000</td>
+      <td>0.014837</td>
+      <td>0.028242</td>
+      <td>0.000414</td>
+      <td>0.025195</td>
+      <td>0.0</td>
+      <td>0.007911</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.017720</td>
+      <td>0.059066</td>
+      <td>0.177582</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000380</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9106</th>
+      <td>0.004070</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.016110</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.010171</td>
+      <td>0.027782</td>
+      <td>0.0</td>
+      <td>0.000945</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.014647</td>
+      <td>0.072228</td>
+      <td>0.222037</td>
+      <td>0.000000</td>
+      <td>0.245327</td>
+      <td>0.002171</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9107</th>
+      <td>0.012894</td>
+      <td>0.000000</td>
+      <td>0.000733</td>
+      <td>0.030433</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.029637</td>
+      <td>0.064172</td>
+      <td>0.0</td>
+      <td>0.021531</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.025631</td>
+      <td>0.008832</td>
+      <td>0.267814</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.030072</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9108</th>
+      <td>0.015228</td>
+      <td>0.000000</td>
+      <td>0.000170</td>
+      <td>0.022236</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.018144</td>
+      <td>0.004921</td>
+      <td>0.0</td>
+      <td>0.005200</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.031351</td>
+      <td>0.211152</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.131391</td>
+      <td>0.003772</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9109</th>
+      <td>0.036592</td>
+      <td>0.000000</td>
+      <td>0.003224</td>
+      <td>0.031009</td>
+      <td>0.004927</td>
+      <td>0.000000</td>
+      <td>0.020842</td>
+      <td>0.071492</td>
+      <td>0.0</td>
+      <td>0.021438</td>
+      <td>...</td>
+      <td>0.000212</td>
+      <td>0.001298</td>
+      <td>0.054454</td>
+      <td>0.162173</td>
+      <td>0.001041</td>
+      <td>0.000000</td>
+      <td>0.060488</td>
+      <td>0.003435</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9110</th>
+      <td>0.017529</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.017824</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.018764</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.002869</td>
+      <td>0.040700</td>
+      <td>0.006030</td>
+      <td>0.246727</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.086884</td>
+      <td>0.003378</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9112</th>
+      <td>0.031905</td>
+      <td>0.003329</td>
+      <td>0.003657</td>
+      <td>0.038107</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.019290</td>
+      <td>0.045312</td>
+      <td>0.0</td>
+      <td>0.002296</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.019050</td>
+      <td>0.053040</td>
+      <td>0.092170</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.001793</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9113</th>
+      <td>0.045796</td>
+      <td>0.000000</td>
+      <td>0.003949</td>
+      <td>0.002286</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.006261</td>
+      <td>0.027501</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.025152</td>
+      <td>0.062904</td>
+      <td>0.257408</td>
+      <td>0.037749</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.001175</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9114</th>
+      <td>0.079590</td>
+      <td>0.006749</td>
+      <td>0.002371</td>
+      <td>0.021311</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.017618</td>
+      <td>0.111433</td>
+      <td>0.0</td>
+      <td>0.010972</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.109078</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000221</td>
+      <td>0.0</td>
+      <td>0.000919</td>
+    </tr>
+    <tr>
+      <th>9116</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.003446</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.005269</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000160</td>
+      <td>0.114610</td>
+      <td>0.022406</td>
+      <td>0.243280</td>
+      <td>0.014482</td>
+      <td>0.000000</td>
+      <td>0.112478</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9117</th>
+      <td>0.001213</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.040750</td>
+      <td>0.001302</td>
+      <td>0.397878</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.166156</td>
+      <td>0.000911</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9118</th>
+      <td>0.019181</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.041347</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.015371</td>
+      <td>0.040876</td>
+      <td>0.0</td>
+      <td>0.012439</td>
+      <td>...</td>
+      <td>0.000219</td>
+      <td>0.000000</td>
+      <td>0.023484</td>
+      <td>0.157825</td>
+      <td>0.031902</td>
+      <td>0.000000</td>
+      <td>0.137689</td>
+      <td>0.004242</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9119</th>
+      <td>0.036951</td>
+      <td>0.002960</td>
+      <td>0.000000</td>
+      <td>0.021283</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.010837</td>
+      <td>0.062043</td>
+      <td>0.0</td>
+      <td>0.015091</td>
+      <td>...</td>
+      <td>0.000076</td>
+      <td>0.006685</td>
+      <td>0.045383</td>
+      <td>0.197475</td>
+      <td>0.040867</td>
+      <td>0.000457</td>
+      <td>0.026496</td>
+      <td>0.001799</td>
+      <td>0.0</td>
+      <td>0.000200</td>
+    </tr>
+    <tr>
+      <th>9120</th>
+      <td>0.026611</td>
+      <td>0.000781</td>
+      <td>0.000000</td>
+      <td>0.000468</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.009929</td>
+      <td>0.040768</td>
+      <td>0.0</td>
+      <td>0.003021</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.024230</td>
+      <td>0.019282</td>
+      <td>0.235651</td>
+      <td>0.017742</td>
+      <td>0.000000</td>
+      <td>0.095742</td>
+      <td>0.002195</td>
+      <td>0.0</td>
+      <td>0.000066</td>
+    </tr>
+    <tr>
+      <th>9121</th>
+      <td>0.005433</td>
+      <td>0.000000</td>
+      <td>0.000454</td>
+      <td>0.056839</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.019102</td>
+      <td>0.052365</td>
+      <td>0.0</td>
+      <td>0.011261</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.048820</td>
+      <td>0.035044</td>
+      <td>0.133349</td>
+      <td>0.024641</td>
+      <td>0.000000</td>
+      <td>0.109806</td>
+      <td>0.002113</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9165</th>
+      <td>0.017479</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.008826</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.013337</td>
+      <td>0.013744</td>
+      <td>0.0</td>
+      <td>0.003507</td>
+      <td>...</td>
+      <td>0.001174</td>
+      <td>0.056218</td>
+      <td>0.020538</td>
+      <td>0.298131</td>
+      <td>0.008824</td>
+      <td>0.000000</td>
+      <td>0.125729</td>
+      <td>0.002626</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9166</th>
+      <td>0.017747</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.013241</td>
+      <td>0.025715</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.011393</td>
+      <td>0.015843</td>
+      <td>0.236452</td>
+      <td>0.071622</td>
+      <td>0.000000</td>
+      <td>0.133848</td>
+      <td>0.001551</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9167</th>
+      <td>0.046150</td>
+      <td>0.004153</td>
+      <td>0.000586</td>
+      <td>0.029131</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.015318</td>
+      <td>0.090483</td>
+      <td>0.0</td>
+      <td>0.048755</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.097628</td>
+      <td>0.052031</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000393</td>
+    </tr>
+    <tr>
+      <th>9168</th>
+      <td>0.038030</td>
+      <td>0.000000</td>
+      <td>0.008009</td>
+      <td>0.032995</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.015055</td>
+      <td>0.019886</td>
+      <td>0.0</td>
+      <td>0.000122</td>
+      <td>...</td>
+      <td>0.000750</td>
+      <td>0.000000</td>
+      <td>0.017958</td>
+      <td>0.237107</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.034764</td>
+      <td>0.000354</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9169</th>
+      <td>0.040401</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.017743</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.012677</td>
+      <td>0.018073</td>
+      <td>0.0</td>
+      <td>0.000072</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.037869</td>
+      <td>0.152494</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.002456</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9170</th>
+      <td>0.001406</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.024063</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.006337</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.034838</td>
+      <td>0.036429</td>
+      <td>0.237845</td>
+      <td>0.186743</td>
+      <td>0.000000</td>
+      <td>0.048438</td>
+      <td>0.000954</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9171</th>
+      <td>0.004296</td>
+      <td>0.000412</td>
+      <td>0.000000</td>
+      <td>0.037080</td>
+      <td>0.007700</td>
+      <td>0.000000</td>
+      <td>0.008648</td>
+      <td>0.013575</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000353</td>
+      <td>0.000761</td>
+      <td>0.010418</td>
+      <td>0.191832</td>
+      <td>0.000000</td>
+      <td>0.001537</td>
+      <td>0.144852</td>
+      <td>0.001676</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9172</th>
+      <td>0.004607</td>
+      <td>0.000422</td>
+      <td>0.016581</td>
+      <td>0.029331</td>
+      <td>0.000000</td>
+      <td>0.000019</td>
+      <td>0.010006</td>
+      <td>0.031523</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.002156</td>
+      <td>0.018158</td>
+      <td>0.009102</td>
+      <td>0.241950</td>
+      <td>0.000000</td>
+      <td>0.004823</td>
+      <td>0.104858</td>
+      <td>0.015060</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9122</th>
+      <td>0.044896</td>
+      <td>0.006798</td>
+      <td>0.000000</td>
+      <td>0.013065</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022354</td>
+      <td>0.067906</td>
+      <td>0.0</td>
+      <td>0.011042</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.030763</td>
+      <td>0.148463</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.004873</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9123</th>
+      <td>0.036793</td>
+      <td>0.021414</td>
+      <td>0.000000</td>
+      <td>0.013317</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.027294</td>
+      <td>0.108887</td>
+      <td>0.0</td>
+      <td>0.038598</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.037017</td>
+      <td>0.085672</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9124</th>
+      <td>0.047839</td>
+      <td>0.005392</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.023929</td>
+      <td>0.095896</td>
+      <td>0.0</td>
+      <td>0.000795</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.036180</td>
+      <td>0.072006</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9125</th>
+      <td>0.047328</td>
+      <td>0.008957</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.025473</td>
+      <td>0.122208</td>
+      <td>0.0</td>
+      <td>0.012059</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.045437</td>
+      <td>0.036258</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9126</th>
+      <td>0.052478</td>
+      <td>0.007149</td>
+      <td>0.000000</td>
+      <td>0.005149</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.026425</td>
+      <td>0.088092</td>
+      <td>0.0</td>
+      <td>0.008506</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.081810</td>
+      <td>0.031593</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9127</th>
+      <td>0.031883</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.007273</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.019330</td>
+      <td>0.083236</td>
+      <td>0.0</td>
+      <td>0.011144</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.040736</td>
+      <td>0.128713</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9128</th>
+      <td>0.049647</td>
+      <td>0.006472</td>
+      <td>0.000000</td>
+      <td>0.003832</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.024532</td>
+      <td>0.087951</td>
+      <td>0.0</td>
+      <td>0.010565</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.069194</td>
+      <td>0.045462</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9129</th>
+      <td>0.071568</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.015938</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.031499</td>
+      <td>0.087671</td>
+      <td>0.0</td>
+      <td>0.014011</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.033312</td>
+      <td>0.047501</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000006</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9130</th>
+      <td>0.066304</td>
+      <td>0.000000</td>
+      <td>0.002818</td>
+      <td>0.001318</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.021337</td>
+      <td>0.090575</td>
+      <td>0.0</td>
+      <td>0.002119</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.060295</td>
+      <td>0.080626</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>9131</th>
+      <td>0.039067</td>
+      <td>0.009778</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.023478</td>
+      <td>0.111008</td>
+      <td>0.0</td>
+      <td>0.018155</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.040867</td>
+      <td>0.056370</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>49 rows × 23 columns</p>
+</div></div></div>
+</div>
+<p>In case we know the true fractions of the cell types across sample, we can validate our deconvolved compositions. Here, Neutrophil counts were measures and indeed we found high correlations between the measured values and our decovolution-based results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neutCounts</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;Total.neutrophil.count...mm3.&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">subsetCorMuSiC</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span>
+        <span class="n">music_frac</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">neutCounts</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span> <span class="p">:]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+        <span class="n">neutCounts</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">neutCounts</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+    <span class="p">)[</span><span class="n">music_frac</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span> <span class="p">:</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">subsetCorMuSiC</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">subsetCorMuSiC</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Shennor\AppData\Roaming\Python\Python38\site-packages\numpy\lib\function_base.py:2691: RuntimeWarning: invalid value encountered in true_divide
+  c /= stddev[:, None]
+C:\Users\Shennor\AppData\Roaming\Python\Python38\site-packages\numpy\lib\function_base.py:2692: RuntimeWarning: invalid value encountered in true_divide
+  c /= stddev[None, :]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NK_cells                 -0.511184
+Eosinophils              -0.498070
+CD4_T_cells_1            -0.403485
+B_cells_1                -0.325301
+B_cells_2                -0.281896
+CD8_T_cells              -0.281529
+pDC                      -0.264388
+CD4_T_cells_3            -0.180847
+CD16_Monocytes           -0.165263
+CD14_Monocytes_2         -0.164895
+CD34+ GATA2+ cells       -0.132763
+CD14_Monocytes_3         -0.063592
+Neutrophils_2            -0.058816
+Immature Neutrophils_1   -0.004655
+CD14_Monocytes_1         -0.002719
+Plasmablast               0.015157
+Neutrophils_3             0.057406
+Megakaryocytes            0.292929
+Immature Neutrophils_2    0.322763
+Neutrophils_1             0.446441
+Neutrophils_4             0.447348
+CD4_T_cells_2                  NaN
+mDC                            NaN
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also look for significant changes in cell compositions between disease patients and healthy controls. In this case, for each cell type, we calculate the p-value of this change based on student’s t-test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">healty_vs_covid</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">sci</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span>
+            <span class="n">music_frac</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;covid&quot;</span><span class="p">],</span>
+            <span class="n">music_frac</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;healthy&quot;</span><span class="p">],</span>
+        <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">music_frac</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CD4_T_cells_1             3.535377e-08
+Eosinophils               2.174486e-07
+CD34+ GATA2+ cells        1.313440e-06
+B_cells_2                 4.179994e-05
+Neutrophils_1             1.133780e-04
+B_cells_1                 3.829060e-04
+Neutrophils_4             4.508343e-04
+CD14_Monocytes_2          1.010730e-02
+Megakaryocytes            1.307137e-02
+Plasmablast               1.902793e-02
+Neutrophils_2             6.436426e-02
+NK_cells                  1.110367e-01
+Immature Neutrophils_1    1.321325e-01
+CD14_Monocytes_1          1.452041e-01
+CD4_T_cells_3             1.676061e-01
+Immature Neutrophils_2    1.806682e-01
+CD14_Monocytes_3          2.641251e-01
+CD8_T_cells               3.427982e-01
+pDC                       3.571902e-01
+Neutrophils_3             4.002572e-01
+CD16_Monocytes            6.143465e-01
+CD4_T_cells_2                      NaN
+mDC                                NaN
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is a boxplot presenting the differences between the two conditions</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_cell</span> <span class="o">=</span> <span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmin</span><span class="p">(</span><span class="n">healty_vs_covid</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span>
+<span class="n">status_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">])</span>
+<span class="n">status_df</span><span class="p">[</span><span class="s2">&quot;cellFraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">music_frac</span><span class="p">[[</span><span class="n">selected_cell</span><span class="p">]]</span>
+<span class="n">status_df</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;cellFraction&#39;}, xlabel=&#39;[status]&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/2fbb756aa61b0c3257d8453d0e0099e17539912210313c6dbdf314d5e3592b0e.png" src="../_images/2fbb756aa61b0c3257d8453d0e0099e17539912210313c6dbdf314d5e3592b0e.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="limitations-and-traps">
+<span id="deconvolution-bulk-deconvolution-key-takeaway-4"></span><span id="deconvolution-bulk-deconvolution-key-takeaway-3"></span><h2><span class="section-number">22.4. </span>Limitations and traps<a class="headerlink" href="#limitations-and-traps" title="Link to this heading">#</a></h2>
+<p>While single cell data is less prone to contain missing cell types, compared to pre-selected sorted cells, dealing with missing cell types is still considered a major challenge in the field of cell type deconvolution to this day <span id="id23">[]</span>. In addition, the number of cell types within the signature matrix has a major influence on deconvolution accuracy, as more cell types usually results in a less accurate deconvolution process <span id="id24">[<a class="reference internal" href="#id471" title="Aaron M. Newman, Chloé B. Steen, Chih Long Liu, Andrew J. Gentles, Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, Mohammad S. Esfahani, Bogdan A. Luca, David Steiner, Maximilian Diehn, and Ash A. Alizadeh. Determining cell type abundance and expression from bulk tissues with digital cytometry. Nature Biotechnology, 37:773–782, May 2019. URL: https://doi.org/10.1038/s41587-019-0114-2, doi:10.1038/s41587-019-0114-2.">Newman <em>et al.</em>, 2019</a>]</span>.</p>
+<p>While several deconvolution methods can correctly infer the proportion of major cellular components, their performance for rare or correlated components varies. To deal with the co-linearity between the predictors some methods perform feature selection prior deconvolution by selecting a subset of genes (called signature gene list) that minimizes the correlation between cell types.</p>
+</section>
+<section id="new-directions">
+<h2><span class="section-number">22.5. </span>New directions<a class="headerlink" href="#new-directions" title="Link to this heading">#</a></h2>
+<p>Other than the methods we described before, there are additional tools which can be utilize to either improve deconvolution or decovolve higher resolution states within cell types:</p>
+<p><strong>AutoGeneS</strong> <span id="id25">[<a class="reference internal" href="#id468" title="Hananeh Aliee and Fabian J. Theis. Autogenes: automatic gene selection using multi-objective optimization for rna-seq deconvolution. Cell Systems, 12(7):706–715, Jul 2021. URL: https://doi.org/10.1016/j.cels.2021.05.006, doi:10.1016/j.cels.2021.05.006.">Aliee and Theis, 2021</a>]</span> proposes a multi-objective feature selection method that can be integrated into a deconvolution platform. AutoGeneS requires no prior knowledge about marker genes and selects genes by simultaneously optimizing multiple criteria: minimizing the correlation and maximizing the distance between cell types.
+AutoGeneS can be applied to reference profiles from various sources like single-cell experiments or sorted
+cell populations.</p>
+<p><strong>CPM</strong> <span id="id26">[]</span> is a cell-state deconvolution method which allows discovering compositional changes occurring within each cell type, based on the single cell cell space, often capturing transitions in cell compositions across continuous cellular trajectories.
+By focusing on the variation within cell types, and less between cell types (as most deconvolution methods), CPM can discover changes in compositions of distinct subgroups of cells or continuous changes across specific cellular trajectories.</p>
+</section>
+<section id="references">
+<h2><span class="section-number">22.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id27">
+<div role="list" class="citation-list">
+<div class="citation" id="id468" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>bulkAT21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>,<a role="doc-backlink" href="#id25">3</a>)</span>
+<p>Hananeh Aliee and Fabian J. Theis. Autogenes: automatic gene selection using multi-objective optimization for rna-seq deconvolution. <em>Cell Systems</em>, 12(7):706–715, Jul 2021. URL: <a class="reference external" href="https://doi.org/10.1016/j.cels.2021.05.006">https://doi.org/10.1016/j.cels.2021.05.006</a>, <a class="reference external" href="https://doi.org/10.1016/j.cels.2021.05.006">doi:10.1016/j.cels.2021.05.006</a>.</p>
+</div>
+<div class="citation" id="id460" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>bulkAHB17<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
+<p>Dvir Aran, Zicheng Hu, and Atul J. Butte. xCell: digitally portraying the tissue cellular heterogeneity landscape. <em>Genome Biology</em>, 11 2017. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-017-1349-1">https://doi.org/10.1186/s13059-017-1349-1</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-017-1349-1">doi:10.1186/s13059-017-1349-1</a>.</p>
+</div>
+<div class="citation" id="id467" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">bulkBVW+16</a><span class="fn-bracket">]</span></span>
+<p>Maayan Baron, Adrian Veres, Samuel L. Wolock, Aubrey L. Faust, Renaud Gaujoux, Amedeo Vetere, Jennifer Hyoje Ryu, Bridget K. Wagner, Shai S. Shen-Orr, Allon M. Klein, Douglas A. Melton, and Itai Yanai. A single-cell transcriptomic map of the human and mouse pancreas reveals inter- and intra-cell population structure. <em>Bioinformatics</em>, 3(4):346–360, Oct 2016. URL: <a class="reference external" href="https://doi.org/10.1016/j.cels.2016.08.011">https://doi.org/10.1016/j.cels.2016.08.011</a>, <a class="reference external" href="https://doi.org/10.1016/j.cels.2016.08.011">doi:10.1016/j.cels.2016.08.011</a>.</p>
+</div>
+<div class="citation" id="id465" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">bulkDCW19</a><span class="fn-bracket">]</span></span>
+<p>Rose Du, Vince Carey, and Scott T. Weiss. Deconvseq: deconvolution of cell mixture distribution in sequencing data. <em>Bioinformatics</em>, 35(24):5095–5102, Dec 2019. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btz444">https://doi.org/10.1093/bioinformatics/btz444</a>, <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btz444">doi:10.1093/bioinformatics/btz444</a>.</p>
+</div>
+<div class="citation" id="id463" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">bulkKKB+12</a><span class="fn-bracket">]</span></span>
+<p>Alexandre Kuhn, Azad Kumar, Alexandra Beilina, Allissa Dillman, Mark R. Cookson, and Andrew B. Singleton. Cell population-specific expression analysis of human cerebellum. <em>BMC Genomics</em>, 13(610):1471–2164, Nov 2012. URL: <a class="reference external" href="https://doi.org/10.1186/1471-2164-13-610">https://doi.org/10.1186/1471-2164-13-610</a>, <a class="reference external" href="https://doi.org/10.1186/1471-2164-13-610">doi:10.1186/1471-2164-13-610</a>.</p>
+</div>
+<div class="citation" id="id461" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">bulkMMO+20</a><span class="fn-bracket">]</span></span>
+<p>Kevin Menden, Mohamed Marouf, Sergio Oller, Anupriya Dalmia, Daniel Sumner Magruder, Karin Kloiber, Peter Heutink, and Stefan Bonn. Deep learning&amp;#x2013;based cell composition analysis from tissue expression profiles. <em>Science Advances</em>, 6(30):eaba2619, 2020. URL: <a class="reference external" href="https://www.science.org/doi/abs/10.1126/sciadv.aba2619">https://www.science.org/doi/abs/10.1126/sciadv.aba2619</a>, <a class="reference external" href="https://arxiv.org/abs/https://www.science.org/doi/pdf/10.1126/sciadv.aba2619">arXiv:https://www.science.org/doi/pdf/10.1126/sciadv.aba2619</a>, <a class="reference external" href="https://doi.org/10.1126/sciadv.aba2619">doi:10.1126/sciadv.aba2619</a>.</p>
+</div>
+<div class="citation" id="id470" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">bulkMLX+19</a><span class="fn-bracket">]</span></span>
+<p>Gianni Monaco, Bernett Lee, Weili Xu, Seri Mustafah, You Yi Hwang, Christophe Carré, Nicolas Burdin, Lucian Visan, Michele Ceccarelli, Michael Poidinger, Alfred Zippelius, João Pedro de Magalhães, and Anis Larbi. Rna-seq signatures normalized by mrna abundance allow absolute deconvolution of human immune cell types. <em>Cell Reports</em>, 26(6):1627–1640, Feb 2019. URL: <a class="reference external" href="https://doi.org/10.1016/j.celrep.2019.01.041">https://doi.org/10.1016/j.celrep.2019.01.041</a>, <a class="reference external" href="https://doi.org/10.1016/j.celrep.2019.01.041">doi:10.1016/j.celrep.2019.01.041</a>.</p>
+</div>
+<div class="citation" id="id462" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">bulkNOS+21</a><span class="fn-bracket">]</span></span>
+<p>Brian B Nadel, Meritxell Oliva, Benjamin L Shou, Keith Mitchell, Feiyang Ma, Dennis J Montoya, Alice Mouton, Sarah Kim-Hellmuth, Barbara E Stranger, Matteo Pellegrini, and Serghei Mangul. Systematic evaluation of transcriptomics-based deconvolution methods and references using thousands of clinical samples. <em>Briefings in Bioinformatics</em>, 08 2021. bbab265. URL: <a class="reference external" href="https://doi.org/10.1093/bib/bbab265">https://doi.org/10.1093/bib/bbab265</a>, <a class="reference external" href="https://arxiv.org/abs/https://academic.oup.com/bib/article-pdf/22/6/bbab265/42242154/bbab265.pdf">arXiv:https://academic.oup.com/bib/article-pdf/22/6/bbab265/42242154/bbab265.pdf</a>, <a class="reference external" href="https://doi.org/10.1093/bib/bbab265">doi:10.1093/bib/bbab265</a>.</p>
+</div>
+<div class="citation" id="id471" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>bulkNSL+19<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id24">3</a>)</span>
+<p>Aaron M. Newman, Chloé B. Steen, Chih Long Liu, Andrew J. Gentles, Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, Mohammad S. Esfahani, Bogdan A. Luca, David Steiner, Maximilian Diehn, and Ash A. Alizadeh. Determining cell type abundance and expression from bulk tissues with digital cytometry. <em>Nature Biotechnology</em>, 37:773–782, May 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41587-019-0114-2">https://doi.org/10.1038/s41587-019-0114-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41587-019-0114-2">doi:10.1038/s41587-019-0114-2</a>.</p>
+</div>
+<div class="citation" id="id353" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">bulkSSRP+20</a><span class="fn-bracket">]</span></span>
+<p>Jonas Schulte-Schrepping, Nico Reusch, Daniela Paclik, Kevin Baßler, Stephan Schlickeiser, Bowen Zhang, Benjamin Krämer, Tobias Krammer, Sophia Brumhard, Lorenzo Bonaguro, Elena De Domenico, Daniel Wendisch, Martin Grasshoff, Theodore S. Kapellos, Michael Beckstette, Tal Pecht, Adem Saglam, Oliver Dietrich, Henrik E. Mei, Axel R. Schulz, Claudia Conrad, Désirée Kunkel, Ehsan Vafadarnejad, Cheng-Jian Xu, Arik Horne, Miriam Herbert, Anna Drews, Charlotte Thibeault, Moritz Pfeiffer, Stefan Hippenstiel, Andreas Hocke, Holger Müller-Redetzky, Katrin-Moira Heim, Felix Machleidt, Alexander Uhrig, Laure Bosquillon de Jarcy, Linda Jürgens, Miriam Stegemann, Christoph R. Glösenkamp, Hans-Dieter Volk, Christine Goffinet, Markus Landthaler, Emanuel Wyler, Philipp Georg, Maria Schneider, Chantip Dang-Heine, Nick Neuwinger, Kai Kappert, Rudolf Tauber, Victor Corman, Jan Raabe, Kim Melanie Kaiser, Michael To Vinh, Gereon Rieke, Christian Meisel, Thomas Ulas, Matthias Becker, Robert Geffers, Martin Witzenrath, Christian Drosten, Norbert Suttorp, Christof von Kalle, Florian Kurth, Kristian Händler, Joachim L. Schultze, Anna C. Aschenbrenner, Yang Li, Jacob Nattermann, Birgit Sawitzki, Antoine-Emmanuel Saliba, Leif Erik Sander, and Deutsche COVID-19 OMICS Initiative (DeCOI). Severe covid-19 is marked by a dysregulated myeloid cell compartment. <em>Cell</em>, 182(6):1419–1440.e23, Sep 2020. S0092-8674(20)30992-2[PII]. URL: <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">https://doi.org/10.1016/j.cell.2020.08.001</a>, <a class="reference external" href="https://doi.org/10.1016/j.cell.2020.08.001">doi:10.1016/j.cell.2020.08.001</a>.</p>
+</div>
+<div class="citation" id="id464" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">bulkSch10</a><span class="fn-bracket">]</span></span>
+<p>Stanley E. Schwartz, Russell Shackney. Applying unmixing to gene expression data for tumor phylogeny inference. <em>BMC Bioinformatics</em>, Jan 2010. URL: <a class="reference external" href="https://doi.org/10.1186/1471-2105-11-42">https://doi.org/10.1186/1471-2105-11-42</a>, <a class="reference external" href="https://doi.org/10.1186/1471-2105-11-42">doi:10.1186/1471-2105-11-42</a>.</p>
+</div>
+<div class="citation" id="id459" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">bulkSOG13</a><span class="fn-bracket">]</span></span>
+<p>Shai S Shen-Orr and Renaud Gaujoux. Computational deconvolution: extracting cell type-specific information from heterogeneous samples. <em>Current Opinion in Immunology</em>, 25(5):571–578, 2013. Special section: Systems biology and bioinformatics / Immunogenetics and transplantation. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0952791513001507">https://www.sciencedirect.com/science/article/pii/S0952791513001507</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.coi.2013.09.015">doi:https://doi.org/10.1016/j.coi.2013.09.015</a>.</p>
+</div>
+<div class="citation" id="id466" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">bulkZBSA19</a><span class="fn-bracket">]</span></span>
+<p>Konstantin Zaitsev, Monika Bambouskova, Amanda Swain, and Maxim N. Artyomov. Complete deconvolution of cellular mixtures based on linearity of transcriptional signatures. <em>Nature Communications</em>, May 2019. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-019-09990-5">https://doi.org/10.1038/s41467-019-09990-5</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-019-09990-5">doi:10.1038/s41467-019-09990-5</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">22.7. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">22.7.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Hananeh Aliee</p></li>
+<li><p>Amit Frishberg</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./deconvolution"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../mechanisms/cell_cell_communication.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">21. </span>Cell-cell communication</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../chromatin_accessibility/introduction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">23. </span>Single-cell ATAC sequencing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">22.1. Background</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approaches">22.2. Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deconvolving-bulk-covid-19-whole-blood-samples">22.3. Deconvolving bulk COVID-19 whole blood samples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">22.3.1. Environment setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">22.3.2. Loading Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">22.3.3. Data preprocessing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-single-cell-data">22.3.4. Visualization of single-cell data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deconvolving-using-music">22.3.5. Deconvolving using MuSiC</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-r">22.3.5.1. Loading R</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-music">22.3.5.2. Running MuSiC</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs-and-validations">22.3.5.3. Outputs and Validations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-and-traps">22.4. Limitations and traps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-directions">22.5. New directions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">22.6. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">22.7. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">22.7.1. Authors</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
