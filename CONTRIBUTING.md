@@ -209,12 +209,9 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 > [!Note]
 >
 > 1. **Create a lamin account**
->
 >    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in).
 >    - Ask us to be added to the `theislab/sc-best-practices` instance.
->
 > 2. **Install lamindb**
->
 >    - Install the lamindb Python package in your environment:
 >
 >    ```bash
@@ -222,7 +219,6 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 >    ```
 >
 > 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
->
 >    - Run the `lamin connect` command:
 >
 >    ```bash
