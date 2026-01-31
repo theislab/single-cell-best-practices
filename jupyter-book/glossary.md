@@ -107,6 +107,9 @@ Drop-seq
 Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
 
+Embedding
+    A way to represent complex objects (e.g., words, proteins, or genes) as numerical vectors so computers can analyze them more easily.
+
 FASTQ
 FASTQ reads
     Sequencing reads that are saved in the FASTQ format.
@@ -165,6 +168,10 @@ Pipeline
 Poisson distribution
 Poisson distributed
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
+
+Principal component analysis (PCA)
+    A statistical method used to simplify complex datasets by reducing the number of variables while preserving the main patterns in the data.
+    It projects high-dimensional data onto orthogonal axes (principal components) ordered by the amount of variance they explain.
 
 Promoter
     Sequence of DNA to which proteins bind to initiate and control transcription.
