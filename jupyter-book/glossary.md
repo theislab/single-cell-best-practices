@@ -107,7 +107,6 @@ Drop-seq
 Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
 
-
 Embedding
     A way to represent complex objects (e.g., words, proteins, or genes) as numerical vectors so computers can analyze them more easily.
 
