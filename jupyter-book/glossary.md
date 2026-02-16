@@ -138,6 +138,9 @@ Locus
 
 Messenger RNA (mRNA)
     A nucleotide sequence that has been read from a gene and serves as a blueprint for a protein.
+Marker gene
+    A gene whose expression is used as an indicator of a particular cell type, biological process, or cellular state.
+    Marker genes are commonly used in single-cell and bulk transcriptomics to identify or classify cells based on their function or identity.
 
 MuData
     A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
