@@ -1,8 +1,63 @@
 # Changelog
 
-<!-- towncrier release notes start -->
+## [v0.2.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.2.0)
 
-## [v1.0.0](https://github.com/theislab/single-cell-best-practices/releases/tag/1.0.0) <sub>2021-08-17</sub>
+### Added
+
+- Add env- and lamin-setup dropdown with `make dropdown`. ([#348](https://github.com/theislab/single-cell-best-practices/pull/348)) <sub>@LuisHenzlmeier</sub>
+- Adding UMIs explanation figure ([#363](https://github.com/theislab/single-cell-best-practices/pull/363)) <sub>@LuisHeinzlmeier</sub>
+- Add a style guide and chapter template for contributors ([#367](https://github.com/theislab/single-cell-best-practices/pull/367)) <sub>@LuisHeinzlmeier</sub>
+- Update `scRNA-seq` chapter and add a paragraph on quantification of gene expression ([#371](https://github.com/theislab/single-cell-best-practices/pull/371)) <sub>@LuisHeinzlmeier</sub>
+
+### Changed
+
+- Add dataset generator and updatae texts in `Interoperability` chapter. ([#347](https://github.com/theislab/single-cell-best-practices/pull/347)) <sub>@seohyonkim</sub>
+- Update `make dropdown` by adding key takeaways dropdown and removing anchors ([#352](https://github.com/theislab/single-cell-best-practices/pull/352)) <sub>@LuisHeinzlmeier</sub>
+- Load datasets via `lamindb`, use `localconverter` instead of `anndata2ri.activate()`, and add descriptions to the plots in `preprocessing and visualization` section ([#356](https://github.com/theislab/single-cell-best-practices/pull/356)) <sub>@seohyonkim</sub>
+- Update dropdown chapter of `CONTRIBUTING.md` based on practical feedback ([#360](https://github.com/theislab/single-cell-best-practices/pull/360)) <sub>@LuisHeinzlmeier</sub>
+- Update of `Preprocessing and Visalization` section ([#356](https://github.com/theislab/single-cell-best-practices/pull/356)) <sub>@seohyonkim</sub>
+- Use new connect syntax ([#404](https://github.com/theislab/single-cell-best-practices/pull/404)) <sub>@Zethson</sub>
+- Update `10. Clustering` ([#406](https://github.com/theislab/single-cell-best-practices/pull/406)) <sub>@seohyonkim</sub>
+- Update `12. Data integration` ([#413](https://github.com/theislab/single-cell-best-practices/pull/413)) <sub>@seohyonkim</sub>
+- Update `13. Pseudotemporal ordering` ([#414](https://github.com/theislab/single-cell-best-practices/pull/414)) <sub>@seohyonkim</sub>
+- Update `14. RNA velocity` ([#415](https://github.com/theislab/single-cell-best-practices/pull/415)) <sub>@seohyonkim</sub>
+- Update `11. Annotation` ([#412](https://github.com/theislab/single-cell-best-practices/pull/412)) <sub>@seohyonkim</sub>
+
+### Fixed
+
+- Pin `jupyter-book==1.0.4.post1` to restore compatibility after upstream v2 release broke PR preview and publish builds ([#400](https://github.com/theislab/single-cell-best-practices/pull/400)) <sub>@seohyonkim</sub>
+- Fix precommit action to v3.0.0 ([#357](https://github.com/theislab/single-cell-best-practices/pull/357)) <sub>@seohyonkim</sub>
+- Fix missed glossary links in `scRNA sequencing` and `r`aw data processing` ([#361](https://github.com/theislab/single-cell-best-practices/pull/361)) <sub>@seohyonkim</sub>
+- Generating subset of human bmmcs and use it in chapter `10. Clustering` ([#410](https://github.com/theislab/single-cell-best-practices/pull/410)) <sub>@seohyonkim</sub>
+
+## [v0.1.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.1.0) <sub>2023-11-14</sub>
+
+### Added
+
+- Add simpleaf example to the raw data processing section ([#116](https://github.com/theislab/single-cell-best-practices/pull/116)) <sub>@DongzeHE</sub>
+- Add `inferring trajectories` section ([#101](https://github.com/theislab/single-cell-best-practices/pull/101)) <sub>@WeilerP</sub>
+- Add `perturbation modelling` chapter ([#79](https://github.com/theislab/single-cell-best-practices/pull/79)) <sub>@Zethson</sub>
+- Add Annotation ([#85](https://github.com/theislab/single-cell-best-practices/pull/85)) <sub>@LisaSikkema</sub>
+- Add `gsea pathway` chapter ([#62](https://github.com/theislab/single-cell-best-practices/pull/62)) <sub>@soroorh</sub>
+- Add `neighborhood analysis`, `spatial domains`, `spacially variable genes` chapters ([#86](https://github.com/theislab/single-cell-best-practices/pull/86)) <sub>@giovp</sub>
+- Add `cell-cell communication` chapter ([#140](https://github.com/theislab/single-cell-best-practices/pull/140)) <sub>@dbdimitrov</sub>
+- Add `paired integration` chapter ([#103](https://github.com/theislab/single-cell-best-practices/pull/103)) <sub>@alitinet</sub>
+- Add multiple multimodal immunce receptor chapters ([#63](https://github.com/theislab/single-cell-best-practices/pull/63)) <sub>@drEast</sub>
+- Add `spatial deconvolution` and `imputation` chapter ([#142](https://github.com/theislab/single-cell-best-practices/pull/142)) <sub>@AnnaChristina</sub>
+- Add feedback from Robin Browaeys to `cell-cell comunication` chapter ([#157](https://github.com/theislab/single-cell-best-practices/pull/157)) <sub>@dbdimitrov</sub>
+- Add docker container & improve environments ([#124](https://github.com/theislab/single-cell-best-practices/pull/124)) <sub>@Zethson</sub>
+- Add `compisitional analysis` chapter ([#89](https://github.com/theislab/single-cell-best-practices/pull/89)) <sub>@Zethson</sub>
+- Add `lineage tracing` chapter ([#88](https://github.com/theislab/single-cell-best-practices/pull/88)) <sub>@mattjones315</sub>
+- Add `preprocessing and visualizaton` section ([#59](https://github.com/theislab/single-cell-best-practices/pull/59)) <sub>@AnnaChristina</sub>
+- Add `clustering` chapter ([#72](https://github.com/theislab/single-cell-best-practices/pull/72)) <sub>@AnnaChristina</sub>
+- Add PDF job ([#65](https://github.com/theislab/single-cell-best-practices/pull/65)) <sub>@Zethson</sub>
+- Add `prior art` chapter ([#58](https://github.com/theislab/single-cell-best-practices/pull/58)) <sub>@Zethson</sub>
+- Add new book CI ([#57](https://github.com/theislab/single-cell-best-practices/pull/57)) <sub>@Zethson</sub>
+- Add `preamble` chapter ([#53](https://github.com/theislab/single-cell-best-practices/pull/53)) <sub>@Zethson</sub>
+- Add scATAC part ([#162](https://github.com/theislab/single-cell-best-practices/pull/162)) <sub>@lauradmartens</sub>
+- Add `modelling mechanism` section ([#96](https://github.com/theislab/single-cell-best-practices/pull/96)) <sub>@ilibarra</sub>
+- Add `Integration` chapter ([#17](https://github.com/theislab/single-cell-best-practices/pull/17)) <sub>@lazappi</sub>
+- Add new book CI ([#57](https://github.com/theislab/single-cell-best-practices/pull/57)) <sub>@Zethson</sub>
 
 ### Changed
 
@@ -34,33 +89,6 @@
 - Update `experimental data collection` chapter ([#71](https://github.com/theislab/single-cell-best-practices/pull/71)) <sub>@AnnaChristina</sub>
 - Update `introduction` section ([#70](https://github.com/theislab/single-cell-best-practices/pull/70)) <sub>@AnnaChristina</sub>
 - Update `preamble` ([#69](https://github.com/theislab/single-cell-best-practices/pull/69)) <sub>@AnnaChristina</sub>
-
-### Added
-
-- Add simpleaf example to the raw data processing section ([#116](https://github.com/theislab/single-cell-best-practices/pull/116)) <sub>@DongzeHE</sub>
-- Add `inferring trajectories` section ([#101](https://github.com/theislab/single-cell-best-practices/pull/101)) <sub>@WeilerP</sub>
-- Add `perturbation modelling` chapter ([#79](https://github.com/theislab/single-cell-best-practices/pull/79)) <sub>@Zethson</sub>
-- Add Annotation ([#85](https://github.com/theislab/single-cell-best-practices/pull/85)) <sub>@LisaSikkema</sub>
-- Add `gsea pathway` chapter ([#62](https://github.com/theislab/single-cell-best-practices/pull/62)) <sub>@soroorh</sub>
-- Add `neighborhood analysis`, `spatial domains`, `spacially variable genes` chapters ([#86](https://github.com/theislab/single-cell-best-practices/pull/86)) <sub>@giovp</sub>
-- Add `cell-cell communication` chapter ([#140](https://github.com/theislab/single-cell-best-practices/pull/140)) <sub>@dbdimitrov</sub>
-- Add `paired integration` chapter ([#103](https://github.com/theislab/single-cell-best-practices/pull/103)) <sub>@alitinet</sub>
-- Add multiple multimodal immunce receptor chapters ([#63](https://github.com/theislab/single-cell-best-practices/pull/63)) <sub>@drEast</sub>
-- Add `spatial deconvolution` and `imputation` chapter ([#142](https://github.com/theislab/single-cell-best-practices/pull/142)) <sub>@AnnaChristina</sub>
-- Add feedback from Robin Browaeys to `cell-cell comunication` chapter ([#157](https://github.com/theislab/single-cell-best-practices/pull/157)) <sub>@dbdimitrov</sub>
-- Add docker container & improve environments ([#124](https://github.com/theislab/single-cell-best-practices/pull/124)) <sub>@Zethson</sub>
-- Add `compisitional analysis` chapter ([#89](https://github.com/theislab/single-cell-best-practices/pull/89)) <sub>@Zethson</sub>
-- Add `lineage tracing` chapter ([#88](https://github.com/theislab/single-cell-best-practices/pull/88)) <sub>@mattjones315</sub>
-- Add `preprocessing and visualizaton` section ([#59](https://github.com/theislab/single-cell-best-practices/pull/59)) <sub>@AnnaChristina</sub>
-- Add `clustering` chapter ([#72](https://github.com/theislab/single-cell-best-practices/pull/72)) <sub>@AnnaChristina</sub>
-- Add PDF job ([#65](https://github.com/theislab/single-cell-best-practices/pull/65)) <sub>@Zethson</sub>
-- Add `prior art` chapter ([#58](https://github.com/theislab/single-cell-best-practices/pull/58)) <sub>@Zethson</sub>
-- Add new book CI ([#57](https://github.com/theislab/single-cell-best-practices/pull/57)) <sub>@Zethson</sub>
-- Add `preamble` chapter ([#53](https://github.com/theislab/single-cell-best-practices/pull/53)) <sub>@Zethson</sub>
-- Add scATAC part ([#162](https://github.com/theislab/single-cell-best-practices/pull/162)) <sub>@lauradmartens</sub>
-- Add `modelling mechanism` section ([#96](https://github.com/theislab/single-cell-best-practices/pull/96)) <sub>@ilibarra</sub>
-- Add `Integration` chapter ([#17](https://github.com/theislab/single-cell-best-practices/pull/17)) <sub>@lazappi</sub>
-- Add new book CI ([#57](https://github.com/theislab/single-cell-best-practices/pull/57)) <sub>@Zethson</sub>
 
 ### Fixed
 

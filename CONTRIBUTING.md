@@ -289,53 +289,24 @@ pre-commit run -a
 If you try to commit changes, they are automatically checked for errors and adjusted if possible.
 Simply add these changes to your commit with `git add`.
 
-### Adding changelog entries with `towncrier`
+### Adding changelog entries (maintainers only)
 
-We use `towncrier` to manage our changelog. Here’s how to include a changelog entry when making a PR:
+Before releasing a new version of the book, ensure all significant changes are documented in CHANGELOG.md.
 
-1. Install `towncrier` (only once):
+Group entries under the following subheadings:
 
-```bash
-pip install towncrier
+- _Added_ for new features/chapters.
+
+- _Changed_ for changes in existing functionality or content.
+
+- _Fixed_ for any bug fixes or typo corrections.
+
+- _Removed_ for content or features that have been deleted.
+
+In the `CHANGELOG.md`, add each relevant PR entries with contributor names and links to the PR.
+
+Each entry must include a brief description, a link to the PR, and the contributor's GitHub handle:
+
 ```
-
-2. Make your pull request as usual.
-
-3. After opening your PR, note the PR number (e.g., 34), and create a changelog fragment:
-
-```bash
-towncrier create -c 'update blah blah ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>' 34.changed.md
-```
-
-Replace "update blah blah" with a brief description of your change, PR number with your PR number, and the author of the PR with your github tag.
-Valid categories for the filename of the `markdown` are:
-
-`added`
-`changed`
-`fixed`
-`removed`
-
-4. This will create a `.md` file (e.g., `34.changed.md`) in the `changelog.d/` directory (at the root of the repo). Make sure this file is included in your commit.
-
-5. Push your changes again.
-
-#### Releasing a new version (maintainers only)
-
-To release a new version:
-
-1. Run Towncrier to build the changelog:
-
-```bash
-towncrier build --yes --version 2.0.0
-```
-
-This will update `CHANGELOG.md` and remove the `changelog.d/` directory.
-
-2. Add contributor names and links to the PR manually under each relevant PR entry in the generated `CHANGELOG.md`.
-
-3. Recreate the `changelog.d/` directory for future PRs:
-
-```bash
-mkdir changelog.d
-touch changelog.d/.gitkeep
+Update analysis workflow ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>'
 ```
