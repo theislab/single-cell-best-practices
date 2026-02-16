@@ -18,7 +18,6 @@ black_list_files_lamin = [
     "ir_profiling",
     "specificity",
     "analysis_tools",
-    "annotation",
     "integration",
     "bulk_deconvolution",
     "paired_integration",
