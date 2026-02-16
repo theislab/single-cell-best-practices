@@ -1,0 +1,1303 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>29. Spatially variable genes &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'spatial/spatially_variable_genes';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="30. Spatial deconvolution" href="deconvolution.html" />
+    <link rel="prev" title="28. Spatial domains" href="domains.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Single-cell best practices - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/analysis_tools.html">4. Analysis frameworks and tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/interoperability.html">5. Interoperability</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">6. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">7. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">8. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">9. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">10. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">11. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">12. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">13. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">14. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">15. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">16. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">17. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">18. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">19. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">20. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">21. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">22. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">23. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">24. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">25. Gene regulatory networks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">26. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neighborhood.html">27. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domains.html">28. Spatial domains</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">29. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deconvolution.html">30. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imputation.html">31. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">32. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">33. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">34. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">35. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">36. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">37. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">38. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">39. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">40. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">41. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">42. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">43. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">44. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">45. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">46. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/spatial/spatially_variable_genes.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fspatial/spatially_variable_genes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/spatial/spatially_variable_genes.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Spatially variable genes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">29.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup-and-data">29.2. Environment setup and data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moran-s-i-score-in-squidpy">29.3. Moran’s I score in Squidpy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spatialde">29.4. SpatialDE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">29.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">29.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">29.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">29.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="spatially-variable-genes">
+<h1><span class="section-number">29. </span>Spatially variable genes<a class="headerlink" href="#spatially-variable-genes" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Spatially variable genes (SVGs) are genes that show a significant spatial pattern.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#spatial-spatially-variable-genes-key-takeaway-1"><span class="std std-ref">Motivation</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Methods designed for this task vary in complexity and model assumptions.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#spatial-spatially-variable-genes-key-takeaway-2"><span class="std std-ref">Motivation</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">We recommend using multiple methods to identify SVGs and assess the result by plotting the gene’s expression in space.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#spatial-spatially-variable-genes-key-takeaway-3"><span class="std std-ref">Motivation</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spatial</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::python=3.12.12</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scanpy=1.11.5</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::leidenalg</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pytorch-cpu</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pip</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squidpy==1.6.6</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SpaGCN==1.2.7</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SpatialDE==1.1.3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tangram-sc==1.0.4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cell2location==0.1.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<span id="spatial-spatially-variable-genes-key-takeaway-3"></span><span id="spatial-spatially-variable-genes-key-takeaway-2"></span><span id="spatial-spatially-variable-genes-key-takeaway-1"></span><h2><span class="section-number">29.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>One main analysis step for single-cell data is to identify highly-variable genes (HVGs) and perform feature selection to reduce the dimensionality of the dataset. HVGs are genes which show significantly different expression profiles between cells or distinct groups. Methods designed for this task, however, neglect the spatial context of cells and can therefore not identify spatial variation. A gene might for example be highly variable, but not show a distinct spatial pattern and is therefore not spatially variable.</p>
+<figure class="align-default" id="svg">
+<a class="bg-primary mb-1 reference internal image-reference" href="../_images/svg.jpeg"><img alt="Difference highly variable gene versus spatially variable gene" class="bg-primary mb-1" src="../_images/svg.jpeg" style="width: 800px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 29.1 </span><span class="caption-text">Spatially variable genes are genes that show a distinct spatial pattern, whereas highly variable genes reflect genes that differ significantly between cells or groups of cells.</span><a class="headerlink" href="#svg" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Spatial variation can be caused by differences in cell-type composition, overall functional dependencies or cell-cell communication events and help to understand the underlying tissue biology. Methods designed to identify spatially variable genes (SVGs) are designed to quantify whether a gene shows a significant spatial pattern by typically decomposing spatial and non-spatial variation in the dataset <span id="id1">[<a class="reference internal" href="#id554" title="Benjamin L. Walker, Zixuan Cang, Honglei Ren, Eric Bourgain-Chang, and Qing Nie. Deciphering tissue structure and function using spatial transcriptomics. Communications Biology, 5(1):220, March 2022. URL: https://doi.org/10.1038/s42003-022-03175-5, doi:10.1038/s42003-022-03175-5.">Walker <em>et al.</em>, 2022</a>]</span>.</p>
+<p>Several methods have been proposed for this task with varying complexity and different assumptions. Currently there is no consensus on which method works best and how to define spatial variability in general. SpatialDE <span id="id2">[<a class="reference internal" href="#id569" title="Valentine Svensson, Sarah A Teichmann, and Oliver Stegle. SpatialDE: identification of spatially variable genes. Nature Methods, 15(5):343–346, May 2018. URL: https://doi.org/10.1038/nmeth.4636, doi:10.1038/nmeth.4636.">Svensson <em>et al.</em>, 2018</a>]</span>, SpatialDE2 <span id="id3">[<a class="reference internal" href="#id570" title="Ilia Kats, Roser Vento-Tormo, and Oliver Stegle. SpatialDE2: Fast and localized variance component analysis of spatial transcriptomics. bioRxiv, pages 2021.10.27.466045, January 2021. URL: http://biorxiv.org/content/early/2021/11/11/2021.10.27.466045.abstract, doi:10.1101/2021.10.27.466045.">Kats <em>et al.</em>, 2021</a>]</span> and SPARK<span id="id4">[<a class="reference internal" href="#id571" title="Jiaqiang Zhu, Shiquan Sun, and Xiang Zhou. SPARK-X: non-parametric modeling enables scalable and robust detection of spatial expression patterns for large spatial transcriptomic studies. Genome Biology, 22(1):184, June 2021. URL: https://doi.org/10.1186/s13059-021-02404-0, doi:10.1186/s13059-021-02404-0.">Zhu <em>et al.</em>, 2021</a>]</span> <span id="id5">[<a class="reference internal" href="#id572" title="Shiquan Sun, Jiaqiang Zhu, and Xiang Zhou. Statistical analysis of spatial expression patterns for spatially resolved transcriptomic studies. Nature Methods, 17(2):193–200, February 2020. URL: https://doi.org/10.1038/s41592-019-0701-7, doi:10.1038/s41592-019-0701-7.">Sun <em>et al.</em>, 2020</a>]</span> use spatial correlation testing, Sepal<span id="id6">[<a class="reference internal" href="#id573" title="Alma Andersson and Joakim Lundeberg. Sepal: identifying transcript profiles with spatial patterns by diffusion-based modeling. Bioinformatics, 37(17):2644–2650, September 2021. URL: https://doi.org/10.1093/bioinformatics/btab164 (visited on 2023-07-03), doi:10.1093/bioinformatics/btab164.">Andersson and Lundeberg, 2021</a>]</span> leverages a Gaussian diffusion on spatial expression, scGCO<span id="id7">[<a class="reference internal" href="#id574" title="Ke Zhang, Wanwan Feng, and Peng Wang. Identification of spatially variable genes with graph cuts. Nature Communications, 13(1):5488, September 2022. URL: https://doi.org/10.1038/s41467-022-33182-3, doi:10.1038/s41467-022-33182-3.">Zhang <em>et al.</em>, 2022</a>]</span> utilizes a graph cut method and SpaGCN <span id="id8">[<a class="reference internal" href="#id575" title="Jian Hu, Xiangjie Li, Kyle Coleman, Amelia Schroeder, Nan Ma, David J Irwin, Edward B Lee, Russell T Shinohara, and Mingyao Li. SpaGCN: integrating gene expression, spatial location and histology to identify spatial domains and spatially variable genes by graph convolutional network. Nat. Methods, 18(11):1342–1351, November 2021.">Hu <em>et al.</em>, 2021</a>]</span> identifies SVGs based on spatial domains identified through a graph convolutional neural network.</p>
+<p>In this notebook we provide a pedagogical example using Squidpy <span id="id9">[<a class="reference internal" href="#id126" title="Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. Nature Methods, 19(2):171-178, Feb 2022. URL: https://doi.org/10.1038/s41592-021-01358-2, doi:10.1038/s41592-021-01358-2.">Palla <em>et al.</em>, 2022</a>]</span> and its implementation of Morans’I to find SVGs and subsequently an example workflow for SpatialDE.</p>
+</section>
+<section id="environment-setup-and-data">
+<h2><span class="section-number">29.2. </span>Environment setup and data<a class="headerlink" href="#environment-setup-and-data" title="Link to this heading">#</a></h2>
+<p>We first load the respective packages needed in this tutorial and the dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">NaiveDE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">SpatialDE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">squidpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sq</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The dataset used in this tutorial consists of 1 tissue slides from 1 mouse and is provided by <a class="reference external" href="https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Adult_Mouse_Brain">10x Genomics Space Ranger 1.1.0</a>. The dataset was pre-processed in Squidpy, which provides a loading function for this dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sq</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">visium_hne_adata</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="moran-s-i-score-in-squidpy">
+<h2><span class="section-number">29.3. </span>Moran’s I score in Squidpy<a class="headerlink" href="#moran-s-i-score-in-squidpy" title="Link to this heading">#</a></h2>
+<p>One approach for the identification of spatially variable genes is the Moran’s I score, a measure of spatial autocorrelation (correlation of signal, such as gene expression, in observations close in space).</p>
+<p>It is defined as:
+<span class="math notranslate nohighlight">\(I = \frac{n}{W}\frac{{\mathop {\sum }\nolimits_{i = 1}^n \mathop {\sum }\nolimits_{j = 1}^n w_{i,j}z_iz_j}}{{\mathop {\sum }\nolimits_{i = 1}^n z_i^2}}\)</span>
+where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(z_{i}\)</span> is the deviation of the feature from the mean <span class="math notranslate nohighlight">\(\left( {x_i - \bar X} \right)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(w_{i,j}\)</span> is the spatial weight between observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is the number of spatial units</p></li>
+<li><p><span class="math notranslate nohighlight">\(W\)</span> is the sum of all <span class="math notranslate nohighlight">\(w_{i,j}\)</span></p></li>
+</ul>
+<p>It can be computed with Squidpy with 1 line. For the purpose of the example, we will compute it only for a few genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sq</span><span class="o">.</span><span class="n">gr</span><span class="o">.</span><span class="n">spatial_neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sq</span><span class="o">.</span><span class="n">gr</span><span class="o">.</span><span class="n">spatial_autocorr</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;moran&quot;</span><span class="p">,</span> <span class="n">genes</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating graph using `grid` coordinates and `None` transform and `1` libraries.
+Adding `adata.obsp[&#39;spatial_connectivities&#39;]`
+       `adata.obsp[&#39;spatial_distances&#39;]`
+       `adata.uns[&#39;spatial_neighbors&#39;]`
+Finish (0:00:00)
+Calculating moran&#39;s statistic for `None` permutations using `1` core(s)
+Adding `adata.uns[&#39;moranI&#39;]`
+Finish (0:00:00)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The method adds a dataframe to <code class="docutils literal notranslate"><span class="pre">adata.uns</span></code> under the key <code class="docutils literal notranslate"><span class="pre">moranI</span></code>. We can inspect the result now:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;moranI&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>I</th>
+      <th>pval_norm</th>
+      <th>var_norm</th>
+      <th>pval_norm_fdr_bh</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Nrgn</th>
+      <td>0.874753</td>
+      <td>0.0</td>
+      <td>0.000131</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mbp</th>
+      <td>0.868723</td>
+      <td>0.0</td>
+      <td>0.000131</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Camk2n1</th>
+      <td>0.866542</td>
+      <td>0.0</td>
+      <td>0.000131</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Slc17a7</th>
+      <td>0.861761</td>
+      <td>0.0</td>
+      <td>0.000131</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Ttr</th>
+      <td>0.841986</td>
+      <td>0.0</td>
+      <td>0.000131</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The Squidpy implementation of Moran’s I computed for every gene</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">I</span></code> so the Moran’s I,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pval_norm</span></code> a p-value under normality assumption.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var_norm</span></code> the variance of the Moran’s I under normality assumption.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{p_val}_{corr_method}</span></code> the corrected p-values.</p></li>
+</ul>
+<p>Let us look at two of the identified and significant genes, for example <em>Nrgn</em> and <em>Ttr</em> with corrected p-values of 0.0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sq</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial_scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Nrgn&quot;</span><span class="p">,</span> <span class="s2">&quot;Ttr&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f79f807e61651a1dd2d4abc42de7f24c87daf0efb30cf318529346901f77d742.png"><img alt="../_images/f79f807e61651a1dd2d4abc42de7f24c87daf0efb30cf318529346901f77d742.png" src="../_images/f79f807e61651a1dd2d4abc42de7f24c87daf0efb30cf318529346901f77d742.png" style="width: 676px; height: 299px;" />
+</a>
+</div>
+</div>
+<p>We can see that the expression of both of these genes seems to show a distinct localization in the tissue. It should be noted that they might (or might not) be also marker genes for specific cell clusters. One interpretation of spatially variable genes identification is that it is an orthogonal way to perform feature selection, by selecting genes that show a variability in space (instead of, for instance, across observations, as it is usually done).</p>
+</section>
+<section id="spatialde">
+<h2><span class="section-number">29.4. </span>SpatialDE<a class="headerlink" href="#spatialde" title="Link to this heading">#</a></h2>
+<p>SpatialDE identifies spatial variable genes through Gaussian process regression. The spatial method decomposes each gene’s expression variability into a spatial and nonspatial component. It then computes the ratio between the spatial and nonspatial variance term to quantify the overall spatial variance present in the dataset. In order to identify significant spatially variable genes, SpatialDE compares the full model that has access to the spatial component to a model without this term.</p>
+<p>We are using the same dataset as we did for computing Moran’s I. As SpatialDE requires the counts table saved as a DataFrame with unique variable names, we first make all variable names unique with the help of the respective Scanpy function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we collect the raw count table with all barcode names and variable names saved as dataframe indexes and columns. Scanpy provides an efficient function for this, <code class="docutils literal notranslate"><span class="pre">get.obs_df</span></code> which collects the respective keys stored in <code class="docutils literal notranslate"><span class="pre">adata</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">),</span> <span class="n">use_raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>SpatialDE additionally requires the total counts and the spatial coordinates in the form of a DataFrame. We can use the same Scanpy function of collecting these items as before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total_counts</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;total_counts&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>SpatialDE assumes a normally distributed noise. Since we just extracted raw counts, which empirically follow a negative binomial distribution, the counts data first needs to be transformed to a normal distributed noise. For this purpose SpatialDE uses a technique based on Anscombe:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">norm_expr</span> <span class="o">=</span> <span class="n">NaiveDE</span><span class="o">.</span><span class="n">stabilize</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/icb/anna.schaar/miniconda3/envs/spatial-chapters/lib/python3.9/site-packages/scipy/optimize/_minpack_py.py:906: OptimizeWarning: Covariance of the parameters could not be estimated
+  warnings.warn(&#39;Covariance of the parameters could not be estimated&#39;,
+</pre></div>
+</div>
+</div>
+</div>
+<p>The transformed data still might include a varying library size across the spatial samples which can introduce a bias in the gene expression. SpatialDE recommends to account for this before actually performing the spatial test and regressing it out with the provided function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resid_expr</span> <span class="o">=</span> <span class="n">NaiveDE</span><span class="o">.</span><span class="n">regress_out</span><span class="p">(</span><span class="n">total_counts</span><span class="p">,</span> <span class="n">norm_expr</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;np.log(total_counts)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now run the actual spatial test by passing the spatial coordinates and the normalized counts to SpatialDE. On the dataset, we are using here SpatialDE takes roughly 15 minutes when running it on all genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">SpatialDE</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;spatial&quot;</span><span class="p">],</span> <span class="n">resid_expr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "01b0697059d14469b25eabe69f7fe624", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>We can now inspect the result:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>FSV</th>
+      <th>M</th>
+      <th>g</th>
+      <th>l</th>
+      <th>max_delta</th>
+      <th>max_ll</th>
+      <th>max_mu_hat</th>
+      <th>max_s2_t_hat</th>
+      <th>model</th>
+      <th>n</th>
+      <th>s2_FSV</th>
+      <th>s2_logdelta</th>
+      <th>time</th>
+      <th>BIC</th>
+      <th>max_ll_null</th>
+      <th>LLR</th>
+      <th>pval</th>
+      <th>qval</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.065401e-01</td>
+      <td>4</td>
+      <td>Mrpl15</td>
+      <td>68.5</td>
+      <td>8.383709e+00</td>
+      <td>-2836.151268</td>
+      <td>-8.553531</td>
+      <td>7.251817e+00</td>
+      <td>SE</td>
+      <td>2688</td>
+      <td>0.004038</td>
+      <td>3.928962e-01</td>
+      <td>0.009583</td>
+      <td>5703.888747</td>
+      <td>-2836.979729</td>
+      <td>0.828461</td>
+      <td>0.362718</td>
+      <td>0.462134</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.132153e-06</td>
+      <td>4</td>
+      <td>4732440D04Rik</td>
+      <td>68.5</td>
+      <td>8.830160e+05</td>
+      <td>1005.684545</td>
+      <td>-0.849110</td>
+      <td>8.478789e-07</td>
+      <td>SE</td>
+      <td>2688</td>
+      <td>0.043424</td>
+      <td>2.453021e+10</td>
+      <td>0.001693</td>
+      <td>-1979.782879</td>
+      <td>1005.684446</td>
+      <td>0.000099</td>
+      <td>0.992065</td>
+      <td>0.992308</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.556985e-01</td>
+      <td>4</td>
+      <td>Rrs1</td>
+      <td>68.5</td>
+      <td>2.910013e+00</td>
+      <td>-2372.430346</td>
+      <td>-5.025306</td>
+      <td>5.476694e+00</td>
+      <td>SE</td>
+      <td>2688</td>
+      <td>0.001739</td>
+      <td>5.062643e-02</td>
+      <td>0.003723</td>
+      <td>4776.446902</td>
+      <td>-2376.942619</td>
+      <td>4.512274</td>
+      <td>0.033652</td>
+      <td>0.056698</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.492298e-01</td>
+      <td>4</td>
+      <td>Cops5</td>
+      <td>68.5</td>
+      <td>3.011488e+00</td>
+      <td>-2579.842074</td>
+      <td>-11.139282</td>
+      <td>2.601672e+01</td>
+      <td>SE</td>
+      <td>2688</td>
+      <td>0.001748</td>
+      <td>5.234926e-02</td>
+      <td>0.003669</td>
+      <td>5191.270360</td>
+      <td>-2584.203162</td>
+      <td>4.361088</td>
+      <td>0.036769</td>
+      <td>0.061422</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.060557e-09</td>
+      <td>4</td>
+      <td>Cpa6</td>
+      <td>68.5</td>
+      <td>4.851652e+08</td>
+      <td>2817.673512</td>
+      <td>-0.768099</td>
+      <td>1.230862e-09</td>
+      <td>SE</td>
+      <td>2688</td>
+      <td>0.031727</td>
+      <td>5.410451e+15</td>
+      <td>0.001641</td>
+      <td>-5603.760814</td>
+      <td>2817.673419</td>
+      <td>0.000093</td>
+      <td>0.992305</td>
+      <td>0.992308</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The resulting DataFrame contains the following important columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">g</span></code>, the gene name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>, a parameter indicating the genes distance scale a gene changes expression over</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pval</span></code>, the p-value for spatial differential expression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">qval</span></code>, the corrected p-value after correcting for multiple testing</p></li>
+</ul>
+<p>We can now sort the result based on the corrected p-values (<code class="docutils literal notranslate"><span class="pre">qval</span></code>) and to better read the DataFrame, subset the table to only show <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">l</span></code> and <code class="docutils literal notranslate"><span class="pre">qval</span></code>. We will additionally save the object as <code class="docutils literal notranslate"><span class="pre">top10</span></code> to conveniently use it for downstream plotting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top10</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;qval&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)[[</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span> <span class="s2">&quot;qval&quot;</span><span class="p">]]</span>
+<span class="n">top10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>g</th>
+      <th>l</th>
+      <th>qval</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7612</th>
+      <td>Esrra</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6586</th>
+      <td>Fbxo31</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6587</th>
+      <td>Jph3</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6588</th>
+      <td>Rpl13</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6589</th>
+      <td>Cpne7</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6590</th>
+      <td>Spata2l</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6591</th>
+      <td>Tcf25</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6592</th>
+      <td>Tubb3</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6593</th>
+      <td>Rhou</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6594</th>
+      <td>2810455O05Rik</td>
+      <td>443.950519</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We can now plot the top-three significant genes and inspect their spatial pattern. We additionally plot the clusters of the dataset to analyze whether the detected genes might be linked to specific clusters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sq</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">spatial_scatter</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">top10</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">][:</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/4f30ded7e90bc167b7141cd1dd634c38ca47d57b1127ff7513f8b93802f8d92c.png"><img alt="../_images/4f30ded7e90bc167b7141cd1dd634c38ca47d57b1127ff7513f8b93802f8d92c.png" src="../_images/4f30ded7e90bc167b7141cd1dd634c38ca47d57b1127ff7513f8b93802f8d92c.png" style="width: 1652px; height: 299px;" />
+</a>
+</div>
+</div>
+<p>As we can observe, all three genes show spatial patterns. <em>Esrra</em> does not seem to be associated with a specific cluster, but shows a spatial pattern in primarily the cortex layers, the thalamus and hypothalamus. <em>Fbxo31</em> and <em>Jph3</em> are primarily expressed in the pyramidal layer.</p>
+</section>
+<section id="references">
+<h2><span class="section-number">29.5. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id10">
+<div role="list" class="citation-list">
+<div class="citation" id="id573" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">spatialAL21</a><span class="fn-bracket">]</span></span>
+<p>Alma Andersson and Joakim Lundeberg. Sepal: identifying transcript profiles with spatial patterns by diffusion-based modeling. <em>Bioinformatics</em>, 37(17):2644–2650, September 2021. URL: <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btab164">https://doi.org/10.1093/bioinformatics/btab164</a> (visited on 2023-07-03), <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btab164">doi:10.1093/bioinformatics/btab164</a>.</p>
+</div>
+<div class="citation" id="id575" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">spatialHLC+21</a><span class="fn-bracket">]</span></span>
+<p>Jian Hu, Xiangjie Li, Kyle Coleman, Amelia Schroeder, Nan Ma, David J Irwin, Edward B Lee, Russell T Shinohara, and Mingyao Li. SpaGCN: integrating gene expression, spatial location and histology to identify spatial domains and spatially variable genes by graph convolutional network. <em>Nat. Methods</em>, 18(11):1342–1351, November 2021.</p>
+</div>
+<div class="citation" id="id570" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">spatialKVTS21</a><span class="fn-bracket">]</span></span>
+<p>Ilia Kats, Roser Vento-Tormo, and Oliver Stegle. SpatialDE2: Fast and localized variance component analysis of spatial transcriptomics. <em>bioRxiv</em>, pages 2021.10.27.466045, January 2021. URL: <a class="reference external" href="http://biorxiv.org/content/early/2021/11/11/2021.10.27.466045.abstract">http://biorxiv.org/content/early/2021/11/11/2021.10.27.466045.abstract</a>, <a class="reference external" href="https://doi.org/10.1101/2021.10.27.466045">doi:10.1101/2021.10.27.466045</a>.</p>
+</div>
+<div class="citation" id="id126" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">spatialPSK+22</a><span class="fn-bracket">]</span></span>
+<p>Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. <em>Nature Methods</em>, 19(2):171–178, Feb 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">https://doi.org/10.1038/s41592-021-01358-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">doi:10.1038/s41592-021-01358-2</a>.</p>
+</div>
+<div class="citation" id="id572" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">spatialSZZ20</a><span class="fn-bracket">]</span></span>
+<p>Shiquan Sun, Jiaqiang Zhu, and Xiang Zhou. Statistical analysis of spatial expression patterns for spatially resolved transcriptomic studies. <em>Nature Methods</em>, 17(2):193–200, February 2020. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-019-0701-7">https://doi.org/10.1038/s41592-019-0701-7</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-019-0701-7">doi:10.1038/s41592-019-0701-7</a>.</p>
+</div>
+<div class="citation" id="id569" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">spatialSTS18</a><span class="fn-bracket">]</span></span>
+<p>Valentine Svensson, Sarah A Teichmann, and Oliver Stegle. SpatialDE: identification of spatially variable genes. <em>Nature Methods</em>, 15(5):343–346, May 2018. URL: <a class="reference external" href="https://doi.org/10.1038/nmeth.4636">https://doi.org/10.1038/nmeth.4636</a>, <a class="reference external" href="https://doi.org/10.1038/nmeth.4636">doi:10.1038/nmeth.4636</a>.</p>
+</div>
+<div class="citation" id="id554" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">spatialWCR+22</a><span class="fn-bracket">]</span></span>
+<p>Benjamin L. Walker, Zixuan Cang, Honglei Ren, Eric Bourgain-Chang, and Qing Nie. Deciphering tissue structure and function using spatial transcriptomics. <em>Communications Biology</em>, 5(1):220, March 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s42003-022-03175-5">https://doi.org/10.1038/s42003-022-03175-5</a>, <a class="reference external" href="https://doi.org/10.1038/s42003-022-03175-5">doi:10.1038/s42003-022-03175-5</a>.</p>
+</div>
+<div class="citation" id="id574" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">spatialZFW22</a><span class="fn-bracket">]</span></span>
+<p>Ke Zhang, Wanwan Feng, and Peng Wang. Identification of spatially variable genes with graph cuts. <em>Nature Communications</em>, 13(1):5488, September 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41467-022-33182-3">https://doi.org/10.1038/s41467-022-33182-3</a>, <a class="reference external" href="https://doi.org/10.1038/s41467-022-33182-3">doi:10.1038/s41467-022-33182-3</a>.</p>
+</div>
+<div class="citation" id="id571" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">spatialZSZ21</a><span class="fn-bracket">]</span></span>
+<p>Jiaqiang Zhu, Shiquan Sun, and Xiang Zhou. SPARK-X: non-parametric modeling enables scalable and robust detection of spatial expression patterns for large spatial transcriptomic studies. <em>Genome Biology</em>, 22(1):184, June 2021. URL: <a class="reference external" href="https://doi.org/10.1186/s13059-021-02404-0">https://doi.org/10.1186/s13059-021-02404-0</a>, <a class="reference external" href="https://doi.org/10.1186/s13059-021-02404-0">doi:10.1186/s13059-021-02404-0</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">29.6. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<section id="authors">
+<h3><span class="section-number">29.6.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Giovanni Palla</p></li>
+<li><p>Anna Schaar</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">29.6.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "spatial-book"
+        },
+        kernelOptions: {
+            name: "spatial-book",
+            path: "./spatial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'spatial-book'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="domains.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">28. </span>Spatial domains</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="deconvolution.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">30. </span>Spatial deconvolution</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">29.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup-and-data">29.2. Environment setup and data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moran-s-i-score-in-squidpy">29.3. Moran’s I score in Squidpy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spatialde">29.4. SpatialDE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">29.5. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">29.6. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">29.6.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">29.6.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
