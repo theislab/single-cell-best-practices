@@ -20,7 +20,6 @@ black_list_files_lamin = [
     "analysis_tools",
     "annotation",
     "integration",
-    "clustering",
     "bulk_deconvolution",
     "paired_integration",
     "advanced_integration",
