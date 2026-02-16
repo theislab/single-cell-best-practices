@@ -88,6 +88,10 @@ Downstream analysis
     A phase of data analysis that follows the initial processing of raw data.
     In the context of scRNA-seq, this includes tasks such as normalization, integration, filtering, cell type identification, trajectory inference, and studying expression dynamics.
 
+Driver genes
+    Genes that actively control or "steer" a cell's transition from one state to another during a biological process.
+    Unlike marker genes, which simply identify a cell type, driver genes are functionally responsible for the fate decision at a bifurcation point.
+
 Dropout
     A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type <Cell type>`.
     The reason for dropouts are commonly low amounts of {term}`mRNA <Messenger RNA (mRNA)>` expression in cells and the general stochasticity of mRNA expression.
