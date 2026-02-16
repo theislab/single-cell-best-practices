@@ -36,7 +36,6 @@ black_list_files_lamin = [
     "spatially_variable_genes",
     "domains",
     "lineage_tracing",
-    "rna_velocity",
     # MD files
     "data_infrastructure",
     "scrna_seq",
