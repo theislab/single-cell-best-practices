@@ -4,9 +4,22 @@
 
 ### Added
 
+- Add env- and lamin-setup dropdown with `make dropdown`. ([#348](https://github.com/theislab/single-cell-best-practices/pull/348)) <sub>@LuisHenzlmeier</sub>
+- Adding UMIs explanation figure ([#363](https://github.com/theislab/single-cell-best-practices/pull/363)) <sub>@LuisHeinzlmeier</sub>
+- Add a style guide and chapter template for contributors ([#367](https://github.com/theislab/single-cell-best-practices/pull/367)) <sub>@LuisHeinzlmeier</sub>
+- Update scRNA-seq chapter and add a paragraph on quantification of gene expression ([#371](https://github.com/theislab/single-cell-best-practices/pull/371)) <sub>@LuisHeinzlmeier</sub>
+
 ### Changed
 
+- Add dataset generator and updatae texts in `Interoperability` chapter. ([#347](https://github.com/theislab/single-cell-best-practices/pull/347)) <sub>@seohyonkim</sub>
+- Update `make dropdown` by adding key takeaways dropdown and removing anchors ([#352](https://github.com/theislab/single-cell-best-practices/pull/352)) <sub>@LuisHeinzlmeier</sub>
+- Load datasets via `lamindb`, use `localconverter` instead of `anndata2ri.activate()`, and add descriptions to the plots in `preprocessing and visualization` section ([#356](https://github.com/theislab/single-cell-best-practices/pull/356)) <sub>@seohyonkim</sub>
+  Update dropdown chapter of `CONTRIBUTING.md` based on practical feedback ([#360](https://github.com/theislab/single-cell-best-practices/pull/360)) <sub>@LuisHeinzlmeier</sub>
+- Update dropdown chapter of `CONTRIBUTING.md` based on practical feedback ([#360](https://github.com/theislab/single-cell-best-practices/pull/360)) <sub>@LuisHeinzlmeier</sub>
+
 ### Fixed
+
+- Pin `jupyter-book==1.0.4.post1` to restore compatibility after upstream v2 release broke PR preview and publish builds ([#400](https://github.com/theislab/single-cell-best-practices/pull/400)) <sub>@seohyonkim</sub>
 
 ## [v0.1.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.1.0) <sub>2023-11-14</sub>
 
