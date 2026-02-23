@@ -19,7 +19,7 @@ Disruptions to this delicate balance can lead to systemic dysregulation, contrib
 Therefore, understanding how cells behave under normal and perturbed states is critical for deepening our understanding of entire cellular systems.
 
 To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level.
-Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA sequencing. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information.
+Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA {term}`sequencing`. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information.
 These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.
 
 Currently, analysts are faced with an overwhelming array of computational tools - over 1,700 methods dedicated to single-cell RNA-seq alone {cite}`Zappia2021_pre`.
