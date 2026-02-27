@@ -11,7 +11,7 @@ Algorithm
 
 Annotation
     Adding labels to raw data to provide context and make it interpretable.
-    Cell annotation, for example, labels genes with information like function, location, and associated proteins.
+    Gene annotation, for example, labels genes with information like function, location, and associated proteins.
     Cell annotation classifies cells based on type, state, or function.
     These are just a few examples.
     There are many more ways to annotate biological data (e.g., based on batch, disease, sex, etc.).
