@@ -228,6 +228,14 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 >    - You should now see `→ connected lamindb: theislab/sc-best-practices`.
 >    - You are ready to use lamindb in your notebook!
 
+### Figure style guide
+
+We encourage contributors to include figures.
+Ideally, new illustrations should follow the visual style used in earlier chapters and use our existing icons.
+To keep the book visually consistent, figures should follow the same topic-based color scheme as the book cover:
+RNA (blue), protein/CITE (red), chromatin/ATAC (yellow), AIRR (violet), and spatial (green).
+If you would like to create a new figure, let us know and we can provide access to the icon set and design resources.
+
 ### Create custom quizzes and flashcards
 
 To build quizzes or flashcards, use the helper functions in `jupyter-book/src/lib.py`.
