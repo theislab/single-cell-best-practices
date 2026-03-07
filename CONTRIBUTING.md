@@ -153,7 +153,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 - Use dropdowns so that the reader is not overwhelmed by the content.
 - To reduce noise, we should aim to write clean code that avoids generating warnings, and also filter out any non-informative warnings at the start of the notebook.
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
-  - Only link the **first occurrence** of each term within the chapter — not every time it appears.
+  - Only link the **first occurrence** of each term within the chapter, not every time it appears.
   - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
     In this case, also add the link to this term in the other chapters.
     If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
@@ -162,6 +162,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 - Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``).
 - References should always contain `doi` and `url`.
 - Write in American English.
+- Genes are written in _italic_ (e.g., _TP53_), while protein names are written in normal (non-italic) text (e.g., TP53).
 
 ### Key takeaways, environment and lamin dropdown
 
@@ -182,7 +183,7 @@ The first sentence of key takeaway 2.
 ```
 
 If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
-Replace all `_` with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=`).
+Replace all `_` of the section or notebook name with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=` for `jupyter-book/preprocessing_visualization/dimensionality_reduction.ipynb`).
 
 Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
@@ -227,6 +228,14 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 >
 >    - You should now see `→ connected lamindb: theislab/sc-best-practices`.
 >    - You are ready to use lamindb in your notebook!
+
+### Figure style guide
+
+We encourage contributors to include figures.
+Ideally, new illustrations should follow the visual style used in earlier chapters and use our existing icons.
+To keep the book visually consistent, figures should follow the same topic-based color scheme as the book cover:
+RNA (blue), protein/CITE (red), chromatin/ATAC (yellow), AIRR (violet), and spatial (green).
+If you would like to create a new figure, let us know and we can provide access to the icon set and design resources.
 
 ### Create custom quizzes and flashcards
 
