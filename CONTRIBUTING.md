@@ -232,7 +232,7 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 ### Figure style guide
 
 We encourage contributors to include figures.
-Ideally, new illustrations should follow the visual style used in earlier chapters and use our existing icons.
+New illustrations must follow the visual style used in earlier chapters and use our existing icons where possible.
 To keep the book visually consistent, figures should follow the same topic-based color scheme as the book cover:
 RNA (blue), protein/CITE (red), chromatin/ATAC (yellow), AIRR (violet), and spatial (green).
 If you would like to create a new figure, let us know and we can provide access to the icon set and design resources.
