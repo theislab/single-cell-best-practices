@@ -9,6 +9,13 @@ Adapter sequences
 Algorithm
     A pre-defined set of instructions to solve a problem.
 
+Annotation
+    Adding labels to raw data to provide context and make it interpretable.
+    Gene annotation, for example, labels genes with information like function, location, and associated proteins.
+    Cell annotation classifies cells based on type, state, or function.
+    These are just a few examples.
+    There are many more ways to annotate biological data (e.g., based on batch, disease, sex, etc.).
+
 AnnData
     A Python package for handling annotated data matrices, commonly used in single-cell and other omics analyses.
     It provides an efficient way to store data as a matrix where rows (observations) and columns (features) can have associated metadata.
@@ -88,6 +95,10 @@ Downstream analysis
     A phase of data analysis that follows the initial processing of raw data.
     In the context of scRNA-seq, this includes tasks such as normalization, integration, filtering, cell type identification, trajectory inference, and studying expression dynamics.
 
+Driver genes
+    Genes that actively control or "steer" a cell's transition from one state to another during a biological process.
+    Unlike marker genes, which simply identify a cell type, driver genes are functionally responsible for the fate decision at a bifurcation point.
+
 Dropout
     A gene with low expression that is observed in one cell, but not in other cells of the same {term}`cell type <Cell type>`.
     The reason for dropouts are commonly low amounts of {term}`mRNA <Messenger RNA (mRNA)>` expression in cells and the general stochasticity of mRNA expression.
@@ -98,6 +109,9 @@ Drop-seq
 
 Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
+
+Embedding
+    A way to represent complex objects (e.g., words, proteins, or genes) as numerical vectors so computers can analyze them more easily.
 
 FASTQ
     Sequencing reads that are saved in the FASTQ format.
@@ -161,7 +175,12 @@ Pipeline
     A pre-specified selection of steps that are commonly executed in order.
 
 Poisson distribution
+Poisson distributed
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
+
+Principal component analysis (PCA)
+    A statistical method used to simplify complex datasets by reducing the number of variables while preserving the main patterns in the data.
+    It projects high-dimensional data onto orthogonal axes (principal components) ordered by the amount of variance they explain.
 
 Promoter
     Sequence of DNA to which proteins bind (e.g. RNA polymerase and transcription factors) to initiate and control transcription.
@@ -199,6 +218,15 @@ Signal-to-noise ratio
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
     Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
+
+Sparse data
+    Refers to data that mostly measures zeros and rarely other values ([sparse data vs. missing data](https://medium.com/biased-algorithms/sparse-data-vs-missing-data-38bc2c7af7c6)).
+    This is common in gene expression data, where many genes are not expressed in most cells.
+
+Sparse matrix
+    A way to store {term}`sparse data`.
+    Instead of keeping all the zeros, it only saves the non-zero values and their positions, saving space and making calculations faster.
+    Useful for large datasets with mostly empty values, like gene expression data.
 
 Spike-in RNA
     RNA transcripts of known sequence and quantity to calibrate measurements in RNA hybridization steps for RNA-seq.

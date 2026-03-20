@@ -17,8 +17,6 @@ black_list_files_lamin = [
     "multimodal_integration",
     "ir_profiling",
     "specificity",
-    "analysis_tools",
-    "integration",
     "bulk_deconvolution",
     "paired_integration",
     "advanced_integration",
@@ -34,7 +32,6 @@ black_list_files_lamin = [
     "spatially_variable_genes",
     "domains",
     "lineage_tracing",
-    "rna_velocity",
     # MD files
     "data_infrastructure",
     "scrna_seq",
