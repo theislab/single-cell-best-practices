@@ -54,7 +54,7 @@
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -667,27 +667,21 @@ Analogously to <code class="docutils literal notranslate"><span class="pre">Arti
 <p>To understand your data better and make use of existing knowledge, it is important to figure out the “cellular identity” of each of the cells in your data.
 The process of labeling groups of cells in your data based on known (or sometimes unknown) cellular phenotypes is called “cell annotation”.
 Whereas there are many ways to annotate your cells (e.g. based on batch, disease, sex and more), in this notebook we will focus on the annotation of “cell types”.</p>
-<p>So what is a cell type?
-Biologists use the term cell type to denote a cellular phenotype that is robust across datasets, identifiable based on expression of specific markers (i.e. proteins or gene transcripts), and often linked to specific functions.
-For example, a plasma B cell is a type of white blood cell that secretes antibodies used to fight pathogens and it can be identified using specific markers.
-Knowing which cell types are in your sample is essential in understanding your data.
-For example, knowing that there are specific immune cell types in a tumor or unusual hematopoietic stem cells in your bone marrow sample can be a valuable insight into the disease you might be studying.</p>
+<p>A cell type is a cellular phenotype that is robust across datasets, identifiable by specific marker genes or proteins, and tied to a distinct biological function. A classic example is the plasma B cell — a white blood cell that secretes antibodies and can be identified by characteristic markers.</p>
 <p>However, like with any categorization the size of categories and the borders drawn between them are partly subjective and can change over time, e.g. because new technologies allow for a higher resolution view of cells, or because specific “sub-phenotypes” that were not considered biologically meaningful are found to have important biological implications (see e.g. <span id="id1">[<a class="reference internal" href="#id168" title="Preetish Kadur Lakshminarasimha Murthy, Vishwaraj Sontake, Aleksandra Tata, Yoshihiko Kobayashi, Lauren Macadlo, Kenichi Okuda, Ansley S. Conchola, Satoko Nakano, Simon Gregory, Lisa A. Miller, Jason R. Spence, John F. Engelhardt, Richard C. Boucher, Jason R. Rock, Scott H. Randell, and Purushothama Rao Tata. Human distal lung maps and lineage hierarchies reveal a bipotent progenitor. Nature, 604(7904):111-119, Apr 2022. URL: https://doi.org/10.1038/s41586-022-04541-3, doi:10.1038/s41586-022-04541-3.">Kadur Lakshminarasimha Murthy <em>et al.</em>, 2022</a>]</span>).
-Cell types are therefore often further classified into “subtypes” or “cell states” (e.g. activated versus resting) and some researchers use the term “cell identity” to avoid this sometimes arbitrary distinction of cell types, cell subtypes and cell states.
+Cell types are therefore often further classified into “subtypes” or “cell states” (e.g. activated versus resting) and some researchers use the term “cell identity” to avoid this sometimes arbitrary distinction.
 For a more detailed discussion of this topic, we recommend the review by Wagner et al. <span id="id2">[<a class="reference internal" href="#id169" title="Allon Wagner, Aviv Regev, and Nir Yosef. Revealing the vectors of cellular identity with single-cell genomics. Nature Biotechnology, 34(11):1145-1160, Nov 2016. URL: https://doi.org/10.1038/nbt.3711, doi:10.1038/nbt.3711.">Wagner <em>et al.</em>, 2016</a>]</span> and the recently published review by Zeng <span id="id3">[<a class="reference internal" href="#id178" title="Hongkui Zeng. What is a cell type and how to define it? Cell, 185(15):2739-2755, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0092867422007838, doi:https://doi.org/10.1016/j.cell.2022.06.031.">Zeng, 2022</a>]</span>.</p>
 <p>Similarly, multiple cell types can be part of a single continuum, where one cell type might transition or differentiate into another.
 For example, in hematopoiesis cells differentiate from a stem cell into a specific immune cell type.
-Although hard borders between early and late stages of this differentiation are often drawn, the state of these cells can more accurately be described by the differentiation coordinate between the less and more differentiated cellular phenotypes.
-We will discuss differentiation and cellular trajectories in subsequent chapters.</p>
-<p>So how do we go about annotating cells in single-cell data?
-There are multiple ways to do it and we will give an overview of different approaches below.
+Although hard borders between early and late stages of this differentiation are often drawn, the state of these cells can more accurately be described by the differentiation coordinate between the less and more differentiated cellular phenotypes.</p>
+<p>There are multiple ways to annotate cells.
+We will give an overview of the most widely used approaches below.
 As we are working with transcriptomic data, each of these methods is ultimately based on the expression of specific genes or gene sets, or general transcriptomic similarity between cells.</p>
 </section>
 <section id="environment-setup">
 <h2><span class="section-number">12.2. </span>Environment setup<a class="headerlink" href="#environment-setup" title="Link to this heading">#</a></h2>
 <div class="cell tag_remove-input docutils container">
 </div>
-<p>Load the needed modules:</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -707,8 +701,6 @@ As we are working with transcriptomic data, each of these methods is ultimately 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
 <span class="n">ln</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span>
-
-<span class="k">assert</span> <span class="n">ln</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">slug</span> <span class="o">==</span> <span class="s2">&quot;theislab/sc-best-practices&quot;</span>
 
 <span class="n">ln</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="s2">&quot;BnpvfJLWjHuE&quot;</span><span class="p">)</span>
 </pre></div>
@@ -746,10 +738,9 @@ As we are working with transcriptomic data, each of these methods is ultimately 
 <span id="cellular-structure-annotation-key-takeaway-2"></span><h2><span class="section-number">12.4. </span>Manual annotation<a class="headerlink" href="#manual-annotation" title="Link to this heading">#</a></h2>
 <p>The classical or oldest way to perform cell type annotation is based on a single or small set of <a class="reference internal" href="../glossary.html#term-Marker-gene"><span class="xref std std-term">marker genes</span></a> known to be associated with a particular cell type.
 This approach dates back to “pre-scRNA-seq times”, when single-cell data was low-dimensional (e.g., FACS data with gene panels consisting of no more than 30-40 genes).
-It is a fast and transparent way to annotate your data.
-However, when no unique markers exist for a specific cell type (which is often the case), this approach can get more complicated and even less objective, with combinations of markers or expression thresholds necessary for proper annotation.
+However, when no unique markers exist for a specific cell type, this approach can quickly become challenging and less objective, with combinations of markers or expression thresholds necessary for proper annotation.
 A robust set of marker genes and prior knowledge or annotation experience can help here, but the approach comes with the risk of unclear and subjective decision-making.</p>
-<p>In this setting, the data is often clustered before annotation, so that we can annotate groups of cells instead of making a per-cell call.
+<p>For manual annotation, the data is usually clustered before annotation, so that we can annotate groups of cells instead of making a per-cell call.
 This is not only less laborious but also more robust to noise: a single cell might not have a count for a specific marker even if it was expressed in that cell, simply due to the inherent sparsity of single-cell data.
 Clustering enables the detection of cells highly similar in overall gene expression and can therefore account for drop-outs at the single-cell level.</p>
 <p>Finally, there are two angles from which to approach the marker-gene-based annotation.
@@ -759,12 +750,11 @@ If necessary, one can move back and forth between those approaches.
 We will show examples of both below.</p>
 <section id="from-markers-to-cluster-annotation">
 <h3><span class="section-number">12.4.1. </span>From markers to cluster annotation<a class="headerlink" href="#from-markers-to-cluster-annotation" title="Link to this heading">#</a></h3>
-<p>Let’s get started with the known-marker-based approach.
-We will first list a set of markers for cell types in the bone marrow here that is based on literature: previous papers that study specific cell types and subtypes and report marker genes for those cell types.
+<p>First, we list a set of markers for cell types in the bone marrow that is based on literature: previous papers that study specific cell types and subtypes and report marker genes for those cell types.
 Note that markers at the protein level (e.g., used for FACS) sometimes do not work as well in transcriptomic data; hence, using markers from RNA-based papers is often more likely to work.
 Moreover, sometimes markers in one dataset do not turn out to work as well in other datasets.
 Ideally, a marker set is therefore validated across multiple datasets.
-Finally, it is often useful to work together with experts: as a bioinformatician, try to team up with a biologist who has more extensive knowledge of the tissue, the biology, the expected cell types and markers, etc.</p>
+It is often useful to work together with experts: as a bioinformatician, try to team up with a biologist who has more extensive knowledge of the tissue, the biology, the expected cell types and markers, etc.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># keys: cell types or populations, values: lists of marker genes</span>
@@ -873,7 +863,7 @@ This will prevent errors once we start plotting.</p>
 </div>
 </div>
 <p>To see where these markers are expressed, we can work with a 2-dimensional visualization of the data, such as a UMAP.
-We’ll construct that UMAP here based on the scran-normalized count data, using only the highly deviant genes.
+We calculate such an embedding here based on the scran-normalized count data, using only the highly deviant genes.
 Note that we first perform a PCA on the normalized counts to reduce the dimensionality of the data before we generate the UMAP.</p>
 <p>To start we store our raw counts in <code class="docutils literal notranslate"><span class="pre">.layers['counts']</span></code>, so that we will still have access to them later if needed.
 We then set our <code class="docutils literal notranslate"><span class="pre">adata.X</span></code> to the scran-normalized, log-transformed counts.</p>
@@ -987,9 +977,9 @@ Note from the marker dictionary above that there are three negative markers in o
 </div>
 </div>
 </div>
-<p>As you can see, even markers for a single cell type are often expressed in different subsets of the data, i.e. individual markers are often not uniquely expressed in a single cell type.
+<p>Even markers for a single cell type are often expressed in different subsets of the data, i.e. individual markers are often not uniquely expressed in a single cell type.
 Rather, it is the intersection of those subsets that will tell you where your cell type of interest is.</p>
-<p>Another thing you might notice is that markers are often sparsely expressed, i.e., it is often only a subset of cells of a cell type in which a marker was detected.
+<p>Of note is that markers are often sparsely expressed, i.e., it is often only a subset of cells of a cell type in which a marker was detected.
 This is due to the nature of scRNA-seq data: we only sequence a small subset of the total amount of RNA molecules in the cell, and due to this subsampling, we will sometimes not sample transcripts from specific genes in a cell even if they were expressed in that cell.
 Therefore, we do not annotate single cells based on a minimum expression threshold of, e.g., a set of markers.
 Instead, we first subdivide the data into groups of similar cells (i.e., “partition” the data) by clustering, thereby accounting for “missing transcripts” of single genes and rather grouping based on overall transcriptomic similarity.
@@ -1228,12 +1218,11 @@ The rest of this tutorial will focus on those options.</p>
 <section id="general-remarks">
 <h3><span class="section-number">12.5.1. </span>General remarks<a class="headerlink" href="#general-remarks" title="Link to this heading">#</a></h3>
 <p>The remainder of the discussed methods will be methods for automated, rather than manual annotation of your data.
-Unlike the method showcased above, each of these methods enables you to annotate your data in an automated way.
-They are based on different principles, sometimes requiring pre-defined sets of markers, other times trained on pre-existing full scRNA-seq datasets.
+Automated approaches are based on different principles, sometimes requiring pre-defined sets of markers, other times trained on pre-existing full scRNA-seq datasets.
 As discussed below, the resulting annotations can be of varying quality.
 It is therefore important to regard these methods as a starting point rather than an end-point of the annotation process.
 See also several reviews <span id="id8">[<a class="reference internal" href="#id172" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id9">[<a class="reference internal" href="#id173" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span> for a more elaborate discussion of automated annotation methods.</p>
-<p>As said, the quality of automatically generated annotations can vary.
+<p>The quality of automatically generated annotations can vary substantially.
 More specifically, the quality of the annotations depends on:</p>
 <ol class="arabic simple">
 <li><p>The type of classifier chosen: Previous benchmark studies have shown that different types of classifiers often perform comparably, with neural network-based methods generally not outperforming general-purpose models such as support vector machines or linear regression models<span id="id10">[<a class="reference internal" href="#id173" title="Tamim Abdelaal, Lieke Michielsen, Davy Cats, Dylan Hoogduin, Hailiang Mei, Marcel J. T. Reinders, and Ahmed Mahfouz. A comparison of automatic cell identification methods for single-cell rna sequencing data. Genome Biology, 20(1):194, Sep 2019. URL: https://doi.org/10.1186/s13059-019-1795-z, doi:10.1186/s13059-019-1795-z.">Abdelaal <em>et al.</em>, 2019</a>]</span>, <span id="id11">[<a class="reference internal" href="#id172" title="Giovanni Pasquini, Jesus Eduardo Rojo Arias, Patrick Schäfer, and Volker Busskamp. Automated methods for cell type annotation on scrna-seq data. Computational and Structural Biotechnology Journal, 19:961-969, 2021. URL: https://www.sciencedirect.com/science/article/pii/S2001037021000192, doi:https://doi.org/10.1016/j.csbj.2021.01.015.">Pasquini <em>et al.</em>, 2021</a>]</span>, <span id="id12">[<a class="reference internal" href="#id175" title="Yixuan Huang and Peng Zhang. Evaluation of machine learning approaches for cell-type identification from single-cell transcriptomics data. Briefings in Bioinformatics, February 2021. URL: https://doi.org/10.1093/bib/bbab035, doi:10.1093/bib/bbab035.">Huang and Zhang, 2021</a>]</span>.<br></p></li>
@@ -1781,12 +1770,12 @@ Note that this is a toy model generated for this tutorial and it should  not be 
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
     <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cellular_structure/annotation_reference_model.pt&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-<span class="n">local_file_path</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+<span class="n">annotation_ref_model_path</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
 
 <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./reference_model&quot;</span><span class="p">)</span>
 <span class="n">model_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local_file_path</span><span class="p">,</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;model.pt&quot;</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">annotation_ref_model_path</span><span class="p">,</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;model.pt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2267,12 +2256,9 @@ However, as with any metric, these uncertainty scores are often imperfect and, i
 For a more extensive discussion of uncertainty metrics, see e.g. <span id="id22">[<a class="reference internal" href="#id188" title="Jan Engelmann, Leon Hetzel, Giovanni Palla, Lisa Sikkema, Malte Luecken, and Fabian Theis. Uncertainty quantification for atlas-level cell type transfer. 2022. URL: https://arxiv.org/abs/2211.03793, doi:10.48550/ARXIV.2211.03793.">Engelmann <em>et al.</em>, 2022</a>]</span>.</p>
 <p>Like with any of the methods discussed in this notebook, the quality of the transferred annotations depends on the quality of the “training data” (in this case the reference) and its annotations, the quality of the model, and the match of your own data with the training data!</p>
 <p>The quality of the transferred annotations should therefore always be validated with manual inspection using marker gene expression and refinement of the initial annotations might be needed.</p>
-<p>Finally, store your adata object if wanted:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># adata.write(&quot;./annotation_adata_out.h5ad&quot;)</span>
-
-<span class="c1"># formatting the &#39;names&#39; column as string, to prevent problems with saving to h5ad format</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># formatting the &#39;names&#39; column as string, to prevent problems with saving to h5ad format</span>
 <span class="n">fields</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;dea_leiden_1_filtered&quot;</span><span class="p">][</span><span class="s2">&quot;names&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span>
 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
     <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;dea_leiden_1_filtered&quot;</span><span class="p">][</span><span class="s2">&quot;names&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span>
