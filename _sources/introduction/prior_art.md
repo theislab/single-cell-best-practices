@@ -1,4 +1,5 @@
 # Prior art
+<!-- END DROPDOWNS -->
 
 Single-cell analysis has evolving from a niche area of interest into a well-established field of study.
 As a result, we are certainly not the first to produce a book on this subject, nor to provide guides and tutorials.
