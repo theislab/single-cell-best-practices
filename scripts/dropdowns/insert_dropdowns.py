@@ -17,8 +17,6 @@ black_list_files_lamin = [
     "multimodal_integration",
     "ir_profiling",
     "specificity",
-    "annotation",
-    "clustering",
     "bulk_deconvolution",
     "paired_integration",
     "advanced_integration",
