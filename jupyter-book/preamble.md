@@ -4,12 +4,6 @@
 
 # Single-cell best practices
 
-```{warning}
-This project is still work in progress and the content is not final yet.
-If you have early feedback feel free to open issues and to get in touch with us.
-Interested in contributing? Please have a look at https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md
-```
-
 ## Introduction
 
 The human body is a complex machine that heavily relies on the basic units of life - cells.
