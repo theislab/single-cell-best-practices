@@ -24,8 +24,6 @@ black_list_files_lamin = [
     "differential_gene_expression",
     "gsea_pathway",
     "compositional",
-    "batch_correction",
-    "doublet_detection",
     "imputation",
     "deconvolution",
     "neighborhood",
