@@ -57,13 +57,13 @@ def multiple_choice_question(
             border: none !important;
             box-shadow: none !important;
             outline: none !important;
-            padding: 15px;
-            width: 400px;
+            padding: 12px;
+            width: 340px;
             text-align: left;
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 15px;
+            margin-bottom: 8px;
             background-color: {bg_color};
-            border-radius: 10px;
+            border-radius: 8px;
             color: {text_color};
         }}
     </style>
@@ -100,8 +100,8 @@ def flip_card(
     front_color: str = "#3965a3",
     back_color: str = "#a8d480",
     text_color: str = "white",
-    front_font_size: int = 20,
-    back_font_size: int = 20,
+    front_font_size: int = 17,
+    back_font_size: int = 17,
 ) -> None:
     """Interactive flip card component for Jupyter notebooks.
 
@@ -127,13 +127,13 @@ def flip_card(
         }}
         .flip-card-{question_id} {{
             background-color: transparent;
-            width: 350px;
-            height: 200px;
+            width: 290px;
+            height: 170px;
             perspective: 1000px;
             display: inline-block;
-            margin: 10px;
+            margin: 8px;
             text-align: center;
-            padding: 10px;
+            padding: 8px;
         }}
         .flip-card-inner-{question_id} {{
             position: relative;
@@ -151,15 +151,15 @@ def flip_card(
             position: absolute;
             width: 100%;
             height: 100%;
-            min-height: 200px;
+            min-height: 170px;
             backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: {text_color};
-            padding: 20px;
-            border-radius: 15px;
+            padding: 14px;
+            border-radius: 12px;
             box-sizing: border-box;
             overflow: hidden;
             text-align: center;
@@ -172,7 +172,7 @@ def flip_card(
             background-color: {back_color};
             transform: rotateY(180deg);
             font-size: {back_font_size}px;
-        }}_b
+        }}
     </style>
 
     <div class="flip-card-{question_id}">
