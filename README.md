@@ -20,13 +20,13 @@ If you found the expert recommendation or this book helpful for your research ar
 ## Contributing
 
 We would like to invite the community to further improve the tutorial and the teaching material.
-Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/master/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/main/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
 ## Adapting the notebooks to other datasets
 
-All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/master/jupyter-book) together with minimal Conda environments.
+All notebooks for the various steps can be found in the [jupyter book folder](https://github.com/theislab/single-cell-best-practices/blob/main/jupyter-book) together with minimal Conda environments.
 Alternatively, the notebooks can be downloaded directly from the rendered version.
 
 ## Acknowledgements
