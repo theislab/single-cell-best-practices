@@ -535,7 +535,7 @@ Given that the use of UMIs is near ubiquitous in high-throughput scRNA-seq proto
 
 ### Graph-based UMI resolution
 
-As a result of the problems that ariOther UMI resolution approaches exist, for example, the reference-free model {cite}`umic` and the method of moments {cite}`Melsted2021`, but they may not be easily represented in this framework and are not discussed in further detail here.se when attempting to resolve UMIs, many methods have been developed to address the problem of UMI resolution.
+As a result of the problems that arise when attempting to resolve UMIs, many methods have been developed to address the problem of UMI resolution.
 While there are a host of different approaches for UMI resolution, we will focus on a framework for representing problem instances, modified from a framework initially proposed by {cite:t}`Smith2017`, that relies upon the notion of a _UMI graph_.
 Each connected component of this graph represents a sub-problem wherein certain subsets of UMIs are collapsed (i.e., resolved as evidence of the same pre-PCR molecule).
 Many popular UMI resolution approaches can be interpreted in this framework by simply modifying precisely how the graph is refined and how the collapse or resolution procedure carried out over this graph works.
@@ -589,6 +589,8 @@ The collapsed nodes or covering sets are regarded as the PCR duplicates of that 
 
 Different rules for defining the adjacency relationship and different approaches for graph resolution itself can seek to preserve different properties and can define a wide variety of distinct overall UMI resolution approaches.
 For approaches that probabilistically resolve ambiguity caused by multimapping, the resolved UMI graph may contain multi-gene equivalence classes (ECs), with their gene origins determined in the next step.
+
+Other UMI resolution approaches exist, for example, the reference-free model {cite}`umic` and the method of moments {cite}`Melsted2021`, but they may not be easily represented in this framework and are not discussed in further detail here.
 
 ```
 
