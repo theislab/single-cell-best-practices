@@ -80,6 +80,7 @@ Complementary DNA (cDNA)
 Differential gene expression (DGE)
 Differential gene expression
 Differential expression
+differential expression
     The [biochemical process](https://www.sciencedirect.com/topics/biochemistry-genetics-and-molecular-biology/differential-gene-expression#:~:text=Within%20this%20context%2C%20differential%20gene%20expression%20is%20defined%20as%20the%20biochemical%20process%20that%20determinates%20which%20genes%20respond%20to%20which%20signals%20or%20triggers%20depending%20on%20the%20conditions.) that determines which genes respond to specific signals or conditions.
     When performing a differential gene expression analysis, the goal is to identify which genes show a significant change in expression between those conditions.
 
