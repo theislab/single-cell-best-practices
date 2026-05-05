@@ -9,7 +9,7 @@
 Raw data processing in single-cell {term}`sequencing` converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
 This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
-:::{figure-md} raw-proc-fig-overview
+:::{figure} raw-proc-fig-overview
 <img src="../_static/images/raw_data_processing/overview_raw_data_processing.jpg" alt="Chapter Overview" class="bg-primary mb-1" width="800px">
 
 An overview of the topics discussed in this chapter. In the plot, "txome" stands for transcriptome.
@@ -65,7 +65,7 @@ However, `FastQC` applies uniform thresholds across all sequencing platforms and
 As a result, warnings (orange exclamation marks) or failures (red crosses) may appear for high-quality data, while questionable data might receive passes (green ticks).
 Therefore, each module should be carefully reviewed before drawing conclusions about data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-summary
+:::{figure} raw-proc-fig-fastqc-summary
 <img src="../_static/images/raw_data_processing/fastqc_example/summary.jpg" alt="Summary" class="bg-primary mb-1" width="300px">
 
 The summary panel of a bad example.
@@ -77,7 +77,7 @@ The basic statistics module provides an overview of key information and statisti
 High-quality single-cell data typically have very few poor-quality sequences and exhibit a uniform sequence length.
 Additionally, the GC content should align with the expected GC content of the genome or transcriptome of the sequenced species.
 
-:::{figure-md} raw-proc-fig-fastqc-basic-statistics
+:::{figure} raw-proc-fig-fastqc-basic-statistics
 <img src="../_static/images/raw_data_processing/fastqc_example/basic_statistics.jpg" alt="Basic Statistics" class="bg-primary mb-1" width="800px">
 
 A good basic statistics report example.
@@ -95,7 +95,7 @@ However, the boxes should not extend into the red area (poor quality calls).
 
 If poor-quality calls are observed, quality trimming may be necessary. [A more detailed explanation](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html) of sequencing error profiles can be found in the [HBC training program](https://hbctraining.github.io/main/).
 
-:::{figure-md} raw-proc-fig-fastqc-per-read-sequence-quality
+:::{figure} raw-proc-fig-fastqc-per-read-sequence-quality
 <img src="../_static/images/raw_data_processing/fastqc_example/per_read_sequence_quality.jpg" alt="per read sequence quality" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per-read sequence quality graph.
@@ -111,7 +111,7 @@ If warm colors appear in certain areas, it suggests that only part of the flowce
 This could result from transient issues during sequencing, such as bubbles passing through the flowcell or smudges and debris within the flowcell lane.
 For further investigation, consult resources like [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and the [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) provided in the `FastQC` manual.
 
-:::{figure-md} raw-proc-fig-fastqc-per-tile-sequence-quality
+:::{figure} raw-proc-fig-fastqc-per-tile-sequence-quality
 <img src="../_static/images/raw_data_processing/fastqc_example/per_tile_sequence_quality.jpg" alt="per tile sequence quality" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per tile sequence quality view.
@@ -124,7 +124,7 @@ The x-axis represents the average quality scores, while the y-axis shows the fre
 For high-quality data, the plot should have a single peak near the high-quality end of the scale.
 If additional peaks appear, it may indicate a subset of reads with quality issues.
 
-:::{figure-md} raw-proc-fig-fastqc-per-sequence-quality-scores
+:::{figure} raw-proc-fig-fastqc-per-sequence-quality-scores
 <img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_quality_scores.jpg" alt="per sequence quality scores" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per sequence quality score plot.
@@ -137,7 +137,7 @@ For single-cell data, it is common to observe fluctuations at the start of the r
 This occurs because the initial bases represent the sequence of the priming sites, which are often not perfectly random.
 This is a frequent occurrence in RNA-seq libraries, even though `FastQC` may flag it with a warning or failure, as noted on the [QC Fail website](https://sequencing.qcfail.com/articles/positional-sequence-bias-in-random-primed-libraries/).
 
-:::{figure-md} raw-proc-fig-fastqc-per-base-sequence-content
+:::{figure} raw-proc-fig-fastqc-per-base-sequence-content
 <img src="../_static/images/raw_data_processing/fastqc_example/per_base_sequence_content.jpg" alt="per base sequence content" class="bg-primary mb-1" width="800px">
 
 A good (left) and bad (right) per base sequence content plot.
@@ -155,7 +155,7 @@ It is also important to note that interpreting GC content in transcriptomics can
 The expected GC distribution depends not only on the sequence composition of the transcriptome but also on gene expression levels in the sample, which are typically unknown beforehand.
 As a result, some deviation from the theoretical distribution is not unusual in RNA-seq data.
 
-:::{figure-md} raw-proc-fig-fastqc-per-sequence-gc-content
+:::{figure} raw-proc-fig-fastqc-per-sequence-gc-content
 <img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_gc_content.jpg" alt="Per Sequence GC Content" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per sequence GC content plot.
@@ -170,7 +170,7 @@ In a high-quality library, the ``N`` content should remain consistently at or ne
 Any noticeable non-zero ``N`` content may indicate issues with sequencing quality or library preparation.
 
 
-:::{figure-md} raw-proc-fig-fastqc-per-base-n-content
+:::{figure} raw-proc-fig-fastqc-per-base-n-content
 <img src="../_static/images/raw_data_processing/fastqc_example/per_base_n_content.jpg" alt="Per Base N Content" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per base N content plot.
@@ -183,7 +183,7 @@ For most single-cell sequencing chemistries, all reads are expected to have the 
 However, if quality trimming was applied before the quality assessment, some variation in read lengths may be observed.
 Small differences in read lengths due to trimming are normal and should not be a cause for concern if expected.
 
-:::{figure-md} raw-proc-fig-fastqc-sequence-length-distribution
+:::{figure} raw-proc-fig-fastqc-sequence-length-distribution
 <img src="../_static/images/raw_data_processing/fastqc_example/sequence_length_distribution.jpg" alt="Sequence Length Distribution" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) sequence length distribution plot.
@@ -198,7 +198,7 @@ Additionally, since `FastQC` is not UMI-aware (i.e., it does not account for uni
 While this may trigger a warning or failure in this module, it does not necessarily indicate a quality issue with the data.
 However, the majority of sequences should still exhibit low duplication levels, reflecting a diverse and well-prepared library.
 
-:::{figure-md} raw-proc-fig-fastqc-sequence-duplication-levels
+:::{figure} raw-proc-fig-fastqc-sequence-duplication-levels
 <img src="../_static/images/raw_data_processing/fastqc_example/sequence_duplication_levels.jpg" alt="Sequence Duplication Levels" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per sequence duplication levels plot.
@@ -213,7 +213,7 @@ However, the majority of sequences should not be overrepresented.
 If the source of an overrepresented sequence is identified (i.e., not listed as "No Hit"), it could indicate potential contamination in the library from the corresponding source.
 Such cases warrant further investigation to ensure data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-overrepresented-sequences
+:::{figure} raw-proc-fig-fastqc-overrepresented-sequences
 <img src="../_static/images/raw_data_processing/fastqc_example/overrepresented_sequences.jpg" alt="Overrepresented Sequences" class="bg-primary mb-1" width="800px">
 
 An overrepresented sequence table.
@@ -226,7 +226,7 @@ High levels of adapter sequences indicate incomplete removal of adapters during 
 Ideally, no significant adapter content should be present in the data.
 If adapter sequences are abundant, additional trimming may be necessary to improve data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-adapter-content
+:::{figure} raw-proc-fig-fastqc-adapter-content
 <img src="../_static/images/raw_data_processing/fastqc_example/adapter_content.jpg" alt="Adapter Content" class="bg-primary mb-1" width="800px">
 
 A good (left) and a bad (right) per sequence quality score plot. The plot on the right is from [the QC Fail website](https://sequencing.qcfail.com/articles/read-through-adapters-can-appear-at-the-ends-of-sequencing-reads/).
@@ -309,7 +309,7 @@ Alignment-based approaches, though computationally expensive, provide a quality 
 This score allows them to distinguish between high-quality alignments and low-complexity or "spurious" matches between the read and reference.
 These approaches include traditional "full-alignment" methods, such as those implemented in tools like `STAR` {cite}`dobin2013star` and `STARsolo` {cite}`Kaminow2021`, as well as _selective-alignment_ methods, like those in `salmon` {cite}`Srivastava2020Alignment` and `alevin` {cite}`Srivastava2019`, which score mappings but skip the computation of the optimal alignment’s backtrace.
 
-:::{figure-md} raw-proc-fig-alignment-mapping
+:::{figure} raw-proc-fig-alignment-mapping
 <img src="../_static/images/raw_data_processing/alignment_vs_mapping.png" alt="Alignment vs Mapping" class="bg-primary mb-1" width="800px">
 
 An abstract overview of the alignment-based method and lightweight mapping-based method.
@@ -621,14 +621,14 @@ Beyond these basic global metrics, at this stage of analysis, QC metrics are des
 
 In the following toggle section, we discuss an example alevinQC report taken from the `alevinQC` [manual webpage](https://github.com/csoneson/alevinQC).
 
-```{toggle}
+```{dropdown}
 
 Once `alevin` or `alevin-fry` quantifies the single-cell data, the quality of the data can be assessed through the R package [`alevinQC`](https://github.com/csoneson/alevinQC).
 The alevinQC report can be generated in PDF format or as R/Shiny applications, which summarizes various components of the single-cell library, such as reads, CBs, and UMIs.
 
 **1. Metadata and summary tables**
 
-:::{figure-md} raw-proc-fig-alevinqc-summary
+:::{figure} raw-proc-fig-alevinqc-summary
 <img src="../_static/images/raw_data_processing/alevinQC_summary.png" alt="AlevinQC Summary" class="bg-primary mb-1" width="800px">
 
 An example of the summary section of an alevinQC report.
@@ -640,7 +640,7 @@ The top right summary table provides the summary statistics for various componen
 
 **2. Knee plot, initial whitelist determination**
 
-:::{figure-md} raw-proc-fig-alevinqc-plots
+:::{figure} raw-proc-fig-alevinqc-plots
 <img src="../_static/images/raw_data_processing/alevinQC_plots.png" alt="AlevinQC Plots" class="bg-primary mb-1" width="800px">
 
 The figure shows the plots in the alevinQC report of an example single-cell dataset, of which the cells are filtered using the "knee" finding method.
