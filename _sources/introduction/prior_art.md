@@ -1,7 +1,7 @@
 # Prior art
 <!-- END DROPDOWNS -->
 
-Single-cell analysis has evolving from a niche area of interest into a well-established field of study.
+Single-cell analysis has evolved from a niche area of interest into a well-established field of study.
 As a result, we are certainly not the first to produce a book on this subject, nor to provide guides and tutorials.
 In the sections that follow, we review two notable and ongoing initiatives aimed at teaching single-cell analysis, highlighting both their similarities to and differences from this book.
 

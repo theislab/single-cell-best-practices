@@ -1,0 +1,1540 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>7. GPU-accelerated analysis &#8212; Single-cell best practices</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/book.css?v=148c11e2" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'introduction/rapids_singlecell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/book.js?v=57d67cd3"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. Quality Control" href="../preprocessing_visualization/quality_control.html" />
+    <link rel="prev" title="6. Interoperability" href="interoperability.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../preamble.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Single-cell best practices - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Single-cell best practices - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="prior_art.html">1. Prior art</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrna_seq.html">2. Single-cell RNA sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raw_data_processing.html">3. Raw data processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fundamental_data_structures_and_frameworks.html">4. Fundamental data structures and frameworks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_data_structures_and_frameworks.html">5. Multimodal and spatial data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interoperability.html">6. Interoperability</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. GPU-accelerated analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Preprocessing and visualization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/quality_control.html">8. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/normalization.html">9. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/feature_selection.html">10. Feature selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing_visualization/dimensionality_reduction.html">11. Dimensionality Reduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Identifying cellular structure</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/clustering.html">12. Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/annotation.html">13. Annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cellular_structure/integration.html">14. Data integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inferring trajectories</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/pseudotemporal.html">15. Pseudotemporal ordering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/rna_velocity.html">16. RNA velocity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trajectories/lineage_tracing.html">17. Lineage tracing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Dealing with conditions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conditions/differential_gene_expression.html">18. Differential gene expression analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/compositional.html">19. Compositional analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/gsea_pathway.html">20. Gene set enrichment and pathway analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conditions/perturbation_modeling.html">21. Perturbation modeling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Modeling mechanisms</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/gene_regulatory_networks.html">22. Gene regulatory networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mechanisms/cell_cell_communication.html">23. Cell-cell communication</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deconvolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deconvolution/bulk_deconvolution.html">24. Bulk deconvolution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chromatin Accessibility</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/introduction.html">25. Single-cell ATAC sequencing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/quality_control.html">26. Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chromatin_accessibility/gene_regulatory_networks_atac.html">27. Gene regulatory networks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spatial omics</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../spatial/introduction.html">28. Single-cell data resolved in space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/neighborhood.html">29. Neighborhood analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/domains.html">30. Spatial domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/spatially_variable_genes.html">31. Spatially variable genes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/deconvolution.html">32. Spatial deconvolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial/imputation.html">33. Imputation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Surface protein</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/quality_control.html">34. Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/normalization.html">35. Normalization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/doublet_detection.html">36. Doublet detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/dimensionality_reduction.html">37. Dimensionality Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/batch_correction.html">38. Batch correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../surface_protein/annotation.html">39. Annotation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Adaptive immune receptor repertoire</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/ir_profiling.html">40. Immune Receptor Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/clonotype.html">41. Clonotype analysis</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/specificity.html">42. Specificity analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../air_repertoire/multimodal_integration.html">43. Integrating AIR and transcriptomics</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Multimodal integration</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/paired_integration.html">44. Paired integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multimodal_integration/advanced_integration.html">45. Advanced integration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Outlook</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../outlook.html">46. Outlook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Acknowledgements</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgements.html">47. Acknowledgements</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">48. Glossary</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/edit/main/jupyter-book/introduction/rapids_singlecell.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/theislab/single-cell-best-practices/issues/new?title=Issue%20on%20page%20%2Fintroduction/rapids_singlecell.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/introduction/rapids_singlecell.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>GPU-accelerated analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">7.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-does-a-gpu-pay-off">7.2. When does a GPU pay off?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">7.3. Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-management-with-rmm">7.4. Memory management with RMM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-scanpy-pipeline-on-the-gpu">7.5. A scanpy pipeline, on the GPU</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-control">7.5.1. Quality control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-hvg-scaling">7.5.2. Normalization, HVG, scaling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-neighbors-umap-clustering">7.5.3. PCA, neighbors, UMAP, clustering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-stays-on-scanpy">7.5.4. Plotting stays on scanpy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-best-practices">7.6. GPU best practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimize-hostdevice-transfers">7.6.1. Minimize host↔device transfers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#free-intermediates-explicitly">7.6.2. Free intermediates explicitly</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitor-vram-usage">7.6.3. Monitor VRAM usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#watch-the-dtype">7.6.4. Watch the dtype</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plan-for-non-determinism">7.6.5. Plan for non-determinism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#match-the-nvidia-driver-to-the-cuda-runtime">7.6.6. Match the NVIDIA driver to the CUDA runtime</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#know-what-is-not-ported">7.6.7. Know what is not ported</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#watch-for-mig-on-shared-clusters">7.6.8. Watch for MIG on shared clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-core-analysis-with-dask-cuda">7.7. Out-of-core analysis with dask-cuda</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-preprocessing-decoupler-squidpy-and-pertpy-on-the-gpu">7.8. Beyond preprocessing: decoupler, squidpy, and pertpy on the GPU</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">7.9. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">7.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">7.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">7.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">7.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gpu-accelerated-analysis">
+<span id="introduction-rapids-singlecell"></span><h1><span class="section-number">7. </span>GPU-accelerated analysis<a class="headerlink" href="#gpu-accelerated-analysis" title="Link to this heading">#</a></h1>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fas fa-brain"></i>   Key takeaways</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">rapids-singlecell mirrors the scanpy API on the GPU, so most preprocessing and clustering pipelines can be ported by swapping <code class="docutils literal notranslate"><span class="pre">sc</span></code> for <code class="docutils literal notranslate"><span class="pre">rsc</span></code> and moving the AnnData with <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_GPU</span></code>.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-rapids-singlecell-key-takeaway-1"><span class="std std-ref">A scanpy pipeline, on the GPU</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Pick exactly one allocator strategy: a pool allocator if the data fits in VRAM, or managed (unified) memory if it does not. Mixing both fragments memory and erodes the speedup.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-rapids-singlecell-key-takeaway-2"><span class="std std-ref">Memory management with RMM</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">Move data back to host memory with <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU</span></code> once a step no longer needs the GPU, free intermediate CuPy arrays, and call <code class="docutils literal notranslate"><span class="pre">cp.get_default_memory_pool().free_all_blocks()</span></code> to release VRAM you are no longer using.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-rapids-singlecell-key-takeaway-3"><span class="std std-ref">Free intermediates explicitly</span></a></div>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<p class="sd-card-text">For datasets that exceed a single GPU’s memory, combine <code class="docutils literal notranslate"><span class="pre">dask-cuda</span></code> with the <code class="docutils literal notranslate"><span class="pre">read_elem_lazy</span></code> AnnData reader to stream chunks through the GPU; expect occasional synchronization points (QC, HVG selection, scaling, PCA) that force evaluation.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="#introduction-rapids-singlecell-key-takeaway-4"><span class="std std-ref">Out-of-core analysis with dask-cuda</span></a></div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-gear"></i>   Environment setup</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Steps</label><div class="sd-tab-content docutils">
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install conda</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Before creating the environment, ensure that <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> is installed on your system.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Save the yml content</strong>:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Copy the content from the yml tab into a file named <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code>.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Create the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Open a terminal or command prompt.</p></li>
+<li><p class="sd-card-text">Run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Activate the environment</strong>:</p>
+<ul>
+<li><p class="sd-card-text">After the environment is created, activate it using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>&lt;environment_name&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text">Replace <code class="docutils literal notranslate"><span class="pre">&lt;environment_name&gt;</span></code> with the name specified in the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. In the yml file it will look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;environment_name&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify the installation</strong>:</p>
+<ul>
+<li><p class="sd-card-text">Check that the environment was created successfully by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+yml</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rapids_singlecell</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bioconda</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.14</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::scanpy=1.12.1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--extra-index-url=https://pypi.nvidia.com</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rapids-singlecell-cu13[rapids]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decoupler</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lamindb[bionty,jupyter]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text"><i class="fa-solid fa-database"></i>   Get data and notebooks</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">This book uses <a class="reference external" href="https://github.com/laminlabs/lamindb">lamindb</a> to store, share, and load datasets and notebooks using the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices">theislab/sc-best-practices instance</a>.
+We acknowledge free hosting from <a class="reference external" href="https://lamin.ai/">Lamin Labs</a>.</p>
+<ol class="arabic">
+<li><p class="sd-card-text"><strong>Install lamindb</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Install the lamindb Python package:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lamindb
+</pre></div>
+</div>
+</li>
+<li><p class="sd-card-text"><strong>Optionally create a lamin account</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Sign up and log in following <a class="reference external" href="https://docs.lamin.ai/setup#sign-up-log-in">the instructions</a></p></li>
+</ul>
+</li>
+<li><p class="sd-card-text"><strong>Verify your setup</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Run the <code class="docutils literal notranslate"><span class="pre">lamin</span> <span class="pre">connect</span></code> command:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+
+<span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">You should now see up to 100 of the stored datasets.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing datasets (Artifacts)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the datasets on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/artifacts">Artifacts page</a></p></li>
+<li><p class="sd-card-text">Load an Artifact and the corresponding object:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lamindb</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ln</span>
+<span class="n">af</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">Artifact</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;theislab/sc-best-practices&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;key_of_dataset&quot;</span><span class="p">,</span> <span class="n">is_latest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The object is now accessible in memory and is ready for analysis.
+Adapt the <code class="docutils literal notranslate"><span class="pre">ln.Artifact.connect(&quot;theislab/sc-best-practices&quot;).get(&quot;SOMEIDXXXX&quot;)</span></code> suffix to get respective versions.</p>
+</li>
+<li><p class="sd-card-text"><strong>Accessing notebooks (Transforms)</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Search for the notebook on the <a class="reference external" href="https://lamin.ai/theislab/sc-best-practices/transforms">Transforms page</a></p></li>
+<li><p class="sd-card-text">Load the notebook:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lamin<span class="w"> </span>load<span class="w"> </span>&lt;notebook<span class="w"> </span>url&gt;
+</pre></div>
+</div>
+<p class="sd-card-text">which will download the notebook to the current working directory.
+Analogously to <code class="docutils literal notranslate"><span class="pre">Artifacts</span></code>, you can adapt the suffix ID to get older versions.</p>
+</li>
+</ol>
+</div>
+</details><!-- END DROPDOWNS -->
+<section id="motivation">
+<h2><span class="section-number">7.1. </span>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>Most chapters in this book run on CPU and on datasets of tens to hundreds of thousands of cells.
+Modern atlases now reach the millions, and the same scanpy-style pipeline that finished in minutes on a laptop can take hours on a workstation and fall over on memory before it finishes.</p>
+<p><a class="reference external" href="https://rapids-singlecell.readthedocs.io/">rapids-singlecell</a> (RSC) is a scverse core package that ports the scanpy API to the GPU on top of <a class="reference external" href="https://rapids.ai/">RAPIDS</a>, CuPy, and cuML <span class="bibtex-citation" id="id1">[<a class="reference internal" href="#id568" title="Severin Dicks, Lukas Heumos, Lilly May, Sara Jimenez, Philipp Angerer, Ilan Gold, Isaac Virshup, Felix Fischer, Michelle Gill, Melanie Boerries, Corey J. Nolet, Tiffany J. Chen, and Fabian J. Theis. Gpu-accelerated single-cell analysis at scale with rapids-singlecell. arXiv preprint arXiv:2603.02402, 2026. URL: https://arxiv.org/abs/2603.02402, doi:10.48550/arXiv.2603.02402.">Dicks <em>et al.</em>, 2026</a>, <a class="reference internal" href="#id570" title="Corey J. Nolet, Divye Gala, Alex Fender, Joe Eaton-Patrick Patro, Edward Raff, John Zedlewski, Brad Rees, and Tim Riedel. Cuml: a library for gpu accelerated machine learning. Software available from rapids.ai, 2024. URL: https://github.com/rapidsai/cuml.">Nolet <em>et al.</em>, 2024</a>]</span>.
+It also provides GPU implementations of selected squidpy <span class="bibtex-citation" id="id2">[<a class="reference internal" href="#id575" title="Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. Nature Methods, 19(2):171–178, 2022. URL: https://doi.org/10.1038/s41592-021-01358-2, doi:10.1038/s41592-021-01358-2.">Palla <em>et al.</em>, 2022</a>]</span>, decoupler <span class="bibtex-citation" id="id3">[<a class="reference internal" href="#id576" title="Pau Badia-i-Mompel, Jesús Vélez Santiago, Jana Braunger, Celina Geiss, Daniel Dimitrov, Sophia Müller-Dott, Petr Taus, Aurelien Dugourd, Christian H. Holland, Ricardo O. Ramirez Flores, and others. Decoupler: ensemble of computational methods to infer biological activities from omics data. Bioinformatics Advances, 2(1):vbac016, 2022.">Badia-i-Mompel <em>et al.</em>, 2022</a>]</span>, and pertpy <span class="bibtex-citation" id="id4">[<a class="reference internal" href="#id577" title="Lukas Heumos, Yuge Ji, Lilly May, Tessa D. Green, Stefan Peidli, Xinyue Zhang, Xichen Wu, Johannes Ostner, Antonia Schumacher, Karin Hrovatin, Michaela Müller, Faye Chong, Gregor Sturm, Alejandro Tejada, Emma Dann, Mingze Dong, Gonçalo Pinto, Mojtaba Bahrami, Ilan Gold, Sergei Rybakov, Altana Namsaraeva, Amir Ali Moinfar, Zihe Zheng, Eljas Roellin, Isra Mekki, Chris Sander, Mohammad Lotfollahi, Herbert B. Schiller, and Fabian J. Theis. Pertpy: an end-to-end framework for perturbation analysis. Nature Methods, 2025. URL: https://doi.org/10.1038/s41592-025-02909-7, doi:10.1038/s41592-025-02909-7.">Heumos <em>et al.</em>, 2025</a>]</span> routines.
+End-to-end speedups of 10–20× over CPU scanpy are typical for the standard preprocessing and clustering pipeline, with individual steps such as UMAP, t-SNE, and Leiden running 50–200× faster.</p>
+</section>
+<section id="when-does-a-gpu-pay-off">
+<h2><span class="section-number">7.2. </span>When does a GPU pay off?<a class="headerlink" href="#when-does-a-gpu-pay-off" title="Link to this heading">#</a></h2>
+<p>GPUs help when the work is regular and large enough to amortize the host-to-device transfer cost.
+For single-cell data, the rough rule of thumb is:</p>
+<ul class="simple">
+<li><p><strong>Below ~50k cells</strong>: CPU scanpy is fine, and the transfer overhead can dominate. Use a GPU only if you need to iterate quickly during method development.</p></li>
+<li><p><strong>50k–1M cells on one GPU</strong>: this is the sweet spot. A single 24–80 GB GPU runs the whole standard pipeline interactively.</p></li>
+<li><p><strong>&gt;1M cells, or memory-pressure</strong>: combine RSC with <a class="reference external" href="https://docs.rapids.ai/api/dask-cuda/stable/">dask-cuda</a> for out-of-core or multi-GPU execution (covered below).</p></li>
+</ul>
+<p>The main bottleneck on a single GPU is <strong>VRAM</strong>, not compute.
+A dense float32 expression matrix for 1M cells × 30k genes is ~120 GB — it never fits.
+Sparse CSR is what makes single-cell on GPU practical, and most of the best practices below are about keeping the matrix sparse and in the right place for as long as possible.</p>
+</section>
+<section id="installation">
+<h2><span class="section-number">7.3. </span>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>Recent RSC releases ship pre-built wheels covering CUDA 12 and 13 and GPU architectures from Turing through Blackwell.
+Install with the <code class="docutils literal notranslate"><span class="pre">[rapids]</span></code> extra so the full RAPIDS stack (cuDF, cuML, cuGraph, RMM, CuPy) is pulled in alongside the precompiled kernels:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># CUDA 13</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;rapids-singlecell-cu13[rapids]&#39;</span><span class="w"> </span>--extra-index-url<span class="o">=</span>https://pypi.nvidia.com
+
+<span class="c1"># CUDA 12</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;rapids-singlecell-cu12[rapids]&#39;</span><span class="w"> </span>--extra-index-url<span class="o">=</span>https://pypi.nvidia.com
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--extra-index-url</span></code> is required because the RAPIDS wheels live on the NVIDIA PyPI index, not the public one.
+On older RSC versions you would have had to install RAPIDS conda packages alongside; that step is no longer needed.</p>
+<div class="tip dropdown admonition">
+<p class="admonition-title">Verify the installation</p>
+<p>Before running anything heavy, confirm CuPy can see your GPU:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import cupy as cp
+print(cp.cuda.runtime.getDeviceCount(), cp.cuda.Device(0).name)
+</pre></div>
+</div>
+<p>If this raises <code class="docutils literal notranslate"><span class="pre">CUDARuntimeError</span></code>, your driver version is older than the CUDA runtime in the wheel — update the NVIDIA driver, not the CUDA toolkit.</p>
+</div>
+</section>
+<section id="memory-management-with-rmm">
+<span id="introduction-rapids-singlecell-key-takeaway-2"></span><h2><span class="section-number">7.4. </span>Memory management with RMM<a class="headerlink" href="#memory-management-with-rmm" title="Link to this heading">#</a></h2>
+<p>RSC routes all GPU allocations through the <a class="reference external" href="https://github.com/rapidsai/rmm">RAPIDS Memory Manager</a> (RMM) <span class="bibtex-citation" id="id5">[<a class="reference internal" href="#id573" title="NVIDIA RAPIDS. RMM: RAPIDS memory manager. https://github.com/rapidsai/rmm, 2024. URL: https://github.com/rapidsai/rmm.">NVIDIA RAPIDS, 2024</a>]</span>.
+Importing <code class="docutils literal notranslate"><span class="pre">rapids_singlecell</span></code> already swaps the default CuPy allocator for an RMM-backed one, but the default is the plain CUDA allocator: every allocation is a <code class="docutils literal notranslate"><span class="pre">cudaMalloc</span></code> and every free is a <code class="docutils literal notranslate"><span class="pre">cudaFree</span></code>.
+Single-cell pipelines allocate constantly (one temporary array per scanpy function), so this default leaves a lot of performance on the table.</p>
+<p>There are two strategies, and you should pick exactly one:</p>
+<ul class="simple">
+<li><p><strong>Pool allocator</strong> — RMM grabs a large slab of VRAM up front and serves subsequent allocations from it. This is by far the fastest option, but it caps you at what fits in VRAM. Use this whenever your dataset fits.</p></li>
+<li><p><strong>Managed (unified) memory</strong> — allocations are backed by CUDA managed memory, so the driver pages data in and out of host RAM transparently. This is how you analyze a 200 GB dataset on a 40 GB GPU. It is slower per-op (page faults are not free) but still typically beats CPU scanpy.</p></li>
+</ul>
+<div class="warning admonition">
+<p class="admonition-title">Do not enable both at the same time</p>
+<p>Combining <code class="docutils literal notranslate"><span class="pre">pool_allocator=True</span></code> with <code class="docutils literal notranslate"><span class="pre">managed_memory=True</span></code> looks tempting, but the pool sits on top of managed memory and the two strategies fight each other.
+You get the latency cost of paging without the speed of pooling, and fragmentation gets worse over the lifetime of the notebook.
+Pick one.</p>
+</div>
+<p>Configure the pool allocator at the <strong>very top</strong> of your notebook, before any CuPy array is created.
+Reinitializing RMM after CuPy has already allocated will leak the old allocations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cupy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rmm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rmm.allocators.cupy</span><span class="w"> </span><span class="kn">import</span> <span class="n">rmm_cupy_allocator</span>
+
+<span class="n">rmm</span><span class="o">.</span><span class="n">reinitialize</span><span class="p">(</span>
+    <span class="n">pool_allocator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">managed_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">initial_pool_size</span><span class="o">=</span><span class="s2">&quot;4GB&quot;</span><span class="p">,</span>  <span class="c1"># start small, grow as needed</span>
+    <span class="n">maximum_pool_size</span><span class="o">=</span><span class="s2">&quot;32GB&quot;</span><span class="p">,</span>  <span class="c1"># leave headroom for plotting libraries, etc.</span>
+<span class="p">)</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_allocator</span><span class="p">(</span><span class="n">rmm_cupy_allocator</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If your dataset will not fit, swap to managed memory instead.
+On Linux with a Pascal-or-newer GPU this is true unified memory and oversubscription works out of the box; on Windows under WSL2 it is emulated and somewhat slower.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmm</span><span class="o">.</span><span class="n">reinitialize</span><span class="p">(</span>
+    <span class="n">pool_allocator</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">managed_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_allocator</span><span class="p">(</span><span class="n">rmm_cupy_allocator</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>With the allocator configured, the rest of the imports look like a normal scanpy notebook — <code class="docutils literal notranslate"><span class="pre">rapids_singlecell</span></code> is conventionally aliased as <code class="docutils literal notranslate"><span class="pre">rsc</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pooch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rapids_singlecell</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rsc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-scanpy-pipeline-on-the-gpu">
+<span id="introduction-rapids-singlecell-key-takeaway-1"></span><h2><span class="section-number">7.5. </span>A scanpy pipeline, on the GPU<a class="headerlink" href="#a-scanpy-pipeline-on-the-gpu" title="Link to this heading">#</a></h2>
+<p>RSC mirrors the scanpy module layout on purpose: <code class="docutils literal notranslate"><span class="pre">rsc.pp</span></code> for preprocessing and <code class="docutils literal notranslate"><span class="pre">rsc.tl</span></code> for tools.
+Most scanpy calls have a one-to-one RSC counterpart with the same signature, so porting a pipeline is largely a matter of switching the prefix.</p>
+<p>The mental model is simple:</p>
+<ol class="arabic simple">
+<li><p>Read the AnnData in as you normally would (CPU memory, sparse <code class="docutils literal notranslate"><span class="pre">.X</span></code>).</p></li>
+<li><p>Move it to the GPU once with <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_GPU</span></code>.</p></li>
+<li><p>Run the heavy preprocessing and clustering steps with <code class="docutils literal notranslate"><span class="pre">rsc.*</span></code>.</p></li>
+<li><p>Move it back to host with <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU</span></code> for plotting, saving, or anything else CPU-only.</p></li>
+</ol>
+<p>We follow the same example dataset used in the upstream RSC tutorials — a ~90k-cell DLI census subset — so the runtimes here are directly comparable to those reported in the <a class="reference external" href="https://rapids-singlecell.readthedocs.io/">rapids-singlecell docs</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://exampledata.scverse.org/rapids-singlecell/dli_census.h5ad&quot;</span><span class="p">,</span>
+    <span class="n">fname</span><span class="o">=</span><span class="s2">&quot;dli_census.h5ad&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">feature_name</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 216611 × 25430
+    obs: &#39;soma_joinid&#39;, &#39;dataset_id&#39;, &#39;assay&#39;, &#39;assay_ontology_term_id&#39;, &#39;cell_type&#39;, &#39;cell_type_ontology_term_id&#39;, &#39;development_stage&#39;, &#39;development_stage_ontology_term_id&#39;, &#39;disease&#39;, &#39;disease_ontology_term_id&#39;, &#39;donor_id&#39;, &#39;is_primary_data&#39;, &#39;observation_joinid&#39;, &#39;self_reported_ethnicity&#39;, &#39;self_reported_ethnicity_ontology_term_id&#39;, &#39;sex&#39;, &#39;sex_ontology_term_id&#39;, &#39;suspension_type&#39;, &#39;tissue&#39;, &#39;tissue_ontology_term_id&#39;, &#39;tissue_type&#39;, &#39;tissue_general&#39;, &#39;tissue_general_ontology_term_id&#39;, &#39;raw_sum&#39;, &#39;nnz&#39;, &#39;raw_mean_nnz&#39;, &#39;raw_variance_nnz&#39;, &#39;n_measured_vars&#39;
+    var: &#39;soma_joinid&#39;, &#39;feature_id&#39;, &#39;feature_name&#39;, &#39;feature_type&#39;, &#39;feature_length&#39;, &#39;nnz&#39;, &#39;n_measured_obs&#39;, &#39;n_cells&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_GPU</span></code> and its <code class="docutils literal notranslate"><span class="pre">anndata_to_CPU</span></code> counterpart only operate on <code class="docutils literal notranslate"><span class="pre">.X</span></code> and <code class="docutils literal notranslate"><span class="pre">.layers</span></code> — <code class="docutils literal notranslate"><span class="pre">obs</span></code>, <code class="docutils literal notranslate"><span class="pre">var</span></code>, <code class="docutils literal notranslate"><span class="pre">obsm</span></code>, and <code class="docutils literal notranslate"><span class="pre">varm</span></code> always stay on the host.
+By default only <code class="docutils literal notranslate"><span class="pre">.X</span></code> is moved; pass <code class="docutils literal notranslate"><span class="pre">convert_all=True</span></code> to also move every layer, or <code class="docutils literal notranslate"><span class="pre">layer=&quot;&lt;name&gt;&quot;</span></code> to move that layer instead of <code class="docutils literal notranslate"><span class="pre">.X</span></code>.
+The transfer converts the matrix to a CuPy CSR (or dense <code class="docutils literal notranslate"><span class="pre">cupy.ndarray</span></code>) in place, and downstream RSC calls read from device memory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rsc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">anndata_to_GPU</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="quality-control">
+<h3><span class="section-number">7.5.1. </span>Quality control<a class="headerlink" href="#quality-control" title="Link to this heading">#</a></h3>
+<p>QC metrics and gene filtering have GPU implementations in <code class="docutils literal notranslate"><span class="pre">rsc.pp</span></code>.
+For the gene-family masks themselves we use plain pandas <code class="docutils literal notranslate"><span class="pre">startswith</span></code> directly on <code class="docutils literal notranslate"><span class="pre">adata.var_names</span></code>: the index is a host-side <code class="docutils literal notranslate"><span class="pre">pd.Index</span></code> regardless of where <code class="docutils literal notranslate"><span class="pre">.X</span></code> lives, so there is nothing to gain from going through a wrapper.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;MT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;MT-&quot;</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;RIBO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;RPS&quot;</span><span class="p">,</span> <span class="s2">&quot;RPL&quot;</span><span class="p">))</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">qc_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MT&quot;</span><span class="p">,</span> <span class="s2">&quot;RIBO&quot;</span><span class="p">])</span>
+
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">]</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;pct_counts_MT&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">]</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(213191, 25430)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="normalization-hvg-scaling">
+<h3><span class="section-number">7.5.2. </span>Normalization, HVG, scaling<a class="headerlink" href="#normalization-hvg-scaling" title="Link to this heading">#</a></h3>
+<p>These are direct one-to-one ports of the scanpy functions covered in <a class="reference internal" href="../preprocessing_visualization/normalization.html"><span class="std std-doc">Normalization</span></a> and <a class="reference internal" href="../preprocessing_visualization/feature_selection.html"><span class="std std-doc">Feature selection</span></a>.
+All scanpy <code class="docutils literal notranslate"><span class="pre">flavor=</span></code> options for <code class="docutils literal notranslate"><span class="pre">highly_variable_genes</span></code> (<code class="docutils literal notranslate"><span class="pre">seurat</span></code>, <code class="docutils literal notranslate"><span class="pre">seurat_v3</span></code>, <code class="docutils literal notranslate"><span class="pre">seurat_v3_paper</span></code>, <code class="docutils literal notranslate"><span class="pre">cell_ranger</span></code>, <code class="docutils literal notranslate"><span class="pre">pearson_residuals</span></code>) are supported on GPU.
+RSC additionally provides <code class="docutils literal notranslate"><span class="pre">flavor=&quot;poisson_gene_selection&quot;</span></code>, a CUDA-kernel port of <a class="reference external" href="https://github.com/tallulandrews/M3Drop">M3Drop</a>’s analytical Poisson gene selection that has no CPU equivalent in scanpy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;cell_ranger&quot;</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">adata</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_highly_variable</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pca-neighbors-umap-clustering">
+<h3><span class="section-number">7.5.3. </span>PCA, neighbors, UMAP, clustering<a class="headerlink" href="#pca-neighbors-umap-clustering" title="Link to this heading">#</a></h3>
+<p>PCA dispatches by input type: dense matrices go through cuML (<code class="docutils literal notranslate"><span class="pre">PCA</span></code> for <code class="docutils literal notranslate"><span class="pre">zero_center=True</span></code>, <code class="docutils literal notranslate"><span class="pre">TruncatedSVD</span></code> otherwise), and <code class="docutils literal notranslate"><span class="pre">chunked=True</span></code> uses cuML <code class="docutils literal notranslate"><span class="pre">IncrementalPCA</span></code>.
+For everything else — sparse and Dask inputs — RSC uses its own CUDA-kernel implementations: a covariance-eigendecomposition path for ≤8k features and a Lanczos SVD for wider matrices.
+Neighbors uses brute-force exact KNN by default, with several cuVS-backed approximate methods available for very large datasets.
+UMAP is cuML-backed; Leiden goes through cuGraph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rsc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="note dropdown admonition">
+<p class="admonition-title">Approximate KNN trades accuracy for scale</p>
+<p><code class="docutils literal notranslate"><span class="pre">rsc.pp.neighbors</span></code> exposes the cuVS approximate-nearest-neighbor backends through <code class="docutils literal notranslate"><span class="pre">algorithm=</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">brute</span></code> (default): exact KNN, scales as O(n²). Best for datasets below ~500k cells; above that the quadratic cost dominates and an ANN backend is faster.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ivfflat</span></code>: inverted-file ANN. A solid default once <code class="docutils literal notranslate"><span class="pre">brute</span></code> becomes too slow — fast, well-behaved on cluster boundaries, and tunable via <code class="docutils literal notranslate"><span class="pre">n_lists</span></code> / <code class="docutils literal notranslate"><span class="pre">n_probes</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all_neighbors</span></code>: cuVS’s batched/clustered ANN (uses <code class="docutils literal notranslate"><span class="pre">nn_descent</span></code> or <code class="docutils literal notranslate"><span class="pre">ivf_pq</span></code> under the hood) that partitions the dataset across clusters and across GPUs. The right choice when the data set exceeds VRAM or when you have more than one GPU available.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ivfpq</span></code>: like <code class="docutils literal notranslate"><span class="pre">ivfflat</span></code> but with product quantization to compress the index for very large datasets at some accuracy cost.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cagra</span></code> and <code class="docutils literal notranslate"><span class="pre">nn_descent</span></code>: graph-based ANN backends, available if you want to compare; <code class="docutils literal notranslate"><span class="pre">nn_descent</span></code> in particular shines in very high dimensions.</p></li>
+</ul>
+<p>All of these change cluster assignments at the margin.
+If you re-run the same workflow with <code class="docutils literal notranslate"><span class="pre">brute</span></code> and with an ANN backend, expect the bulk of cells to land in the same cluster but a few to swap — don’t treat that as a bug.</p>
+</div>
+</section>
+<section id="plotting-stays-on-scanpy">
+<h3><span class="section-number">7.5.4. </span>Plotting stays on scanpy<a class="headerlink" href="#plotting-stays-on-scanpy" title="Link to this heading">#</a></h3>
+<p>RSC deliberately does not duplicate scanpy’s plotting API.
+Once the heavy compute is done, the familiar <code class="docutils literal notranslate"><span class="pre">sc.pl.*</span></code> functions work directly — <code class="docutils literal notranslate"><span class="pre">obs</span></code>, <code class="docutils literal notranslate"><span class="pre">var</span></code>, and embeddings in <code class="docutils literal notranslate"><span class="pre">obsm</span></code> already live on the host, so coloring a UMAP by a <code class="docutils literal notranslate"><span class="pre">obs</span></code> column or cluster label needs no transfer.
+You only need <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU</span></code> when the plot pulls values from <code class="docutils literal notranslate"><span class="pre">.X</span></code> itself, e.g. coloring by a gene’s expression or a dotplot of marker genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0139ff9aaf851252c86cb43f4e8a7b209316e9aab00a73b19dec4a6975ab18e1.png" src="../_images/0139ff9aaf851252c86cb43f4e8a7b209316e9aab00a73b19dec4a6975ab18e1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="gpu-best-practices">
+<h2><span class="section-number">7.6. </span>GPU best practices<a class="headerlink" href="#gpu-best-practices" title="Link to this heading">#</a></h2>
+<p>The pipeline above runs in seconds on a small dataset. Once you scale up, the habits below are what separate a fast workflow from one that thrashes the GPU.</p>
+<section id="minimize-hostdevice-transfers">
+<h3><span class="section-number">7.6.1. </span>Minimize host↔device transfers<a class="headerlink" href="#minimize-hostdevice-transfers" title="Link to this heading">#</a></h3>
+<p>Every <code class="docutils literal notranslate"><span class="pre">anndata_to_GPU</span></code> / <code class="docutils literal notranslate"><span class="pre">anndata_to_CPU</span></code> is a PCIe transfer.
+A 50 GB sparse matrix takes a few seconds to move and easily dominates fast preprocessing steps.</p>
+<p>Move once, do all GPU work in a contiguous block, and move back once.
+Avoid patterns like calling a CPU-only function in the middle of a pipeline that forces an implicit move — if you must mix, batch the CPU work.</p>
+</section>
+<section id="free-intermediates-explicitly">
+<span id="introduction-rapids-singlecell-key-takeaway-3"></span><h3><span class="section-number">7.6.2. </span>Free intermediates explicitly<a class="headerlink" href="#free-intermediates-explicitly" title="Link to this heading">#</a></h3>
+<p>Python’s garbage collector won’t release CuPy memory back to the pool as eagerly as you’d want.
+After a memory-heavy step (<code class="docutils literal notranslate"><span class="pre">rsc.pp.scale</span></code> on dense data, <code class="docutils literal notranslate"><span class="pre">rsc.pp.regress_out</span></code>, PCA on a large matrix), drop references to layers you don’t need and ask CuPy to release the freed pool blocks back to the driver.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gc</span>
+
+<span class="c1"># Drop references to large intermediates first.</span>
+<span class="k">if</span> <span class="s2">&quot;counts&quot;</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+    <span class="k">del</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+<span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+
+<span class="c1"># Then return any unused pool blocks to the driver.</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">get_default_memory_pool</span><span class="p">()</span><span class="o">.</span><span class="n">free_all_blocks</span><span class="p">()</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">get_default_pinned_memory_pool</span><span class="p">()</span><span class="o">.</span><span class="n">free_all_blocks</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="monitor-vram-usage">
+<h3><span class="section-number">7.6.3. </span>Monitor VRAM usage<a class="headerlink" href="#monitor-vram-usage" title="Link to this heading">#</a></h3>
+<p>It’s hard to right-size your pool or diagnose an OOM without seeing what’s on the device.
+There are three useful views:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CuPy: what your process has allocated through the active pool.</span>
+<span class="n">pool</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">get_default_memory_pool</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CuPy pool used: </span><span class="si">{</span><span class="n">pool</span><span class="o">.</span><span class="n">used_bytes</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CuPy pool total: </span><span class="si">{</span><span class="n">pool</span><span class="o">.</span><span class="n">total_bytes</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB&quot;</span><span class="p">)</span>
+
+<span class="c1"># CUDA: what the device reports as free vs total (across all processes).</span>
+<span class="n">free</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">memGetInfo</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device free: </span><span class="si">{</span><span class="n">free</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB / </span><span class="si">{</span><span class="n">total</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CuPy pool used: 0.00 GB
+CuPy pool total: 0.00 GB
+Device free: 93.73 GB / 101.97 GB
+</pre></div>
+</div>
+</div>
+</div>
+<p>From a separate terminal, <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span> <span class="pre">--query-gpu=memory.used,memory.free,utilization.gpu</span> <span class="pre">--format=csv</span> <span class="pre">-l</span> <span class="pre">1</span></code> gives you a per-second feed across processes — indispensable when debugging a pipeline that suddenly OOMs three steps in.</p>
+</section>
+<section id="watch-the-dtype">
+<h3><span class="section-number">7.6.4. </span>Watch the dtype<a class="headerlink" href="#watch-the-dtype" title="Link to this heading">#</a></h3>
+<p>AnnData objects coming from <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> are commonly <code class="docutils literal notranslate"><span class="pre">float64</span></code>.
+On the GPU, <code class="docutils literal notranslate"><span class="pre">float64</span></code> doubles your memory footprint and runs noticeably slower on consumer cards (where FP64 throughput is limited compared to data-center cards).</p>
+<p>Cast to <code class="docutils literal notranslate"><span class="pre">float32</span></code> before moving to GPU unless you have a specific numerical reason not to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">anndata_to_GPU</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>RSC computes most reductions internally in <code class="docutils literal notranslate"><span class="pre">float64</span></code> to preserve numerical stability for things like variance and PCA, even when the input is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, so you get the memory savings without the worst-case precision loss.</p>
+</section>
+<section id="plan-for-non-determinism">
+<h3><span class="section-number">7.6.5. </span>Plan for non-determinism<a class="headerlink" href="#plan-for-non-determinism" title="Link to this heading">#</a></h3>
+<p>GPU reductions are non-deterministic by default because the order of floating-point summation depends on thread scheduling.
+Differences are tiny per element but can flip an HVG ranking near the cutoff or move a cell across a cluster boundary.
+If exact reproducibility matters, set <code class="docutils literal notranslate"><span class="pre">cp.random.seed(...)</span></code> and constrain to a single CUDA stream, but accept that bit-identical results across hardware are not realistic.</p>
+</section>
+<section id="match-the-nvidia-driver-to-the-cuda-runtime">
+<h3><span class="section-number">7.6.6. </span>Match the NVIDIA driver to the CUDA runtime<a class="headerlink" href="#match-the-nvidia-driver-to-the-cuda-runtime" title="Link to this heading">#</a></h3>
+<p>RSC wheels pin a specific CUDA runtime version.
+Your NVIDIA driver must be at least as new as that runtime; an older driver will fail to load CuPy with a misleading error.
+Update the driver, not the toolkit — the wheel ships its own toolkit.</p>
+</section>
+<section id="know-what-is-not-ported">
+<h3><span class="section-number">7.6.7. </span>Know what is not ported<a class="headerlink" href="#know-what-is-not-ported" title="Link to this heading">#</a></h3>
+<p>Tools that depend heavily on R packages (SoupX, scDblFinder, scran) and tools that aren’t bottlenecks (most plotting) live on CPU.
+The expected pattern is to do the bottleneck steps on GPU and bounce back to CPU for the rest.</p>
+</section>
+<section id="watch-for-mig-on-shared-clusters">
+<h3><span class="section-number">7.6.8. </span>Watch for MIG on shared clusters<a class="headerlink" href="#watch-for-mig-on-shared-clusters" title="Link to this heading">#</a></h3>
+<p>If you’re on a shared cluster, check whether MIG (Multi-Instance GPU) is enabled.
+MIG slices a single A100/H100 into smaller, isolated GPUs, which is great for fairness but means you may have less VRAM than <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> on the host suggests.</p>
+</section>
+</section>
+<section id="out-of-core-analysis-with-dask-cuda">
+<span id="introduction-rapids-singlecell-key-takeaway-4"></span><h2><span class="section-number">7.7. </span>Out-of-core analysis with dask-cuda<a class="headerlink" href="#out-of-core-analysis-with-dask-cuda" title="Link to this heading">#</a></h2>
+<p>When the dataset doesn’t fit on a single GPU even with managed memory, RSC integrates with <a class="reference external" href="https://docs.rapids.ai/api/dask-cuda/stable/">dask-cuda</a> to stream chunks of the matrix through one or more GPUs <span class="bibtex-citation" id="id6">[<a class="reference internal" href="#id574" title="Matthew Rocklin. Dask: parallel computation with blocked algorithms and task scheduling. Proceedings of the 14th Python in Science Conference, pages 126–132, 2015. URL: https://doi.org/10.25080/Majora-7b98e3ed-013, doi:10.25080/Majora-7b98e3ed-013.">Rocklin, 2015</a>]</span>.
+AnnData’s lazy reader (<code class="docutils literal notranslate"><span class="pre">read_elem_lazy</span></code> in anndata ≥0.12, <code class="docutils literal notranslate"><span class="pre">read_elem_as_dask</span></code> before that) loads <code class="docutils literal notranslate"><span class="pre">.X</span></code> as a Dask array directly from a Zarr or HDF5 store without ever materializing it in host RAM.</p>
+<p>The recipe is short but each piece matters.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dask.distributed</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dask_cuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalCUDACluster</span>
+
+<span class="n">cluster</span> <span class="o">=</span> <span class="n">LocalCUDACluster</span><span class="p">(</span>
+    <span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">protocol</span><span class="o">=</span><span class="s2">&quot;ucx&quot;</span><span class="p">,</span>  <span class="c1"># zero-copy GPU↔GPU comms over NVLink/InfiniBand if available</span>
+    <span class="n">rmm_pool_size</span><span class="o">=</span><span class="s2">&quot;20GB&quot;</span><span class="p">,</span>
+    <span class="n">rmm_maximum_pool_size</span><span class="o">=</span><span class="s2">&quot;40GB&quot;</span><span class="p">,</span>
+    <span class="n">rmm_allocator_external_lib_list</span><span class="o">=</span><span class="s2">&quot;cupy&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<details class="admonition hide below-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell output</p>
+<p class="expanded admonition-title">Hide code cell output</p>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2026-05-06 11:21:24 | [INFO] To route to workers diagnostics web server please install jupyter-server-proxy: python -m pip install jupyter-server-proxy
+2026-05-06 11:21:24 | [INFO] State start
+2026-05-06 11:21:24 | [INFO] Found stale lock file and directory &#39;/tmp/dask-scratch-space/scheduler-91l8od54&#39;, purging
+2026-05-06 11:21:24 | [INFO] Found stale lock file and directory &#39;/tmp/dask-scratch-space/worker-dmwfgw5g&#39;, purging
+2026-05-06 11:21:24 | [WARNING] A CUDA context for device 0 (GPU-740d12cd-9ded-6e44-a5b5-5cd90037aebe) already exists on process ID 537888. This is often the result of a CUDA-enabled library calling a CUDA runtime function before Dask-CUDA can spawn worker processes. Please make sure any such function calls don&#39;t happen at import time or in the global scope of a program.
+2026-05-06 11:21:24 | [INFO]   Scheduler at:     ucx://127.0.0.1:53865
+2026-05-06 11:21:24 | [INFO]   dashboard at:  http://127.0.0.1:8787/status
+2026-05-06 11:21:24 | [INFO] Registering Worker plugin shuffle
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1778059284.202777] [2cab62a-lcedt:537888:0]          parser.c:2359 UCX  WARN  unused environment variable: UCX_MEMTYPE_CACHE (maybe: UCX_MEMTYPE_CACHE?)
+[1778059284.202777] [2cab62a-lcedt:537888:0]          parser.c:2359 UCX  WARN  (set UCX_WARN_UNUSED_ENV_VARS=n to suppress this warning)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2026-05-06 11:21:24 | [INFO]         Start Nanny at: &#39;ucx://127.0.0.1:47175&#39;
+2026-05-06 11:21:25 | [INFO] Register worker addr: ucx://127.0.0.1:52107 name: 0
+2026-05-06 11:21:25 | [INFO] Starting worker compute stream, ucx://127.0.0.1:52107
+2026-05-06 11:21:25 | [INFO] Starting established connection to ucx://127.0.0.1:53865
+2026-05-06 11:21:25 | [INFO] Receive client connection: Client-f48fc233-492c-11f1-b520-bcfce74fad1a
+2026-05-06 11:21:25 | [INFO] Starting established connection to ucx://127.0.0.1:53865
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anndata.experimental</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_elem_lazy</span>
+
+<span class="c1"># The lazy reader operates on a zarr store, so convert the cached h5ad once.</span>
+<span class="c1"># In a real workflow you&#39;d already have a zarr atlas on disk or in object storage.</span>
+<span class="n">zarr_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zarr&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">zarr_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">write_zarr</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">)</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">)</span>
+<span class="n">X_lazy</span> <span class="o">=</span> <span class="n">read_elem_lazy</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">20_000</span><span class="p">,</span> <span class="n">store</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X_lazy</span><span class="p">,</span>
+    <span class="n">obs</span><span class="o">=</span><span class="n">ad</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_elem</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">]),</span>
+    <span class="n">var</span><span class="o">=</span><span class="n">ad</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_elem</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">]),</span>
+<span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">anndata_to_GPU</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Two practical points trip up most first-time users of the Dask path:</p>
+<p><strong>Most operations are lazy, but some are not.</strong>
+Filtering and <code class="docutils literal notranslate"><span class="pre">log1p</span></code> stay lazy and just queue up work.
+<code class="docutils literal notranslate"><span class="pre">normalize_total</span></code> is also lazy <em>only if you pass <code class="docutils literal notranslate"><span class="pre">target_sum=</span></code> explicitly</em>; with the default <code class="docutils literal notranslate"><span class="pre">target_sum=None</span></code> it has to compute the per-cell sums to find the median library size, which triggers a synchronization.
+<code class="docutils literal notranslate"><span class="pre">calculate_qc_metrics</span></code>, <code class="docutils literal notranslate"><span class="pre">highly_variable_genes</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span></code>, and <code class="docutils literal notranslate"><span class="pre">pca</span></code> need a full reduction over the matrix and trigger a synchronization — think of those as the natural breakpoints in a Dask pipeline.</p>
+<p><strong>Filter with boolean masks, not <code class="docutils literal notranslate"><span class="pre">sc.pp.filter_cells</span></code>.</strong>
+Built-in filtering helpers materialize counts to decide which cells to keep, which defeats lazy execution.
+Compute the masks once from QC metrics and apply them directly with <code class="docutils literal notranslate"><span class="pre">.copy()</span></code> to keep things in CSR rather than a view:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">10_000</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Chunk size is a knob you have to tune.</strong>
+Too-small chunks drown the scheduler in tasks; too-large ones blow VRAM on synchronization.
+20–50k cells per chunk is a reasonable starting point for a 24–80 GB GPU; profile with the Dask dashboard if a step is slower than expected.</p>
+</section>
+<section id="beyond-preprocessing-decoupler-squidpy-and-pertpy-on-the-gpu">
+<h2><span class="section-number">7.8. </span>Beyond preprocessing: decoupler, squidpy, and pertpy on the GPU<a class="headerlink" href="#beyond-preprocessing-decoupler-squidpy-and-pertpy-on-the-gpu" title="Link to this heading">#</a></h2>
+<p>RSC also wraps GPU implementations of selected routines from three other scverse packages, each under its own namespace:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rsc.dcg.*</span></code> — <a class="reference external" href="https://decoupler-py.readthedocs.io/">decoupler</a> functional analysis (<code class="docutils literal notranslate"><span class="pre">ulm</span></code>, <code class="docutils literal notranslate"><span class="pre">mlm</span></code>, <code class="docutils literal notranslate"><span class="pre">aucell</span></code>, <code class="docutils literal notranslate"><span class="pre">waggr</span></code>, <code class="docutils literal notranslate"><span class="pre">zscore</span></code>). On a million-cell atlas, transcription factor activity inference goes from hours on CPU to minutes on a single GPU. The CPU and GPU APIs are identical aside from the namespace; see the <a class="reference internal" href="../conditions/gsea_pathway.html"><span class="std std-doc">pathway and gene-set analysis chapter</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rsc.gr.*</span></code> — <a class="reference external" href="https://squidpy.readthedocs.io/">squidpy</a> spatial analysis (<code class="docutils literal notranslate"><span class="pre">spatial_autocorr</span></code>, <code class="docutils literal notranslate"><span class="pre">co_occurrence</span></code>, <code class="docutils literal notranslate"><span class="pre">ligrec</span></code>). Moran’s/Geary’s spatial autocorrelation and the ligand–receptor permutation test are the routines that benefit most from the GPU; see the <a class="reference internal" href="../spatial/neighborhood.html"><span class="std std-doc">spatial neighborhood chapter</span></a> for what these do conceptually. The neighborhood graph itself is still built with <code class="docutils literal notranslate"><span class="pre">sq.gr.spatial_neighbors</span></code> on CPU.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rsc.ptg.*</span></code> — <a class="reference external" href="https://pertpy.readthedocs.io/">pertpy</a> perturbation distances via the <code class="docutils literal notranslate"><span class="pre">Distance</span></code> class. Only <code class="docutils literal notranslate"><span class="pre">edistance</span></code> is ported today, with more metrics coming soon. The GPU implementation recomputes distances on the fly rather than materializing an n×n cell-distance matrix, so bootstrap variance estimation becomes practical on screens with hundreds of perturbations; see the <a class="reference internal" href="../conditions/perturbation_modeling.html"><span class="std std-doc">perturbation modeling chapter</span></a>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">decoupler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dc</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">collectri</span><span class="p">(</span><span class="n">organism</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s2">&quot;academic&quot;</span><span class="p">)</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">dcg</span><span class="o">.</span><span class="n">ulm</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">net</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bsize</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">squidpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sq</span>
+<span class="n">sq</span><span class="o">.</span><span class="n">gr</span><span class="o">.</span><span class="n">spatial_neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="s2">&quot;generic&quot;</span><span class="p">)</span>  <span class="c1"># still CPU</span>
+<span class="n">rsc</span><span class="o">.</span><span class="n">gr</span><span class="o">.</span><span class="n">spatial_autocorr</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;moran&quot;</span><span class="p">)</span>
+
+<span class="n">distance</span> <span class="o">=</span> <span class="n">rsc</span><span class="o">.</span><span class="n">ptg</span><span class="o">.</span><span class="n">Distance</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;edistance&quot;</span><span class="p">,</span> <span class="n">obsm_key</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">pairwise</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;perturbation&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Not the entire upstream API is ported — RSC focuses on the routines that are both heavy enough to be worth a GPU port and embarrassingly parallel enough to stay numerically faithful. Check the RSC API reference for the current coverage.</p>
+<div class="dropdown admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://rapids-singlecell.readthedocs.io/">rapids-singlecell documentation</a> — API reference and tutorials, including 1M-cell and out-of-core demos.</p></li>
+<li><p><a class="reference external" href="https://docs.rapids.ai/api/rmm/stable/">RAPIDS Memory Manager</a> — deeper background on pool, managed, and arena allocators.</p></li>
+<li><p><a class="reference external" href="https://docs.rapids.ai/api/dask-cuda/stable/">dask-cuda</a> — multi-GPU and out-of-core configuration.</p></li>
+<li><p><a class="reference external" href="https://docs.rapids.ai/api/cuml/stable/">cuML user guide</a> — the GPU ML library that backs PCA, UMAP, t-SNE, and the logistic regression marker test.</p></li>
+<li><p><a class="reference external" href="https://developer.nvidia.com/blog/gpu-accelerated-single-cell-rna-analysis-with-rapids-singlecell/">NVIDIA Single Cell Analysis blog post</a> — reference benchmarks against CPU scanpy.</p></li>
+</ul>
+</div>
+</section>
+<section id="quiz">
+<h2><span class="section-number">7.9. </span>Quiz<a class="headerlink" href="#quiz" title="Link to this heading">#</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .mcq-box {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            padding: 12px;
+            width: 340px;
+            text-align: left;
+            font-size: 15px;
+            margin-bottom: 8px;
+            background-color: #3965a3;
+            border-radius: 8px;
+            color: white;
+        }
+    </style>
+
+    <div class="mcq-box">
+        <p><strong>You have an 80 GB AnnData object and a 40 GB GPU. Which RMM configuration is appropriate?</strong></p>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq1" value="pool_allocator=True, managed_memory=False"
+            onclick="checkAnswer(this, 'pool_allocator=False, managed_memory=True', 'A pool allocator caps you at VRAM size. The dataset doesn't fit.', 'feedback-q1')"> pool_allocator=True, managed_memory=False
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq1" value="pool_allocator=False, managed_memory=True"
+            onclick="checkAnswer(this, 'pool_allocator=False, managed_memory=True', '', 'feedback-q1')"> pool_allocator=False, managed_memory=True
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq1" value="pool_allocator=True, managed_memory=True"
+            onclick="checkAnswer(this, 'pool_allocator=False, managed_memory=True', 'Mixing the two strategies fragments memory and erodes the speedup.', 'feedback-q1')"> pool_allocator=True, managed_memory=True
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq1" value="Don't reinitialize RMM; let the default allocator handle it"
+            onclick="checkAnswer(this, 'pool_allocator=False, managed_memory=True', 'The default plain-cudaMalloc allocator works but pays an allocation cost on every temporary array.', 'feedback-q1')"> Don't reinitialize RMM; let the default allocator handle it
+        </label><br>
+        
+        <p id="feedback-q1" style="font-weight: bold;"></p>
+        <p class="mcq-answer-q1" style="display: none; font-weight: bold; color: red;">
+            ✔ Correct Answer: pool_allocator=False, managed_memory=True
+        </p>
+    </div>
+
+    <script>
+    function checkAnswer(element, correct, explanation, feedbackId) {
+        let feedback = document.getElementById(feedbackId);
+        if (element.value === correct) {
+            feedback.innerHTML = "✅ Correct!";
+            feedback.style.color = "#a8d480";
+        } else {
+            feedback.innerHTML = "❌ Incorrect! " + explanation;
+            feedback.style.color = "#EE4B2B";
+        }
+    }
+    </script>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .mcq-box {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            padding: 12px;
+            width: 340px;
+            text-align: left;
+            font-size: 15px;
+            margin-bottom: 8px;
+            background-color: #3965a3;
+            border-radius: 8px;
+            color: white;
+        }
+    </style>
+
+    <div class="mcq-box">
+        <p><strong>Which of the following steps in a Dask-backed RSC pipeline triggers a synchronization (i.e., is not lazy)?</strong></p>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq2" value="rsc.pp.normalize_total"
+            onclick="checkAnswer(this, 'rsc.pp.highly_variable_genes', 'normalize_total stays lazy.', 'feedback-q2')"> rsc.pp.normalize_total
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq2" value="rsc.pp.log1p"
+            onclick="checkAnswer(this, 'rsc.pp.highly_variable_genes', 'log1p stays lazy.', 'feedback-q2')"> rsc.pp.log1p
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq2" value="rsc.pp.highly_variable_genes"
+            onclick="checkAnswer(this, 'rsc.pp.highly_variable_genes', '', 'feedback-q2')"> rsc.pp.highly_variable_genes
+        </label><br>
+        
+        <label style="color: white;">
+            <input type="radio" name="qq2" value="Boolean indexing into adata"
+            onclick="checkAnswer(this, 'rsc.pp.highly_variable_genes', 'Boolean indexing is lazy as long as you avoid sc.pp.filter_cells / .filter_genes.', 'feedback-q2')"> Boolean indexing into adata
+        </label><br>
+        
+        <p id="feedback-q2" style="font-weight: bold;"></p>
+        <p class="mcq-answer-q2" style="display: none; font-weight: bold; color: red;">
+            ✔ Correct Answer: rsc.pp.highly_variable_genes
+        </p>
+    </div>
+
+    <script>
+    function checkAnswer(element, correct, explanation, feedbackId) {
+        let feedback = document.getElementById(feedbackId);
+        if (element.value === correct) {
+            feedback.innerHTML = "✅ Correct!";
+            feedback.style.color = "#a8d480";
+        } else {
+            feedback.innerHTML = "❌ Incorrect! " + explanation;
+            feedback.style.color = "#EE4B2B";
+        }
+    }
+    </script>
+    </div><div class="output text_html">
+    <style>
+        .output.text_html {
+            --pst-color-text-base: transparent !important;
+        }
+        .flip-card-q3 {
+            background-color: transparent;
+            width: 290px;
+            height: 170px;
+            perspective: 1000px;
+            display: inline-block;
+            margin: 8px;
+            text-align: center;
+            padding: 8px;
+        }
+        .flip-card-inner-q3 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+        .flip-card-q3:hover .flip-card-inner-q3 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front-q3, .flip-card-back-q3 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 170px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-align: center;
+        }
+        .flip-card-front-q3 {
+            background-color: #3965a3;
+            font-size: 17px;
+        }
+        .flip-card-back-q3 {
+            background-color: #a8d480;
+            transform: rotateY(180deg);
+            font-size: 17px;
+        }
+    </style>
+
+    <div class="flip-card-q3">
+        <div class="flip-card-inner-q3">
+            <div class="flip-card-front-q3">
+                Why should you cast .X to float32 before moving to the GPU?
+            </div>
+            <div class="flip-card-back-q3">
+                It halves the VRAM footprint and runs faster on consumer GPUs where FP64 throughput is limited; RSC still uses float64 internally for sensitive reductions.
+            </div>
+        </div>
+    </div>
+    <noscript>
+        <p><strong>Q:</strong> Why should you cast .X to float32 before moving to the GPU?</p>
+        <p><strong>Answer:</strong> It halves the VRAM footprint and runs faster on consumer GPUs where FP64 throughput is limited; RSC still uses float64 internally for sensitive reductions.</p>
+    </noscript>
+    </div></div>
+</div>
+</section>
+<section id="references">
+<h2><span class="section-number">7.10. </span>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id7">
+<div role="list" class="citation-list">
+<div class="citation" id="id576" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">BiMVelezSB+22</a><span class="fn-bracket">]</span></span>
+<p>Pau Badia-i-Mompel, Jesús Vélez Santiago, Jana Braunger, Celina Geiss, Daniel Dimitrov, Sophia Müller-Dott, Petr Taus, Aurelien Dugourd, Christian H. Holland, Ricardo O. Ramirez Flores, and others. Decoupler: ensemble of computational methods to infer biological activities from omics data. <em>Bioinformatics Advances</em>, 2(1):vbac016, 2022.</p>
+</div>
+<div class="citation" id="id568" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">DHM+26</a><span class="fn-bracket">]</span></span>
+<p>Severin Dicks, Lukas Heumos, Lilly May, Sara Jimenez, Philipp Angerer, Ilan Gold, Isaac Virshup, Felix Fischer, Michelle Gill, Melanie Boerries, Corey J. Nolet, Tiffany J. Chen, and Fabian J. Theis. Gpu-accelerated single-cell analysis at scale with rapids-singlecell. <em>arXiv preprint arXiv:2603.02402</em>, 2026. URL: <a class="reference external" href="https://arxiv.org/abs/2603.02402">https://arxiv.org/abs/2603.02402</a>, <a class="reference external" href="https://doi.org/10.48550/arXiv.2603.02402">doi:10.48550/arXiv.2603.02402</a>.</p>
+</div>
+<div class="citation" id="id577" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">HJM+25</a><span class="fn-bracket">]</span></span>
+<p>Lukas Heumos, Yuge Ji, Lilly May, Tessa D. Green, Stefan Peidli, Xinyue Zhang, Xichen Wu, Johannes Ostner, Antonia Schumacher, Karin Hrovatin, Michaela Müller, Faye Chong, Gregor Sturm, Alejandro Tejada, Emma Dann, Mingze Dong, Gonçalo Pinto, Mojtaba Bahrami, Ilan Gold, Sergei Rybakov, Altana Namsaraeva, Amir Ali Moinfar, Zihe Zheng, Eljas Roellin, Isra Mekki, Chris Sander, Mohammad Lotfollahi, Herbert B. Schiller, and Fabian J. Theis. Pertpy: an end-to-end framework for perturbation analysis. <em>Nature Methods</em>, 2025. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-025-02909-7">https://doi.org/10.1038/s41592-025-02909-7</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-025-02909-7">doi:10.1038/s41592-025-02909-7</a>.</p>
+</div>
+<div class="citation" id="id570" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">NGF+24</a><span class="fn-bracket">]</span></span>
+<p>Corey J. Nolet, Divye Gala, Alex Fender, Joe Eaton-Patrick Patro, Edward Raff, John Zedlewski, Brad Rees, and Tim Riedel. Cuml: a library for gpu accelerated machine learning. <em>Software available from rapids.ai</em>, 2024. URL: <a class="github reference external" href="https://github.com/rapidsai/cuml">rapidsai/cuml</a>.</p>
+</div>
+<div class="citation" id="id575" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">PSK+22</a><span class="fn-bracket">]</span></span>
+<p>Giovanni Palla, Hannah Spitzer, Michal Klein, David Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, Ignacio L. Ibarra, Olle Holmberg, Isaac Virshup, Mohammad Lotfollahi, Sabrina Richter, and Fabian J. Theis. Squidpy: a scalable framework for spatial omics analysis. <em>Nature Methods</em>, 19(2):171–178, 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">https://doi.org/10.1038/s41592-021-01358-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41592-021-01358-2">doi:10.1038/s41592-021-01358-2</a>.</p>
+</div>
+<div class="citation" id="id574" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">Roc15</a><span class="fn-bracket">]</span></span>
+<p>Matthew Rocklin. Dask: parallel computation with blocked algorithms and task scheduling. <em>Proceedings of the 14th Python in Science Conference</em>, pages 126–132, 2015. URL: <a class="reference external" href="https://doi.org/10.25080/Majora-7b98e3ed-013">https://doi.org/10.25080/Majora-7b98e3ed-013</a>, <a class="reference external" href="https://doi.org/10.25080/Majora-7b98e3ed-013">doi:10.25080/Majora-7b98e3ed-013</a>.</p>
+</div>
+<div class="citation" id="id573" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">NVIDIARAPIDS24</a><span class="fn-bracket">]</span></span>
+<p>NVIDIA RAPIDS. RMM: RAPIDS memory manager. <a class="github reference external" href="https://github.com/rapidsai/rmm">rapidsai/rmm</a>, 2024. URL: <a class="github reference external" href="https://github.com/rapidsai/rmm">rapidsai/rmm</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contributors">
+<h2><span class="section-number">7.11. </span>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We gratefully acknowledge the contributions of:</p>
+<section id="authors">
+<h3><span class="section-number">7.11.1. </span>Authors<a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Lukas Heumos</p></li>
+</ul>
+</section>
+<section id="reviewers">
+<h3><span class="section-number">7.11.2. </span>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Severin Dicks</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./introduction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="interoperability.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Interoperability</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../preprocessing_visualization/quality_control.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Quality Control</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">7.1. Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-does-a-gpu-pay-off">7.2. When does a GPU pay off?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">7.3. Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-management-with-rmm">7.4. Memory management with RMM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-scanpy-pipeline-on-the-gpu">7.5. A scanpy pipeline, on the GPU</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-control">7.5.1. Quality control</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-hvg-scaling">7.5.2. Normalization, HVG, scaling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-neighbors-umap-clustering">7.5.3. PCA, neighbors, UMAP, clustering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-stays-on-scanpy">7.5.4. Plotting stays on scanpy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-best-practices">7.6. GPU best practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimize-hostdevice-transfers">7.6.1. Minimize host↔device transfers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#free-intermediates-explicitly">7.6.2. Free intermediates explicitly</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitor-vram-usage">7.6.3. Monitor VRAM usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#watch-the-dtype">7.6.4. Watch the dtype</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plan-for-non-determinism">7.6.5. Plan for non-determinism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#match-the-nvidia-driver-to-the-cuda-runtime">7.6.6. Match the NVIDIA driver to the CUDA runtime</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#know-what-is-not-ported">7.6.7. Know what is not ported</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#watch-for-mig-on-shared-clusters">7.6.8. Watch for MIG on shared clusters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-core-analysis-with-dask-cuda">7.7. Out-of-core analysis with dask-cuda</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-preprocessing-decoupler-squidpy-and-pertpy-on-the-gpu">7.8. Beyond preprocessing: decoupler, squidpy, and pertpy on the GPU</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quiz">7.9. Quiz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">7.10. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">7.11. Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">7.11.1. Authors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reviewers">7.11.2. Reviewers</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Lukas Heumos, Anna Schaar, single-cell best practices consortium
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  Brought to you by
+  <a href="https://www.github.com/theislab">Theislab</a>, with many thanks to the single-cell community as a whole!
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
