@@ -607,8 +607,7 @@ yml</label><div class="sd-tab-content docutils">
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--extra-index-url=https://pypi.nvidia.com</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rapids-singlecell-cu13[rapids]</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decoupler</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lamindb[bionty,jupyter]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lamindb</span>
 </pre></div>
 </div>
 </div>
@@ -742,13 +741,20 @@ Reinitializing RMM after CuPy has already allocated will leak the old allocation
 <span class="n">rmm</span><span class="o">.</span><span class="n">reinitialize</span><span class="p">(</span>
     <span class="n">pool_allocator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">managed_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">initial_pool_size</span><span class="o">=</span><span class="s2">&quot;4GB&quot;</span><span class="p">,</span>  <span class="c1"># start small, grow as needed</span>
+    <span class="n">initial_pool_size</span><span class="o">=</span><span class="s2">&quot;4GB&quot;</span><span class="p">,</span>  <span class="c1"># size to expected peak — growth events defeat the pool&#39;s purpose</span>
     <span class="n">maximum_pool_size</span><span class="o">=</span><span class="s2">&quot;32GB&quot;</span><span class="p">,</span>  <span class="c1"># leave headroom for plotting libraries, etc.</span>
 <span class="p">)</span>
 <span class="n">cp</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">set_allocator</span><span class="p">(</span><span class="n">rmm_cupy_allocator</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="note dropdown admonition">
+<p class="admonition-title">Why set the initial pool size explicitly?</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">pool_allocator=True</span></code> and <code class="docutils literal notranslate"><span class="pre">initial_pool_size=None</span></code>, RMM only grabs half of VRAM up front and grows from there.
+Each growth event triggers a fresh <code class="docutils literal notranslate"><span class="pre">cudaMalloc</span></code> — the very thing the pool was meant to avoid — and fragments the pool because the new chunk isn’t contiguous with the old one.
+Size <code class="docutils literal notranslate"><span class="pre">initial_pool_size</span></code> close to your expected peak (often 60–80% of VRAM on a dedicated GPU) so the pool grows zero or very few times.
+<code class="docutils literal notranslate"><span class="pre">maximum_pool_size</span></code> is the real ceiling and stays separate, so you’re not capping yourself — you’re just telling RMM how much to grab on the first call.</p>
 </div>
 <p>If your dataset will not fit, swap to managed memory instead.
 On Linux with a Pascal-or-newer GPU this is true unified memory and oversubscription works out of the box; on Windows under WSL2 it is emulated and somewhat slower.</p>
@@ -862,6 +868,13 @@ RSC additionally provides <code class="docutils literal notranslate"><span class
 </div>
 </div>
 </div>
+<div class="warning dropdown admonition">
+<p class="admonition-title">Stashing into .raw doubles VRAM transiently</p>
+<p>The standard pattern of stashing the pre-HVG matrix into <code class="docutils literal notranslate"><span class="pre">.raw</span></code> makes a copy of <code class="docutils literal notranslate"><span class="pre">.X</span></code> — and on GPU that copy lives in VRAM, roughly doubling the footprint between <code class="docutils literal notranslate"><span class="pre">adata.raw</span> <span class="pre">=</span> <span class="pre">adata</span></code> and <code class="docutils literal notranslate"><span class="pre">rsc.pp.scale</span></code>.
+On a 90k-cell example it doesn’t bite, but on a 1M-cell atlas the transient 2× peak is what will OOM you.
+If you don’t need <code class="docutils literal notranslate"><span class="pre">.raw</span></code> later for marker analysis or DE with <code class="docutils literal notranslate"><span class="pre">use_raw=True</span></code>, drop the line outright.
+If you do, size <code class="docutils literal notranslate"><span class="pre">initial_pool_size</span></code> to cover the peak, or do the normalize → HVG → raw cycle on CPU before moving to GPU.</p>
+</div>
 </section>
 <section id="pca-neighbors-umap-clustering">
 <h3><span class="section-number">7.5.3. </span>PCA, neighbors, UMAP, clustering<a class="headerlink" href="#pca-neighbors-umap-clustering" title="Link to this heading">#</a></h3>
@@ -897,7 +910,8 @@ If you re-run the same workflow with <code class="docutils literal notranslate">
 <h3><span class="section-number">7.5.4. </span>Plotting stays on scanpy<a class="headerlink" href="#plotting-stays-on-scanpy" title="Link to this heading">#</a></h3>
 <p>RSC deliberately does not duplicate scanpy’s plotting API.
 Once the heavy compute is done, the familiar <code class="docutils literal notranslate"><span class="pre">sc.pl.*</span></code> functions work directly — <code class="docutils literal notranslate"><span class="pre">obs</span></code>, <code class="docutils literal notranslate"><span class="pre">var</span></code>, and embeddings in <code class="docutils literal notranslate"><span class="pre">obsm</span></code> already live on the host, so coloring a UMAP by a <code class="docutils literal notranslate"><span class="pre">obs</span></code> column or cluster label needs no transfer.
-You only need <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU</span></code> when the plot pulls values from <code class="docutils literal notranslate"><span class="pre">.X</span></code> itself, e.g. coloring by a gene’s expression or a dotplot of marker genes.</p>
+You only need <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU</span></code> when the plot pulls values from <code class="docutils literal notranslate"><span class="pre">.X</span></code> itself, e.g. coloring by a gene’s expression or a dotplot of marker genes.
+The same goes for serialization: <code class="docutils literal notranslate"><span class="pre">write_h5ad</span></code> and <code class="docutils literal notranslate"><span class="pre">write_zarr</span></code> expect a host-side matrix, so call <code class="docutils literal notranslate"><span class="pre">rsc.get.anndata_to_CPU(adata)</span></code> before writing or you’ll either error out or persist a CuPy-backed <code class="docutils literal notranslate"><span class="pre">.X</span></code> that won’t reload on a CPU-only machine.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">],</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;on data&quot;</span><span class="p">)</span>
