@@ -163,6 +163,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 - References should always contain `doi` and `url`.
 - Write in American English.
 - Genes are written in _italic_ (e.g., _TP53_), while protein names are written in normal (non-italic) text (e.g., TP53).
+- Use lowercase for package names whenever possible: write pertpy instead of PertPy. Only capitalize at the beginning of a sentence, e.g. “Pertpy is a package that …”.
 
 ### Key takeaways, environment and lamin dropdown
 
