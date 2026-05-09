@@ -190,6 +190,10 @@ Pseudotime
     Latent and therefore unobserved dimension reflecting cells' progression through transitions.
     Pseudotime is usually related to real time events, but not necessarily the same.
 
+Pseudobulk
+    A method where single cells are grouped by cell type within each sample, and their counts are aggregated.
+    Pseudobulks can then be used for tools originally designed for bulk sequencing.
+
 RNA
     Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
     Unlike DNA, RNA can be highly dynamic, acting as a messenger ({term}`mRNA <Messenger RNA (mRNA)>`) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
