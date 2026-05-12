@@ -11,10 +11,10 @@ jobs:
   build-book:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -35,40 +35,20 @@ jobs:
             v1-${{ github.ref }}
             v1-refs/heads/master
 
-      - name: Insert env-setup dropdown to all chapters
+      - name: Insert dropdowns to all chapters
         run: make dropdown
 
       - name: Build the JupyterBook
         run: make
 
-      - name: Deploy PR preview
-        id: preview-step
-        uses: rossjrw/pr-preview-action@v1
-        if: github.event_name == 'pull_request' && github.event.action != 'closed'
-        with:
-          source-dir: ./jupyter-book/_build/html
-          preview-branch: ${{ env.PREVIEW_BRANCH }}
-          comment: false
-
-      - name: Add Sticky PR Comment for Preview
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request' && github.event.action != 'closed'
-        with:
-          header: pr-preview
-          message: |
-            [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
-            :---:
-            | <p></p> :dna: View preview of single-cell best practices at <br> ${{ steps.preview-step.outputs.preview-url }} <br><br>
-            | <h6>Built to branch [`${{ env.PREVIEW_BRANCH }}`](${{ github.server_url }}/${{ github.repository }}/tree/${{ env.PREVIEW_BRANCH }}) at ${{ steps.preview-step.outputs.action-start-time }}. <br> Preview will be ready when the [GitHub Pages deployment](${{ github.server_url }}/${{ github.repository }}/deployments) is complete. <br><br> </h6>
-
   pdfhtml:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -88,10 +68,14 @@ jobs:
       - name: Install Chromium
         run: uv pip install --system pyppeteer
 
+      - name: Relax Playwright wait condition for PDF build
+        run: |
+          python -c "import jupyter_book.pdf as m, pathlib; p = pathlib.Path(m.__file__); p.write_text(p.read_text().replace('wait_until=\"networkidle\"', 'wait_until=\"load\"'))"
+
       - name: Build PDF from HTML (Docs)
         run: make pdf
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: PDF_HTML
           path: jupyter-book/_build/pdf/book.pdf
