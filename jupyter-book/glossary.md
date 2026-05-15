@@ -77,6 +77,10 @@ Complementary DNA (cDNA)
     DNA synthesized from an RNA template by the enzyme reverse transcriptase.
     cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
+Differential gene expression (DGE)
+    The [biochemical process](https://www.sciencedirect.com/topics/biochemistry-genetics-and-molecular-biology/differential-gene-expression#:~:text=Within%20this%20context%2C%20differential%20gene%20expression%20is%20defined%20as%20the%20biochemical%20process%20that%20determinates%20which%20genes%20respond%20to%20which%20signals%20or%20triggers%20depending%20on%20the%20conditions.) that determines which genes respond to specific signals or conditions.
+    When performing a differential gene expression analysis, the goal is to identify which genes show a significant change in expression between those conditions.
+
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes <Barcode>`.
 
@@ -188,6 +192,10 @@ Promoter
 Pseudotime
     Latent and therefore unobserved dimension reflecting cells' progression through transitions.
     Pseudotime is usually related to real time events, but not necessarily the same.
+
+Pseudobulk
+    A method where single cells are grouped by cell type within each sample, and their counts are aggregated.
+    Pseudobulks can then be used for tools originally designed for bulk sequencing.
 
 RNA
     Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
