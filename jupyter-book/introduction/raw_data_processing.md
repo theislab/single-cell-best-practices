@@ -1094,7 +1094,6 @@ Tutorials for explaining and evaluating FastQC report are available from [MSU](h
 
 ```{bibliography}
 :filter: docname in docnames
-:labelprefix: raw
 ```
 
 ## Contributors

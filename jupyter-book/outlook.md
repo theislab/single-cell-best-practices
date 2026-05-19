@@ -38,5 +38,4 @@ As soon as high quality single-cell proteomics datasets are generated on a regul
 
 ```{bibliography}
 :filter: docname in docnames
-:labelprefix: ol
 ```

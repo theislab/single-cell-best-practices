@@ -41,5 +41,4 @@ We advise against relying on the example case study provided with the paper and 
 
 ```{bibliography}
 :filter: docname in docnames
-:labelprefix: pa
 ```
