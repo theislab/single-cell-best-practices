@@ -33,7 +33,7 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
    ```
 
    The object is now accessible in memory and is ready for analysis.
-   Adapt the `ln.Artifact.connect("theislab/sc-best-practices").get("SOMEIDXXXX")` suffix to get respective versions.
+   Adapt the {py:meth}`lamindb.Artifact.connect("theislab/sc-best-practices").get("SOMEIDXXXX") <lamindb.Artifact.connect>` suffix to get respective versions.
 
 5. **Accessing notebooks (Transforms)**
    - Search for the notebook on the [Transforms page](https://lamin.ai/theislab/sc-best-practices/transforms)
