@@ -13,7 +13,8 @@ authors:
 (raw-proc)=
 
 # Raw data processing
-```{dropdown} <i class="fas fa-brain"></i>&nbsp;&nbsp;&nbsp;Key takeaways
+
+```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
 
 :::{card}
 :link: introduction-raw-data-processing-key-takeaway-1
@@ -21,6 +22,7 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 :::
 
 ```
+
 ``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
 `````{tab-set}
 
@@ -37,6 +39,7 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 
 `````
 ``````
+
 <!-- END DROPDOWNS -->
 
 (introduction-raw-data-processing-key-takeaway-1)=
@@ -46,7 +49,7 @@ Accurate raw data processing transforms FASTQ files into a count matrix, enablin
 Raw data processing in single-cell {term}`sequencing` converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
 This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
-:::{figure} ../_static/images/raw_data_processing/overview_raw_data_processing.jpg
+:::{figure} ../\_static/images/raw_data_processing/overview_raw_data_processing.jpg
 :name: raw-proc-fig-overview
 :alt: Chapter Overview
 :width: 800px
@@ -385,7 +388,7 @@ Alignment-based approaches, though computationally expensive, provide a quality 
 This score allows them to distinguish between high-quality alignments and low-complexity or "spurious" matches between the read and reference.
 These approaches include traditional "full-alignment" methods, such as those implemented in tools like `STAR` {cite}`raw:dobin2013star` and `STARsolo` {cite}`raw:Kaminow2021`, as well as _selective-alignment_ methods, like those in `salmon` {cite}`raw:Srivastava2020Alignment` and `alevin` {cite}`raw:Srivastava2019`, which score mappings but skip the computation of the optimal alignment’s backtrace.
 
-:::{figure} ../_static/images/raw_data_processing/alignment_vs_mapping.png
+:::{figure} ../\_static/images/raw_data_processing/alignment_vs_mapping.png
 :name: raw-proc-fig-alignment-mapping
 :alt: Alignment vs Mapping
 :class: bg-primary mb-1

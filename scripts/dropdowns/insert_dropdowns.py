@@ -5,7 +5,13 @@ from pathlib import Path
 from keytakeaways import Key_takeaways
 
 black_list_directories = ["_build", "_static", "src"]
-black_list_files_yml = ["prior_art", "scrna_seq", "introduction", "muon_to_seurat"]
+black_list_files_yml = [
+    "prior_art",
+    "scrna_seq",
+    "introduction",
+    "muon_to_seurat",
+    "raw_data_processing",
+]
 black_list_files_lamin = [
     # IPYNB files
     "introduction",
