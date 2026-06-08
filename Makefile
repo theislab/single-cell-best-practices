@@ -1,8 +1,11 @@
 JUPYTER_BOOK_DIR = jupyter-book
 JUPYTER_KERNEL := python3
 
-build:
+serve:
 	cd $(JUPYTER_BOOK_DIR) && jupyter book start
+
+build:
+	cd $(JUPYTER_BOOK_DIR) && jupyter book  --html
 
 dropdown:
 	python3 scripts/dropdowns/insert_dropdowns.py

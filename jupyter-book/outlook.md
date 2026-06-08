@@ -1,3 +1,7 @@
+---
+numbering: false
+---
+
 # Outlook
 
 The single-cell field is progressing at a rapid pace. This process is accompanied by a massive amount of newly developed tools, which do not allow for new discoveries, but also extend the pool of tools to select from.

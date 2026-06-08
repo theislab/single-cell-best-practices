@@ -1,3 +1,7 @@
+---
+numbering: false
+---
+
 # Changelog
 
 <!-- towncrier release notes start -->

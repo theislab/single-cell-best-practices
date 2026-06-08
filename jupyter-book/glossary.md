@@ -1,3 +1,7 @@
+---
+numbering: false
+---
+
 # Glossary
 
 ```{glossary}

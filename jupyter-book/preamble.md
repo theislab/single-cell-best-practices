@@ -1,3 +1,7 @@
+---
+numbering: false
+---
+
 ![alt text](_static/images/title.png "Title")
 
 <div style="page-break-after: always;"></div>
