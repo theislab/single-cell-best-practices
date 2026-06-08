@@ -125,6 +125,20 @@ Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, fol
 
 Each `.ipynb` notebook should follow this standard structure:
 
+0. ✍️ **Authors and Reviewers**: At the top of the notebook, include a section listing the authors and reviewers who contributed to the chapter. This section should be formatted as follows:
+
+````markdown
+---
+authors:
+```markdown
+  - name: Lukas Heumos
+  - name: Luis Heinzmeier
+  - name: Isaac Virshup
+    roles:k
+      - writing – review & editing
+---
+````
+
 1. 🧠 **Title**
 2. 🔽 **Dropdown Section**
    - Key Takeaways
