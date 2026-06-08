@@ -1,6 +1,4 @@
 ---
-numbering:
-  offset: 0
 ---
 
 # Prior art

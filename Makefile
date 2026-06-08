@@ -5,7 +5,7 @@ serve:
 	cd $(JUPYTER_BOOK_DIR) && jupyter book start
 
 build:
-	cd $(JUPYTER_BOOK_DIR) && jupyter book  --html
+	cd $(JUPYTER_BOOK_DIR) && jupyter book build --html
 
 dropdown:
 	python3 scripts/dropdowns/insert_dropdowns.py
