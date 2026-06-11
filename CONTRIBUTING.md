@@ -318,5 +318,5 @@ In the `CHANGELOG.md`, add each relevant PR entries with contributor names and l
 Each entry must include a brief description, a link to the PR, and the contributor's GitHub handle:
 
 ```
-Update analysis workflow ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>'
+Update analysis workflow ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>
 ```
