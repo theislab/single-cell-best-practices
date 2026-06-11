@@ -9,6 +9,13 @@ Adapter sequences
 Algorithm
     A pre-defined set of instructions to solve a problem.
 
+Annotation
+    Adding labels to raw data to provide context and make it interpretable.
+    Gene annotation, for example, labels genes with information like function, location, and associated proteins.
+    Cell annotation classifies cells based on type, state, or function.
+    These are just a few examples.
+    There are many more ways to annotate biological data (e.g., based on batch, disease, sex, etc.).
+
 AnnData
     A Python package for handling annotated data matrices, commonly used in single-cell and other omics analyses.
     It provides an efficient way to store data as a matrix where rows (observations) and columns (features) can have associated metadata.
@@ -70,6 +77,10 @@ Complementary DNA (cDNA)
     DNA synthesized from an RNA template by the enzyme reverse transcriptase.
     cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
+Differential gene expression (DGE)
+    The [biochemical process](https://www.sciencedirect.com/topics/biochemistry-genetics-and-molecular-biology/differential-gene-expression#:~:text=Within%20this%20context%2C%20differential%20gene%20expression%20is%20defined%20as%20the%20biochemical%20process%20that%20determinates%20which%20genes%20respond%20to%20which%20signals%20or%20triggers%20depending%20on%20the%20conditions.) that determines which genes respond to specific signals or conditions.
+    When performing a differential gene expression analysis, the goal is to identify which genes show a significant change in expression between those conditions.
+
 Demultiplexing
     The process of determining which sequencing reads belong to which cell using {term}`barcodes <Barcode>`.
 
@@ -102,6 +113,9 @@ Drop-seq
 
 Edit distance
     Edit distance (often referred to as Levenshtein distance) measures the minimum number of operations (Substitution, Insertion, Deletion) required to transform one string into another.
+
+Embedding
+    A way to represent complex objects (e.g., words, proteins, or genes) as numerical vectors so computers can analyze them more easily.
 
 FASTQ
     Sequencing reads that are saved in the FASTQ format.
@@ -142,6 +156,9 @@ Locus
 
 Messenger RNA (mRNA)
     A nucleotide sequence that has been read from a gene and serves as a blueprint for a protein.
+Marker gene
+    A gene whose expression is used as an indicator of a particular cell type, biological process, or cellular state.
+    Marker genes are commonly used in single-cell and bulk transcriptomics to identify or classify cells based on their function or identity.
 
 MuData
     A Python package for multimodal annotated data matrices that builds on {term}`AnnData`.
@@ -162,7 +179,12 @@ Pipeline
     A pre-specified selection of steps that are commonly executed in order.
 
 Poisson distribution
+Poisson distributed
     Discrete probability distribution denoting the probability of a specified number of events occurring in a fixed interval of time or space with the events occurring independently at a known constant mean rate.
+
+Principal component analysis (PCA)
+    A statistical method used to simplify complex datasets by reducing the number of variables while preserving the main patterns in the data.
+    It projects high-dimensional data onto orthogonal axes (principal components) ordered by the amount of variance they explain.
 
 Promoter
     Sequence of DNA to which proteins bind (e.g. RNA polymerase and transcription factors) to initiate and control transcription.
@@ -170,6 +192,10 @@ Promoter
 Pseudotime
     Latent and therefore unobserved dimension reflecting cells' progression through transitions.
     Pseudotime is usually related to real time events, but not necessarily the same.
+
+Pseudobulk
+    A method where single cells are grouped by cell type within each sample, and their counts are aggregated.
+    Pseudobulks can then be used for tools originally designed for bulk sequencing.
 
 RNA
     Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
@@ -200,6 +226,15 @@ Signal-to-noise ratio
     In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
     A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
     Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
+
+Sparse data
+    Refers to data that mostly measures zeros and rarely other values ([sparse data vs. missing data](https://medium.com/biased-algorithms/sparse-data-vs-missing-data-38bc2c7af7c6)).
+    This is common in gene expression data, where many genes are not expressed in most cells.
+
+Sparse matrix
+    A way to store {term}`sparse data`.
+    Instead of keeping all the zeros, it only saves the non-zero values and their positions, saving space and making calculations faster.
+    Useful for large datasets with mostly empty values, like gene expression data.
 
 Spike-in RNA
     RNA transcripts of known sequence and quantity to calibrate measurements in RNA hybridization steps for RNA-seq.
