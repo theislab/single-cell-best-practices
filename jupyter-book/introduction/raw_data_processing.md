@@ -103,7 +103,7 @@ A good (left) and a bad (right) per-read sequence quality graph.
 
 **3. Per tile sequence quality**
 
-Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}` <Flowcell>` [tile](https://www.biostars.org/p/9461090/)(miniature imaging areas of the {term}`flowcell <Flowcell>`).
+Using an Illumina library, the per-tile sequence quality plot highlights deviations from the average quality for reads across each {term}`flowcell <Flowcell>` [tile](https://www.biostars.org/p/9461090/) (miniature imaging areas of the flowcell).
 The plot uses a color gradient to represent deviations, where warmer colors indicate larger deviations.
 High-quality data typically display a uniform blue color across the plot, indicating consistent quality across all tiles of the flowcell.
 
@@ -257,6 +257,13 @@ While mapping read sequences to reference sequences _far_ predates the developme
 Many existing RNA-seq aligners are protocol-agnostic and do not inherently account for features specific to scRNA-seq, such as cell barcodes, UMIs, or their positions and lengths.
 As a result, additional tools are often required for steps like demultiplexing and UMI resolution {cite}`raw:Smith2017`.
 
+```{admonition} GPU-accelerated alignment
+Alignment is frequently the most time-consuming step of raw data processing, particularly for the splice-aware, genome-based aligners discussed below.
+To shorten wall-clock time, GPU-accelerated implementations of common aligners have emerged.
+For example, [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html) provides a GPU-accelerated version of `STAR` — the aligner underlying both `STARsolo` and `Cell Ranger` — that can substantially reduce alignment runtimes relative to CPU-only execution on suitable hardware.
+This accelerates the computation rather than altering the algorithm, so the resulting alignments are unchanged; it is therefore primarily relevant when processing very large datasets or many samples.
+```
+
 To address the challenges of aligning and mapping scRNA-seq data, several specialized tools have been developed that handle the additional processing requirements automatically or internally.
 These tools include:
 
@@ -294,7 +301,7 @@ While these variations modify the rules of the dynamic programming recurrence an
 Several sophisticated modifications and heuristics have been developed to enhance the practical efficiency of aligning genomic sequencing reads.
 For example, `banded alignment` {cite}`raw:chao1992aligning` is a popular heuristic used by many tools to avoid computing large portions of the dynamic programming table when alignment scores below a threshold are not of interest.
 Other heuristics, like X-drop {cite}`raw:zhang2000` and Z-drop {cite}`raw:li2018minimap2`, efficiently prune unpromising alignments early in the process.
-Recent advances, such as wavefront alignment {cite}`raw:marco2021fast`, marco2022optimal, enable the determination of optimal alignments in significantly reduced time and space, particularly when high-scoring alignments are present.
+Recent advances, such as wavefront alignment {cite}`raw:marco2021fast,raw:marco2022optimal`, enable the determination of optimal alignments in significantly reduced time and space, particularly when high-scoring alignments are present.
 Additionally, much work has focused on optimizing data layout and computation to leverage instruction-level parallelism {cite}`raw:wozniak1997using,raw:rognes2000six,raw:farrar2007striped`, and expressing dynamic programming recurrences in ways that facilitate data parallelism and vectorization, such as through difference encoding {cite:t}`raw:Suzuki2018`.
 Most widely-used alignment tools incorporate these highly optimized, vectorized implementations.
 
@@ -484,7 +491,7 @@ This same procedure is generally applied to all cells independently.
 ```{figure} ../_static/images/raw_data_processing/UMI.png
 :name: umi-figure
 :alt: Figure UMIs
-:with: 100%
+:width: 100%
 
 
 UMIs reduce PCR amplification bias by tracking original molecules, but can be affected by different types of errors (blue boxes).
@@ -866,7 +873,7 @@ simpleaf quant \
 
 After running these commands, the resulting quantification information can be found in the `simpleaf_quant/af_quant/alevin` folder.
 Within this directory, there are three files: `quants_mat.mtx`, `quants_mat_cols.txt`, and `quants_mat_rows.txt`, which correspond, respectively, to the count matrix, the gene names for each column of this matrix, and the corrected, filtered cell barcodes for each row of this matrix. The tail lines of these files are shown below.
-Of note here is the fact that `alevin-fry` was run in the USA-mode (<u>u</u>nspliced, <u>s</u>pliced, and <u>a</u>mbiguous mode), and so quantification was performed for both the spliced and unspliced status of each gene — the resulting `quants_mat_cols.txt` file will then have a number of rows equal to 3 times the number of annotated genes which correspond, to the names used for the spliced (S), unspliced (U), and splicing-ambiguous variants (A) of each gene.
+Of note here is the fact that `alevin-fry` was run in the USA-mode (<u>u</u>nspliced, <u>s</u>pliced, and <u>a</u>mbiguous mode), and so quantification was performed for both the spliced and unspliced status of each gene — the resulting `quants_mat_cols.txt` file will then have a number of rows equal to 3 times the number of annotated genes, corresponding to the names used for the spliced (S), unspliced (U), and splicing-ambiguous variants (A) of each gene.
 
 ```bash
 # Each line in `quants_mat.mtx` represents
