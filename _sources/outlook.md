@@ -30,7 +30,7 @@ The first pipelines are starting to appear {cite}`ol:Khozoie2021`, and we expect
 
 ## Single-cell proteomics
 
-Furthermore, the young and fast evolving field of single-cell proteomics {cite}`Brunner2022` will bring an additional modality into the single-cell space with more integration challenges, but also great potential for new discoveries.
+Furthermore, the young and fast evolving field of single-cell proteomics {cite}`ol:Brunner2022` will bring an additional modality into the single-cell space with more integration challenges, but also great potential for new discoveries.
 Currently, single-cell proteomics suffers from a lack of high quality datasets, making it challenging to develop tools and pipelines for sound statistical analysis.
 As soon as high quality single-cell proteomics datasets are generated on a regular basis, we expect the single-cell community to develop new tools for the analysis.
 
