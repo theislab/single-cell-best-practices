@@ -21,7 +21,6 @@ black_list_files_lamin = [
     "paired_integration",
     "advanced_integration",
     "perturbation_modeling",
-    "differential_gene_expression",
     "gsea_pathway",
     "compositional",
     "imputation",
