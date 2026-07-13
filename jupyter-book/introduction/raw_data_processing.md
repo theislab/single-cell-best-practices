@@ -14,34 +14,6 @@ authors:
 
 # Raw data processing
 
-```{dropdown} <i class="fas fa-brain"></i>   Key takeaways
-
-:::{card}
-:link: introduction-raw-data-processing-key-takeaway-1
-Accurate raw data processing transforms FASTQ files into a count matrix, enabling reliable single-cell sequencing analyses through read alignment, barcode correction, and UMI counting.
-:::
-
-```
-
-``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
-`````{tab-set}
-
-````{tab-item} Steps
-```{include} ../_static/default_text_env_setup.md
-```
-````
-
-````{tab-item} yml
-```{literalinclude} introduction.yml
-:language: yaml
-```
-````
-
-`````
-``````
-
-<!-- END DROPDOWNS -->
-
 (introduction-raw-data-processing-key-takeaway-1)=
 
 ## Motivation
@@ -474,7 +446,7 @@ This, in turn, may result in misleading and even biologically implausible gene e
 To account for reads originating outside spliced transcripts, the spliced transcript sequences can be augmented with additional reference sequences, such as full-length unspliced transcripts or excised intronic sequences.
 This enables better, faster, and more memory-efficient mapping compared to full-genome alignment, while still capturing many reads that would otherwise be missed.
 More reads can be confidently assigned compared to using only the spliced transcriptome, and when combined with lightweight mapping approaches, spurious mappings can be significantly reduced {cite}`raw:He2022`.
-Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and {term}`RNA velocity` analysis {cite}`raw:Soneson2021Preprocessing` (see {doc}`../trajectories/rna_velocity`).
+Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and {term}`RNA velocity` analysis {cite}`raw:Soneson2021Preprocessing` (see [](../trajectories/rna_velocity)).
 These augmented references can be constructed for all common methods that do not rely on spliced alignment to the full genome {cite}`raw:Srivastava2019,raw:Melsted2021,raw:He2022`.
 
 (raw-proc:cb-correction)=
