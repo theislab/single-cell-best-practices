@@ -143,22 +143,24 @@ def insert_to_ipynb(notebook_path: Path, n_cells: int) -> None:
     n_cells_checked = 0
     for cell in nb["cells"]:
         if cell["cell_type"] == "markdown":
+            source_is_str = isinstance(cell["source"], str)
+            lines = (
+                cell["source"].splitlines(keepends=True)
+                if source_is_str
+                else cell["source"]
+            )
+
             index_title = next(
-                (
-                    index
-                    for index, line in enumerate(cell["source"])
-                    if line.startswith("# ")
-                ),
+                (index for index, line in enumerate(lines) if line.startswith("# ")),
                 None,
             )
             if index_title is not None:
-                insert_dropdowns_in_lines(cell["source"], index_title, notebook_path)
+                insert_dropdowns_in_lines(lines, index_title, notebook_path)
+                cell["source"] = "".join(lines) if source_is_str else lines
 
-                if nb is not None:
-                    with open(notebook_path, "w", encoding="utf-8") as f:
-                        json.dump(nb, f, indent=2)
-                else:
-                    raise RuntimeError(f"Failed to process notebook: {notebook}")
+                with open(notebook_path, "w", encoding="utf-8") as f:
+                    json.dump(nb, f, indent=1, ensure_ascii=False)
+                    f.write("\n")
 
                 return
 
