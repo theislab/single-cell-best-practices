@@ -55,27 +55,12 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade uv
-          uv pip install --system jupyter-book==2.1.5 jupytext beautifulsoup4 playwright
+          uv pip install --system jupyter-book==2.1.5 jupytext beautifulsoup4
 
-      - name: Install Playwright browsers
-        run: playwright install --with-deps
-
-      - name: Install Headless Chrome dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -yq $(cat .github/workflows/pyppeteer_requirements.txt)
-
-      - name: Install Chromium
-        run: uv pip install --system pyppeteer
-
-      # - name: Relax Playwright wait condition for PDF build
-      #   run: |
-      #     python -c "import jupyter_book.pdf as m, pathlib; p = pathlib.Path(m.__file__); p.write_text(p.read_text().replace('wait_until=\"networkidle\"', 'wait_until=\"load\"'))"
-
-      - name: Build PDF from HTML (Docs)
+      - name: Build PDF
         run: make pdf
 
       - uses: actions/upload-artifact@v7
         with:
           name: PDF_HTML
-          path: jupyter-book/_build/pdf/book.pdf
+          path: jupyter-book/exports/book.pdf
