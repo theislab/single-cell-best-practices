@@ -21,7 +21,8 @@ authors:
 Raw data processing in single-cell {term}`sequencing` converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
 This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
 
-:::{figure} ../\_static/images/raw_data_processing/overview_raw_data_processing.jpg
+<!-- prettier-ignore -->
+:::{figure} ../_static/images/raw_data_processing/overview_raw_data_processing.jpg
 :name: raw-proc-fig-overview
 :alt: Chapter Overview
 :width: 800px
@@ -367,7 +368,8 @@ Alignment-based approaches, though computationally expensive, provide a quality 
 This score allows them to distinguish between high-quality alignments and low-complexity or "spurious" matches between the read and reference.
 These approaches include traditional "full-alignment" methods, such as those implemented in tools like `STAR` {cite}`raw:dobin2013star` and `STARsolo` {cite}`raw:Kaminow2021`, as well as _selective-alignment_ methods, like those in `salmon` {cite}`raw:Srivastava2020Alignment` and `alevin` {cite}`raw:Srivastava2019`, which score mappings but skip the computation of the optimal alignment’s backtrace.
 
-:::{figure} ../\_static/images/raw_data_processing/alignment_vs_mapping.png
+<!-- prettier-ignore -->
+:::{figure} ../_static/images/raw_data_processing/alignment_vs_mapping.png
 :name: raw-proc-fig-alignment-mapping
 :alt: Alignment vs Mapping
 :class: bg-primary mb-1
