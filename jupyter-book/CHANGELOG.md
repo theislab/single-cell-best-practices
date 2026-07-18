@@ -67,13 +67,13 @@ numbering: false
 - Add `neighborhood analysis`, `spatial domains`, `spacially variable genes` chapters ([#86](https://github.com/theislab/single-cell-best-practices/pull/86)) <sub>`@giovp`</sub>
 - Add `cell-cell communication` chapter ([#140](https://github.com/theislab/single-cell-best-practices/pull/140)) <sub>`@dbdimitrov`</sub>
 - Add `paired integration` chapter ([#103](https://github.com/theislab/single-cell-best-practices/pull/103)) <sub>`@alitinet`</sub>
-- Add multiple multimodal immunce receptor chapters ([#63](https://github.com/theislab/single-cell-best-practices/pull/63)) <sub>`@drEast`</sub>
+- Add multiple multimodal immune receptor chapters ([#63](https://github.com/theislab/single-cell-best-practices/pull/63)) <sub>`@drEast`</sub>
 - Add `spatial deconvolution` and `imputation` chapter ([#142](https://github.com/theislab/single-cell-best-practices/pull/142)) <sub>`@AnnaChristina`</sub>
-- Add feedback from Robin Browaeys to `cell-cell comunication` chapter ([#157](https://github.com/theislab/single-cell-best-practices/pull/157)) <sub>`@dbdimitrov`</sub>
+- Add feedback from Robin Browaeys to `cell-cell communication` chapter ([#157](https://github.com/theislab/single-cell-best-practices/pull/157)) <sub>`@dbdimitrov`</sub>
 - Add docker container & improve environments ([#124](https://github.com/theislab/single-cell-best-practices/pull/124)) <sub>`@Zethson`</sub>
-- Add `compisitional analysis` chapter ([#89](https://github.com/theislab/single-cell-best-practices/pull/89)) <sub>`@Zethson`</sub>
+- Add `compositional analysis` chapter ([#89](https://github.com/theislab/single-cell-best-practices/pull/89)) <sub>`@Zethson`</sub>
 - Add `lineage tracing` chapter ([#88](https://github.com/theislab/single-cell-best-practices/pull/88)) <sub>`@mattjones315`</sub>
-- Add `preprocessing and visualizaton` section ([#59](https://github.com/theislab/single-cell-best-practices/pull/59)) <sub>`@AnnaChristina`</sub>
+- Add `preprocessing and visualization` section ([#59](https://github.com/theislab/single-cell-best-practices/pull/59)) <sub>`@AnnaChristina`</sub>
 - Add `clustering` chapter ([#72](https://github.com/theislab/single-cell-best-practices/pull/72)) <sub>`@AnnaChristina`</sub>
 - Add PDF job ([#65](https://github.com/theislab/single-cell-best-practices/pull/65)) <sub>`@Zethson`</sub>
 - Add `prior art` chapter ([#58](https://github.com/theislab/single-cell-best-practices/pull/58)) <sub>`@Zethson`</sub>
@@ -82,7 +82,6 @@ numbering: false
 - Add scATAC part ([#162](https://github.com/theislab/single-cell-best-practices/pull/162)) <sub>`@lauradmartens`</sub>
 - Add `modelling mechanism` section ([#96](https://github.com/theislab/single-cell-best-practices/pull/96)) <sub>`@ilibarra`</sub>
 - Add `Integration` chapter ([#17](https://github.com/theislab/single-cell-best-practices/pull/17)) <sub>`@lazappi`</sub>
-- Add new book CI ([#57](https://github.com/theislab/single-cell-best-practices/pull/57)) <sub>`@Zethson`</sub>
 
 ### Changed
 
@@ -119,7 +118,6 @@ numbering: false
 
 - Fix broken link on edit button ([#115](https://github.com/theislab/single-cell-best-practices/pull/115)) (`@emiller88`)
 - Fix environment CI ([#158](https://github.com/theislab/single-cell-best-practices/pull/158)) (`@Zethson`)
-- Fix surface protein environment and small bugs ([#154](https://github.com/theislab/single-cell-best-practices/pulls/154)) (`@danielStrobl`)
+- Fix surface protein environment and small bugs ([#154](https://github.com/theislab/single-cell-best-practices/pull/154)) (`@danielStrobl`)
 - Add missing links to other chapters in `Compositional analysis` chapter ([#145](https://github.com/theislab/single-cell-best-practices/pull/145)) (`@dbdimitrov`)
-- Fix environment CI ([#158](https://github.com/theislab/single-cell-best-practices/pull/158)) (`@Zethson`)
 - Fix environments for `surface protein` section and small bugs ([#154](https://github.com/theislab/single-cell-best-practices/pull/154)) (`@danielStrobl`)

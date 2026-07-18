@@ -132,9 +132,9 @@ Each `.ipynb` notebook should follow this standard structure:
 authors:
 ```markdown
   - name: Lukas Heumos
-  - name: Luis Heinzmeier
+  - name: Luis Heinzlmeier
   - name: Isaac Virshup
-    roles:k
+    roles:
       - writing – review & editing
 ---
 ````
