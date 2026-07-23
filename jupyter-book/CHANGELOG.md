@@ -31,6 +31,7 @@
 - Insert dropdowns for deployments ([#424](https://github.com/theislab/single-cell-best-practices/pull/424)) <sub>@Zethson</sub>
 - Update the differential gene expression chapter ([#430](https://github.com/theislab/single-cell-best-practices/pull/430)) <sub>@LuisHeinzlmeier</sub>
 - Add memory management details for `RAPIDS-singlecell` ([#432](https://github.com/theislab/single-cell-best-practices/pull/432)) <sub>@Zethson</sub>
+- Update compositional analysis chapter ([#448](https://github.com/theislab/single-cell-best-practices/pull/448)) <sub>@LuisHeinzlmeier</sub>
 
 ### Fixed
 
