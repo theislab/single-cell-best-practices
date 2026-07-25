@@ -1,4 +1,12 @@
+import re
 from pathlib import Path
+
+# Every key takeaway card is itself a link, and HTML forbids nesting an anchor inside an
+# anchor. A citation, glossary term, cross reference or markdown link in a key takeaway
+# therefore produces markup the browser has to reparent, which breaks React hydration for
+# the *whole* page: nothing on it stays interactive and the browser back button starts
+# throwing. The failure is silent at build time, so it is caught here instead.
+_LINK_IN_CARD = re.compile(r"\{(?:cite[a-z:]*|term|ref|doc|download|numref)\}`|\]\(")
 
 
 class Key_takeaways:
@@ -83,3 +91,27 @@ class Key_takeaways:
         self._dict_key_takeaways = {}
         self._dict_key_takeaway_link_overrides = {}
         self._read_key_takeaways(key_takeaways_path)
+        self._reject_links(key_takeaways_path)
+
+    def _reject_links(self, key_takeaways_path: Path) -> None:
+        """Fails the build if a key takeaway contains anything that renders as a link.
+
+        Args:
+            key_takeaways_path: Path to the `*_keytakeaways.txt`-file being parsed
+
+        Raises:
+            ValueError: If a key takeaway contains a link, citation or cross reference
+        """
+        offenders = [
+            (number, line)
+            for number, lines in sorted(self._dict_key_takeaways.items())
+            for line in lines
+            if _LINK_IN_CARD.search(line)
+        ]
+        if offenders:
+            details = "\n".join(f"  key takeaway {n}: {line}" for n, line in offenders)
+            raise ValueError(
+                f"{key_takeaways_path}: key takeaways must not contain links, "
+                f"citations or cross references, because the card around them is "
+                f"already a link and the nested anchor breaks the page.\n{details}"
+            )

@@ -174,6 +174,9 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
     If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
   - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
   - Don't link terms in the key takeaways!
+    The same goes for citations, cross references and plain markdown links: a key takeaway card is itself a link, and a link nested inside a link is invalid HTML.
+    The browser reparents it, which breaks React hydration for the entire page — nothing on it stays interactive and the browser back button starts throwing.
+    `make dropdown` fails if a key takeaway contains one.
 - Cite with `` {cite:p}`KEY` ``, which renders as `[Smith et al., 2017]`. A bare `` {cite}`KEY` `` renders narratively as `Smith et al. (2017)`, which only reads well when the authors are the subject of the sentence — use `` {cite:t}`KEY` `` for that.
 - Based on hours of proofreading: Always make a space before `{cite:p}` (e.g., ``"This was shown by {cite:p}`Smith2017`."``).
 - References should always contain `doi` and `url`.
