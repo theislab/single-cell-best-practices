@@ -13,14 +13,14 @@ numbering: false
 The human body is a complex machine that heavily relies on the basic units of life - cells.
 These cells exhibit remarkable diversity, varying in type and function, and can undergo significant transitions during development, in response to disease, or during regenerative processes.
 This cellular heterogeneity manifests in their structure, function, and gene expression profiles.
-Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer {cite}`Macaulay2017`.
+Disruptions to this delicate balance can lead to systemic dysregulation, contributing to severe conditions such as cancer {cite:p}`Macaulay2017`.
 Therefore, understanding how cells behave under normal and perturbed states is critical for deepening our understanding of entire cellular systems.
 
 To address this challenge, researchers employ a variety of strategies, with one of the most promising being profiling cells at the individual level.
 Traditionally, each cells' transcriptome was primarily examined in a process known as single-cell RNA {term}`sequencing`. However, recent advancements in single-cell genomics now enable the integration of transcriptome data with spatial, chromatin accessibility, or protein-level information.
 These developments not only enhance our understanding of complex regulatory mechanisms but also introduce additional challenges in data analysis.
 
-Currently, analysts are faced with an overwhelming array of computational tools - over 1,700 methods dedicated to single-cell RNA-seq alone {cite}`Zappia2021_pre`.
+Currently, analysts are faced with an overwhelming array of computational tools - over 1,700 methods dedicated to single-cell RNA-seq alone {cite:p}`Zappia2021_pre`.
 Navigating this extensive landscape to produce reliable, cutting-edge results poses a significant challenge.
 
 ## What this book covers
@@ -116,9 +116,3 @@ For inquiries, speaking engagements, or collaboration opportunities, please emai
 ## License
 
 This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/development/LICENSE).
-
-## References
-
-```{bibliography}
-:filter: docname in docnames
-```

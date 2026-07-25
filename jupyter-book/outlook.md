@@ -30,16 +30,10 @@ Though, it is not always possible to obtain all modalities. We therefore expect 
 The amount of single-cell data and analysis possibilities is growing on such a big scale that it is inevitable that as many processes as possible should be automated.
 With the advent of reference mapping to atlases to automate cell type annotation and automated quality control tools, the development of highly automated pipelines is becoming a real possibility.
 Especially, the reanalysis of "old", existing datasets could uncover previously missed biology.
-The first pipelines are starting to appear {cite}`ol:Khozoie2021`, and we expect more pipelines with support for modalities beyond {term}`RNA` to be developed.
+The first pipelines are starting to appear {cite:p}`ol:Khozoie2021`, and we expect more pipelines with support for modalities beyond {term}`RNA` to be developed.
 
 ## Single-cell proteomics
 
-Furthermore, the young and fast evolving field of single-cell proteomics {cite}`ol:Brunner2022` will bring an additional modality into the single-cell space with more integration challenges, but also great potential for new discoveries.
+Furthermore, the young and fast evolving field of single-cell proteomics {cite:p}`ol:Brunner2022` will bring an additional modality into the single-cell space with more integration challenges, but also great potential for new discoveries.
 Currently, single-cell proteomics suffers from a lack of high quality datasets, making it challenging to develop tools and pipelines for sound statistical analysis.
 As soon as high quality single-cell proteomics datasets are generated on a regular basis, we expect the single-cell community to develop new tools for the analysis.
-
-## References
-
-```{bibliography}
-:filter: docname in docnames
-```
