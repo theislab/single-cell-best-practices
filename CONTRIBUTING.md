@@ -125,6 +125,19 @@ Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, fol
 
 Each `.ipynb` notebook should follow this standard structure:
 
+0. ✍️ **Authors and Reviewers**: At the top of the notebook, include a section listing the authors and reviewers who contributed to the chapter. This section should be formatted as follows:
+
+```markdown
+---
+authors:
+  - name: Lukas Heumos
+  - name: Luis Heinzlmeier
+  - name: Isaac Virshup
+    roles:
+      - writing – review & editing
+---
+```
+
 1. 🧠 **Title**
 2. 🔽 **Dropdown Section**
    - Key Takeaways
@@ -133,8 +146,10 @@ Each `.ipynb` notebook should follow this standard structure:
 3. 📖 **Main Content**
 4. 🔗 **See Also** _(Dropdown)_
 5. ❓ **Quiz / Flashcards**
-6. 📚 **References**
-7. 👥 **Contributors**
+6. 👥 **Contributors**
+
+The references and the contributors sections are rendered by the theme at the end of every page.
+Do not add a `## References` heading or a `{bibliography}` directive yourself, or the page ends up with two references sections.
 
 All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
 In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
@@ -159,7 +174,11 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
     If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
   - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
   - Don't link terms in the key takeaways!
-- Based on hours of proofreading: Always make a space before `{cite}` (e.g., ``"This was shown by {cite}`Smith2017`."``).
+    The same goes for citations, cross references and plain markdown links: a key takeaway card is itself a link, and a link nested inside a link is invalid HTML.
+    The browser reparents it, which breaks React hydration for the entire page — nothing on it stays interactive and the browser back button starts throwing.
+    `make dropdown` fails if a key takeaway contains one.
+- Cite with `` {cite:p}`KEY` ``, which renders as `[Smith et al., 2017]`. A bare `` {cite}`KEY` `` renders narratively as `Smith et al. (2017)`, which only reads well when the authors are the subject of the sentence — use `` {cite:t}`KEY` `` for that.
+- Based on hours of proofreading: Always make a space before `{cite:p}` (e.g., ``"This was shown by {cite:p}`Smith2017`."``).
 - References should always contain `doi` and `url`.
 - Write in American English.
 - Genes are written in _italic_ (e.g., _TP53_), while protein names are written in normal (non-italic) text (e.g., TP53).
@@ -185,6 +204,31 @@ The first sentence of key takeaway 2.
 
 If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
 Replace all `_` of the section or notebook name with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=` for `jupyter-book/preprocessing_visualization/dimensionality_reduction.ipynb`).
+
+> [!WARNING]
+> MyST only allows a **single label per element**.
+> This applies to any labeled element in the book, not just headings — figures, tables, admonitions, and dropdowns included.
+> Stacking more than one `(label)=` — or a `:name:`/`:label:` option plus a stacked `(label)=` — on the same element means only the first one resolves; the rest silently become dead links, with no build warning to catch it.
+>
+> If a key takeaway should point at an element that already has a label (whether that label belongs to another key takeaway or to any other existing label in the book, e.g. one referenced via `{ref}` from another chapter), don't add a second label — suffix its number with `:<label>` in `_keytakeaways.txt` instead:
+>
+> ```
+> 3:preprocessing-visualization-quality-control-key-takeaway-1
+> The first sentence of key takeaway 3, which shares a heading with key takeaway 1.
+> ```
+
+> [!WARNING]
+> A standalone `(label)=` line only binds to a heading or paragraph — it does **not** attach to a directive (`{figure}`, `{table}`, `{admonition}`, `{dropdown}`, ...), even if placed directly above it.
+> The label is silently created but never resolves to that directive, again with no build warning.
+> For figures and tables, use the `:name:` option instead:
+>
+> ```
+> :::{figure} ../_static/images/example.png
+> :name: example-fig
+> :::
+> ```
+>
+> Admonitions and dropdowns (`{admonition}`, `{dropdown}`, `{seealso}`) can't be linked to at all right now, `:name:` included — it's a known upstream rendering bug, not a syntax mistake. Don't rely on linking to them until it's fixed upstream.
 
 Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.

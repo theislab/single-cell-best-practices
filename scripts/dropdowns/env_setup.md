@@ -1,4 +1,4 @@
-``````{dropdown} <i class="fa-solid fa-gear"></i>   Environment setup
+``````{dropdown} ⚙️ Environment setup
 `````{tab-set}
 
 ````{tab-item} Steps
