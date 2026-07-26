@@ -11,9 +11,14 @@ Upstream issue: https://github.com/jupyter-book/mystmd/issues/1178
 
 There is no configuration for this and no server to fix it in, since releases are
 published to GitHub Pages, so the workaround is appended to the theme's client entry
-bundle: a `popstate` listener that turns a back navigation away from a key takeaway into
-a normal document load. It is armed only by a click on a key takeaway card, so every
-other back and forward is left as an in place transition.
+bundle: a `popstate` listener that turns a back navigation within a single page into a
+normal document load. A key takeaway link only adds a fragment, so going back from one
+stays on the same page and is reloaded; chapter to chapter back and forward changes the
+path and is left as an in place transition.
+
+Keying this off the path rather than off a remembered click on a card matters: a flag set
+when the card is clicked is cleared by whatever the reader clicks next, which is easy to
+do between following a takeaway and pressing back.
 
 The listener deliberately goes into the JavaScript bundle rather than into a `<script>`
 tag in the HTML. Remix hydrates `<head>` and `<body>`, so an injected tag is DOM React
@@ -35,24 +40,31 @@ SNIPPET = f"""
   if (typeof window === "undefined" || window.__mystReloadOnBack) return;
   window.__mystReloadOnBack = true;
 
-  /* Only a back navigation away from a key takeaway is reloaded, so every other
-     back and forward stays an in place transition. */
-  var armed = false;
+  /* Which page the current history entry belongs to. A key takeaway link only adds a
+     fragment, so a back navigation away from one stays on the same page, and that is the
+     POP the theme cannot render. Chapter to chapter back and forward changes the path and
+     is left as an in place transition. */
+  var page = window.location.pathname;
 
-  /* Key takeaway cards are the only cards in this book, see
-     scripts/dropdowns/keytakeaways.py, so `a.myst-card` identifies them. Match on the
-     element rather than the URL: a takeaway may link to an existing label such as
-     `#rna-doublet-detection` instead of `#...-key-takeaway-N`. */
-  document.addEventListener("click", function (event) {{
-    var node = event.target;
-    var link = node && node.closest ? node.closest("a") : null;
-    /* Following any other link disarms, so a later back elsewhere is left alone. */
-    armed = !!(link && link.classList.contains("myst-card"));
-  }}, true);
+  function remember() {{
+    page = window.location.pathname;
+  }}
+
+  /* The router navigates with pushState, so follow it to keep `page` current. */
+  ["pushState", "replaceState"].forEach(function (name) {{
+    var original = window.history[name];
+    if (typeof original !== "function") return;
+    window.history[name] = function () {{
+      var result = original.apply(this, arguments);
+      remember();
+      return result;
+    }};
+  }});
 
   window.addEventListener("popstate", function () {{
-    if (!armed) return;
-    armed = false;
+    var leaving = page;
+    remember();
+    if (leaving !== window.location.pathname) return;
     /* The URL is already the one being navigated to when popstate fires, so a plain
        reload lands on the right page. */
     window.location.reload();
