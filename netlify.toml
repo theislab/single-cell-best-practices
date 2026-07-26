@@ -4,18 +4,3 @@
 
 [build.environment]
   PYTHON_VERSION = "3.13"
-
-# The theme links internally with `prefetch="intent"`, so hovering a link makes the router
-# request the target with a `?_data=...` query string, expecting Remix loader JSON. There is
-# no server behind a static build, and a static host ignores the query string and answers
-# with the page's HTML instead. The router caches that as the route's data, and the next
-# navigation into the route reads `data.page.frontmatter` on it and throws
-# "Application Error: Cannot read properties of undefined (reading 'frontmatter')".
-# Answering these requests with a 404 keeps the bad data out of the router cache.
-# Upstream: https://github.com/jupyter-book/mystmd/issues/1178
-[[redirects]]
-  from = "/*"
-  query = {_data = ":route"}
-  to = "/_no-loader-data"
-  status = 404
-  force = true
