@@ -1,14 +1,18 @@
 JUPYTER_BOOK_DIR = jupyter-book
 JUPYTER_KERNEL := python3
 
+serve:
+	cd $(JUPYTER_BOOK_DIR) && jupyter book start
+
 build:
-	jupyter-book build $(JUPYTER_BOOK_DIR)
+	cd $(JUPYTER_BOOK_DIR) && jupyter book build --html
+	python3 scripts/postbuild/reload_on_back.py $(JUPYTER_BOOK_DIR)/_build/html
 
 dropdown:
 	python3 scripts/dropdowns/insert_dropdowns.py
 
 clean:
-	jupyter-book clean --all $(JUPYTER_BOOK_DIR)
+	cd $(JUPYTER_BOOK_DIR) && jupyter book clean --all
 
 pdf:
-	jupyter-book build jupyter-book/ --builder pdfhtml
+	cd $(JUPYTER_BOOK_DIR) && jupyter book build --pdf
