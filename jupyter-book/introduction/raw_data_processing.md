@@ -1,3 +1,15 @@
+---
+authors:
+  - name: Dongze He
+  - name: Avi Srivastava
+  - name: Hirak Sarkar
+  - name: Rob Patro
+  - name: Seo H. Kim
+  - name: Lukas Heumos
+    roles:
+      - writing – review & editing
+---
+
 (raw-proc)=
 
 # Raw data processing
@@ -7,15 +19,18 @@
 ## Motivation
 
 Raw data processing in single-cell {term}`sequencing` converts sequencing machine output (so-called lane-demultiplexed {term}`FASTQ` files) into readily analyzable representations such as a count matrix.
-This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule ({numref}`raw-proc-fig-overview`).
+This matrix represents the estimated number of distinct molecules derived from each gene per quantified cell, sometimes categorized by the inferred splicing status of each molecule (see the [Chapter Overview figure](#raw-proc-fig-overview)).
 
-:::{figure-md} raw-proc-fig-overview
-<img src="../_static/images/raw_data_processing/overview_raw_data_processing.jpg" alt="Chapter Overview" class="bg-primary mb-1" width="800px">
+<!-- prettier-ignore -->
+:::{figure} ../_static/images/raw_data_processing/overview_raw_data_processing.jpg
+:name: raw-proc-fig-overview
+:alt: Chapter Overview
+:width: 800px
 
 An overview of the topics discussed in this chapter. In the plot, "txome" stands for transcriptome.
 :::
 
-The count matrix is the foundation for a wide range of scRNA-seq analyses {cite}`Zappia2021_raw`, including cell type identification or developmental trajectory inference.
+The count matrix is the foundation for a wide range of scRNA-seq analyses {cite:p}`Zappia2021_raw`, including cell type identification or developmental trajectory inference.
 A robust and accurate count matrix is essential for reliable {term}`downstream analyses <Downstream analysis>`.
 Errors at this stage can lead to invalid conclusions and discoveries based on missed insights, or distorted signals in the data.
 Despite the straightforward nature of the input (FASTQ files) and the desired output (count matrix), raw data processing presents several technical challenges.
@@ -32,8 +47,8 @@ We also discuss the challenges and trade-offs involved in each step.
 
 The starting point for raw data processing is somewhat arbitrary. For this discussion, we treat lane-demultiplexed FASTQ files as the _raw_ input.
 However, these files are derived from earlier steps, such as base calling and base quality estimation, which can influence downstream processing.
-For example, base-calling errors and index hopping {cite}`raw:farouni2020model` can introduce inaccuracies in FASTQ data.
-These issues can be mitigated with computational approaches {cite}`raw:farouni2020model` or experimental enhancements like [dual indexing](https://www.10xgenomics.com/blog/sequence-with-confidence-understand-index-hopping-and-how-to-resolve-it).
+For example, base-calling errors and index hopping {cite:p}`raw:farouni2020model` can introduce inaccuracies in FASTQ data.
+These issues can be mitigated with computational approaches {cite:p}`raw:farouni2020model` or experimental enhancements like [dual indexing](https://www.10xgenomics.com/blog/sequence-with-confidence-understand-index-hopping-and-how-to-resolve-it).
 
 Here, we do not delve into the upstream processes, but consider the FASTQ files, derived from, e.g., BCL files via [appropriate tools](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/bcl2fastq-direct), as the raw input under consideration.
 ```
@@ -65,8 +80,12 @@ However, `FastQC` applies uniform thresholds across all sequencing platforms and
 As a result, warnings (orange exclamation marks) or failures (red crosses) may appear for high-quality data, while questionable data might receive passes (green ticks).
 Therefore, each module should be carefully reviewed before drawing conclusions about data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-summary
-<img src="../_static/images/raw_data_processing/fastqc_example/summary.jpg" alt="Summary" class="bg-primary mb-1" width="300px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/summary.jpg
+:name: raw-proc-fig-fastqc-summary
+:alt: Summary
+:class: bg-primary mb-1
+:width: 300px
+
 
 The summary panel of a bad example.
 :::
@@ -77,8 +96,11 @@ The basic statistics module provides an overview of key information and statisti
 High-quality single-cell data typically have very few poor-quality sequences and exhibit a uniform sequence length.
 Additionally, the GC content should align with the expected GC content of the genome or transcriptome of the sequenced species.
 
-:::{figure-md} raw-proc-fig-fastqc-basic-statistics
-<img src="../_static/images/raw_data_processing/fastqc_example/basic_statistics.jpg" alt="Basic Statistics" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/basic_statistics.jpg
+:name: raw-proc-fig-fastqc-basic-statistics
+:alt: Basic Statistics
+:class: bg-primary mb-1
+:width: 800px
 
 A good basic statistics report example.
 :::
@@ -95,8 +117,11 @@ However, the boxes should not extend into the red area (poor quality calls).
 
 If poor-quality calls are observed, quality trimming may be necessary. [A more detailed explanation](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html) of sequencing error profiles can be found in the [HBC training program](https://hbctraining.github.io/main/).
 
-:::{figure-md} raw-proc-fig-fastqc-per-read-sequence-quality
-<img src="../_static/images/raw_data_processing/fastqc_example/per_read_sequence_quality.jpg" alt="per read sequence quality" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_read_sequence_quality.jpg
+:name: raw-proc-fig-fastqc-per-read-sequence-quality
+:alt: Per Read Sequence Quality
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per-read sequence quality graph.
 :::
@@ -111,8 +136,11 @@ If warm colors appear in certain areas, it suggests that only part of the flowce
 This could result from transient issues during sequencing, such as bubbles passing through the flowcell or smudges and debris within the flowcell lane.
 For further investigation, consult resources like [QC Fail](https://sequencing.qcfail.com/articles/position-specific-failures-of-flowcells/) and the [common reasons for warnings](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html) provided in the `FastQC` manual.
 
-:::{figure-md} raw-proc-fig-fastqc-per-tile-sequence-quality
-<img src="../_static/images/raw_data_processing/fastqc_example/per_tile_sequence_quality.jpg" alt="per tile sequence quality" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_tile_sequence_quality.jpg
+:name: raw-proc-fig-fastqc-per-tile-sequence-quality
+:alt: Per Tile Sequence Quality
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per tile sequence quality view.
 :::
@@ -124,8 +152,11 @@ The x-axis represents the average quality scores, while the y-axis shows the fre
 For high-quality data, the plot should have a single peak near the high-quality end of the scale.
 If additional peaks appear, it may indicate a subset of reads with quality issues.
 
-:::{figure-md} raw-proc-fig-fastqc-per-sequence-quality-scores
-<img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_quality_scores.jpg" alt="per sequence quality scores" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_sequence_quality_scores.jpg
+:name: raw-proc-fig-fastqc-per-sequence-quality-scores
+:alt: Per Sequence Quality Scores
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per sequence quality score plot.
 :::
@@ -137,8 +168,11 @@ For single-cell data, it is common to observe fluctuations at the start of the r
 This occurs because the initial bases represent the sequence of the priming sites, which are often not perfectly random.
 This is a frequent occurrence in RNA-seq libraries, even though `FastQC` may flag it with a warning or failure, as noted on the [QC Fail website](https://sequencing.qcfail.com/articles/positional-sequence-bias-in-random-primed-libraries/).
 
-:::{figure-md} raw-proc-fig-fastqc-per-base-sequence-content
-<img src="../_static/images/raw_data_processing/fastqc_example/per_base_sequence_content.jpg" alt="per base sequence content" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_base_sequence_content.jpg
+:name: raw-proc-fig-fastqc-per-base-sequence-content
+:alt: Per Base Sequence Content
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and bad (right) per base sequence content plot.
 :::
@@ -155,8 +189,11 @@ It is also important to note that interpreting GC content in transcriptomics can
 The expected GC distribution depends not only on the sequence composition of the transcriptome but also on gene expression levels in the sample, which are typically unknown beforehand.
 As a result, some deviation from the theoretical distribution is not unusual in RNA-seq data.
 
-:::{figure-md} raw-proc-fig-fastqc-per-sequence-gc-content
-<img src="../_static/images/raw_data_processing/fastqc_example/per_sequence_gc_content.jpg" alt="Per Sequence GC Content" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_sequence_gc_content.jpg
+:name: raw-proc-fig-fastqc-per-sequence-gc-content
+:alt: Per Sequence GC Content
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per sequence GC content plot.
 The plot on the left is from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx).
@@ -170,8 +207,11 @@ In a high-quality library, the ``N`` content should remain consistently at or ne
 Any noticeable non-zero ``N`` content may indicate issues with sequencing quality or library preparation.
 
 
-:::{figure-md} raw-proc-fig-fastqc-per-base-n-content
-<img src="../_static/images/raw_data_processing/fastqc_example/per_base_n_content.jpg" alt="Per Base N Content" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/per_base_n_content.jpg
+:name: raw-proc-fig-fastqc-per-base-n-content
+:alt: Per Base N Content
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per base N content plot.
 :::
@@ -183,8 +223,11 @@ For most single-cell sequencing chemistries, all reads are expected to have the 
 However, if quality trimming was applied before the quality assessment, some variation in read lengths may be observed.
 Small differences in read lengths due to trimming are normal and should not be a cause for concern if expected.
 
-:::{figure-md} raw-proc-fig-fastqc-sequence-length-distribution
-<img src="../_static/images/raw_data_processing/fastqc_example/sequence_length_distribution.jpg" alt="Sequence Length Distribution" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/sequence_length_distribution.jpg
+:name: raw-proc-fig-fastqc-sequence-length-distribution
+:alt: Sequence Length Distribution
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) sequence length distribution plot.
 :::
@@ -198,8 +241,11 @@ Additionally, since `FastQC` is not UMI-aware (i.e., it does not account for uni
 While this may trigger a warning or failure in this module, it does not necessarily indicate a quality issue with the data.
 However, the majority of sequences should still exhibit low duplication levels, reflecting a diverse and well-prepared library.
 
-:::{figure-md} raw-proc-fig-fastqc-sequence-duplication-levels
-<img src="../_static/images/raw_data_processing/fastqc_example/sequence_duplication_levels.jpg" alt="Sequence Duplication Levels" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/sequence_duplication_levels.jpg
+:name: raw-proc-fig-fastqc-sequence-duplication-levels
+:alt: Sequence Duplication Levels
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per sequence duplication levels plot.
 :::
@@ -213,8 +259,11 @@ However, the majority of sequences should not be overrepresented.
 If the source of an overrepresented sequence is identified (i.e., not listed as "No Hit"), it could indicate potential contamination in the library from the corresponding source.
 Such cases warrant further investigation to ensure data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-overrepresented-sequences
-<img src="../_static/images/raw_data_processing/fastqc_example/overrepresented_sequences.jpg" alt="Overrepresented Sequences" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/overrepresented_sequences.jpg
+:name: raw-proc-fig-fastqc-overrepresented-sequences
+:alt: Overrepresented Sequences
+:class: bg-primary mb-1
+:width: 800px
 
 An overrepresented sequence table.
 :::
@@ -226,8 +275,11 @@ High levels of adapter sequences indicate incomplete removal of adapters during 
 Ideally, no significant adapter content should be present in the data.
 If adapter sequences are abundant, additional trimming may be necessary to improve data quality.
 
-:::{figure-md} raw-proc-fig-fastqc-adapter-content
-<img src="../_static/images/raw_data_processing/fastqc_example/adapter_content.jpg" alt="Adapter Content" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/fastqc_example/adapter_content.jpg
+:name: raw-proc-fig-fastqc-adapter-content
+:alt: Adapter Content
+:class: bg-primary mb-1
+:width: 800px
 
 A good (left) and a bad (right) per sequence quality score plot. The plot on the right is from [the QC Fail website](https://sequencing.qcfail.com/articles/read-through-adapters-can-appear-at-the-ends-of-sequencing-reads/).
 :::
@@ -236,7 +288,7 @@ A good (left) and a bad (right) per sequence quality score plot. The plot on the
 
 Multiple FastQC reports can be combined into a single report using the tool [`MultiQC`](https://multiqc.info).
 
-(raw-proc:aln-map)=
+(raw-proc-aln-map)=
 
 ## Alignment and mapping
 
@@ -250,12 +302,12 @@ In single-cell sequencing protocols, the raw sequence files typically include:
 - Unique Molecular Identifiers (UMIs): Tags that distinguish individual molecules to account for amplification bias.
 - Raw {term}`cDNA <Complementary DNA (cDNA)>` Sequences: The actual read sequences generated from the molecules.
 
-As the first step ({numref}`raw-proc-fig-overview`), accurate mapping or alignment is crucial for reliable downstream analyses.
+As the first step (see the [Chapter Overview figure](#raw-proc-fig-overview) above), accurate mapping or alignment is crucial for reliable downstream analyses.
 Errors during this step, such as incorrect mapping of reads to transcripts or genes, can result in inaccurate or misleading count matrices.
 
 While mapping read sequences to reference sequences _far_ predates the development of scRNA-seq, the sheer scale of modern scRNA-seq datasets—often involving hundreds of millions to billions of reads—makes this step particularly computationally intensive.
 Many existing RNA-seq aligners are protocol-agnostic and do not inherently account for features specific to scRNA-seq, such as cell barcodes, UMIs, or their positions and lengths.
-As a result, additional tools are often required for steps like demultiplexing and UMI resolution {cite}`raw:Smith2017`.
+As a result, additional tools are often required for steps like demultiplexing and UMI resolution {cite:p}`raw:Smith2017`.
 
 ```{admonition} GPU-accelerated alignment
 Alignment is frequently the most time-consuming step of raw data processing, particularly for the splice-aware, genome-based aligners discussed below.
@@ -267,13 +319,13 @@ This accelerates the computation rather than altering the algorithm, so the resu
 To address the challenges of aligning and mapping scRNA-seq data, several specialized tools have been developed that handle the additional processing requirements automatically or internally.
 These tools include:
 
-- `Cell Ranger` (commercial software from 10x Genomics) {cite}`raw:Zheng2017`
-- `zUMIs` {cite}`raw:zumis`
-- `alevin` {cite}`raw:Srivastava2019`
-- `RainDrop` {cite}`raw:niebler2020raindrop`
-- `kallisto|bustools` {cite}`raw:Melsted2021`
-- `STARsolo` {cite}`raw:Kaminow2021`
-- `alevin-fry` {cite}`raw:He2022`
+- `Cell Ranger` (commercial software from 10x Genomics) {cite:p}`raw:Zheng2017`
+- `zUMIs` {cite:p}`raw:zumis`
+- `alevin` {cite:p}`raw:Srivastava2019`
+- `RainDrop` {cite:p}`raw:niebler2020raindrop`
+- `kallisto|bustools` {cite:p}`raw:Melsted2021`
+- `STARsolo` {cite:p}`raw:Kaminow2021`
+- `alevin-fry` {cite:p}`raw:He2022`
 
 These tools provide specialized capabilities for aligning scRNA-seq reads, parsing technical read content (e.g., cell barcodes and UMIs), demultiplexing, and UMI resolution.
 Although they offer simplified user interfaces, their internal methodologies differ significantly.
@@ -284,13 +336,13 @@ While these tools vary in their specific algorithms, data structures, and trade-
 1. **The type of mapping they perform**, and
 2. **The type of reference sequence against which they map reads**.
 
-(raw-proc:types-of-mapping)=
+(raw-proc-types-of-mapping)=
 
 ### Types of mapping
 
 We focus on three main types of mapping algorithms commonly used for mapping sc/snRNA-seq data: spliced alignment, contiguous alignment, and variations of lightweight mapping.
 
-First, we distinguish between alignment-based approaches and lightweight mapping-based approaches ({numref}`raw-proc-fig-alignment-mapping`).
+First, we distinguish between alignment-based approaches and lightweight mapping-based approaches (see the [Alignment vs Mapping figure](#raw-proc-fig-alignment-mapping)).
 Alignment-based methods use various heuristics to identify potential loci from which reads may originate and then score the best nucleotide-level alignment between the read and reference, typically using dynamic programming algorithms.
 
 [global alignment](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm) aligns the entirety of the query and reference sequences, while [local alignment](https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm) focuses on aligning subsequences.
@@ -299,10 +351,10 @@ Additionally, "soft-clipping" may be used to reduce penalties for mismatches, in
 While these variations modify the rules of the dynamic programming recurrence and traceback, they do not fundamentally alter its overall complexity.
 
 Several sophisticated modifications and heuristics have been developed to enhance the practical efficiency of aligning genomic sequencing reads.
-For example, `banded alignment` {cite}`raw:chao1992aligning` is a popular heuristic used by many tools to avoid computing large portions of the dynamic programming table when alignment scores below a threshold are not of interest.
-Other heuristics, like X-drop {cite}`raw:zhang2000` and Z-drop {cite}`raw:li2018minimap2`, efficiently prune unpromising alignments early in the process.
-Recent advances, such as wavefront alignment {cite}`raw:marco2021fast,raw:marco2022optimal`, enable the determination of optimal alignments in significantly reduced time and space, particularly when high-scoring alignments are present.
-Additionally, much work has focused on optimizing data layout and computation to leverage instruction-level parallelism {cite}`raw:wozniak1997using,raw:rognes2000six,raw:farrar2007striped`, and expressing dynamic programming recurrences in ways that facilitate data parallelism and vectorization, such as through difference encoding {cite:t}`raw:Suzuki2018`.
+For example, `banded alignment` {cite:p}`raw:chao1992aligning` is a popular heuristic used by many tools to avoid computing large portions of the dynamic programming table when alignment scores below a threshold are not of interest.
+Other heuristics, like X-drop {cite:p}`raw:zhang2000` and Z-drop {cite:p}`raw:li2018minimap2`, efficiently prune unpromising alignments early in the process.
+Recent advances, such as wavefront alignment {cite:p}`raw:marco2021fast,raw:marco2022optimal`, enable the determination of optimal alignments in significantly reduced time and space, particularly when high-scoring alignments are present.
+Additionally, much work has focused on optimizing data layout and computation to leverage instruction-level parallelism {cite:p}`raw:wozniak1997using,raw:rognes2000six,raw:farrar2007striped`, and expressing dynamic programming recurrences in ways that facilitate data parallelism and vectorization, such as through difference encoding {cite:t}`raw:Suzuki2018`.
 Most widely-used alignment tools incorporate these highly optimized, vectorized implementations.
 
 In addition to the alignment score, the backtrace of the actual alignment that produces this score is often encoded as a `CIGAR` string (short for "Concise Idiosyncratic Gapped Alignment Report").
@@ -314,10 +366,14 @@ A detailed description of the `CIGAR` string format can be found in [the SAMtool
 
 Alignment-based approaches, though computationally expensive, provide a quality score for each potential mapping of a read.
 This score allows them to distinguish between high-quality alignments and low-complexity or "spurious" matches between the read and reference.
-These approaches include traditional "full-alignment" methods, such as those implemented in tools like `STAR` {cite}`raw:dobin2013star` and `STARsolo` {cite}`raw:Kaminow2021`, as well as _selective-alignment_ methods, like those in `salmon` {cite}`raw:Srivastava2020Alignment` and `alevin` {cite}`raw:Srivastava2019`, which score mappings but skip the computation of the optimal alignment’s backtrace.
+These approaches include traditional "full-alignment" methods, such as those implemented in tools like `STAR` {cite:p}`raw:dobin2013star` and `STARsolo` {cite:p}`raw:Kaminow2021`, as well as _selective-alignment_ methods, like those in `salmon` {cite:p}`raw:Srivastava2020Alignment` and `alevin` {cite:p}`raw:Srivastava2019`, which score mappings but skip the computation of the optimal alignment’s backtrace.
 
-:::{figure-md} raw-proc-fig-alignment-mapping
-<img src="../_static/images/raw_data_processing/alignment_vs_mapping.png" alt="Alignment vs Mapping" class="bg-primary mb-1" width="800px">
+<!-- prettier-ignore -->
+:::{figure} ../_static/images/raw_data_processing/alignment_vs_mapping.png
+:name: raw-proc-fig-alignment-mapping
+:alt: Alignment vs Mapping
+:class: bg-primary mb-1
+:width: 800px
 
 An abstract overview of the alignment-based method and lightweight mapping-based method.
 :::
@@ -336,12 +392,12 @@ Contiguous-alignment methods require a continuous substring of the reference to 
 While small insertions and deletions may be tolerated, large gaps—such as those in spliced alignments—are generally not allowed.
 ```
 
-Alignment-based methods, such as spliced and contiguous alignment, can be distinguished from **lightweight-mapping methods**, which include approaches like **pseudoalignment** {cite}`raw:Bray2016`, **quasi-mapping** {cite}`raw:srivastava2016rapmap`, and **pseudoalignment with structural constraints** {cite}`raw:He2022`.
+Alignment-based methods, such as spliced and contiguous alignment, can be distinguished from **lightweight-mapping methods**, which include approaches like **pseudoalignment** {cite:p}`raw:Bray2016`, **quasi-mapping** {cite:p}`raw:srivastava2016rapmap`, and **pseudoalignment with structural constraints** {cite:p}`raw:He2022`.
 
 Lightweight-mapping methods achieve significantly higher speed.
 However, they do not provide easily-interpretable score-based assessments to determine the quality of a match, making it more difficult to assess alignment confidence.
 
-(raw-proc:mapping-references)=
+(raw-proc-mapping-references)=
 
 ### Mapping against different reference sequences
 
@@ -355,19 +411,19 @@ There are three main categories of reference sequences:
 Currently, not all combinations of mapping algorithms and reference sequences are possible.
 For instance, lightweight-mapping algorithms do not yet support spliced mapping of reads against a reference genome.
 
-(raw-proc:genome-mapping)=
+(raw-proc-genome-mapping)=
 
 #### Mapping to the full genome
 
 The first type of reference used for mapping is the **entire genome** of the target organism, typically with annotated transcripts considered during mapping.
-Tools such as `zUMIs` {cite}`raw:zumis`, `Cell Ranger` {cite}`raw:Zheng2017`, and `STARsolo` {cite}`raw:Kaminow2021` follow this approach.
+Tools such as `zUMIs` {cite:p}`raw:zumis`, `Cell Ranger` {cite:p}`raw:Zheng2017`, and `STARsolo` {cite:p}`raw:Kaminow2021` follow this approach.
 Since many reads originate from **spliced transcripts**, this method requires a **splice-aware alignment algorithm** capable of splitting alignments across one or more splice junctions.
 
 A key advantage of this approach is that it accounts for reads arising from any location in the genome, not just those from annotated transcripts.
 Additionally, because a **genome-wide index** is constructed, there is minimal additional cost in reporting not only reads that map to known spliced transcripts but also those that overlap introns or align within non-coding regions, making this method equally effective for **single-cell** and **single-nucleus** data.
 Another benefit is that even reads mapping outside annotated transcripts, exons, or introns can still be accounted for, enabling **_post hoc_ augmentation** of the quantified loci.
 
-(raw-proc:txome-mapping)=
+(raw-proc-txome-mapping)=
 
 #### Mapping to the spliced transcriptome
 
@@ -381,21 +437,21 @@ Alternatively, reads can be mapped using contiguous alignments, making both alig
 
 While these approaches significantly reduce the memory and time required for alignment and mapping, they fail to capture reads that arise from outside the spliced transcriptome.
 As a result, they are not suitable for processing single-nucleus data.
-Even in single-cell experiments, reads arising from outside of the spliced transcriptome can constitute a substantial fraction of all data, and there is growing evidence that such reads should be incorporated into subsequent analysis {cite}`raw:technote_10x_intronic_reads,raw:Pool2022`.
+Even in single-cell experiments, reads arising from outside of the spliced transcriptome can constitute a substantial fraction of all data, and there is growing evidence that such reads should be incorporated into subsequent analysis {cite:p}`raw:technote_10x_intronic_reads,raw:Pool2022`.
 Additionally, when paired with lightweight-mapping methods, short sequences shared between the spliced transcriptome and the actual genomic regions that generated a read can lead to spurious mappings.
-This, in turn, may result in misleading and even biologically implausible gene expression estimates {cite}`raw:Kaminow2021,raw:Bruning2022Comparative,raw:He2022`.
+This, in turn, may result in misleading and even biologically implausible gene expression estimates {cite:p}`raw:Kaminow2021,raw:Bruning2022Comparative,raw:He2022`.
 
-(raw-proc:aug-txome-mapping)=
+(raw-proc-aug-txome-mapping)=
 
 #### Mapping to an augmented transcriptome
 
 To account for reads originating outside spliced transcripts, the spliced transcript sequences can be augmented with additional reference sequences, such as full-length unspliced transcripts or excised intronic sequences.
 This enables better, faster, and more memory-efficient mapping compared to full-genome alignment, while still capturing many reads that would otherwise be missed.
-More reads can be confidently assigned compared to using only the spliced transcriptome, and when combined with lightweight mapping approaches, spurious mappings can be significantly reduced {cite}`raw:He2022`.
-Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and {term}`RNA velocity` analysis {cite}`raw:Soneson2021Preprocessing` (see {doc}`../trajectories/rna_velocity`).
-These augmented references can be constructed for all common methods that do not rely on spliced alignment to the full genome {cite}`raw:Srivastava2019,raw:Melsted2021,raw:He2022`.
+More reads can be confidently assigned compared to using only the spliced transcriptome, and when combined with lightweight mapping approaches, spurious mappings can be significantly reduced {cite:p}`raw:He2022`.
+Augmented transcriptomes are widely used in methods that do not map to the full genome, particularly for single-nucleus data processing and {term}`RNA velocity` analysis {cite:p}`raw:Soneson2021Preprocessing` (see [](../trajectories/rna_velocity)).
+These augmented references can be constructed for all common methods that do not rely on spliced alignment to the full genome {cite:p}`raw:Srivastava2019,raw:Melsted2021,raw:He2022`.
 
-(raw-proc:cb-correction)=
+(raw-proc-cb-correction)=
 
 ## Cell barcode correction
 
@@ -409,7 +465,7 @@ The beads contain high-diversity DNA barcodes, allowing for parallel barcoding o
 Depending on the sample chemistry and user-defined processing options, not all sequenced fragments that align to the reference are necessarily considered for quantification and barcode correction.
 One commonly-applied criterion for filtering is alignment orientation.
 Specifically, certain chemistries specify protocols such that the aligned reads should only derive from (i.e. map back to) the underlying transcripts in a specific orientation.
-For example, in 10x Genomics 3' Chromium chemistries, we expect the biological read to align to the underlying transcript's forward strand, though anti-sense reads do exist {cite}`raw:technote_10x_intronic_reads`.
+For example, in 10x Genomics 3' Chromium chemistries, we expect the biological read to align to the underlying transcript's forward strand, though anti-sense reads do exist {cite:p}`raw:technote_10x_intronic_reads`.
 As a result, reads mapped in the reverse-complement orientation to the reference sequences may be ignored or filtered out based on user-defined settings.
 If a chemistry follows such a so-called "stranded" protocol, this should be documented.
 ```
@@ -425,7 +481,7 @@ This discrepancy arises from several key sources of error:
 - Sequence errors: Errors introduced during PCR amplification or sequencing can distort barcode counts, contributing to both under- and over-counting.
 
 To address these issues, computational tools for demultiplexing RNA-seq reads into cell-specific bins use various diagnostic indicators to filter out artefactual or low-quality data.
-Numerous methods exist for removing ambient RNA contamination {cite}`raw:Young2020,raw:Muskovic2021,raw:Lun2019`, detecting doublets {cite}`raw:DePasquale2019,raw:McGinnis2019,raw:Wolock2019,raw:Bais2019`, and correcting cell barcode errors based on nucleotide sequence similarity.
+Numerous methods exist for removing ambient RNA contamination {cite:p}`raw:Young2020,raw:Muskovic2021,raw:Lun2019`, detecting doublets {cite:p}`raw:DePasquale2019,raw:McGinnis2019,raw:Wolock2019,raw:Bais2019`, and correcting cell barcode errors based on nucleotide sequence similarity.
 
 Several common strategies are used for cell barcode identification and correction.
 
@@ -447,7 +503,7 @@ Several common strategies are used for cell barcode identification and correctio
    If a set of potential barcodes is unknown - or even if it is known, but one wishes to correct directly from the observed data itself without consulting an external list - one can use a method based on the observation that high-quality barcodes are those associated with the highest number of reads in the sample.
    To achieve this, one can construct a cumulative frequency plot where barcodes are sorted in descending order based on the number of distinct reads or UMIs they are associated with.
    Often, this ranked cumulative frequency plot will contain a "knee" or "elbow" – an inflection point that can be used to characterize frequently occurring barcodes from infrequent (and therefore likely erroneous) barcodes.
-   Many methods exist for attempting to identify such an inflection point {cite}`raw:Smith2017,raw:Lun2019,raw:He2022` as a likely point of discrimination between properly captured cells and empty droplets.
+   Many methods exist for attempting to identify such an inflection point {cite:p}`raw:Smith2017,raw:Lun2019,raw:He2022` as a likely point of discrimination between properly captured cells and empty droplets.
    Subsequently, the set of barcodes that appear "above" the knee can be treated as a permit list against which the rest of the barcodes may be corrected, as in the first method list above.
    Such an approach is flexible as it can be applied in chemistries that have an external permit list and those that don't.
    Further parameters of the knee-finding algorithms can be altered to yield more or less restrictive selected barcode sets.
@@ -468,14 +524,14 @@ Several common strategies are used for cell barcode identification and correctio
   While this guarantees selection of at least n cells, it assumes that the chosen threshold accurately reflects the number of real cells.
   It is only reasonable if the user has a good reason to believe that the threshold frequency should be set around the provided index.
 
-(raw-proc:umi-resolution)=
+(raw-proc-umi-resolution)=
 
 ## UMI resolution
 
 After cell barcode (CB) correction, reads have either been discarded or assigned to a corrected CB.
 Subsequently, we wish to quantify the abundance of each gene within each corrected CB.
 
-Because of the {term}`amplification bias` as discussed in {ref}`exp-data:transcript-quantification`, reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules ({numref}`umi-figure`). Additionally, several other complicating factors present challenges when attempting to perform this estimation.
+Because of the {term}`amplification bias` as discussed in the [transcript quantification section](#exp-data-transcript-quantification), reads must be deduplicated, based upon their UMI, to assess the true count of sampled molecules (see the [UMI figure](#umi-figure)). Additionally, several other complicating factors present challenges when attempting to perform this estimation.
 
 The UMI deduplication step aims to identify the set of reads and UMIs derived from each original, pre-PCR molecule in each cell captured and sequenced in the experiment.
 The result of this process is to allocate a molecule count to each gene in each cell, which is subsequently used in the downstream analysis as the raw expression estimate for this gene.
@@ -499,7 +555,7 @@ Nucleotide substitutions in UMI tags may occur during amplification or sequencin
 Multimapping can arise when reads sharing the same UMI are mapped to different genes (blue and red), when a single read maps to multiple genes (gray), or both.
 ```
 
-(raw-proc:need-for-umi-resolution)=
+(raw-proc-need-for-umi-resolution)=
 
 ### The need for UMI resolution
 
@@ -507,18 +563,18 @@ In the ideal case, where the correct (unaltered) UMIs tag reads, the reads of ea
 Consequently, the UMI deduplication procedure is conceptually straightforward: the reads of a UMI are the PCR duplicates from a single pre-PCR molecule.
 The number of captured and sequenced molecules of each gene is the number of distinct UMIs observed for this gene.
 
-However, the problems encountered in practice make the simple rules described above insufficient for identifying the gene origin of UMIs in general and necessitate the development of more sophisticated models ({numref}`umi-figure`):
+However, the problems encountered in practice make the simple rules described above insufficient for identifying the gene origin of UMIs in general and necessitate the development of more sophisticated models (see the [UMI figure](#umi-figure)):
 
 - **Errors in UMIs**:
   These occur when the sequenced UMI tag of reads contains errors introduced during PCR or the sequencing process.
   Common UMI errors include nucleotide substitutions during PCR and read errors during sequencing.
-  Failing to address such UMI errors can inflate the estimated number of molecules {cite}`raw:Smith2017,raw:ziegenhain2022molecular`.
+  Failing to address such UMI errors can inflate the estimated number of molecules {cite:p}`raw:Smith2017,raw:ziegenhain2022molecular`.
 
 - **Multimapping**:
   This issue arises in cases where a read or UMI belongs to multiple references (e.g., multi-gene reads/UMIs).
   This happens when different reads of a UMI map to different genes, when a read maps to multiple genes, or both.
   The consequence of this issue is that the gene origin of the multi-gene reads/UMIs is ambiguous, which results in uncertainty about the sampled pre-PCR molecule count of those genes.
-  Simply discarding multi-gene reads/UMIs can lead to a loss of data or a biased estimate among genes that tend to produce multimapping reads, such as sequence-similar gene families {cite}`raw:Srivastava2019`.
+  Simply discarding multi-gene reads/UMIs can lead to a loss of data or a biased estimate among genes that tend to produce multimapping reads, such as sequence-similar gene families {cite:p}`raw:Srivastava2019`.
 
 ```{admonition} A Note on UMI Errors
 UMI errors, especially those due to nucleotide substitutions and miscallings, are prevalent in single-cell experiments.
@@ -531,14 +587,14 @@ There exist other challenges that we do not focus upon here, such as "convergent
 We consider the case where the same UMI is used to tag two different pre-PCR molecules arising from the same gene, in the same cell, as a convergent collision.
 When two or more distinct UMIs arise from the same pre-PCR molecule, e.g., due to the sampling of multiple priming sites from this molecule, we consider this a divergent collision.
 We expect convergent UMI collisions to be rare and, therefore, their effect typically small.
-Further, transcript-level mapping information can sometimes be used to resolve such collisions {cite}`raw:Srivastava2019`.
-Divergent UMI collisions occur primarily among introns of unspliced transcripts {cite}`raw:technote_10x_intronic_reads`, and approaches to addressing the issues they raise are an area of active research {cite}`raw:technote_10x_intronic_reads,raw:Gorin2021`.
+Further, transcript-level mapping information can sometimes be used to resolve such collisions {cite:p}`raw:Srivastava2019`.
+Divergent UMI collisions occur primarily among introns of unspliced transcripts {cite:p}`raw:technote_10x_intronic_reads`, and approaches to addressing the issues they raise are an area of active research {cite:p}`raw:technote_10x_intronic_reads,raw:Gorin2021`.
 
-Given that the use of UMIs is near ubiquitous in high-throughput scRNA-seq protocols and the fact that addressing these errors improves the estimation of gene abundances, there has been much attention paid to the problem of UMI resolution in recent literature {cite}`raw:Islam2013,raw:Bose2015,raw:Macosko2015,raw:Smith2017,raw:Srivastava2019,raw:Kaminow2021,raw:Melsted2021,raw:He2022,raw:calib,raw:umic,raw:zumis`.
+Given that the use of UMIs is near ubiquitous in high-throughput scRNA-seq protocols and the fact that addressing these errors improves the estimation of gene abundances, there has been much attention paid to the problem of UMI resolution in recent literature {cite:p}`raw:Islam2013,raw:Bose2015,raw:Macosko2015,raw:Smith2017,raw:Srivastava2019,raw:Kaminow2021,raw:Melsted2021,raw:He2022,raw:calib,raw:umic,raw:zumis`.
 
 ```{dropdown} Graph-based UMI resolution
 
-(raw-proc:graph-based-umi-resolution)=
+(raw-proc-graph-based-umi-resolution)=
 
 ### Graph-based UMI resolution
 
@@ -551,14 +607,14 @@ In the context of single-cell data, a UMI graph $G(V,E)$ is a {term}`directed gr
 Each node $v_i \in V$ represents an equivalence class (EC) of reads, and the edge set $E$ encodes the relationship between the ECs.
 The equivalence relation $\sim_r$ defined on reads is based on their UMI and mapping information.
 We say reads $r_x$ and $r_y$ are equivalent, $r_x \sim_r r_y$, if and only if they have identical UMI tags and map to the same set of references.
-UMI resolution approaches may define a "reference" as a genomic locus {cite}`raw:Smith2017`, transcript {cite}`raw:Srivastava2019,raw:He2022` or gene {cite}`raw:Zheng2017,raw:Kaminow2021`.
+UMI resolution approaches may define a "reference" as a genomic locus {cite:p}`raw:Smith2017`, transcript {cite:p}`raw:Srivastava2019,raw:He2022` or gene {cite:p}`raw:Zheng2017,raw:Kaminow2021`.
 
 In the UMI graph framework, a UMI resolution approach can be divided into three major steps:
 **defining nodes**, **defining adjacency relationships**, and **resolving components**.
 Each of these steps has different options that can be modularly composed by different approaches.
 Additionally, these steps may sometimes be preceded (and/or followed) by filtering steps designed to discard or heuristically assign (by modifying the set of reference mappings reported) reads and UMIs exhibiting certain types of mapping ambiguity.
 
-(raw-proc:umi-graph-node-def)=
+(raw-proc-umi-graph-node-def)=
 
 #### Defining nodes
 
@@ -566,9 +622,9 @@ As described above, a node $v_i \in V$ is an equivalence class of reads.
 Therefore, $V$ can be defined based on the full or filtered set of mapped reads and their associated _uncorrected_ UMIs.
 All reads that satisfy the equivalence relation $\sim_r$ based on their reference set and UMI tag are associated with the same vertex $v \in V$.
 An EC is a multi-gene EC if its UMI is a multi-gene UMI.
-Some approaches will avoid the creation of such ECs by filtering or heuristically assigning reads prior to node creation, while other approaches will retain and process these ambiguous vertices and attempt and resolve their gene origin via parsimony, probabilistic assignment, or based on a related rule or model {cite}`raw:Srivastava2019,raw:Kaminow2021,raw:He2022`.
+Some approaches will avoid the creation of such ECs by filtering or heuristically assigning reads prior to node creation, while other approaches will retain and process these ambiguous vertices and attempt and resolve their gene origin via parsimony, probabilistic assignment, or based on a related rule or model {cite:p}`raw:Srivastava2019,raw:Kaminow2021,raw:He2022`.
 
-(raw-proc:umi-graph-edge-def)=
+(raw-proc-umi-graph-edge-def)=
 
 #### Defining the adjacency relationship
 
@@ -581,34 +637,34 @@ Here we define the following functions on the node $v_i \in V$:
 - $m(v_i)$ is the reference set encoded in the mapping information, for $v_i$.
 - $D(v_i, v_j)$ is the distance between $u(v_i)$ and $u(v_j)$, where $v_j \in V$.
 
-Given these function definitions, any two nodes $v_i, v_j \in V$ will be incident with a bi-directed edge if and only if $m(v_i) \cap m(v_j) \ne \emptyset$ and $D(v_i,v_j) \le \theta$, where $\theta$ is a distance threshold and is often set as $\theta=1$ {cite}`raw:Smith2017,raw:Kaminow2021,raw:Srivastava2019`.
-Additionally, the bi-directed edge might be replaced by a directed edge incident from $v_i$ to $v_j$ if $c(v_i) \ge 2c(v_j) -1$ or vice versa {cite}`raw:Smith2017,raw:Srivastava2019`.
+Given these function definitions, any two nodes $v_i, v_j \in V$ will be incident with a bi-directed edge if and only if $m(v_i) \cap m(v_j) \ne \emptyset$ and $D(v_i,v_j) \le \theta$, where $\theta$ is a distance threshold and is often set as $\theta=1$ {cite:p}`raw:Smith2017,raw:Kaminow2021,raw:Srivastava2019`.
+Additionally, the bi-directed edge might be replaced by a directed edge incident from $v_i$ to $v_j$ if $c(v_i) \ge 2c(v_j) -1$ or vice versa {cite:p}`raw:Smith2017,raw:Srivastava2019`.
 Though these edge definitions are among the most common, others are possible, so long as they are completely defined by the $u$, $c$, $m$, and $D$ functions. With $V$ and $E$ in hand, the UMI graph $G = (V,E)$ is now defined.
 
-(raw-proc:umi-graph-resolution-def)=
+(raw-proc-umi-graph-resolution-def)=
 
 #### Defining the graph resolution approach
 
 Given the defined UMI graph, many different resolution approaches may be applied.
-A resolution method may be as simple as finding the set of connected components, clustering the graph, greedily collapsing nodes or contracting edges {cite}`raw:Smith2017`, or searching for a cover of the graph by structures following certain rules (e.g., monochromatic arboresences {cite}`raw:Srivastava2019`) to reduce the graph.
+A resolution method may be as simple as finding the set of connected components, clustering the graph, greedily collapsing nodes or contracting edges {cite:p}`raw:Smith2017`, or searching for a cover of the graph by structures following certain rules (e.g., monochromatic arboresences {cite:p}`raw:Srivastava2019`) to reduce the graph.
 As a result, each node in the reduced UMI graph, or each element in the cover in the case that the graph is not modified dynamically, represents a pre-PCR molecule.
 The collapsed nodes or covering sets are regarded as the PCR duplicates of that molecule.
 
 Different rules for defining the adjacency relationship and different approaches for graph resolution itself can seek to preserve different properties and can define a wide variety of distinct overall UMI resolution approaches.
 For approaches that probabilistically resolve ambiguity caused by multimapping, the resolved UMI graph may contain multi-gene equivalence classes (ECs), with their gene origins determined in the next step.
 
-Other UMI resolution approaches exist, for example, the reference-free model {cite}`raw:umic` and the method of moments {cite}`raw:Melsted2021`, but they may not be easily represented in this framework and are not discussed in further detail here.
+Other UMI resolution approaches exist, for example, the reference-free model {cite:p}`raw:umic` and the method of moments {cite:p}`raw:Melsted2021`, but they may not be easily represented in this framework and are not discussed in further detail here.
 
 ```
 
-(raw-proc:umi-graph-quantification)=
+(raw-proc-umi-graph-quantification)=
 
 #### Quantification
 
 The last step in UMI resolution is quantifying the abundance of each gene using the resolved UMI graph.
 For approaches that discard multi-gene ECs, the molecule count vector for the genes in the current cell being processed (or count vector for short) is generated by counting the number of ECs labeled with each gene.
 On the other hand, approaches that process, rather than discard, multi-gene ECs usually resolve the ambiguity by applying some statistical inference procedure.
-For example, {cite:t}`raw:Srivastava2019` introduce an expectation-maximization (EM) approach for probabilistically assigning multi-gene UMIs, and related EM algorithms have also been introduced as optional steps in subsequent tools {cite}`raw:Melsted2021,raw:Kaminow2021,raw:He2022`.
+For example, {cite:t}`raw:Srivastava2019` introduce an expectation-maximization (EM) approach for probabilistically assigning multi-gene UMIs, and related EM algorithms have also been introduced as optional steps in subsequent tools {cite:p}`raw:Melsted2021,raw:Kaminow2021,raw:He2022`.
 In this model, the collapsed-EC-to-gene assignments are latent variables, and the deduplicated molecule count of genes are the main parameters.
 Intuitively, evidence from gene-unique ECs will be used to help probabilistically apportion the multi-gene ECs.
 The EM algorithm seeks the parameters that together have the (locally) highest likelihood of generating the observed ECs.
@@ -616,7 +672,7 @@ The EM algorithm seeks the parameters that together have the (locally) highest l
 Usually, the UMI resolution and quantification process described above will be performed separately for each cell, represented by a corrected CB, to create a complete count matrix for all genes in all cells.
 However, the relative paucity of per-cell information in high-throughput single-cell samples limits the evidence available when performing UMI resolution, which in turn limits the potential efficacy of model-based solutions like the statistical inference procedure described above.
 
-(raw-proc:count-qc)=
+(raw-proc-count-qc)=
 
 ## Count matrix quality control
 
@@ -624,21 +680,24 @@ Once a count matrix has been generated, it is important to perform a quality con
 There are several distinct assessments that generally fall under the rubric of quality control.
 Basic global metrics are often recorded and reported to help assess the overall quality of the sequencing measurement itself.
 These metrics consist of quantities such as the total fraction of mapped reads, the distribution of distinct UMIs observed per cell, the distribution of UMI deduplication rates, the distribution of detected genes per cell, etc.
-These and similar metrics are often recorded by the quantification tools themselves {cite}`raw:Zheng2017,raw:Kaminow2021,raw:Melsted2021,raw:He2022` since they arise naturally and can be computed during the process of read mapping, cell barcode correction, and UMI resolution.
+These and similar metrics are often recorded by the quantification tools themselves {cite:p}`raw:Zheng2017,raw:Kaminow2021,raw:Melsted2021,raw:He2022` since they arise naturally and can be computed during the process of read mapping, cell barcode correction, and UMI resolution.
 Likewise, there exist several tools to help organize and visualize these basic metrics, such as the [Loupe browser](https://support.10xgenomics.com/single-cell-gene-expression/software/visualization/latest/what-is-loupe-cell-browser), [alevinQC](https://github.com/csoneson/alevinQC), or a [kb_python report](https://github.com/pachterlab/kb_python), depending upon the quantification pipeline being used.
 Beyond these basic global metrics, at this stage of analysis, QC metrics are designed primarily to help determine which cells (CBs) have been sequenced "successfully", and which exhibit artifacts that warrant filtering or correction.
 
 In the following toggle section, we discuss an example alevinQC report taken from the `alevinQC` [manual webpage](https://github.com/csoneson/alevinQC).
 
-```{toggle}
+```{dropdown}
 
 Once `alevin` or `alevin-fry` quantifies the single-cell data, the quality of the data can be assessed through the R package [`alevinQC`](https://github.com/csoneson/alevinQC).
 The alevinQC report can be generated in PDF format or as R/Shiny applications, which summarizes various components of the single-cell library, such as reads, CBs, and UMIs.
 
 **1. Metadata and summary tables**
 
-:::{figure-md} raw-proc-fig-alevinqc-summary
-<img src="../_static/images/raw_data_processing/alevinQC_summary.png" alt="AlevinQC Summary" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/alevinQC_summary.png
+:name: raw-proc-fig-alevinqc-summary
+:alt: AlevinQC Summary
+:class: bg-primary mb-1
+:width: 800px
 
 An example of the summary section of an alevinQC report.
 :::
@@ -649,14 +708,17 @@ The top right summary table provides the summary statistics for various componen
 
 **2. Knee plot, initial whitelist determination**
 
-:::{figure-md} raw-proc-fig-alevinqc-plots
-<img src="../_static/images/raw_data_processing/alevinQC_plots.png" alt="AlevinQC Plots" class="bg-primary mb-1" width="800px">
+:::{figure} ../_static/images/raw_data_processing/alevinQC_plots.png
+:name: raw-proc-fig-alevinqc-plots
+:alt: AlevinQC Plots
+:class: bg-primary mb-1
+:width: 800px
 
 The figure shows the plots in the alevinQC report of an example single-cell dataset, of which the cells are filtered using the "knee" finding method.
 Each dot represents a corrected cell barcode with its corrected profile.
 :::
 
-The first (top left) view in {numref}`raw-proc-fig-alevinqc-plots` shows the distribution of cell barcode frequency in decreasing order.
+The first (top left) view in the [AlevinQC plots figure](#raw-proc-fig-alevinqc-plots) shows the distribution of cell barcode frequency in decreasing order.
 In all plots shown above, each point represents a corrected cell barcode, with its x-coordinate corresponding to its cell barcode frequency rank.
 In the top left plot, the y-coordinate corresponds to the observed frequency of the corrected barcode.
 Generally, this plot shows a "knee"-like pattern, which can be used to identify the initial list of high-quality barcodes.
@@ -669,18 +731,18 @@ One should be skeptical of the data quality if the frequency is consistently low
 **3. Barcode collapsing**
 
 After identification of the barcodes that will be processed, either through an internal threshold (e.g., from the "knee"-based method) or through external whitelisting, `alevin` (or `alevin-fry`) performs cell barcode sequence correction.
-The barcode collapsing plot, the upper middle plot in the {numref}`raw-proc-fig-alevinqc-plots`, shows the number of reads assigned to a cell barcode after sequence correction of the cell barcodes versus prior to correction.
+The barcode collapsing plot, the upper middle plot in the [AlevinQC plots figure](#raw-proc-fig-alevinqc-plots), shows the number of reads assigned to a cell barcode after sequence correction of the cell barcodes versus prior to correction.
 Generally, we would see that all points fall close to the line representing $x = y$, which means that the reassignments in CB correction usually do not drastically change the profile of the cell barcodes.
 
 **4. Knee Plot, number of genes per cell**
 
-The upper right plot in {numref}`raw-proc-fig-alevinqc-plots` shows the distribution of the number of observed genes of all processed cell barcodes.
+The upper right plot in the [AlevinQC plots figure](#raw-proc-fig-alevinqc-plots) shows the distribution of the number of observed genes of all processed cell barcodes.
 Generally, a mean of $2,000$ genes per cell is considered modest but reasonable for the downstream analyses.
 One should double-check the quality of the data if all cells have a low number of observed genes.
 
 **5. Quantification summary**
 
-Finally, a series of quantification summary plots, the bottom plots in {numref}`raw-proc-fig-alevinqc-plots`, compare the cell barcode frequency, the total number of UMIs after deduplication and the total number of non-zero genes using scatter plots.
+Finally, a series of quantification summary plots, the bottom plots in the [AlevinQC plots figure](#raw-proc-fig-alevinqc-plots), compare the cell barcode frequency, the total number of UMIs after deduplication and the total number of non-zero genes using scatter plots.
 In general, in each plot, the plotted data should demonstrate a positive correlation, and, if high-quality filtering (e.g., knee filtering) has been performed, the high-quality cell barcodes should be well separated from the rest.
 Moreover, one should expect all three plots to convey similar trends.
 If using an external permit list, all the dots in the plots will be colored red, as all these cell barcodes are processed and reported in the gene count matrix.
@@ -692,29 +754,29 @@ If all of these metrics are consistently low across cells or if these plots conv
 ### Empty droplet detection
 
 One of the first QC steps is determining which cell barcodes correspond to "high-confidence" sequenced cells.
-It is common in droplet-based protocols {cite}`raw:Macosko2015` that certain barcodes are associated with ambient {term}`RNA` instead of the RNA of a captured cell.
+It is common in droplet-based protocols {cite:p}`raw:Macosko2015` that certain barcodes are associated with ambient {term}`RNA` instead of the RNA of a captured cell.
 This happens when droplets fail to capture a cell.
 These empty droplets still tend to produce sequenced reads, although the characteristics of these reads look markedly different from those associated with barcodes corresponding to properly captured cells.
 Many approaches exist to assess whether a barcode likely corresponds to an empty droplet or not.
 One simple method is to examine the cumulative frequency plot of the barcodes, in which barcodes are sorted in descending order of the number of distinct UMIs with which they are associated.
-This plot often contains a "knee" that can be identified as a likely point of discrimination between properly captured cells and empty droplets {cite}`raw:Smith2017,raw:He2022`.
+This plot often contains a "knee" that can be identified as a likely point of discrimination between properly captured cells and empty droplets {cite:p}`raw:Smith2017,raw:He2022`.
 While this "knee" method is intuitive and can often estimate a reasonable threshold, it has several drawbacks.
 For example, not all cumulative histograms display an obvious knee, and it is notoriously difficult to design algorithms that can robustly and automatically detect such knees.
 Finally, the total UMI count associated with a barcode may not, alone, be the best signal to determine if the barcode was associated with an empty or damaged cell.
 
-This led to the development of several tools specifically designed to detect empty or damaged droplets, or cells generally deemed to be of "low quality" {cite}`raw:Lun2019,raw:Heiser2021,raw:Hippen2021,raw:Muskovic2021,raw:Alvarez2020,raw:Young2020`.
+This led to the development of several tools specifically designed to detect empty or damaged droplets, or cells generally deemed to be of "low quality" {cite:p}`raw:Lun2019,raw:Heiser2021,raw:Hippen2021,raw:Muskovic2021,raw:Alvarez2020,raw:Young2020`.
 These tools incorporate a variety of different measures of cell quality, including the frequencies of distinct UMIs, the number of detected genes, and the fraction of mitochondrial RNA, and typically work by applying a statistical model to these features to classify high-quality cells from putative empty droplets or damaged cells.
 This means that cells can typically be scored, and a final filtering can be selected based on an estimated posterior probability that cells are not empty or compromised.
-While these models generally work well for single-cell {term}`RNA`-seq data, one may have to apply several additional filters or heuristics to obtain robust filtering in single-nucleus {term}`RNA`-seq data {cite}`raw:Kaminow2021,raw:He2022`, like those exposed in the [`emptyDropsCellRanger`](https://github.com/MarioniLab/DropletUtils/blob/master/R/emptyDropsCellRanger.R) function of `DropletUtils` {cite}`raw:Lun2019`.
+While these models generally work well for single-cell {term}`RNA`-seq data, one may have to apply several additional filters or heuristics to obtain robust filtering in single-nucleus {term}`RNA`-seq data {cite:p}`raw:Kaminow2021,raw:He2022`, like those exposed in the [`emptyDropsCellRanger`](https://github.com/MarioniLab/DropletUtils/blob/master/R/emptyDropsCellRanger.R) function of `DropletUtils` {cite:p}`raw:Lun2019`.
 
 ### Doublet detection
 
 In addition to determining which cell barcodes correspond to empty droplets or damaged cells, one may also wish to identify those cell barcodes that correspond to doublets or multiplets.
 When a given droplet captures two (doublets) or more (multiplets) cells, this can result in a skewed distribution for these cell barcodes in terms of quantities like the number of reads and UMIs they represent, as well as gene expression profiles they display.
-Many tools have also been developed to predict the doublet status of cell barcodes {cite}`raw:DePasquale2019,raw:McGinnis2019,raw:Wolock2019,raw:Bais2019,raw:Bernstein2020`.
+Many tools have also been developed to predict the doublet status of cell barcodes {cite:p}`raw:DePasquale2019,raw:McGinnis2019,raw:Wolock2019,raw:Bais2019,raw:Bernstein2020`.
 Once detected, cells determined to likely be doublets and multiplets can be removed or otherwise adjusted for in the subsequent analysis.
 
-(raw-proc:output-representation)=
+(raw-proc-output-representation)=
 
 ## Count data representation
 
@@ -726,22 +788,22 @@ Additionally, multiple priming sites, especially in unspliced molecules, can vio
 
 ## Brief discussion
 
-To close this chapter, we convey some observations and suggestions that have arisen from recent benchmarking and review studies surrounding some of the common preprocessing tools described above {cite}`raw:You_2021,raw:Bruning_2022`.
+To close this chapter, we convey some observations and suggestions that have arisen from recent benchmarking and review studies surrounding some of the common preprocessing tools described above {cite:p}`raw:You_2021,raw:Bruning_2022`.
 It is, of course, important to note that the development of methods and tools for single-cell and single-nucleus RNA-seq raw data processing, as well as the continual evaluation of such methods, is an ongoing community effort.
 It is therefore often useful and reasonable, when performing your own analyses, to experiment with several different tools.
 
 At the coarsest level, the most common tools can process data robustly and accurately.
-It has been suggested that with many common downstream analyses like clustering, and the methods used to perform them, the choice of preprocessing tool typically makes less difference than other steps in the analysis process {cite}`raw:You_2021`.
-Nonetheless, it has also been observed that applying lightweight mapping restricted to the spliced transcriptome can increase the probability of spurious mapping and gene expression {cite}`raw:Bruning_2022`.
+It has been suggested that with many common downstream analyses like clustering, and the methods used to perform them, the choice of preprocessing tool typically makes less difference than other steps in the analysis process {cite:p}`raw:You_2021`.
+Nonetheless, it has also been observed that applying lightweight mapping restricted to the spliced transcriptome can increase the probability of spurious mapping and gene expression {cite:p}`raw:Bruning_2022`.
 
 Ultimately, the choice of a specific tool largely depends on the task at hand, and the constraints on available computational resources.
 If performing a standard single-cell analysis, lightweight mapping-based methods are a good choice since they are faster (often considerably so) and more memory frugal than existing alignment-based tools.
 If performing single-nucleus RNA-seq analysis, `alevin-fry` is an attractive option in particular, as it remains memory frugal and its index remains relatively small even as the transcriptome reference is expanded to include unspliced reference sequence.
 On the other hand, alignment-based methods are recommended when recovering reads that map outside the (extended) transcriptome is important or when genomic mapping sites are required for downstream analyses.
-This is particularly relevant for tasks such as differential transcript usage analysis using tools like `sierra` {cite}`raw:sierra`.
+This is particularly relevant for tasks such as differential transcript usage analysis using tools like `sierra` {cite:p}`raw:sierra`.
 Among the alignment-based pipelines, according to {cite:t}`raw:Bruning_2022`, `STARsolo` should be favored over `Cell Ranger` because the former is much faster than the latter, and requires less memory, while it is also capable of producing almost identical results.
 
-(raw-proc:example-workflow)=
+(raw-proc-example-workflow)=
 
 ## A real-world example
 
@@ -752,13 +814,13 @@ Usually, a reference includes the genome sequences and the corresponding gene an
 In this example, we will use _chromosome 5_ of the human genome and its related gene annotations as the reference, which is a subset of the Human reference, [GRCh38 (GENCODE v32/Ensembl 98) reference](https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A) from the 10x Genomics reference build.
 Correspondingly, we extract the subset of reads that map to the generated reference from a [human brain tumor dataset](https://www.10xgenomics.com/resources/datasets/200-sorted-cells-from-human-glioblastoma-multiforme-3-lt-v-3-1-3-1-low-6-0-0) from 10x Genomics.
 
-[`Alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/) {cite}`raw:He2022` is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool.
+[`Alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/) {cite:p}`raw:He2022` is a fast, accurate, and memory-frugal single-cell and single-nucleus data processing tool.
 [Simpleaf](https://github.com/COMBINE-lab/simpleaf) is a program, written in [rust](https://www.rust-lang.org/), that exposes a unified and simplified interface for processing some of the most common protocols and data types using the `alevin-fry` pipeline.
 A nextflow-based [workflow](https://github.com/COMBINE-lab/quantaf) tool also exists to process extensive collections of single-cell data.
 Here we will first show how to process single-cell raw data using two `simpleaf` commands. Then, we describe the complete set of `salmon alevin` and `alevin-fry` commands to which these `simpleaf` commands correspond, to outline where the steps described in this section occur and to convey the possible different processing options.
 These commands will be run from the command line, and [`conda`](https://docs.conda.io/en/latest/) will be used for installing all of the software required for running this example.
 
-(raw-proc:example-prep)=
+(raw-proc-example-prep)=
 
 ### Preparation
 
@@ -810,7 +872,7 @@ wget -qO- https://github.com/f0t1h/3M-february-2018/raw/master/3M-february-2018.
 
 With the reference files (the genome FASTA file and the gene annotation GTF file) and read records (the FASTQ files) ready, we can now apply the raw data processing pipeline discussed above to generate the gene count matrix.
 
-(raw-proc:example-simpleaf)=
+(raw-proc-example-simpleaf)=
 
 ### Simplified raw data processing pipeline
 
@@ -909,7 +971,7 @@ adata_sa = pyroe.load_fry(quant_dir)
 ```
 
 The default behavior loads the `X` layer of the `Anndata` object as the sum of the spliced and ambiguous counts for each gene.
-However, recent work {cite}`raw:Pool2022` and [updated practices](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/release-notes) suggest that the inclusion of intronic counts, even in single-cell RNA-seq data, may increase sensitivity and benefit downstream analyses.
+However, recent work {cite:p}`raw:Pool2022` and [updated practices](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/release-notes) suggest that the inclusion of intronic counts, even in single-cell RNA-seq data, may increase sensitivity and benefit downstream analyses.
 While the best way to make use of this information is the subject of ongoing research, since `alevin-fry` automatically quantifies spliced, unspliced, and ambiguous reads in each sample, the count matrix containing the total counts for each gene can be simply obtained as follows:
 
 ```python
@@ -919,7 +981,7 @@ quant_dir = 'simpleaf_quant/af_quant'
 adata_usa = pyroe.load_fry(quant_dir, output_format={'X' : ['U','S','A']})
 ```
 
-(raw-proc:example-map)=
+(raw-proc-example-map)=
 
 ### The complete alevin-fry pipeline
 
@@ -927,7 +989,7 @@ adata_usa = pyroe.load_fry(quant_dir, output_format={'X' : ['U','S','A']})
 Next, we will show how to generate the identical quantification result by explicitly calling the `pyroe`, `salmon`, and `alevin-fry` commands.
 On top of the pedagogical value, knowing the exact command of each step will be helpful if only a part of the pipeline needs to be rerun or if some parameters not currently exposed by `simpleaf` need to be specified.
 
-Please note that the commands in the {ref}`raw-proc:example-prep` section should be executed in advance.
+Please note that the commands in the [Preparation](#raw-proc-example-prep) section should be executed in advance.
 All the tools called in the following commands, `pyroe`, `salmon`, and `alevin-fry`, have already been installed when installing `simpleaf`.
 
 #### Building the index
@@ -962,7 +1024,7 @@ salmon index \
 
 The _splici_ index can be found in the `salmon_index` directory.
 
-(raw-proc:example-quant)=
+(raw-proc-example-quant)=
 
 #### Mapping and quantification
 
@@ -1026,14 +1088,14 @@ After running these commands, the resulting quantification information can be fo
 Other relevant information concerning the mapping, CB correction, and UMI resolution steps can be found in the `salmon_alevin`, `alevin_fry_gpl`, and `alevin_fry_quant` folders, respectively.
 
 In the example given here, we demonstrate using `simpleaf` and `alevin-fry` to process a 10x Chromium 3' v3 dataset.
-`Alevin-fry` and `simpleaf` provide many other options for processing different single-cell protocols, including but not limited to Dropseq {cite}`raw:Macosko2015`, sci-RNA-seq3 {cite}`raw:Cao2019` and other 10x Chromium platforms.
+`Alevin-fry` and `simpleaf` provide many other options for processing different single-cell protocols, including but not limited to Dropseq {cite:p}`raw:Macosko2015`, sci-RNA-seq3 {cite:p}`raw:Cao2019` and other 10x Chromium platforms.
 A more comprehensive list and description of available options for different stages of processing can be found in the [`alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/) and [`simpleaf`](https://github.com/COMBINE-lab/simpleaf) documentation.
 `alevin-fry` also provides a [nextflow](https://www.nextflow.io/docs/latest/)-based workflow, called [quantaf](https://github.com/COMBINE-lab/quantaf), for conveniently processing many samples from a simply-defined sample sheet.
 
-Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including [`zUMIs`](https://github.com/sdparekh/zUMIs/wiki) {cite}`raw:zumis`, [`alevin`](https://salmon.readthedocs.io/en/latest/alevin.html) {cite}`raw:Srivastava2019`, [`kallisto|bustools`](https://www.kallistobus.tools/) {cite}`raw:Melsted2021`, [`STARsolo`](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) {cite}`raw:Kaminow2021` and [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger).
+Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including [`zUMIs`](https://github.com/sdparekh/zUMIs/wiki) {cite:p}`raw:zumis`, [`alevin`](https://salmon.readthedocs.io/en/latest/alevin.html) {cite:p}`raw:Srivastava2019`, [`kallisto|bustools`](https://www.kallistobus.tools/) {cite:p}`raw:Melsted2021`, [`STARsolo`](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) {cite:p}`raw:Kaminow2021` and [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger).
 The [`scrnaseq`](https://nf-co.re/scrnaseq) pipeline from [`nf-core`](https://nf-co.re/) also provides a nextflow-based pipeline for processing single-cell RNA-seq data generated using a range of different chemistries and integrates several of the tools described in this section.
 
-(raw-proc:useful-links)=
+(raw-proc-useful-links)=
 
 ## Useful links
 
@@ -1048,15 +1110,6 @@ The [`scrnaseq`](https://nf-co.re/scrnaseq) pipeline from [`nf-core`](https://nf
 Tutorials for processing scRNA-seq raw data from [the galaxy project](https://galaxyproject.org/) can be found at [here](https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing-tenx/tutorial.html) and [here](https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/scrna-preprocessing/tutorial.html).
 
 Tutorials for explaining and evaluating FastQC report are available from [MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx), [the HBC training program](https://hbctraining.github.io/Intro-to-rnaseq-hpc-salmon/lessons/qc_fastqc_assessment.html), [Galaxy Training](https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html) and [the QC Fail website](https://sequencing.qcfail.com/software/fastqc/).
-
-(raw-proc:references)=
-
-## References
-
-```{bibliography}
-:filter: docname in docnames
-:labelprefix: raw
-```
 
 ## Contributors
 

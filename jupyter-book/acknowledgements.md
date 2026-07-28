@@ -1,3 +1,7 @@
+---
+numbering: false
+---
+
 # Acknowledgements
 
 It is often times easy to forget that many of the biggest advancements in science are only possible because of some seemingly unimportant experiments in the past.
