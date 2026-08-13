@@ -1,14 +1,12 @@
 /*
- * Styling the MyST book theme does not provide out of the box, kept close to the look
- * of the previous Sphinx build of this book.
+ * Styling the MyST book theme does not provide out of the box, kept close to the look of the previous Sphinx build of this book.
  */
 
 /*
  * In-text citations.
  *
- * The theme renders a parenthetical citation group as a bare span, so "{cite:p}`a,b`"
- * comes out undelimited as "Doe et al., 2020; Roe et al., 2021". Put the brackets of the
- * old build back around it.
+ * The theme renders a parenthetical citation group as a bare span, so "{cite:p}`a,b`" comes out undelimited as "Doe et al., 2020; Roe et al., 2021".
+ * Put the brackets of the old build back around it.
  */
 .cite-group.parenthetical::before {
   content: "[";
@@ -18,33 +16,48 @@
   content: "]";
 }
 
-/* Inline code: set it off from the surrounding prose the way the old build did. */
-:not(pre) > code {
+/*
+ * Inline code: set it off from the surrounding prose the way the old build did.
+ *
+ * Both rules are wrapped in ":where()" so that they carry no specificity and the exceptions below win on order alone.
+ * Without it the dark variant, a class and therefore more specific than the exceptions, puts the box back on everything that opts out.
+ */
+:where(:not(pre) > code) {
   padding: 0.15em 0.35em;
   border: 1px solid rgb(231 229 228);
   border-radius: 0.25rem;
   background-color: rgb(250 250 249);
 }
 
-.dark :not(pre) > code {
+:where(.dark :not(pre) > code) {
   border-color: rgb(68 64 60);
   background-color: rgb(41 37 36);
 }
 
-/* Headings, links and admonition titles keep their own styling. */
+/*
+ * Headings, links and admonition titles keep their own styling, and a cell output is code already, so its grey backdrop below is all it gets.
+ *
+ * Cards are excluded from the link rule: a key takeaway card is a link around a paragraph rather than a link inside one, so its inline code reads as prose and is boxed like the rest of the text.
+ * The theme colours code inside a link like the link, which for a card is the card text, so the prose colour is put back as well.
+ */
 h1 code,
 h2 code,
 h3 code,
 h4 code,
 h5 code,
 h6 code,
-a code,
+a:not(.myst-card) code,
 summary code,
 .myst-admonition-header code,
-.myst-dropdown-header code {
+.myst-dropdown-header code,
+[data-name="outputs-container"] code {
   padding: 0;
   border: 0;
   background-color: transparent;
+}
+
+.myst-card code {
+  color: var(--tw-prose-code);
 }
 
 /* Code cells and their text output: grey backdrop, as in the old build. */
@@ -65,5 +78,26 @@ summary code,
 
 .dark [data-name="safe-output-stream"],
 .dark [data-name="safe-output-text"] {
+  background-color: rgb(41 37 36);
+}
+
+/*
+ * An output that ships HTML, such as a MuData object description or a rich console log, is not one of the output types the theme renders itself, so it goes through the notebook renderer and misses the backdrop above.
+ * Only a bare preformatted block is picked up, which is what those descriptions and logs are; tables, widgets and figures keep the layout they bring along.
+ * The backdrop goes on the block itself because that is what carries the white background of the notebook renderer; on its container the white would simply sit on top of the grey.
+ * The margin and the padding around it are dropped so that it lines up with the other outputs.
+ */
+[data-name="outputs-container"] .jp-RenderedHTML:has(> pre) {
+  padding-right: 0;
+}
+
+[data-name="outputs-container"] .jp-RenderedHTML > pre {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: rgb(245 245 244);
+}
+
+.dark [data-name="outputs-container"] .jp-RenderedHTML > pre {
   background-color: rgb(41 37 36);
 }
