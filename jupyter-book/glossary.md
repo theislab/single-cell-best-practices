@@ -135,6 +135,9 @@ Flowcell
 Gene expression matrix
 : A cell (barcode) by gene (scverse ecosystem) or gene by cell (barcode) matrix storing counts in the cell values.
 
+Gene set enrichment analysis (GSEA) 
+: Computational methods that determine whether groups of genes sharing a common biological function or pathway show statistically significant changes between conditions.
+
 Hamming distance
 : A measure of the number of positions at which two strings of equal length differ.
   It is commonly used in error detection and correction, including barcode correction in sequencing data.
