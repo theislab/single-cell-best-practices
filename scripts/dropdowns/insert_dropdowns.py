@@ -27,7 +27,6 @@ black_list_files_lamin = [
     "paired_integration",
     "advanced_integration",
     "perturbation_modeling",
-    "gsea_pathway",
     "imputation",
     "deconvolution",
     "neighborhood",

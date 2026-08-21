@@ -36,6 +36,7 @@ numbering: false
 - Update the differential gene expression chapter ([#430](https://github.com/theislab/single-cell-best-practices/pull/430)) <sub>`@LuisHeinzlmeier`</sub>
 - Add memory management details for `RAPIDS-singlecell` ([#432](https://github.com/theislab/single-cell-best-practices/pull/432)) <sub>`@Zethson`</sub>
 - Migrate to Jupyter Book v2 ([#436](https://github.com/theislab/single-cell-best-practices/pull/436)) <sub>`@seohyonkim`</sub>
+- Update the gene set enrichment analysis chapter ([#459](https://github.com/theislab/single-cell-best-practices/pull/459)) <sub>`@LuisHeinzlmeier`</sub>
 
 ### Fixed
 
