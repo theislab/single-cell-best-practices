@@ -1,7 +1,11 @@
 from collections.abc import Iterable, Mapping
+from contextlib import contextmanager
 
 from IPython.display import HTML, display
 from jinja2 import Template
+
+# Shared width so flip cards and MCQs line up visually, e.g. when grouped in quiz_tabs().
+_CARD_WIDTH_PX = 340
 
 _MULTIPLE_CHOICE_TEMPLATE = Template(
     """
@@ -11,7 +15,7 @@ _MULTIPLE_CHOICE_TEMPLATE = Template(
             box-shadow: none !important;
             outline: none !important;
             padding: 12px;
-            width: 340px;
+            width: {{ card_width }}px;
             text-align: left;
             font-size: 15px;
             margin-bottom: 8px;
@@ -26,7 +30,9 @@ _MULTIPLE_CHOICE_TEMPLATE = Template(
         {% for option in options %}
         <label style="color: {{ text_color }};">
             <input type="radio" name="q{{ question_id }}" value="{{ option }}"
-            onclick="checkAnswer(this, '{{ correct_answer }}', '{{ explanations.get(option, '') }}', 'feedback-{{ question_id }}')"> {{ option }}
+            data-correct="{{ correct_answer }}" data-explanation="{{ explanations.get(option, '') }}"
+            data-feedback-id="feedback-{{ question_id }}"
+            onclick="checkAnswer(this)"> {{ option }}
         </label><br>
         {% endfor %}
         <p id="feedback-{{ question_id }}" style="font-weight: bold;"></p>
@@ -36,13 +42,13 @@ _MULTIPLE_CHOICE_TEMPLATE = Template(
     </div>
 
     <script>
-    function checkAnswer(element, correct, explanation, feedbackId) {
-        let feedback = document.getElementById(feedbackId);
-        if (element.value === correct) {
+    function checkAnswer(element) {
+        let feedback = document.getElementById(element.dataset.feedbackId);
+        if (element.value === element.dataset.correct) {
             feedback.innerHTML = "✅ Correct!";
             feedback.style.color = "#a8d480";
         } else {
-            feedback.innerHTML = "❌ Incorrect! " + explanation;
+            feedback.innerHTML = "❌ Incorrect! " + element.dataset.explanation;
             feedback.style.color = "#EE4B2B";
         }
     }
@@ -56,7 +62,7 @@ _FLIP_CARD_TEMPLATE = Template(
     <style>
         .flip-card-{{ question_id }} {
             background-color: transparent;
-            width: 290px;
+            width: {{ card_width }}px;
             height: 170px;
             perspective: 1000px;
             display: inline-block;
@@ -122,6 +128,115 @@ _FLIP_CARD_TEMPLATE = Template(
     autoescape=True,
 )
 
+_TAB_GROUP_TEMPLATE = Template(
+    """
+    <style>
+        .quiz-tabs-{{ group_id }} {
+            width: {{ card_width }}px;
+            margin-bottom: 8px;
+        }
+        .quiz-tab-strip-{{ group_id }} {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .quiz-tab-btn-{{ group_id }} {
+            flex: 1;
+            border: none;
+            border-radius: 6px 6px 0 0;
+            padding: 6px 0;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #cfd8e3;
+            color: #234;
+        }
+        .quiz-tab-btn-{{ group_id }}.active {
+            background-color: #3965a3;
+            color: white;
+        }
+        .quiz-tab-pane-{{ group_id }} {
+            display: none;
+        }
+        .quiz-tab-pane-{{ group_id }}.active {
+            display: block;
+        }
+    </style>
+    <div class="quiz-tabs-{{ group_id }}">
+        <div class="quiz-tab-strip-{{ group_id }}">
+            {% for label in labels %}
+            <button class="quiz-tab-btn-{{ group_id }}{% if loop.first %} active{% endif %}"
+                data-group-id="{{ group_id }}" data-index="{{ loop.index0 }}"
+                onclick="quizTabSwitch(this)">{{ label }}</button>
+            {% endfor %}
+        </div>
+        {% for fragment in fragments %}
+        <div class="quiz-tab-pane-{{ group_id }}{% if loop.first %} active{% endif %}">
+            {{ fragment | safe }}
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+    function quizTabSwitch(button) {
+        const groupId = button.dataset.groupId;
+        const i = Number(button.dataset.index);
+        const btns = document.getElementsByClassName("quiz-tab-btn-" + groupId);
+        const panes = document.getElementsByClassName("quiz-tab-pane-" + groupId);
+        for (let j = 0; j < btns.length; j++) {
+            btns[j].classList.toggle("active", j === i);
+            panes[j].classList.toggle("active", j === i);
+        }
+    }
+    </script>
+    """,
+    autoescape=True,
+)
+
+_active_groups: list[list[tuple[str, str]]] = []
+
+
+def _emit(question_id: str, html_code: str) -> None:
+    """Display a rendered quiz widget, or collect it if inside quiz_tabs()."""
+    if _active_groups:
+        _active_groups[-1].append((question_id, html_code))
+    else:
+        display(HTML(html_code))
+
+
+@contextmanager
+def quiz_tabs():
+    """Group multiple flip_card/multiple_choice_question calls into one tabbed widget.
+
+    Examples:
+        >>> with quiz_tabs():
+        ...     flip_card("q1", "What is 2+2?", "4")
+        ...     multiple_choice_question(
+        ...         "q2",
+        ...         "What is the capital of France?",
+        ...         ["Paris", "London"],
+        ...         "Paris",
+        ...         {"London": "London is the capital of the UK"},
+        ...     )
+    """
+    group: list[tuple[str, str]] = []
+    _active_groups.append(group)
+    try:
+        yield
+    finally:
+        _active_groups.pop()
+        if group:
+            # Derived from the questions' own ids rather than a counter, since
+            # quiz cells may be re-executed in separate isolated kernels and a
+            # counter would collide across groups on the same page.
+            group_id = "grp-" + "-".join(question_id for question_id, _ in group)
+            html_code = _TAB_GROUP_TEMPLATE.render(
+                group_id=group_id,
+                labels=[f"Q{i}" for i in range(1, len(group) + 1)],
+                fragments=[html for _, html in group],
+                card_width=_CARD_WIDTH_PX,
+            )
+            display(HTML(html_code))
+
 
 def multiple_choice_question(
     question_id: str,
@@ -167,8 +282,9 @@ def multiple_choice_question(
         bg_color=bg_color,
         text_color=text_color,
         answer_color=answer_color,
+        card_width=_CARD_WIDTH_PX,
     )
-    display(HTML(html_code))
+    _emit(question_id, html_code)
 
 
 def flip_card(
@@ -207,5 +323,6 @@ def flip_card(
         text_color=text_color,
         front_font_size=front_font_size,
         back_font_size=back_font_size,
+        card_width=_CARD_WIDTH_PX,
     )
-    display(HTML(html_code))
+    _emit(question_id, html_code)

@@ -293,24 +293,25 @@ You can create multiple-choice questions or simple flip cards.
 %run ../../scripts/quiz.py
 ```
 
-2. Then, add as many questions as you like. For example:
+2. Then, add as many questions as you like, wrapped in `with quiz_tabs():` so they render as one tabbed widget instead of stacking one below the other. For example:
 
 ```python
-flip_card("q1", "What is 2 + 2?", "4")
-multiple_choice_question(
-   "q1",
-   "What is the capital of France?",
-   ["Paris", "London", "Berlin", "Madrid"],
-   "Paris",
-   {
-         "London": "London is the capital of the UK",
-         "Berlin": "Berlin is the capital of Germany",
-         "Madrid": "Madrid is the capital of Spain",
-   }
-)
+with quiz_tabs():
+    flip_card("q1", "What is 2 + 2?", "4")
+    multiple_choice_question(
+       "q2",
+       "What is the capital of France?",
+       ["Paris", "London", "Berlin", "Madrid"],
+       "Paris",
+       {
+             "London": "London is the capital of the UK",
+             "Berlin": "Berlin is the capital of Germany",
+             "Madrid": "Madrid is the capital of Spain",
+       }
+    )
 ```
 
-3. Run the code cell and it will build the multiple-choice questions or flip cards as output.
+3. Run the code cell and it will build a tabbed widget with your multiple-choice questions and flip cards as output.
 
 > [!WARNING]
 > Add the cell tag `remove-input` to the code cell to remove the code, when building the book.
