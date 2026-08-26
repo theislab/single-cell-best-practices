@@ -50,7 +50,7 @@ However, these files are derived from earlier steps, such as base calling and ba
 For example, base-calling errors and index hopping {cite:p}`raw:farouni2020model` can introduce inaccuracies in FASTQ data.
 These issues can be mitigated with computational approaches {cite:p}`raw:farouni2020model` or experimental enhancements like [dual indexing](https://www.10xgenomics.com/blog/sequence-with-confidence-understand-index-hopping-and-how-to-resolve-it).
 
-Here, we do not delve into the upstream processes, but consider the FASTQ files, derived from, e.g., BCL files via [appropriate tools](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/bcl2fastq-direct), as the raw input under consideration.
+Here, we do not delve into the upstream processes, but consider the FASTQ files, derived from, e.g., BCL files via [appropriate tools](https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/inputs/cr-direct-demultiplexing-bcl-convert), as the raw input under consideration.
 ```
 
 ## Raw data quality control
