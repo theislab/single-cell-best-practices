@@ -20,17 +20,10 @@ Keying this off the path rather than off a remembered click on a card matters: a
 when the card is clicked is cleared by whatever the reader clicks next, which is easy to
 do between following a takeaway and pressing back.
 
-The listener deliberately goes into the JavaScript bundle rather than into a `<script>`
-tag in the HTML. Remix hydrates `<head>` and `<body>`, so an injected tag is DOM React
-did not render, which breaks hydration on every page — a worse bug than the one being
-worked around.
-
 Remove this once the theme handles POP navigation.
 """
 
-import re
-import sys
-from pathlib import Path
+from client_bundle import patch_client_entry
 
 MARKER = "myst-reload-on-back-workaround"
 
@@ -72,60 +65,6 @@ SNIPPET = f"""
 }})();
 """
 
-ENTRY_GLOB = "entry.client-*.js"
-
-
-def main() -> int:
-    root = Path(sys.argv[1] if len(sys.argv) > 1 else "jupyter-book/_build/html")
-    if not root.is_dir():
-        print(f"{root} does not exist, nothing to patch", file=sys.stderr)
-        return 1
-
-    entries = sorted((root / "build").glob(ENTRY_GLOB))
-    if not entries:
-        print(
-            f"no {ENTRY_GLOB} under {root / 'build'}; the theme's bundle layout changed, "
-            "so the back button workaround was not applied",
-            file=sys.stderr,
-        )
-        return 1
-
-    # Every page imports the same client entry, so patching it covers the whole site.
-    # Guard against the entry being referenced but not actually loaded by checking that
-    # at least one page imports it.
-    pages = [p for p in root.rglob("*.html") if "/build/" not in p.as_posix()]
-    referenced = {
-        m.group(1)
-        for page in pages
-        for m in re.finditer(
-            r'/build/(entry\.client-[^"\')]+\.js)', page.read_text(encoding="utf-8")
-        )
-    }
-    if not referenced:
-        print("no page imports a client entry bundle", file=sys.stderr)
-        return 1
-
-    patched = 0
-    for entry in entries:
-        if entry.name not in referenced:
-            continue
-        text = entry.read_text(encoding="utf-8")
-        if MARKER in text:
-            continue
-        entry.write_text(text + SNIPPET, encoding="utf-8")
-        patched += 1
-
-    missing = referenced - {e.name for e in entries}
-    if missing:
-        print(f"pages import missing entry bundles: {sorted(missing)}", file=sys.stderr)
-        return 1
-
-    print(
-        f"back button workaround applied to {patched} client entry bundle(s), "
-        f"covering {len(pages)} pages"
-    )
-    return 0
-
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(patch_client_entry(MARKER, SNIPPET, "back button workaround"))
