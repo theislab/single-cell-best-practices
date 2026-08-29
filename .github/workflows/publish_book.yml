@@ -9,27 +9,17 @@ jobs:
   build-book:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.13
+          python-version: "3.14"
 
       - name: Setup environment
-        run: pip install --upgrade "jupyter-book==2.1.6" jupytext==1.19.3 beautifulsoup4==4.15.0
-
-      - name: Cache jupyter-cache folder
-        uses: actions/cache@v4
-        env:
-          cache-name: jupyter-cache
-        with:
-          path: jupyter-book/_build/.jupyter_cache
-          key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
-          restore-keys: |
-            v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
-            v1-${{ github.ref }}
-            v1-refs/heads/master
+        run: |
+          pip install uv
+          uv pip install --system "jupyter-book==2.1.6" jupytext beautifulsoup4
 
       - name: Insert dropdowns to all chapters
         run: make dropdown

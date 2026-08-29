@@ -8,9 +8,6 @@ on:
 
 concurrency: preview-${{ github.ref }}
 
-env:
-  PREVIEW_BRANCH: gh-pages
-
 jobs:
   build-book:
     runs-on: ubuntu-latest
@@ -18,7 +15,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
 
@@ -26,18 +23,6 @@ jobs:
         run: |
           pip install uv
           uv pip install --system "jupyter-book==2.1.6" jupytext beautifulsoup4
-
-      - name: Cache jupyter-cache folder
-        uses: actions/cache@v4
-        env:
-          cache-name: jupyter-cache
-        with:
-          path: jupyter-book/_build/.jupyter_cache
-          key: v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
-          restore-keys: |
-            v1-${{ github.ref }}-${{ hashFiles('notebook_scripts/**/*.py') }}
-            v1-${{ github.ref }}
-            v1-refs/heads/master
 
       - name: Insert dropdowns to all chapters
         run: make dropdown
@@ -61,6 +46,20 @@ jobs:
           python -m pip install --upgrade uv
           uv pip install --system jupyter-book==2.1.6 jupytext beautifulsoup4
 
+      - name: Install LaTeX and the image converters myst shells out to
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            imagemagick \
+            librsvg2-bin \
+            latexmk \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-plain-generic \
+            texlive-xetex \
+            texlive-extra-utils
+
       - name: Build PDF
         run: make pdf
 
@@ -68,3 +67,4 @@ jobs:
         with:
           name: PDF_HTML
           path: jupyter-book/exports/book.pdf
+          if-no-files-found: error
