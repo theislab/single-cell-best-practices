@@ -84,23 +84,19 @@ def writable(path: Path) -> bool:
     return not path.exists() or MARKER in path.read_text(encoding="utf-8")
 
 
-def main() -> int:
+def main() -> None:
     root = Path(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_ROOT)
     toc_path = Path(sys.argv[2] if len(sys.argv) > 2 else DEFAULT_TOC)
     if not root.is_dir():
-        print(f"{root} does not exist, nothing to redirect to", file=sys.stderr)
-        return 1
+        raise SystemExit(f"{root} does not exist, nothing to redirect to")
     if not toc_path.is_file():
-        print(
-            f"{toc_path} does not exist, cannot read the table of contents",
-            file=sys.stderr,
+        raise SystemExit(
+            f"{toc_path} does not exist, cannot read the table of contents"
         )
-        return 1
 
     sources = toc_files(toc_path)
     if not sources:
-        print(f"no 'file:' entries in {toc_path}", file=sys.stderr)
-        return 1
+        raise SystemExit(f"no 'file:' entries in {toc_path}")
 
     # The first entry is the front page, which v2 serves at the site root rather than under its own slug.
     routes = ["/"] + [route_for(source) for source in sources[1:]]
@@ -111,37 +107,27 @@ def main() -> int:
         if not (root / route.lstrip("/") / "index.html").is_file()
     ]
     if missing:
-        print(
-            f"the build has no page at {', '.join(missing)}; the v2 route layout changed, "
-            f"so the redirects were not written",
-            file=sys.stderr,
+        raise SystemExit(
+            f"the build has no page at {', '.join(missing)}; the v2 route layout changed, so the redirects were not written"
         )
-        return 1
 
-    written = 0
-    for source, route in zip(sources, routes, strict=False):
+    for source, route in zip(sources, routes, strict=True):
         legacy = root / SOURCE_SUFFIX.sub(".html", source)
         # Rebuilding into a directory that already holds a previous run has to stay harmless, while a path the book itself now occupies has to stay untouched.
         if not writable(legacy):
-            print(f"{legacy} is a real page, not overwriting it", file=sys.stderr)
-            return 1
+            raise SystemExit(f"{legacy} is a real page, not overwriting it")
         target = route if route == "/" else route + "/"
         legacy.parent.mkdir(parents=True, exist_ok=True)
         legacy.write_text(STUB.format(target=target, marker=MARKER), encoding="utf-8")
-        written += 1
 
     not_found = root / "404.html"
     if not writable(not_found):
-        print(f"{not_found} is a real page, not overwriting it", file=sys.stderr)
-        return 1
+        raise SystemExit(f"{not_found} is a real page, not overwriting it")
     known = "[" + ", ".join(f'"{route}"' for route in routes if route != "/") + "]"
     not_found.write_text(
         NOT_FOUND.format(routes=known, marker=MARKER), encoding="utf-8"
     )
 
-    print(f"{written} legacy URL(s) redirected, and a 404 page catches the rest")
-    return 0
-
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
