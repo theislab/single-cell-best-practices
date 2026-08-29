@@ -67,4 +67,4 @@ SNIPPET = f"""
 
 
 if __name__ == "__main__":
-    raise SystemExit(patch_client_entry(MARKER, SNIPPET, "back button workaround"))
+    patch_client_entry(MARKER, SNIPPET, "back button workaround")
