@@ -8,6 +8,7 @@ build:
 	cd $(JUPYTER_BOOK_DIR) && jupyter book build --html
 	python3 scripts/postbuild/reload_on_back.py $(JUPYTER_BOOK_DIR)/_build/html
 	python3 scripts/postbuild/expand_toc.py $(JUPYTER_BOOK_DIR)/_build/html
+	python3 scripts/postbuild/legacy_redirects.py $(JUPYTER_BOOK_DIR)/_build/html
 
 dropdown:
 	python3 scripts/dropdowns/insert_dropdowns.py
