@@ -11,20 +11,16 @@ ENTRY_GLOB = "entry.client-*.js"
 DEFAULT_ROOT = Path("jupyter-book/_build/html")
 
 
-def patch_client_entry(marker: str, snippet: str, description: str) -> int:
+def patch_client_entry(marker: str, snippet: str, description: str) -> None:
     root = Path(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_ROOT)
     if not root.is_dir():
-        print(f"{root} does not exist, nothing to patch", file=sys.stderr)
-        return 1
+        raise SystemExit(f"{root} does not exist, nothing to patch")
 
     entries = sorted((root / "build").glob(ENTRY_GLOB))
     if not entries:
-        print(
-            f"no {ENTRY_GLOB} under {root / 'build'}; the theme's bundle layout changed, "
-            f"so {description} was not applied",
-            file=sys.stderr,
+        raise SystemExit(
+            f"no {ENTRY_GLOB} under {root / 'build'}; the theme's bundle layout changed, so {description} was not applied"
         )
-        return 1
 
     # Every page imports the same client entry, so patch the ones a page actually loads.
     pages = [p for p in root.rglob("*.html") if "/build/" not in p.as_posix()]
@@ -36,10 +32,8 @@ def patch_client_entry(marker: str, snippet: str, description: str) -> int:
         )
     }
     if not referenced:
-        print("no page imports a client entry bundle", file=sys.stderr)
-        return 1
+        raise SystemExit("no page imports a client entry bundle")
 
-    patched = 0
     for entry in entries:
         if entry.name not in referenced:
             continue
@@ -47,15 +41,7 @@ def patch_client_entry(marker: str, snippet: str, description: str) -> int:
         if marker in text:
             continue
         entry.write_text(text + snippet, encoding="utf-8")
-        patched += 1
 
     missing = referenced - {e.name for e in entries}
     if missing:
-        print(f"pages import missing entry bundles: {sorted(missing)}", file=sys.stderr)
-        return 1
-
-    print(
-        f"{description} applied to {patched} client entry bundle(s), "
-        f"covering {len(pages)} pages"
-    )
-    return 0
+        raise SystemExit(f"pages import missing entry bundles: {sorted(missing)}")
