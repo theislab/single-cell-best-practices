@@ -858,7 +858,8 @@ mkdir af_xmpl_run && cd af_xmpl_run
 ## The pipe operator (|) passes the output of the wget command to the tar command.
 ## The dash operator (-) after `tar xzf` captures the output of the first command.
 ## - example dataset
-wget -qO- https://umd.box.com/shared/static/lx2xownlrhz3us8496tyu9c4dgade814.gz | tar xzf - --strip-components=1 -C .
+## The URL is quoted because it contains & characters, which the shell would otherwise read as command separators.
+wget -qO- "https://app.box.com/index.php?rm=box_download_shared_file&shared_name=lx2xownlrhz3us8496tyu9c4dgade814&file_id=f_964122990740" | tar xzf - --strip-components=1 -C .
 ## The fetched folder containing the fastq files is called toy_read_fastq.
 fastq_dir="toy_read_fastq"
 ## The fetched folder containing the human ref files is called toy_human_ref.
