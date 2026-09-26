@@ -21,10 +21,11 @@ MARKER = "myst-expand-toc"
 
 # The minified form of `useState(isCurrentSection)` for the open state of a section, together with the effect that restores that state after every navigation.
 # Both go: a section starts open and stays as the reader leaves it.
+# Older themes restore the state from the variable they started it with, newer ones recompute it and also rerun the effect when the path changes.
 SECTION_STATE = re.compile(
-    r"\.default\.useState\((?P<current>\w+)\);"
-    r'\(0,[\w$.]+\.useEffect\)\(\(\)=>\{(?P<navigation>\w+)\.state==="idle"'
-    r"&&\w+\((?P=current)\)\},\[(?P=navigation)\.state\]\);"
+    r"\.default\.useState\((?P<current>[\w$]+)\);"
+    r'\(0,[\w$.]+\.useEffect\)\(\(\)=>\{(?P<navigation>[\w$]+)\.state==="idle"'
+    r"&&[\w$]+\([^{};]*\)\},\[(?P=navigation)\.state(?:,[\w$]+)*\]\);"
 )
 OPEN = f".default.useState(true);/* {MARKER} */"
 
