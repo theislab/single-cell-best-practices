@@ -9,14 +9,11 @@ black_list_files_yml = [
     "prior_art",
     "scrna_seq",
     "introduction",
-    "muon_to_seurat",
     "raw_data_processing",
 ]
 black_list_files_lamin = [
     # IPYNB files
     "introduction",
-    "gene_regulatory_networks_atac",
-    "muon_to_seurat",
     "cell_cell_communication",
     "gene_regulatory_networks",
     "clonotype",
