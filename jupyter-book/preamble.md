@@ -8,6 +8,10 @@ numbering: false
 
 # Single-cell best practices
 
+:::{tip} 中文版
+A community-maintained [Simplified Chinese translation](https://uniqjade.github.io/single-cell-best-practices-zh/) of this book is available.
+:::
+
 ## Introduction
 
 The human body is a complex machine that heavily relies on the basic units of life - cells.
