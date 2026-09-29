@@ -81,6 +81,10 @@ Complementary DNA (cDNA)
 : DNA synthesized from an RNA template by the enzyme reverse transcriptase.
   cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
 
+Differential abundance analysis
+: The statistical comparison of cell type or cell state proportions between conditions.
+  Unlike differential gene expression, it tests for changes in the composition of a sample rather than in the expression of individual genes.
+
 Differential gene expression (DGE)
 : The [biochemical process](https://www.sciencedirect.com/topics/biochemistry-genetics-and-molecular-biology/differential-gene-expression#:~:text=Within%20this%20context%2C%20differential%20gene%20expression%20is%20defined%20as%20the%20biochemical%20process%20that%20determinates%20which%20genes%20respond%20to%20which%20signals%20or%20triggers%20depending%20on%20the%20conditions.) that determines which genes respond to specific signals or conditions.
   When performing a differential gene expression analysis, the goal is to identify which genes show a significant change in expression between those conditions.
@@ -141,6 +145,10 @@ Gene set enrichment analysis (GSEA) 
 Hamming distance
 : A measure of the number of positions at which two strings of equal length differ.
   It is commonly used in error detection and correction, including barcode correction in sequencing data.
+
+High-dimensional data
+: Data in which each observation is described by many variables, such as single cells measured across thousands of genes.
+  Such data is typically reduced to fewer dimensions before analysis, since distances between observations become less informative as the number of dimensions grows.
 
 Imputation
 : The replacement of missing values with usually artificial values.
@@ -207,6 +215,9 @@ Pseudobulk
 :  A method where single cells are grouped by cell type within each sample, and their counts are aggregated.
   Pseudobulks can then be used for tools originally designed for bulk sequencing.
 
+Python Package Index (PyPI)
+: The official repository of third-party Python packages, from which packages are installed with `pip`.
+
 RNA
 : Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
   Unlike DNA, RNA can be highly dynamic, acting as a messenger ({term}`mRNA <Messenger RNA (mRNA)>`) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
@@ -231,6 +242,10 @@ Scverse
 Sequencing
 : Sequencing is the process of deciphering the order of DNA nucleotides.
 
+Sequencing depth
+: The number of reads or molecules sequenced per sample or, in single-cell data, per cell.
+  In scRNA-seq, it is usually measured as the total number of counts per cell, also called count depth or library size.
+
 Signal-to-noise ratio
 : A measure of the clarity of a signal relative to background noise.
   In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
@@ -253,9 +268,17 @@ Splice Junctions
 : Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
   These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA <Messenger RNA (mRNA)>`.
 
+t-distributed stochastic neighbor embedding (t-SNE)
+: A non-linear method that embeds high-dimensional data into two or three dimensions for visualization by keeping the nearest neighbors of every observation close together.
+  Cluster sizes and distances between well-separated clusters in a t-SNE plot carry little meaning.
+
 Trajectory inference
 : Also known as pseudotemporal ordering.
   The computational recovery of dynamic processes by ordering cells by similarity or other means.
+
+Uniform manifold approximation and projection (UMAP)
+: A non-linear method that embeds high-dimensional data into a low-dimensional space, typically two dimensions for visualization, by optimizing a layout of its nearest-neighbor graph.
+  Like t-SNE, it preserves which observations are neighbors rather than the distances between observations that are far apart.
 
 Unique Molecular Identifier (UMI)
 : A special type of molecular barcode that uniquely tags each molecule in a sample library.
