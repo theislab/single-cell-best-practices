@@ -73,9 +73,17 @@ CpG
   CpG sites are often found in clusters called CpG islands near gene promoters.
   Unmethylated CpG sites are associated with gene activation, while methylated CpG sites can lead to gene inhibition.
 
+Clonotype
+: A group of cells that descend from the same ancestral lymphocyte and therefore share their immune receptor.
+  T cell clonotypes are usually defined by identical CDR3 sequences, whereas B cell clonotypes also group receptors that differ by {term}`somatic hypermutation <Somatic hypermutation (SHM)>`.
+
 Cluster
 : A group of a population or data points that share similarities.
   In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation <Cell type annotation>`).
+
+Complementarity-determining region (CDR)
+: One of the three hypervariable loops of an immune receptor chain that contact the antigen.
+  CDR1 and CDR2 are encoded by the V gene, whereas CDR3 spans the junctions of the V, (D) and J gene segments and is therefore the most diverse.
 
 Complementary DNA (cDNA)
 : DNA synthesized from an RNA template by the enzyme reverse transcriptase.
@@ -155,6 +163,9 @@ Imputation
 
 Indrop
 : A Droplet based protocol for scRNA-seq.
+
+Junction
+: The CDR3 of an immune receptor chain together with the conserved cysteine and phenylalanine or tryptophan that flank it.
 
 Library
 : Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
@@ -252,6 +263,9 @@ Signal-to-noise ratio
   A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
   Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
 
+Somatic hypermutation (SHM)
+: Point mutations introduced into the variable region of the BCR of activated B cells, which together with selection increase the affinity of antibodies over the course of an immune response.
+
 Sparse data
 : Refers to data that mostly measures zeros and rarely other values ([sparse data vs. missing data](https://medium.com/biased-algorithms/sparse-data-vs-missing-data-38bc2c7af7c6)).
   This is common in gene expression data, where many genes are not expressed in most cells.
@@ -287,4 +301,8 @@ Unique Molecular Identifier (UMI)
 Untranslated Region (UTR)
 : A segment of an {term}`mRNA <Messenger RNA (mRNA)>` transcript that is transcribed but not translated into protein.
   UTRs are located at both ends of the coding sequence.
+
+V(D)J recombination
+: The somatic rearrangement of variable (V), diversity (D) and joining (J) gene segments that assembles the immune receptor genes of each developing lymphocyte.
+  Nucleotides inserted and deleted at the joined ends further increase the diversity of the receptors.
 ```
