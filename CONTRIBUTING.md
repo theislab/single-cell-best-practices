@@ -250,6 +250,7 @@ Then, ensure that all used datasets are loaded directly from the instance.
 If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
 You can use the existing notebooks in the [`scripts`](/scripts/) folder as a guide.
 Finally, use `ln.track()` and `ln.finish()` while re-running the notebook to have the latest version in the instance as well.
+Start the notebook with `ln.connect("theislab/sc-best-practices")` and `ln.track("<uid>")` in a cell tagged `hide-output`, using the uid that `ln.track()` prints on the first run.
 The [template](/jupyter-book/template/template.ipynb) shows the basic steps for tracking a notebook!
 
 > [!Note]
@@ -261,7 +262,7 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 >    - Install the lamindb Python package in your environment:
 >
 >    ```bash
->    pip install lamindb[bionty,jupyter,zarr]
+>    pip install lamindb
 >    ```
 >
 > 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
