@@ -15,7 +15,6 @@ black_list_files_lamin = [
     # IPYNB files
     "introduction",
     "cell_cell_communication",
-    "gene_regulatory_networks",
     "bulk_deconvolution",
     "paired_integration",
     "advanced_integration",
