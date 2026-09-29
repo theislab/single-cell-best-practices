@@ -19,7 +19,6 @@ black_list_files_lamin = [
     "bulk_deconvolution",
     "paired_integration",
     "advanced_integration",
-    "perturbation_modeling",
     "imputation",
     "deconvolution",
     "neighborhood",
