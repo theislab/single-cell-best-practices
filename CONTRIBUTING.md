@@ -19,7 +19,7 @@ Whatever proposal you have: Just open an issue and let's get in touch!
 
 ## Book architecture
 
-The `jupyter_book` folder contains the source content and configuration for the book.
+The `jupyter-book` folder contains the source content and configuration for the book.
 In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
 Each section contains the relevant notebooks along with their [associated files](#essential-files-for-every-chapter).
 
@@ -38,8 +38,7 @@ Here’s an example of the folder layout:
 │   ├── gsea_pathway_keytakeaways.txt
 │   └── ...
 ├── ...
-├── _toc.yml
-├── _config.yml
+├── myst.yml
 ├── acknowledgements.md
 ├── CHANGELOG.md
 ├── glossary.md
@@ -58,15 +57,9 @@ Here’s an example of the folder layout:
 
 ## Building the book
 
-The book requires the following dependencies to be installed:
+The book is built with Jupyter Book 2, jupytext and beautifulsoup4, which the [`environment.yml`](/environment.yml) in the root of the repository installs.
 
-1. jupyter-book
-2. jupytext
-3. beautifulsoup4
-
-[An example Conda environment can be found here](https://github.com/theislab/single-cell-best-practices/blob/development/environment.yml).
-
-Run the following command with the environment file to create the environment to build the book.
+Run the following command to create the environment to build the book.
 
 ```bash
 conda env create -f environment.yml
@@ -75,10 +68,11 @@ conda env create -f environment.yml
 Building the book is then as simple as:
 
 ```bash
-make
+make build
 ```
 
 which will build the complete book.
+`make serve` starts a local preview that rebuilds on changes.
 This does not execute any notebooks and any updated chapters must be updated in a separate step.
 
 To clean the build directory run:
@@ -93,6 +87,8 @@ All chapters are available as Jupyter Notebooks and end-to-end executable.
 The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
 Hence, we decided to provide minimal Conda environments per chapter.
 These can be found in the respective folders.
+Chapters of a section may share one environment named after the section folder, e.g. `chromatin_accessibility/chromatin_accessibility.yml`, which the environment dropdown then shows for all of them.
+Every environment file has to be added to `.github/workflows/build_environments.yml`, so that CI checks that it can be created.
 
 > [!NOTE]
 > Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
@@ -109,7 +105,7 @@ These can be found in the respective folders.
 
 Each chapter comes with a few essential files.
 The `.ipynb` notebook contains the main content and includes citations drawn from the accompanying `.bib` file.
-The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters).
+The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters), unless the chapter uses the environment of its section.
 Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown).
 
 ```bash
@@ -158,9 +154,8 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 
 ### Helpful links
 
-- [Jupyter Book documentation](https://jupyterbook.org/en/stable/intro.html)
+- [Jupyter Book documentation](https://jupyterbook.org)
 - [MyST Markdown documentation](https://mystmd.org)
-- [Sphinx documentation](https://www.sphinx-doc.org/en/master/)
 
 ### Rules
 
@@ -187,7 +182,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 ### Key takeaways, environment and lamin dropdown
 
 The environment and lamin dropdowns are inserted after the title of every chapter.
-If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
+If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/insert_dropdowns.py` (`black_list_files_yml` or `black_list_files_lamin`).
 A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
 This file has to contain the key takeaways in the following format:
 
@@ -230,7 +225,7 @@ Replace all `_` of the section or notebook name with `-`, and the card of the ke
 >
 > Admonitions and dropdowns (`{admonition}`, `{dropdown}`, `{seealso}`) can't be linked to at all right now, `:name:` included — it's a known upstream rendering bug, not a syntax mistake. Don't rely on linking to them until it's fixed upstream.
 
-Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
+Our CI workflow (`.github/workflows/build_book.yml`) will call `make dropdown` when building the book.
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
 
 > [!WARNING]
@@ -322,24 +317,25 @@ For detailed information, check out the method descriptions in `scripts/quiz.py`
 
 ### Pre commit
 
-Pre-commit is a tool that automatically checks your markdown and code for mistakes before you commit it.
+We use [prek](https://github.com/j178/prek), a fast reimplementation of pre-commit, to automatically check your markdown and code for mistakes before you commit it.
+It reads the same `.pre-commit-config.yaml` and runs in CI on every pull request.
 
-1. Please install `pre-commit`:
+1. Please install `prek`:
 
 ```bash
-pip install pre-commit
+pip install prek
 ```
 
 2. Next, activate it in the root of the repository:
 
 ```bash
-pre-commit install
+prek install
 ```
 
 3. Afterwards, you can always manually run it:
 
 ```bash
-pre-commit run -a
+prek run --all-files
 ```
 
 If you try to commit changes, they are automatically checked for errors and adjusted if possible.
