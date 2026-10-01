@@ -16,8 +16,6 @@ black_list_files_lamin = [
     "introduction",
     "cell_cell_communication",
     "bulk_deconvolution",
-    "paired_integration",
-    "advanced_integration",
     "imputation",
     "deconvolution",
     "neighborhood",
