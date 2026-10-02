@@ -14,7 +14,6 @@ black_list_files_yml = [
 black_list_files_lamin = [
     # IPYNB files
     "introduction",
-    "cell_cell_communication",
     "bulk_deconvolution",
     "imputation",
     "deconvolution",
