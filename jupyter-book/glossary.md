@@ -170,6 +170,10 @@ Junction
 Library
 : Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
 
+Ligand
+: A molecule that binds specifically to a receptor or other target protein, usually without being chemically changed. In cell signaling, ligand binding typically changes the receptor's conformation
+  and can trigger (agonist) or block (antagonist) a cellular response.
+
 Modalities
 : Different types of biological information measured at the single-cell level.
   These include gene expression, chromatin accessibility, surface proteins, immune receptor sequences, and spatial organization.
@@ -228,6 +232,10 @@ Pseudobulk
 
 Python Package Index (PyPI)
 : The official repository of third-party Python packages, from which packages are installed with `pip`.
+
+Receptor
+: A protein (or protein complex) that specifically recognizes and binds a ligand. Binding typically changes the receptor's conformation and triggers a cellular response, such as a signaling
+  cascade, the opening of an ion channel, or a change in gene expression.
 
 RNA
 : Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
