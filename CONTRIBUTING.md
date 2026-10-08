@@ -295,15 +295,15 @@ You can create multiple-choice questions or simple flip cards.
 with quiz_tabs():
     flip_card("q1", "What is 2 + 2?", "4")
     multiple_choice_question(
-       "q2",
-       "What is the capital of France?",
-       ["Paris", "London", "Berlin", "Madrid"],
-       "Paris",
-       {
-             "London": "London is the capital of the UK",
-             "Berlin": "Berlin is the capital of Germany",
-             "Madrid": "Madrid is the capital of Spain",
-       }
+        "q2",
+        "What is the capital of France?",
+        ["Paris", "London", "Berlin", "Madrid"],
+        "Paris",
+        {
+            "London": "London is the capital of the UK",
+            "Berlin": "Berlin is the capital of Germany",
+            "Madrid": "Madrid is the capital of Spain",
+        },
     )
 ```
 

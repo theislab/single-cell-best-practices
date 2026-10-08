@@ -967,7 +967,7 @@ A similar function, [loadFry](https://rdrr.io/github/mikelove/fishpond/man/loadF
 ```python
 import pyroe
 
-quant_dir = 'simpleaf_quant/af_quant'
+quant_dir = "simpleaf_quant/af_quant"
 adata_sa = pyroe.load_fry(quant_dir)
 ```
 
@@ -978,8 +978,8 @@ While the best way to make use of this information is the subject of ongoing res
 ```python
 import pyroe
 
-quant_dir = 'simpleaf_quant/af_quant'
-adata_usa = pyroe.load_fry(quant_dir, output_format={'X' : ['U','S','A']})
+quant_dir = "simpleaf_quant/af_quant"
+adata_usa = pyroe.load_fry(quant_dir, output_format={"X": ["U", "S", "A"]})
 ```
 
 (raw-proc-example-map)=

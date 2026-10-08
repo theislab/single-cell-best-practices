@@ -28,7 +28,10 @@ We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
 
    ```python
    import lamindb as ln
-   af = ln.Artifact.connect("theislab/sc-best-practices").get(key="key_of_dataset", is_latest=True)
+
+   af = ln.Artifact.connect("theislab/sc-best-practices").get(
+       key="key_of_dataset", is_latest=True
+   )
    obj = af.load()
    ```
 
