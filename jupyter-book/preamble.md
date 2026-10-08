@@ -2,7 +2,11 @@
 numbering: false
 ---
 
-![alt text](_static/images/title.png "Title")
+```{image} _static/images/title.png
+:alt: Single-cell best practices
+:width: 80%
+:align: center
+```
 
 <div style="page-break-after: always;"></div>
 
@@ -114,8 +118,7 @@ You can report issues and requests in our [issue tracker](https://github.com/the
 
 For inquiries, speaking engagements, or collaboration opportunities, please email:
 
-- Anna Schaar: anna.schaar@helmholtz-munich.de
-- Lukas Heumos: lukas.heumos@helmholtz-munich.de
+- Lukas Heumos: lukas.heumos@scverse.org
 
 ## License
 
