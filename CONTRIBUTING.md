@@ -17,6 +17,9 @@ Whatever proposal you have: Just open an issue and let's get in touch!
 
 [![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
+To contribute changes, fork the repository or create a branch and open a pull request against `main`.
+Every pull request runs CI and gets a Netlify deploy preview of the book, and nothing is published before it is merged.
+
 ## Book architecture
 
 The `jupyter-book` folder contains the source content and configuration for the book.
@@ -55,6 +58,9 @@ Here’s an example of the folder layout:
 │   │   └── ...
 ```
 
+A chapter only appears in the book once it is listed under `toc` in `jupyter-book/myst.yml`, and its `.bib` file has to be added to the `bibliography` list there.
+A page's URL follows its file path, not its position in the `toc`, so move chapters between sections by editing the `toc` instead of moving files, which would break existing links.
+
 ## Building the book
 
 The book is built with Jupyter Book 2, jupytext and beautifulsoup4, which the [`environment.yml`](/environment.yml) in the root of the repository installs.
@@ -89,6 +95,7 @@ Hence, we decided to provide minimal Conda environments per chapter.
 These can be found in the respective folders.
 Chapters of a section may share one environment named after the section folder, e.g. `chromatin_accessibility/chromatin_accessibility.yml`, which the environment dropdown then shows for all of them.
 Every environment file has to be added to `.github/workflows/build_environments.yml`, so that CI checks that it can be created.
+Use the latest Python release, pin the main packages, and only use pip packages that ship wheels for that Python version, since CI creates the environments on runners that cannot compile them.
 
 > [!NOTE]
 > Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
@@ -98,6 +105,9 @@ Every environment file has to be added to `.github/workflows/build_environments.
 > ```
 >
 > Now you can execute all cells in the notebook.
+
+CI never executes notebooks, so execute every changed chapter in its environment and commit the outputs.
+To execute a chapter without opening Jupyter, run `jupyter nbconvert --to notebook --execute --inplace CHAPTER-NAME.ipynb`, since `ln.track()` reads the notebook path from that command.
 
 ## Style guide for contributors
 
