@@ -55,6 +55,9 @@ Here’s an example of the folder layout:
 │   │   └── ...
 ```
 
+A chapter only appears in the book once it is listed under `toc` in `jupyter-book/myst.yml`, and its `.bib` file has to be added to the `bibliography` list there.
+A page's URL follows its file path, not its position in the `toc`, so move chapters between sections by editing the `toc` instead of moving files, which would break existing links.
+
 ## Building the book
 
 The book is built with Jupyter Book 2, jupytext and beautifulsoup4, which the [`environment.yml`](/environment.yml) in the root of the repository installs.
