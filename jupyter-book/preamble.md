@@ -54,6 +54,9 @@ Whether you're a beginner looking to grasp the basics or an experienced analyst 
 
 ## Structure of the book
 
+The introduction covers the data structures and frameworks that all modalities share.
+The following sections are organized by modality, and the sections on [RNA](introduction/scrna_seq.ipynb), [chromatin accessibility](chromatin_accessibility/introduction.ipynb) and [spatial omics](spatial/introduction.ipynb) open with how their data is generated.
+Two closing chapters cover [interoperability](introduction/interoperability.ipynb) between ecosystems and [GPU-accelerated analysis](introduction/rapids_singlecell.ipynb) of large datasets.
 Each chapter corresponds to a distinct phase of a typical single-cell data analysis project.
 While an analysis workflow should generally follow the order of the chapters, flexibility is encouraged depending on specific downstream analysis objectives.
 Each chapter is supplemented with extensive references, and readers are encouraged to consult these primary sources for a deeper understanding.
