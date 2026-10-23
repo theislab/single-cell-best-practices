@@ -2,11 +2,19 @@
 numbering: false
 ---
 
-![alt text](_static/images/title.png "Title")
+```{image} _static/images/title.png
+:alt: Single-cell best practices
+:width: 80%
+:align: center
+```
 
 <div style="page-break-after: always;"></div>
 
 # Single-cell best practices
+
+:::{tip} 中文版
+A community-maintained [Simplified Chinese translation](https://uniqjade.github.io/single-cell-best-practices-zh/) of this book is available.
+:::
 
 ## Introduction
 
@@ -46,6 +54,9 @@ Whether you're a beginner looking to grasp the basics or an experienced analyst 
 
 ## Structure of the book
 
+The introduction covers the data structures and frameworks that all modalities share.
+The following sections are organized by modality, and the sections on [RNA](introduction/scrna_seq.ipynb), [chromatin accessibility](chromatin_accessibility/introduction.ipynb) and [spatial omics](spatial/introduction.ipynb) open with how their data is generated.
+Two closing chapters cover [interoperability](introduction/interoperability.ipynb) between ecosystems and [GPU-accelerated analysis](introduction/rapids_singlecell.ipynb) of large datasets.
 Each chapter corresponds to a distinct phase of a typical single-cell data analysis project.
 While an analysis workflow should generally follow the order of the chapters, flexibility is encouraged depending on specific downstream analysis objectives.
 Each chapter is supplemented with extensive references, and readers are encouraged to consult these primary sources for a deeper understanding.
@@ -110,8 +121,7 @@ You can report issues and requests in our [issue tracker](https://github.com/the
 
 For inquiries, speaking engagements, or collaboration opportunities, please email:
 
-- Anna Schaar: anna.schaar@helmholtz-munich.de
-- Lukas Heumos: lukas.heumos@helmholtz-munich.de
+- Lukas Heumos: lukas.heumos@scverse.org
 
 ## License
 

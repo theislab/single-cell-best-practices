@@ -17,9 +17,12 @@ Whatever proposal you have: Just open an issue and let's get in touch!
 
 [![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
 
+To contribute changes, fork the repository or create a branch and open a pull request against `main`.
+Every pull request runs CI and gets a Netlify deploy preview of the book, and nothing is published before it is merged.
+
 ## Book architecture
 
-The `jupyter_book` folder contains the source content and configuration for the book.
+The `jupyter-book` folder contains the source content and configuration for the book.
 In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
 Each section contains the relevant notebooks along with their [associated files](#essential-files-for-every-chapter).
 
@@ -38,8 +41,7 @@ Here’s an example of the folder layout:
 │   ├── gsea_pathway_keytakeaways.txt
 │   └── ...
 ├── ...
-├── _toc.yml
-├── _config.yml
+├── myst.yml
 ├── acknowledgements.md
 ├── CHANGELOG.md
 ├── glossary.md
@@ -56,17 +58,14 @@ Here’s an example of the folder layout:
 │   │   └── ...
 ```
 
+A chapter only appears in the book once it is listed under `toc` in `jupyter-book/myst.yml`, and its `.bib` file has to be added to the `bibliography` list there.
+A page's URL follows its file path, not its position in the `toc`, so move chapters between sections by editing the `toc` instead of moving files, which would break existing links.
+
 ## Building the book
 
-The book requires the following dependencies to be installed:
+The book is built with Jupyter Book 2, jupytext and beautifulsoup4, which the [`environment.yml`](/environment.yml) in the root of the repository installs.
 
-1. jupyter-book
-2. jupytext
-3. beautifulsoup4
-
-[An example Conda environment can be found here](https://github.com/theislab/single-cell-best-practices/blob/development/environment.yml).
-
-Run the following command with the environment file to create the environment to build the book.
+Run the following command to create the environment to build the book.
 
 ```bash
 conda env create -f environment.yml
@@ -75,10 +74,11 @@ conda env create -f environment.yml
 Building the book is then as simple as:
 
 ```bash
-make
+make build
 ```
 
 which will build the complete book.
+`make serve` starts a local preview that rebuilds on changes.
 This does not execute any notebooks and any updated chapters must be updated in a separate step.
 
 To clean the build directory run:
@@ -93,6 +93,9 @@ All chapters are available as Jupyter Notebooks and end-to-end executable.
 The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
 Hence, we decided to provide minimal Conda environments per chapter.
 These can be found in the respective folders.
+Chapters of a section may share one environment named after the section folder, e.g. `chromatin_accessibility/chromatin_accessibility.yml`, which the environment dropdown then shows for all of them.
+Every environment file has to be added to `.github/workflows/build_environments.yml`, so that CI checks that it can be created.
+Use the latest Python release, pin the main packages, and only use pip packages that ship wheels for that Python version, since CI creates the environments on runners that cannot compile them.
 
 > [!NOTE]
 > Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
@@ -103,13 +106,16 @@ These can be found in the respective folders.
 >
 > Now you can execute all cells in the notebook.
 
+CI never executes notebooks, so execute every changed chapter in its environment and commit the outputs.
+To execute a chapter without opening Jupyter, run `jupyter nbconvert --to notebook --execute --inplace CHAPTER-NAME.ipynb`, since `ln.track()` reads the notebook path from that command.
+
 ## Style guide for contributors
 
 ### Essential files for every chapter
 
 Each chapter comes with a few essential files.
 The `.ipynb` notebook contains the main content and includes citations drawn from the accompanying `.bib` file.
-The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters).
+The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters), unless the chapter uses the environment of its section.
 Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown).
 
 ```bash
@@ -158,9 +164,8 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 
 ### Helpful links
 
-- [Jupyter Book documentation](https://jupyterbook.org/en/stable/intro.html)
+- [Jupyter Book documentation](https://jupyterbook.org)
 - [MyST Markdown documentation](https://mystmd.org)
-- [Sphinx documentation](https://www.sphinx-doc.org/en/master/)
 
 ### Rules
 
@@ -187,7 +192,7 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 ### Key takeaways, environment and lamin dropdown
 
 The environment and lamin dropdowns are inserted after the title of every chapter.
-If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/keytakeaways.py` (`black_list_files_yml` or `black_list_files_lamin`).
+If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/insert_dropdowns.py` (`black_list_files_yml` or `black_list_files_lamin`).
 A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
 This file has to contain the key takeaways in the following format:
 
@@ -230,7 +235,7 @@ Replace all `_` of the section or notebook name with `-`, and the card of the ke
 >
 > Admonitions and dropdowns (`{admonition}`, `{dropdown}`, `{seealso}`) can't be linked to at all right now, `:name:` included — it's a known upstream rendering bug, not a syntax mistake. Don't rely on linking to them until it's fixed upstream.
 
-Our CI workflow (`.github/worksflows/build_book.yml`) will call `make dropdown` when building the book.
+Our CI workflow (`.github/workflows/build_book.yml`) will call `make dropdown` when building the book.
 For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
 
 > [!WARNING]
@@ -250,6 +255,7 @@ Then, ensure that all used datasets are loaded directly from the instance.
 If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
 You can use the existing notebooks in the [`scripts`](/scripts/) folder as a guide.
 Finally, use `ln.track()` and `ln.finish()` while re-running the notebook to have the latest version in the instance as well.
+Start the notebook with `ln.connect("theislab/sc-best-practices")` and `ln.track("<uid>")` in a cell tagged `hide-output`, using the uid that `ln.track()` prints on the first run.
 The [template](/jupyter-book/template/template.ipynb) shows the basic steps for tracking a notebook!
 
 > [!Note]
@@ -261,7 +267,7 @@ The [template](/jupyter-book/template/template.ipynb) shows the basic steps for 
 >    - Install the lamindb Python package in your environment:
 >
 >    ```bash
->    pip install lamindb[bionty,jupyter,zarr]
+>    pip install lamindb
 >    ```
 >
 > 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
@@ -299,15 +305,15 @@ You can create multiple-choice questions or simple flip cards.
 with quiz_tabs():
     flip_card("q1", "What is 2 + 2?", "4")
     multiple_choice_question(
-       "q2",
-       "What is the capital of France?",
-       ["Paris", "London", "Berlin", "Madrid"],
-       "Paris",
-       {
-             "London": "London is the capital of the UK",
-             "Berlin": "Berlin is the capital of Germany",
-             "Madrid": "Madrid is the capital of Spain",
-       }
+        "q2",
+        "What is the capital of France?",
+        ["Paris", "London", "Berlin", "Madrid"],
+        "Paris",
+        {
+            "London": "London is the capital of the UK",
+            "Berlin": "Berlin is the capital of Germany",
+            "Madrid": "Madrid is the capital of Spain",
+        },
     )
 ```
 
@@ -321,24 +327,25 @@ For detailed information, check out the method descriptions in `scripts/quiz.py`
 
 ### Pre commit
 
-Pre-commit is a tool that automatically checks your markdown and code for mistakes before you commit it.
+We use [prek](https://github.com/j178/prek), a fast reimplementation of pre-commit, to automatically check your markdown and code for mistakes before you commit it.
+It reads the same `.pre-commit-config.yaml` and runs in CI on every pull request.
 
-1. Please install `pre-commit`:
+1. Please install `prek`:
 
 ```bash
-pip install pre-commit
+pip install prek
 ```
 
 2. Next, activate it in the root of the repository:
 
 ```bash
-pre-commit install
+prek install
 ```
 
 3. Afterwards, you can always manually run it:
 
 ```bash
-pre-commit run -a
+prek run --all-files
 ```
 
 If you try to commit changes, they are automatically checked for errors and adjusted if possible.

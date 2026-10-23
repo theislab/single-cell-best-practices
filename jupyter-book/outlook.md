@@ -4,36 +4,45 @@ numbering: false
 
 # Outlook
 
-The single-cell field is progressing at a rapid pace. This process is accompanied by a massive amount of newly developed tools, which do not allow for new discoveries, but also extend the pool of tools to select from.
+Single-cell analysis has moved from a niche technology to a routine part of biology and medicine.
+Datasets now span hundreds of millions of cells, models are pretrained on all of them, and software agents are starting to run analyses on their own.
+None of this makes careful analysis less important; it raises the cost of getting it wrong.
 
 ## Benchmarking
 
-Due to the vast amount of tools to choose from, we expect further and regular benchmarking to become even more important. Efforts such as [Open Problems in Single-Cell Analysis](https://openproblems.bio/), which aim to benchmark tools using well-defined metrics applied to standard datasets, will become essential.
-However, for benchmarking to be successful, the single-cell community has to agree on a set of metrics per task.
-We therefore expect discussions on what defines "good" or "bad" analysis steps to become increasingly important.
-As soon as new benchmarking results and tool recommendations become available, we will update our chapters.
+New tools appear faster than anyone can evaluate them by hand.
+Living benchmarks such as [Open Problems in Single-Cell Analysis](https://openproblems.bio/) {cite:p}`ol:Luecken2025` compare methods on shared datasets and metrics, and we will keep updating our recommendations as their results change.
+Benchmarks are only as good as their metrics, so agreeing on what defines a good result for each task remains an open problem.
 
-## Atlas building and reference mapping
+## Foundation models and virtual cells
 
-With the advent of more single-cell atlases, we expect a slow transition from less manual annotation to more automated annotation _via_ reference mapping.
-For this to become a reality, the single-cell community needs not only healthy reference atlases, but also reference atlases for various conditions such as diseases.
-We envision reference mapping to also allow for automated quality control through uncertainty estimation.
-Cells that have a hard time getting mapped onto high quality references are either of low quality or highly biologically relevant.
+Models pretrained on tens of millions of cells promise general cell representations that transfer to annotation, integration, and perturbation prediction.
+The long-term goal is a virtual cell that predicts how any cell responds to any perturbation {cite:p}`ol:Bunne2024`.
+So far, careful evaluations show that these models often do not beat simple baselines, both for zero-shot embeddings {cite:p}`ol:Kedzierska2025` and for perturbation effect prediction {cite:p}`ol:AhlmannEltze2025`.
+Until that changes, any foundation model should be compared against a simple baseline on the data at hand.
 
-## Modality prediction
+## Agentic analysis
 
-Single-cell analysis is slowly starting to move on from unimodal to multimodal perspectives to obtain complete views of cells.
-Though, it is not always possible to obtain all modalities. We therefore expect modality prediction and unpaired integration methods to become more important.
+Large language model agents can now plan an analysis, write the code, and run it {cite:p}`ol:Huang2025`.
+This lowers the barrier to single-cell analysis, but it does not remove the need to know what a good analysis looks like.
+An agent can pick an unsuitable normalization, leak information between training and test data, or over-interpret clusters just as confidently as a person can, only faster.
+We expect best practices like the ones in this book to become the reference that agents follow and that people use to check their output.
 
-## End-to-end pipelines
+## Scale
 
-The amount of single-cell data and analysis possibilities is growing on such a big scale that it is inevitable that as many processes as possible should be automated.
-With the advent of reference mapping to atlases to automate cell type annotation and automated quality control tools, the development of highly automated pipelines is becoming a real possibility.
-Especially, the reanalysis of "old", existing datasets could uncover previously missed biology.
-The first pipelines are starting to appear {cite:p}`ol:Khozoie2021`, and we expect more pipelines with support for modalities beyond {term}`RNA` to be developed.
+Perturbation atlases such as Tahoe-100M {cite:p}`ol:Zhang2025` profile more than 100 million cells in a single study.
+At this scale, CPU-based analysis becomes the bottleneck, and GPU-accelerated tools such as [rapids-singlecell](introduction/rapids_singlecell.ipynb) {cite:p}`ol:Dicks2026` are becoming the default.
+Jointly reanalyzing existing datasets at this scale could also uncover biology that individual studies missed.
 
-## Single-cell proteomics
+## Spatial and multimodal data
 
-Furthermore, the young and fast evolving field of single-cell proteomics {cite:p}`ol:Brunner2022` will bring an additional modality into the single-cell space with more integration challenges, but also great potential for new discoveries.
-Currently, single-cell proteomics suffers from a lack of high quality datasets, making it challenging to develop tools and pipelines for sound statistical analysis.
-As soon as high quality single-cell proteomics datasets are generated on a regular basis, we expect the single-cell community to develop new tools for the analysis.
+Spatial transcriptomics now measures thousands of genes at subcellular resolution, placing cell states back into their tissue context.
+Measuring every modality in every cell remains infeasible, so methods that predict missing modalities and integrate unpaired data will stay important.
+Single-cell proteomics {cite:p}`ol:Brunner2022` adds the layer closest to cellular function, and its analysis tools will mature as high-quality datasets become routine.
+
+## From cells to patients
+
+Single-cell studies increasingly profile cohorts of hundreds of donors, which turns cell-level findings into patient-level questions.
+Answering them requires linking single-cell data to clinical records such as diagnoses, laboratory values, and outcomes.
+Electronic health records (EHRs) come with their own pitfalls, including missing values, inconsistent coding, and confounding by treatment.
+Frameworks such as ehrapy {cite:p}`ol:Heumos2024` bring the AnnData-based analysis patterns of this book to EHR data, so that both data types can be analyzed in the same ecosystem.

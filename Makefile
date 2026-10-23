@@ -5,10 +5,8 @@ serve:
 	cd $(JUPYTER_BOOK_DIR) && jupyter book start
 
 build:
-	python3 scripts/prebuild/expand_toc.py $(JUPYTER_BOOK_DIR)
 	cd $(JUPYTER_BOOK_DIR) && jupyter book build --html
 	python3 scripts/postbuild/reload_on_back.py $(JUPYTER_BOOK_DIR)/_build/html
-	python3 scripts/postbuild/scroll_toc.py $(JUPYTER_BOOK_DIR)/_build/html
 	python3 scripts/postbuild/legacy_redirects.py $(JUPYTER_BOOK_DIR)/_build/html
 
 dropdown:

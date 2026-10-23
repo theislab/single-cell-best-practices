@@ -73,13 +73,25 @@ CpG
   CpG sites are often found in clusters called CpG islands near gene promoters.
   Unmethylated CpG sites are associated with gene activation, while methylated CpG sites can lead to gene inhibition.
 
+Clonotype
+: A group of cells that descend from the same ancestral lymphocyte and therefore share their immune receptor.
+  T cell clonotypes are usually defined by identical CDR3 sequences, whereas B cell clonotypes also group receptors that differ by {term}`somatic hypermutation <Somatic hypermutation (SHM)>`.
+
 Cluster
 : A group of a population or data points that share similarities.
   In single-cell, clusters usually share a common function or marker gene expression that is used for annotation (see {term}`cell type annotation <Cell type annotation>`).
 
+Complementarity-determining region (CDR)
+: One of the three hypervariable loops of an immune receptor chain that contact the antigen.
+  CDR1 and CDR2 are encoded by the V gene, whereas CDR3 spans the junctions of the V, (D) and J gene segments and is therefore the most diverse.
+
 Complementary DNA (cDNA)
 : DNA synthesized from an RNA template by the enzyme reverse transcriptase.
   cDNA is commonly used in RNA-seq library preparation because it is more stable than RNA and allows the captured transcripts to be amplified and sequenced for gene expression analysis.
+
+Differential abundance analysis
+: The statistical comparison of cell type or cell state proportions between conditions.
+  Unlike differential gene expression, it tests for changes in the composition of a sample rather than in the expression of individual genes.
 
 Differential gene expression (DGE)
 : The [biochemical process](https://www.sciencedirect.com/topics/biochemistry-genetics-and-molecular-biology/differential-gene-expression#:~:text=Within%20this%20context%2C%20differential%20gene%20expression%20is%20defined%20as%20the%20biochemical%20process%20that%20determinates%20which%20genes%20respond%20to%20which%20signals%20or%20triggers%20depending%20on%20the%20conditions.) that determines which genes respond to specific signals or conditions.
@@ -142,14 +154,25 @@ Hamming distance
 : A measure of the number of positions at which two strings of equal length differ.
   It is commonly used in error detection and correction, including barcode correction in sequencing data.
 
+High-dimensional data
+: Data in which each observation is described by many variables, such as single cells measured across thousands of genes.
+  Such data is typically reduced to fewer dimensions before analysis, since distances between observations become less informative as the number of dimensions grows.
+
 Imputation
 : The replacement of missing values with usually artificial values.
 
 Indrop
 : A Droplet based protocol for scRNA-seq.
 
+Junction
+: The CDR3 of an immune receptor chain together with the conserved cysteine and phenylalanine or tryptophan that flank it.
+
 Library
 : Also known as sequencing library. A pool of DNA fragments with attached sequencing adapters.
+
+Ligand
+: A molecule that binds specifically to a receptor or other target protein, usually without being chemically changed. In cell signaling, ligand binding typically changes the receptor's conformation
+  and can trigger (agonist) or block (antagonist) a cellular response.
 
 Modalities
 : Different types of biological information measured at the single-cell level.
@@ -207,6 +230,13 @@ Pseudobulk
 :  A method where single cells are grouped by cell type within each sample, and their counts are aggregated.
   Pseudobulks can then be used for tools originally designed for bulk sequencing.
 
+Python Package Index (PyPI)
+: The official repository of third-party Python packages, from which packages are installed with `pip`.
+
+Receptor
+: A protein (or protein complex) that specifically recognizes and binds a ligand. Binding typically changes the receptor's conformation and triggers a cellular response, such as a signaling
+  cascade, the opening of an ion channel, or a change in gene expression.
+
 RNA
 : Ribonucleic acid (RNA) is a single-stranded nucleic acid present in all living cells that encodes and regulates gene expression.
   Unlike DNA, RNA can be highly dynamic, acting as a messenger ({term}`mRNA <Messenger RNA (mRNA)>`) to carry genetic instructions, a structural or catalytic component (rRNA, snRNA), or a regulator of gene expression (miRNA, siRNA, lncRNA).
@@ -231,11 +261,18 @@ Scverse
 Sequencing
 : Sequencing is the process of deciphering the order of DNA nucleotides.
 
+Sequencing depth
+: The number of reads or molecules sequenced per sample or, in single-cell data, per cell.
+  In scRNA-seq, it is usually measured as the total number of counts per cell, also called count depth or library size.
+
 Signal-to-noise ratio
 : A measure of the clarity of a signal relative to background noise.
   In sequencing, the signal represents the detectable information derived from the DNA or RNA molecules being sequenced, while the noise includes random errors or unwanted signals that can obscure or distort the true data.
   A high signal-to-noise ratio (SNR) indicates that the signal is strong and reliable compared to the noise, resulting in better data quality.
   Conversely, a low SNR means the noise may interfere with or reduce the accuracy of the sequencing results.
+
+Somatic hypermutation (SHM)
+: Point mutations introduced into the variable region of the BCR of activated B cells, which together with selection increase the affinity of antibodies over the course of an immune response.
 
 Sparse data
 : Refers to data that mostly measures zeros and rarely other values ([sparse data vs. missing data](https://medium.com/biased-algorithms/sparse-data-vs-missing-data-38bc2c7af7c6)).
@@ -253,9 +290,17 @@ Splice Junctions
 : Locations where introns are removed, and exons are joined together in a mature RNA transcript during RNA splicing.
   These junctions occur at specific nucleotide sequences and are critical for the proper assembly of functional {term}`mRNA <Messenger RNA (mRNA)>`.
 
+t-distributed stochastic neighbor embedding (t-SNE)
+: A non-linear method that embeds high-dimensional data into two or three dimensions for visualization by keeping the nearest neighbors of every observation close together.
+  Cluster sizes and distances between well-separated clusters in a t-SNE plot carry little meaning.
+
 Trajectory inference
 : Also known as pseudotemporal ordering.
   The computational recovery of dynamic processes by ordering cells by similarity or other means.
+
+Uniform manifold approximation and projection (UMAP)
+: A non-linear method that embeds high-dimensional data into a low-dimensional space, typically two dimensions for visualization, by optimizing a layout of its nearest-neighbor graph.
+  Like t-SNE, it preserves which observations are neighbors rather than the distances between observations that are far apart.
 
 Unique Molecular Identifier (UMI)
 : A special type of molecular barcode that uniquely tags each molecule in a sample library.
@@ -264,4 +309,8 @@ Unique Molecular Identifier (UMI)
 Untranslated Region (UTR)
 : A segment of an {term}`mRNA <Messenger RNA (mRNA)>` transcript that is transcribed but not translated into protein.
   UTRs are located at both ends of the coding sequence.
+
+V(D)J recombination
+: The somatic rearrangement of variable (V), diversity (D) and joining (J) gene segments that assembles the immune receptor genes of each developing lymphocyte.
+  Nucleotides inserted and deleted at the joined ends further increase the diversity of the receptors.
 ```

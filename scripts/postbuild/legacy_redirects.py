@@ -112,6 +112,9 @@ def main() -> None:
         )
 
     for source, route in zip(sources, routes, strict=True):
+        # The host serves `<route>.html` for `<route>` itself, so a stub there would redirect the page onto itself; the 404 page still forwards the old URL.
+        if "/" + SOURCE_SUFFIX.sub("", source) == route:
+            continue
         legacy = root / SOURCE_SUFFIX.sub(".html", source)
         # Rebuilding into a directory that already holds a previous run has to stay harmless, while a path the book itself now occupies has to stay untouched.
         if not writable(legacy):
