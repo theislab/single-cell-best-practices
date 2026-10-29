@@ -962,7 +962,7 @@ ACTGTGAAGAAATTGC
 ```
 
 We can load the count matrix into Python as an [`AnnData`](https://anndata.readthedocs.io/en/latest/) object using the `load_fry` function from [`pyroe`](https://github.com/COMBINE-lab/pyroe).
-A similar function, [loadFry](https://rdrr.io/github/mikelove/fishpond/man/loadFry.html), has been implemented in the [`fishpond`](https://github.com/mikelove/fishpond) R package.
+A similar function, [loadFry](https://thelovelab.github.io/fishpond/reference/loadFry.html), has been implemented in the [`fishpond`](https://github.com/mikelove/fishpond) R package.
 
 ```python
 import pyroe
@@ -1029,7 +1029,7 @@ The _splici_ index can be found in the `salmon_index` directory.
 
 #### Mapping and quantification
 
-Next, we will map the sequencing reads recorded against the _splici_ index by calling [`salmon alevin`](https://salmon.readthedocs.io/en/latest/alevin.html). This will produce an output folder called `salmon_alevin` that contains all the information we need to process the mapped reads using `alevin-fry`.
+Next, we will map the sequencing reads recorded against the _splici_ index by calling [`salmon alevin`](https://github.com/COMBINE-lab/salmon). This will produce an output folder called `salmon_alevin` that contains all the information we need to process the mapped reads using `alevin-fry`.
 
 ```bash
 # Collect FASTQ files
@@ -1093,7 +1093,7 @@ In the example given here, we demonstrate using `simpleaf` and `alevin-fry` to p
 A more comprehensive list and description of available options for different stages of processing can be found in the [`alevin-fry`](https://alevin-fry.readthedocs.io/en/latest/) and [`simpleaf`](https://github.com/COMBINE-lab/simpleaf) documentation.
 `alevin-fry` also provides a [nextflow](https://www.nextflow.io/docs/latest/)-based workflow, called [quantaf](https://github.com/COMBINE-lab/quantaf), for conveniently processing many samples from a simply-defined sample sheet.
 
-Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including [`zUMIs`](https://github.com/sdparekh/zUMIs/wiki) {cite:p}`raw:zumis`, [`alevin`](https://salmon.readthedocs.io/en/latest/alevin.html) {cite:p}`raw:Srivastava2019`, [`kallisto|bustools`](https://www.kallistobus.tools/) {cite:p}`raw:Melsted2021`, [`STARsolo`](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) {cite:p}`raw:Kaminow2021` and [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger).
+Of course, similar resources exist for many of the other raw data processing tools referenced and described throughout this section, including [`zUMIs`](https://github.com/sdparekh/zUMIs/wiki) {cite:p}`raw:zumis`, [`alevin`](https://github.com/COMBINE-lab/salmon) {cite:p}`raw:Srivastava2019`, [`kallisto|bustools`](https://www.kallistobus.tools/) {cite:p}`raw:Melsted2021`, [`STARsolo`](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md) {cite:p}`raw:Kaminow2021` and [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger).
 The [`scrnaseq`](https://nf-co.re/scrnaseq) pipeline from [`nf-core`](https://nf-co.re/) also provides a nextflow-based pipeline for processing single-cell RNA-seq data generated using a range of different chemistries and integrates several of the tools described in this section.
 
 (raw-proc-useful-links)=
