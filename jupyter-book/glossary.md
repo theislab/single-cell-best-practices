@@ -314,3 +314,7 @@ V(D)J recombination
 : The somatic rearrangement of variable (V), diversity (D) and joining (J) gene segments that assembles the immune receptor genes of each developing lymphocyte.
   Nucleotides inserted and deleted at the joined ends further increase the diversity of the receptors.
 ```
+
+```{raw} latex
+\printglossaries
+```
