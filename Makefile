@@ -16,4 +16,5 @@ clean:
 	cd $(JUPYTER_BOOK_DIR) && jupyter book clean --all
 
 pdf:
+	python3 scripts/prebuild/pdf_toc.py
 	cd $(JUPYTER_BOOK_DIR) && jupyter book build --pdf

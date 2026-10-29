@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  release:
+    types: [published]
 
 concurrency: preview-${{ github.ref }}
 
@@ -32,6 +34,8 @@ jobs:
 
   pdfhtml:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v7
@@ -58,7 +62,8 @@ jobs:
             texlive-fonts-recommended \
             texlive-plain-generic \
             texlive-xetex \
-            texlive-extra-utils
+            texlive-extra-utils \
+            fonts-dejavu-core
 
       - name: Insert dropdowns to all chapters
         run: make dropdown
@@ -71,3 +76,9 @@ jobs:
           name: PDF_HTML
           path: jupyter-book/exports/book.pdf
           if-no-files-found: error
+
+      - name: Attach the PDF to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" jupyter-book/exports/book.pdf --clobber

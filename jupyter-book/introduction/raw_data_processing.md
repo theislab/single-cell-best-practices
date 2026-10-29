@@ -25,7 +25,7 @@ This matrix represents the estimated number of distinct molecules derived from e
 :::{figure} ../_static/images/raw_data_processing/overview_raw_data_processing.jpg
 :name: raw-proc-fig-overview
 :alt: Chapter Overview
-:width: 800px
+:width: 100%
 
 An overview of the topics discussed in this chapter. In the plot, "txome" stands for transcriptome.
 :::
@@ -100,7 +100,7 @@ Additionally, the GC content should align with the expected GC content of the ge
 :name: raw-proc-fig-fastqc-basic-statistics
 :alt: Basic Statistics
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good basic statistics report example.
 :::
@@ -121,7 +121,7 @@ If poor-quality calls are observed, quality trimming may be necessary. [A more d
 :name: raw-proc-fig-fastqc-per-read-sequence-quality
 :alt: Per Read Sequence Quality
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per-read sequence quality graph.
 :::
@@ -140,7 +140,7 @@ For further investigation, consult resources like [QC Fail](https://sequencing.q
 :name: raw-proc-fig-fastqc-per-tile-sequence-quality
 :alt: Per Tile Sequence Quality
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per tile sequence quality view.
 :::
@@ -156,7 +156,7 @@ If additional peaks appear, it may indicate a subset of reads with quality issue
 :name: raw-proc-fig-fastqc-per-sequence-quality-scores
 :alt: Per Sequence Quality Scores
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per sequence quality score plot.
 :::
@@ -172,7 +172,7 @@ This is a frequent occurrence in RNA-seq libraries, even though `FastQC` may fla
 :name: raw-proc-fig-fastqc-per-base-sequence-content
 :alt: Per Base Sequence Content
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and bad (right) per base sequence content plot.
 :::
@@ -193,7 +193,7 @@ As a result, some deviation from the theoretical distribution is not unusual in 
 :name: raw-proc-fig-fastqc-per-sequence-gc-content
 :alt: Per Sequence GC Content
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per sequence GC content plot.
 The plot on the left is from [the RTSF at MSU](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx).
@@ -211,7 +211,7 @@ Any noticeable non-zero ``N`` content may indicate issues with sequencing qualit
 :name: raw-proc-fig-fastqc-per-base-n-content
 :alt: Per Base N Content
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per base N content plot.
 :::
@@ -227,7 +227,7 @@ Small differences in read lengths due to trimming are normal and should not be a
 :name: raw-proc-fig-fastqc-sequence-length-distribution
 :alt: Sequence Length Distribution
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) sequence length distribution plot.
 :::
@@ -245,7 +245,7 @@ However, the majority of sequences should still exhibit low duplication levels, 
 :name: raw-proc-fig-fastqc-sequence-duplication-levels
 :alt: Sequence Duplication Levels
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per sequence duplication levels plot.
 :::
@@ -263,7 +263,7 @@ Such cases warrant further investigation to ensure data quality.
 :name: raw-proc-fig-fastqc-overrepresented-sequences
 :alt: Overrepresented Sequences
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 An overrepresented sequence table.
 :::
@@ -279,7 +279,7 @@ If adapter sequences are abundant, additional trimming may be necessary to impro
 :name: raw-proc-fig-fastqc-adapter-content
 :alt: Adapter Content
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 A good (left) and a bad (right) per sequence quality score plot. The plot on the right is from [the QC Fail website](https://sequencing.qcfail.com/articles/read-through-adapters-can-appear-at-the-ends-of-sequencing-reads/).
 :::
@@ -373,7 +373,7 @@ These approaches include traditional "full-alignment" methods, such as those imp
 :name: raw-proc-fig-alignment-mapping
 :alt: Alignment vs Mapping
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 An abstract overview of the alignment-based method and lightweight mapping-based method.
 :::
@@ -697,7 +697,7 @@ The alevinQC report can be generated in PDF format or as R/Shiny applications, w
 :name: raw-proc-fig-alevinqc-summary
 :alt: AlevinQC Summary
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 An example of the summary section of an alevinQC report.
 :::
@@ -712,7 +712,7 @@ The top right summary table provides the summary statistics for various componen
 :name: raw-proc-fig-alevinqc-plots
 :alt: AlevinQC Plots
 :class: bg-primary mb-1
-:width: 800px
+:width: 100%
 
 The figure shows the plots in the alevinQC report of an example single-cell dataset, of which the cells are filtered using the "knee" finding method.
 Each dot represents a corrected cell barcode with its corrected profile.
