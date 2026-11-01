@@ -5,7 +5,7 @@
 ## Data format
 
 - Nothing special needed as we will use example data.
-- Please run the notebook [xenium_breast_cancer]() first.
+- Please run the `xenium_breast_cancer` notebook first.
 
 ### Input
 
@@ -54,10 +54,10 @@ AnnData object with n_obs × n_vars = 167780 × 313
 ### Level 2: Segmentation
 
 - Conventional single cell QC
-    - total counts
-    - gene counts
-    - mt coverage
-    - ribosomal coverage
+  - total counts
+  - gene counts
+  - mt coverage
+  - ribosomal coverage
 
 ### Level 3: Image-based
 
