@@ -4,7 +4,7 @@ numbering: false
 
 # Changelog
 
-## [v0.2.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.2.0) <sub>2026-06-11</sub>
+## [v0.2.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.2.0) <sub>2026-10-29</sub>
 
 ### Added
 
@@ -17,6 +17,17 @@ numbering: false
 - Add a GPU acceleration chapter (`RAPIDS-singlecell`) ([#431](https://github.com/theislab/single-cell-best-practices/pull/431)) <sub>`@Zethson`</sub>
 - Add intersphinx mapping and hyperlink API mentions throughout the book ([#441](https://github.com/theislab/single-cell-best-practices/pull/441)) <sub>`@Zethson`</sub>
 - Mention GPU-accelerated alignment with NVIDIA Parabricks in the raw data processing chapter ([#446](https://github.com/theislab/single-cell-best-practices/pull/446)) <sub>`@Zethson`</sub>
+- Add a GSEA figure ([#463](https://github.com/theislab/single-cell-best-practices/pull/463)) <sub>`@LuisHeinzlmeier`</sub>
+- Add guidance on integrating tumor samples ([#499](https://github.com/theislab/single-cell-best-practices/pull/499)) <sub>`@Zethson`</sub>
+- Add the new `pertpy` DGE plots to the differential expression chapter ([#500](https://github.com/theislab/single-cell-best-practices/pull/500)) <sub>`@Zethson`</sub>
+- Add a pull request template with a contribution checklist ([#501](https://github.com/theislab/single-cell-best-practices/pull/501)) <sub>`@Zethson`</sub>
+- Discuss LLM and foundation model annotation in the annotation chapter ([#508](https://github.com/theislab/single-cell-best-practices/pull/508)) <sub>`@Zethson`</sub>
+- Add a cell-cell communication chapter ([#451](https://github.com/theislab/single-cell-best-practices/pull/451)) <sub>`@cesarogiul`</sub>
+- Link the Simplified Chinese translation from the landing page ([#484](https://github.com/theislab/single-cell-best-practices/pull/484)) <sub>`@Zethson`</sub>
+- Link UMAP, t-SNE and four more glossary terms across the book ([#491](https://github.com/theislab/single-cell-best-practices/pull/491)) <sub>`@Zethson`</sub>
+- Explain the negative binomial in the scRNA-seq chapter ([#478](https://github.com/theislab/single-cell-best-practices/pull/478)) <sub>`@Zethson`</sub>
+- Explain why the dimensionality reduction chapter does not scale genes ([#473](https://github.com/theislab/single-cell-best-practices/pull/473)) <sub>`@Zethson`</sub>
+- Attach a complete PDF of the book to every release ([#519](https://github.com/theislab/single-cell-best-practices/pull/519)) <sub>`@Zethson`</sub>
 
 ### Changed
 
@@ -37,6 +48,31 @@ numbering: false
 - Add memory management details for `RAPIDS-singlecell` ([#432](https://github.com/theislab/single-cell-best-practices/pull/432)) <sub>`@Zethson`</sub>
 - Migrate to Jupyter Book v2 ([#436](https://github.com/theislab/single-cell-best-practices/pull/436)) <sub>`@seohyonkim`</sub>
 - Update the gene set enrichment analysis chapter ([#459](https://github.com/theislab/single-cell-best-practices/pull/459)) <sub>`@LuisHeinzlmeier`</sub>
+- Update the compositional analysis chapter ([#448](https://github.com/theislab/single-cell-best-practices/pull/448)) <sub>`@LuisHeinzlmeier`</sub>
+- Update the surface protein chapters ([#455](https://github.com/theislab/single-cell-best-practices/pull/455)) <sub>`@javier-marchena-hurtado`</sub>
+- Replace `scArches` with `cellmapper` in the annotation chapter ([#457](https://github.com/theislab/single-cell-best-practices/pull/457)) <sub>`@seohyonkim`</sub>
+- Improve the quiz cards used in the chapters ([#461](https://github.com/theislab/single-cell-best-practices/pull/461)) <sub>`@seohyonkim`</sub>
+- Address the prose review points on the quality control chapter ([#474](https://github.com/theislab/single-cell-best-practices/pull/474)) <sub>`@Zethson`</sub>
+- Hide noisy cell output and explain five core concepts ([#479](https://github.com/theislab/single-cell-best-practices/pull/479)) <sub>`@Zethson`</sub>
+- Group the RNA chapters under one RNA header ([#487](https://github.com/theislab/single-cell-best-practices/pull/487)) <sub>`@Zethson`</sub>
+- Revise quality control and embeddings, and rerun preprocessing on current scverse ([#489](https://github.com/theislab/single-cell-best-practices/pull/489)) <sub>`@Zethson`</sub>
+- Point to batch-aware deviance in feature selection ([#490](https://github.com/theislab/single-cell-best-practices/pull/490)) <sub>`@Zethson`</sub>
+- Hide the remaining noisy cell output ([#492](https://github.com/theislab/single-cell-best-practices/pull/492)) <sub>`@Zethson`</sub>
+- Say which QC steps apply to plate-based protocols ([#493](https://github.com/theislab/single-cell-best-practices/pull/493)) <sub>`@Zethson`</sub>
+- Cluster and annotate the preprocessed sample instead of a broken subset ([#494](https://github.com/theislab/single-cell-best-practices/pull/494)) <sub>`@Zethson`</sub>
+- Rewrite the gene regulatory network chapter around `decoupler` and CollecTRI ([#495](https://github.com/theislab/single-cell-best-practices/pull/495)) <sub>`@Zethson`</sub>
+- Connect to `lamindb` and track notebooks the same way in every chapter ([#496](https://github.com/theislab/single-cell-best-practices/pull/496)) <sub>`@Zethson`</sub>
+- Rewrite the chromatin accessibility section around `SnapATAC2` ([#497](https://github.com/theislab/single-cell-best-practices/pull/497)) <sub>`@Zethson`</sub>
+- Rewrite the adaptive immune receptor section around `scirpy` 0.25 ([#498](https://github.com/theislab/single-cell-best-practices/pull/498)) <sub>`@Zethson`</sub>
+- Group acknowledgements, glossary and changelog under Appendix ([#503](https://github.com/theislab/single-cell-best-practices/pull/503)) <sub>`@Zethson`</sub>
+- Rewrite the multimodal integration chapters in Python with public data ([#504](https://github.com/theislab/single-cell-best-practices/pull/504)) <sub>`@Zethson`</sub>
+- Rewrite the perturbation modeling chapter around current screen analysis ([#505](https://github.com/theislab/single-cell-best-practices/pull/505)) <sub>`@Zethson`</sub>
+- Restore the GRN rewrite and match environment files to chapters ([#506](https://github.com/theislab/single-cell-best-practices/pull/506)) <sub>`@Zethson`</sub>
+- Bring the contributing guide in line with the current build setup ([#507](https://github.com/theislab/single-cell-best-practices/pull/507)) <sub>`@Zethson`</sub>
+- Collapse the doubled spacing between notebook cells ([#510](https://github.com/theislab/single-cell-best-practices/pull/510)) <sub>`@Zethson`</sub>
+- Update the contact details and shrink the cover ([#511](https://github.com/theislab/single-cell-best-practices/pull/511)) <sub>`@Zethson`</sub>
+- Rewrite the outlook for foundation models, agents and clinical data ([#512](https://github.com/theislab/single-cell-best-practices/pull/512)) <sub>`@Zethson`</sub>
+- Split the introduction by modality ([#515](https://github.com/theislab/single-cell-best-practices/pull/515)) <sub>`@Zethson`</sub>
 
 ### Fixed
 
@@ -51,10 +87,22 @@ numbering: false
 - Fix silently dropped citations by deduplicating BibTeX keys ([#442](https://github.com/theislab/single-cell-best-practices/pull/442)) <sub>`@Zethson`</sub>
 - Fix invisible MuData/AnnData object summaries caused by a quiz CSS rule leaking `--pst-color-text-base: transparent` to all cell outputs ([#444](https://github.com/theislab/single-cell-best-practices/pull/444)) <sub>`@Zethson`</sub>
 - Remove duplicated paragraph in section 6.5 ([#445](https://github.com/theislab/single-cell-best-practices/pull/445)) <sub>`@durr1602`</sub>
+- Fix a few typos ([#449](https://github.com/theislab/single-cell-best-practices/pull/449)) <sub>`@durr1602`</sub>
+- Fix inline code and cell output formatting ([#456](https://github.com/theislab/single-cell-best-practices/pull/456)) <sub>`@Zethson`</sub>
+- Fix the annotation environment ([#464](https://github.com/theislab/single-cell-best-practices/pull/464)) <sub>`@Zethson`</sub>
+- Fix deployment issues of the Jupyter Book v2 site ([#467](https://github.com/theislab/single-cell-best-practices/pull/467)) <sub>`@seohyonkim`</sub>
+- Redirect the pre v2 URLs of the book instead of returning 404 ([#471](https://github.com/theislab/single-cell-best-practices/pull/471)) <sub>`@Zethson`</sub>
+- Fix the toy dataset download in the raw data processing chapter ([#476](https://github.com/theislab/single-cell-best-practices/pull/476)) <sub>`@Zethson`</sub>
+- Stop presenting an underflowed p-value as a p-value of zero ([#477](https://github.com/theislab/single-cell-best-practices/pull/477)) <sub>`@Zethson`</sub>
+- Point the `liana` intersphinx inventory at its new docs domain ([#485](https://github.com/theislab/single-cell-best-practices/pull/485)) <sub>`@Zethson`</sub>
+- Show dropdown content in the PDF ([#502](https://github.com/theislab/single-cell-best-practices/pull/502)) <sub>`@Zethson`</sub>
+- Fix the contributing guide link ([#517](https://github.com/theislab/single-cell-best-practices/pull/517)) <sub>`@Zethson`</sub>
+- Replace dead links across the book ([#518](https://github.com/theislab/single-cell-best-practices/pull/518)) <sub>`@Zethson`</sub>
 
 ### Removed
 
 - Remove the PR preview deployment from GitHub Actions ([#427](https://github.com/theislab/single-cell-best-practices/pull/427)) <sub>`@Zethson`</sub>
+- Remove the Dockerfile ([#513](https://github.com/theislab/single-cell-best-practices/pull/513)) <sub>`@Zethson`</sub>
 
 ## [v0.1.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.1.0) <sub>2023-11-14</sub>
 
