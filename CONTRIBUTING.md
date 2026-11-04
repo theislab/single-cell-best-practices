@@ -173,6 +173,8 @@ We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb
 - Use dropdowns so that the reader is not overwhelmed by the content.
 - To reduce noise, we should aim to write clean code that avoids generating warnings, and also filter out any non-informative warnings at the start of the notebook.
   - Filter the warnings with `warnings.filterwarnings` in a separate code cell before the imports and add the cell tag `remove-input` to it, as done in [`gsea_pathway.ipynb`](/jupyter-book/conditions/gsea_pathway.ipynb).
+- Keep code cells free of comments and put explanations in the text.
+  A short hint is fine if it makes the code noticeably quicker to understand.
 - In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
   - Only link the **first occurrence** of each term within the chapter, not every time it appears.
   - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
