@@ -1,0 +1,99 @@
+\documentclass[a4paper,11pt,oneside]{book}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{fontspec}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{natbib}
+\usepackage{xcolor}
+\usepackage{changepage}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage[normalem]{ulem}
+\bibliographystyle{abbrvnat}
+
+% Make list items more compact
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep, topsep=0pt}
+
+[- IMPORTS -]
+
+% Dropdowns are framed boxes, which cannot hold floats.
+\usepackage{etoolbox}
+\makeatletter
+\newcommand{\framedfloat}[1]{\renewenvironment{#1}[1][]{\par\medskip\def\@captype{#1}\centering}{\par\medskip}}
+\AtBeginEnvironment{framed}{\framedfloat{figure}\framedfloat{table}}
+\renewcommand*{\glossaryentrynumbers}[1]{}
+\renewcommand*{\glossarysection}[2][]{}
+\renewcommand*{\glspostdescription}{}
+% The glossary page prints the glossary, so MyST's own call at the end of the book must do nothing.
+\AtBeginDocument{\let\origprintglossaries\printglossaries\renewcommand{\printglossaries}{\origprintglossaries\let\printglossaries\relax}}
+% MyST writes arrows in running text as math commands.
+\let\mathrightarrow\rightarrow
+\renewcommand{\rightarrow}{\ensuremath{\mathrightarrow}}
+\let\mathleftrightarrow\leftrightarrow
+\renewcommand{\leftrightarrow}{\ensuremath{\mathleftrightarrow}}
+\makeatother
+
+\hypersetup{
+  colorlinks,
+  linkcolor={black},
+  citecolor={black},
+  urlcolor={black}
+}
+
+% Style quotes
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\definecolor{quoteshade}{rgb}{0.95, 0.95, 1}
+\renewenvironment{quote}{%
+  \def\FrameCommand{%
+    \hspace{1pt}%
+    {\color{darkblue}\vrule width 2pt}%
+    {\color{quoteshade}\vrule width 4pt}%
+    \colorbox{quoteshade}%
+  }%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}%
+  \noindent\hspace{-8pt}% disable indenting first paragraph
+  \begin{adjustwidth}{0pt}{0pt}% adjust as needed
+  \vspace{2pt}\vspace{2pt}%
+}
+{%
+  \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\title{\Huge \textbf{[-doc.title-]}[# if doc.subtitle #] \\ \huge [-doc.subtitle-][# endif #]}
+\author{\textsc{
+[#- for author in doc.authors #]
+  [#- if not loop.first #] and [# endif #][-author.name-][# if not loop.last and not loop.first #], [# endif #]
+[#- endfor -#]
+}}
+
+\begin{document}
+\sloppy
+\glsaddall
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+% \listoffigures
+% \listoftables
+
+\mainmatter
+
+% \include{preface.tex}
+% \include{acknowledgements.tex}
+
+% The preamble comes before the first chapter, so leave it unnumbered.
+\setcounter{secnumdepth}{-1}
+\pretocmd{\chapter}{\setcounter{secnumdepth}{2}}{}{}
+
+[- CONTENT -]
+
+
+[# if doc.bibliography #]
+\bibliography{[- doc.bibliography | join(", ") -]}
+[# endif #]
+
+\end{document}

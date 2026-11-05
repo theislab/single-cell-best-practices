@@ -107,7 +107,7 @@ If you found our content helpful for your research, please cite it as:
 ## Contributing
 
 We invite the community to contribute to the ongoing improvement of this tutorial and teaching material.
-Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/development/CONTRIBUTING.md) for further instructions.
+Please read [contributing](https://github.com/theislab/single-cell-best-practices/blob/main/CONTRIBUTING.md) for further instructions.
 
 In case of questions or problems, please get in touch by posting an issue in this repository.
 
@@ -125,4 +125,4 @@ For inquiries, speaking engagements, or collaboration opportunities, please emai
 
 ## License
 
-This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/development/LICENSE).
+This book is licensed under the [Apache 2.0 license](https://github.com/theislab/single-cell-best-practices/blob/main/LICENSE).
