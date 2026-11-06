@@ -1,0 +1,375 @@
+# Contributing
+
+## Our philosophy
+
+We aim for this book to be a resource for introducing people to single-cell and spatial data analysis while ensuring that newcomers and experienced analysts alike do things properly.
+To ensure our recommendations reflect best practices, we try to rely exclusively on external and independent benchmarks.
+
+## How can I contribute?
+
+We warmly welcome contributions, especially those that help us keep our best practices up to date!
+However, as mentioned [above](#our-philosophy), these recommendations are held to high standards.
+
+If you're proposing new tutorials, corrections, or extensions, we strongly recommend opening an issue first to talk about your ideas with us.
+We're always eager to learn about the latest developments and are happy to discuss the current state of best practices.
+We also encourage contributions in the form of [quizzes and flashcards](#create-custom-quizzes-and-flashcards).
+Whatever proposal you have: Just open an issue and let's get in touch!
+
+[![Open an Issue](https://img.shields.io/badge/Open%20Issue-blue?logo=github)](https://github.com/theislab/single-cell-best-practices/issues/new?title=Your+Issue+Title&body=Describe+your+issue+here)
+
+To contribute changes, fork the repository or create a branch and open a pull request against `main`.
+Every pull request runs CI and gets a Netlify deploy preview of the book, and nothing is published before it is merged.
+
+## Book architecture
+
+The `jupyter-book` folder contains the source content and configuration for the book.
+In addition to several configuration files, all chapters are grouped into their respective section folders — for example, the `conditions` folder.
+Each section contains the relevant notebooks along with their [associated files](#essential-files-for-every-chapter).
+
+Here’s an example of the folder layout:
+
+```bash
+├── conditions
+│   ├── compositional_keytakeaways.txt
+│   ├── compositional.bib
+│   ├── compositional.ipynb
+│   ├── compositional.yml
+│   ├── differential_gene_expression_keytakeaways.txt
+│   ├── differential_gene_expression.bib
+│   ├── differential_gene_expression.ipynb
+│   ├── differential_gene_expression.yml
+│   ├── gsea_pathway_keytakeaways.txt
+│   └── ...
+├── ...
+├── myst.yml
+├── acknowledgements.md
+├── CHANGELOG.md
+├── glossary.md
+├── outlook.md
+├── preamble.md
+├── _static
+│   ├── book.css
+│   ├── book.js
+│   ├── favicon.ico
+│   ├── images
+│   │   ├── conditions
+│   │   │   ├── compositional.jpg
+│   │   │   └── differential_gene_expression.jpg
+│   │   └── ...
+```
+
+A chapter only appears in the book once it is listed under `toc` in `jupyter-book/myst.yml`, and its `.bib` file has to be added to the `bibliography` list there.
+A page's URL follows its file path, not its position in the `toc`, so move chapters between sections by editing the `toc` instead of moving files, which would break existing links.
+
+## Building the book
+
+The book is built with Jupyter Book 2, jupytext and beautifulsoup4, which the [`environment.yml`](/environment.yml) in the root of the repository installs.
+
+Run the following command to create the environment to build the book.
+
+```bash
+conda env create -f environment.yml
+```
+
+Building the book is then as simple as:
+
+```bash
+make build
+```
+
+which will build the complete book.
+`make serve` starts a local preview that rebuilds on changes.
+This does not execute any notebooks and any updated chapters must be updated in a separate step.
+
+To clean the build directory run:
+
+```bash
+make clean
+```
+
+### Building individual chapters
+
+All chapters are available as Jupyter Notebooks and end-to-end executable.
+The diverse requirements of tools for the chapters do not allow it for us to provide a single environment that can build all chapters.
+Hence, we decided to provide minimal Conda environments per chapter.
+These can be found in the respective folders.
+Chapters of a section may share one environment named after the section folder, e.g. `chromatin_accessibility/chromatin_accessibility.yml`, which the environment dropdown then shows for all of them.
+Every environment file has to be added to `.github/workflows/build_environments.yml`, so that CI checks that it can be created.
+Use the latest Python release, pin the main packages, and only use pip packages that ship wheels for that Python version, since CI creates the environments on runners that cannot compile them.
+
+> [!NOTE]
+> Run the following command with the environment file of choice to create the environment for the chapter that you want to build.
+>
+> ```bash
+> conda env create -f CHAPTER-NAME.yml
+> ```
+>
+> Now you can execute all cells in the notebook.
+
+CI never executes notebooks, so execute every changed chapter in its environment and commit the outputs.
+To execute a chapter without opening Jupyter, run `jupyter nbconvert --to notebook --execute --inplace CHAPTER-NAME.ipynb`, since `ln.track()` reads the notebook path from that command.
+
+## Style guide for contributors
+
+### Essential files for every chapter
+
+Each chapter comes with a few essential files.
+The `.ipynb` notebook contains the main content and includes citations drawn from the accompanying `.bib` file.
+The `.yml` file defines a minimal Conda environment, as described [above](#building-individual-chapters), unless the chapter uses the environment of its section.
+Finally, the `_keytakeaways.txt` file summarizes the chapter’s main ideas, following the specified [format](#key-takeaways-environment-and-lamin-dropdown).
+
+```bash
+├── SECTION-NAME
+│   ├── CHAPTER-NAME.ipynb
+│   ├── CHAPTER-NAME.bib
+│   ├── CHAPTER-NAME.yml
+│   ├── CHAPTER-NAME_keytakeaways.txt
+│   ├── ...
+```
+
+### Notebook Structure
+
+Each `.ipynb` notebook should follow this standard structure:
+
+0. ✍️ **Authors and Reviewers**: At the top of the notebook, include a section listing the authors and reviewers who contributed to the chapter. This section should be formatted as follows:
+
+```markdown
+---
+authors:
+  - name: Lukas Heumos
+  - name: Luis Heinzlmeier
+  - name: Isaac Virshup
+    roles:
+      - writing – review & editing
+---
+```
+
+1. 🧠 **Title**
+2. 🔽 **Dropdown Section**
+   - Key Takeaways
+   - Environment Setup
+   - Lamin Setup
+3. 📖 **Main Content**
+4. 🔗 **See Also** _(Dropdown)_
+5. ❓ **Quiz / Flashcards**
+6. 👥 **Contributors**
+
+The references and the contributors sections are rendered by the theme at the end of every page.
+Do not add a `## References` heading or a `{bibliography}` directive yourself, or the page ends up with two references sections.
+
+All dropdowns immediately following the title are automatically inserted if they meet the corresponding [requirements](#key-takeaways-environment-and-lamin-dropdown).
+In addition, each chapter should conclude with a few questions that reinforce the main concepts covered.
+[Below](#create-custom-quizzes-and-flashcards) you will find instructions on how to create quizzes and flashcards in our custom format.
+We’ve also prepared a chapter [template](/jupyter-book/template/template.ipynb) with which you can quickly and effectively create a chapter for our book.
+
+### Helpful links
+
+- [Jupyter Book documentation](https://jupyterbook.org)
+- [MyST Markdown documentation](https://mystmd.org)
+
+### Rules
+
+- Place each sentence on its own line to make reviewing easier.
+- Use dropdowns so that the reader is not overwhelmed by the content.
+- To reduce noise, we should aim to write clean code that avoids generating warnings, and also filter out any non-informative warnings at the start of the notebook.
+- In each chapter, link all used glossary terms with `` {term}`EXAMPLE TERM` ``.
+  - Only link the **first occurrence** of each term within the chapter, not every time it appears.
+  - Add a new term to the glossary only if it appears multiple times throughout the book and has not yet been listed.
+    In this case, also add the link to this term in the other chapters.
+    If the term is used just once and may be unclear, provide a direct explanation within the corresponding chapter.
+  - To link a term that has the same meaning or a different spelling than its glossary entry, use this format: `` {term}`YOUR TERM <GLOSSARY TERM>` `` (e.g.: `` {term}`barcodes <Barcode>` ``).
+  - Don't link terms in the key takeaways!
+    The same goes for citations, cross references and plain markdown links: a key takeaway card is itself a link, and a link nested inside a link is invalid HTML.
+    The browser reparents it, which breaks React hydration for the entire page — nothing on it stays interactive and the browser back button starts throwing.
+    `make dropdown` fails if a key takeaway contains one.
+- Cite with `` {cite:p}`KEY` ``, which renders as `[Smith et al., 2017]`. A bare `` {cite}`KEY` `` renders narratively as `Smith et al. (2017)`, which only reads well when the authors are the subject of the sentence — use `` {cite:t}`KEY` `` for that.
+- Based on hours of proofreading: Always make a space before `{cite:p}` (e.g., ``"This was shown by {cite:p}`Smith2017`."``).
+- References should always contain `doi` and `url`.
+- Write in American English.
+- Genes are written in _italic_ (e.g., _TP53_), while protein names are written in normal (non-italic) text (e.g., TP53).
+- Use lowercase for package names whenever possible: write pertpy instead of PertPy. Only capitalize at the beginning of a sentence, e.g. “Pertpy is a package that …”.
+
+### Key takeaways, environment and lamin dropdown
+
+The environment and lamin dropdowns are inserted after the title of every chapter.
+If you don't want to have those dropdowns in your chapter, make sure to list your notebook in the blacklists of `scripts/dropdowns/insert_dropdowns.py` (`black_list_files_yml` or `black_list_files_lamin`).
+A key takeaways dropdown is only inserted if a file called `<name-notebook>_keytakeaways.txt` is in the same directory as your notebook.
+This file has to contain the key takeaways in the following format:
+
+```
+1
+The first sentence of key takeaway 1.
+The second sentence of key takeaway 1.
+
+2
+The first sentence of key takeaway 2.
+
+...
+```
+
+If you want to link a key takeaway to a certain heading in your chapter, add `<section-name>-<notebook-name>-key-takeaway-<key-takeaway-number>` as a label before the heading.
+Replace all `_` of the section or notebook name with `-`, and the card of the key takeaway will be linked to the heading in the text (e.g., `(preprocessing-visualization-dimensionality-reduction-key-takeaway-2)=` for `jupyter-book/preprocessing_visualization/dimensionality_reduction.ipynb`).
+
+> [!WARNING]
+> MyST only allows a **single label per element**.
+> This applies to any labeled element in the book, not just headings — figures, tables, admonitions, and dropdowns included.
+> Stacking more than one `(label)=` — or a `:name:`/`:label:` option plus a stacked `(label)=` — on the same element means only the first one resolves; the rest silently become dead links, with no build warning to catch it.
+>
+> If a key takeaway should point at an element that already has a label (whether that label belongs to another key takeaway or to any other existing label in the book, e.g. one referenced via `{ref}` from another chapter), don't add a second label — suffix its number with `:<label>` in `_keytakeaways.txt` instead:
+>
+> ```
+> 3:preprocessing-visualization-quality-control-key-takeaway-1
+> The first sentence of key takeaway 3, which shares a heading with key takeaway 1.
+> ```
+
+> [!WARNING]
+> A standalone `(label)=` line only binds to a heading or paragraph — it does **not** attach to a directive (`{figure}`, `{table}`, `{admonition}`, `{dropdown}`, ...), even if placed directly above it.
+> The label is silently created but never resolves to that directive, again with no build warning.
+> For figures and tables, use the `:name:` option instead:
+>
+> ```
+> :::{figure} ../_static/images/example.png
+> :name: example-fig
+> :::
+> ```
+>
+> Admonitions and dropdowns (`{admonition}`, `{dropdown}`, `{seealso}`) can't be linked to at all right now, `:name:` included — it's a known upstream rendering bug, not a syntax mistake. Don't rely on linking to them until it's fixed upstream.
+
+Our CI workflow (`.github/workflows/build_book.yml`) will call `make dropdown` when building the book.
+For testing, you can insert the dropdowns locally by calling `make dropdown` before `make`.
+
+> [!WARNING]
+> Executing `make dropdown` locally will modify nearly all notebook files.
+> These changes should never be committed or pushed to the repository.
+> We recommend discarding these changes immediately after running the command using `git restore .`.
+> Ensure you’ve staged your wanted changes (`git add`) beforehand.
+
+### Lamindb
+
+[Lamindb](https://github.com/laminlabs/lamindb) is an open-source data framework to enable learning at scale in computational biology.
+We use lamindb to store, share, and load datasets and notebooks using the [theislab/sc-best-practices](https://lamin.ai/theislab/sc-best-practices) instance.
+We acknowledge free hosting from [Lamin Labs](https://lamin.ai/).
+
+When making contributions that got merged, ask us to be added to the `theislab/sc-best-practices` instance.
+Then, ensure that all used datasets are loaded directly from the instance.
+If you upload a new dataset to the instance, create a separate notebook for it and place it in the [`scripts`](/scripts/) folder.
+You can use the existing notebooks in the [`scripts`](/scripts/) folder as a guide.
+Finally, use `ln.track()` and `ln.finish()` while re-running the notebook to have the latest version in the instance as well.
+Start the notebook with `ln.connect("theislab/sc-best-practices")` and `ln.track("<uid>")` in a cell tagged `hide-output`, using the uid that `ln.track()` prints on the first run.
+The [template](/jupyter-book/template/template.ipynb) shows the basic steps for tracking a notebook!
+
+> [!Note]
+>
+> 1. **Create a lamin account**
+>    - Sign up and log in following [the instructions](https://docs.lamin.ai/setup#sign-up-log-in).
+>    - Ask us to be added to the `theislab/sc-best-practices` instance.
+> 2. **Install lamindb**
+>    - Install the lamindb Python package in your environment:
+>
+>    ```bash
+>    pip install lamindb
+>    ```
+>
+> 3. **Connect to the [theislab/sc-best-practices instance](https://lamin.ai/theislab/sc-best-practices)**
+>    - Run the `lamin connect` command:
+>
+>    ```bash
+>    lamin connect theislab/sc-best-practices
+>    ```
+>
+>    - You should now see `→ connected lamindb: theislab/sc-best-practices`.
+>    - You are ready to use lamindb in your notebook!
+
+### Figure style guide
+
+We encourage contributors to include figures.
+New illustrations must follow the visual style used in earlier chapters and use our existing icons where possible.
+To keep the book visually consistent, figures should follow the same topic-based color scheme as the book cover:
+RNA (blue), protein/CITE (red), chromatin/ATAC (yellow), AIRR (violet), and spatial (green).
+If you would like to create a new figure, let us know and we can provide access to the icon set and design resources.
+Set figure widths in percent (`:width: 100%`), because the PDF export shrinks or overflows widths given in pixels.
+
+### Create custom quizzes and flashcards
+
+To build quizzes or flashcards, use the helper functions in `scripts/quiz.py`.
+You can create multiple-choice questions or simple flip cards.
+
+1. Start your notebook code cell with
+
+```python
+%run ../../scripts/quiz.py
+```
+
+2. Then, add as many questions as you like, wrapped in `with quiz_tabs():` so they render as one tabbed widget instead of stacking one below the other. For example:
+
+```python
+with quiz_tabs():
+    flip_card("q1", "What is 2 + 2?", "4")
+    multiple_choice_question(
+        "q2",
+        "What is the capital of France?",
+        ["Paris", "London", "Berlin", "Madrid"],
+        "Paris",
+        {
+            "London": "London is the capital of the UK",
+            "Berlin": "Berlin is the capital of Germany",
+            "Madrid": "Madrid is the capital of Spain",
+        },
+    )
+```
+
+3. Run the code cell and it will build a tabbed widget with your multiple-choice questions and flip cards as output.
+
+> [!WARNING]
+> Add the cell tag `remove-input` to the code cell to remove the code, when building the book.
+
+You can also adjust the font size, text color and much more.
+For detailed information, check out the method descriptions in `scripts/quiz.py`.
+
+### Pre commit
+
+We use [prek](https://github.com/j178/prek), a fast reimplementation of pre-commit, to automatically check your markdown and code for mistakes before you commit it.
+It reads the same `.pre-commit-config.yaml` and runs in CI on every pull request.
+
+1. Please install `prek`:
+
+```bash
+pip install prek
+```
+
+2. Next, activate it in the root of the repository:
+
+```bash
+prek install
+```
+
+3. Afterwards, you can always manually run it:
+
+```bash
+prek run --all-files
+```
+
+If you try to commit changes, they are automatically checked for errors and adjusted if possible.
+Simply add these changes to your commit with `git add`.
+
+### Adding changelog entries (maintainers only)
+
+Before releasing a new version of the book, ensure all significant changes are documented in CHANGELOG.md.
+
+Group entries under the following subheadings:
+
+- _Added_ for new features/chapters.
+
+- _Changed_ for changes in existing functionality or content.
+
+- _Fixed_ for any bug fixes or typo corrections.
+
+- _Removed_ for content or features that have been deleted.
+
+In the `CHANGELOG.md`, add each relevant PR entries with contributor names and links to the PR.
+
+Each entry must include a brief description, a link to the PR, and the contributor's GitHub handle:
+
+```
+Update analysis workflow ([#34](https://github.com/theislab/single-cell-best-practices/pull/34)) <sub>@seohyonkim</sub>
+```

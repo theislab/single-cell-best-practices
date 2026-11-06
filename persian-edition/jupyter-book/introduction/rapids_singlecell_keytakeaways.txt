@@ -1,0 +1,11 @@
+1
+rapids-singlecell mirrors the scanpy API on the GPU, so most preprocessing and clustering pipelines can be ported by swapping `sc` for `rsc` and moving the AnnData with `rsc.get.anndata_to_GPU`.
+
+2
+Pick exactly one allocator strategy: a pool allocator if the data fits in VRAM, or managed (unified) memory if it does not. Mixing both fragments memory and erodes the speedup.
+
+3
+Move data back to host memory with `rsc.get.anndata_to_CPU` once a step no longer needs the GPU, free intermediate CuPy arrays, and call `cp.get_default_memory_pool().free_all_blocks()` to release VRAM you are no longer using.
+
+4
+For datasets that exceed a single GPU's memory, combine `dask-cuda` with the `read_elem_lazy` AnnData reader to stream chunks through the GPU; expect occasional synchronization points (QC, HVG selection, scaling, PCA) that force evaluation.

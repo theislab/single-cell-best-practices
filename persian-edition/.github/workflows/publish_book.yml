@@ -1,0 +1,40 @@
+name: Publish book
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-book:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Setup environment
+        run: |
+          pip install uv
+          uv pip install --system "jupyter-book==2.1.6" jupytext beautifulsoup4
+
+      - name: Insert dropdowns to all chapters
+        run: make dropdown
+
+      - name: Build the JupyterBook
+        run: make build
+
+      - name: Create CNAME record
+        run: |
+          cd ./jupyter-book/_build/html/
+          echo "www.sc-best-practices.org" > CNAME
+
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          folder: ./jupyter-book/_build/html/
+          force: false
