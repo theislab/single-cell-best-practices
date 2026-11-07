@@ -114,3 +114,7 @@
 ## به‌روزرسانی وضعیت ارسال — ۲۰۲۶-۱۱-۰۶
 
 کاربر پس از مشخص‌شدن مقصد، صریحاً ارسال همهٔ تغییرات به Git را تأیید کرد؛ مانع مجوز ذکرشده در یادداشت قبلی رفع شد. شاخهٔ `persian-translation` در `https://github.com/Omidbiochem/single-cell-best-practices` ایجاد شد و commitهای مرحلهٔ ترجمه تا `5e13b12c9e537db7342dbc68e79764bc31c3725b` با موفقیت ارسال شدند. این یادداشت نیز در همان شاخه ثبت و ارسال می‌شود. شاخهٔ اصلی و منابع انگلیسی تغییر نکرده‌اند؛ وضعیت ناتمام ترجمه همچنان معتبر است.
+
+## Local Windows workflow checkpoint — 2026-11-07
+
+Added portable Python orchestration and SETUP/BUILD/START/DIAGNOSE BAT launchers under persian-edition. Actual Linux MyST build and loopback HTTP lifecycle tests passed. Windows execution, full offline asset packaging, search/math interaction, complete translation, figure inspection and the final second-pass audit remain pending. No new chapter was marked translated. Resume technical work from qa/FINAL_WEBSITE_QA.md; resume translation from raw_data_processing.md as recorded above. The new audit CSV enumerates 1503 notebook Markdown/quiz review units but is not a complete paragraph ledger for non-notebook material and does not certify semantic review.

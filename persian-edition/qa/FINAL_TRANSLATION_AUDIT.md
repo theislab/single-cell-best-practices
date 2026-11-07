@@ -1,0 +1,3 @@
+# Final translation audit — NOT COMPLETE
+
+This is a checkpoint, not a passed final audit. The original inventory contains 289 files, 53 TOC entries, 1476 Markdown cells and 1105 code cells. Only eight TOC entries have translated drafts. No independent sentence-level second-pass semantic audit has been completed. The CSV enumerates notebook Markdown and quiz units requiring review; non-notebook paragraph/table units and justified category A/B technical tokens still need a complete unit ledger. None of the 60 figure/source-artwork entries has a completed embedded-text inspection. Category C remains unresolved. Do not certify completion.

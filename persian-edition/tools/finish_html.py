@@ -13,11 +13,11 @@ def main():
     shutil.copytree(static/'fonts',root/'fonts',dirs_exist_ok=True)
     pages=list(root.rglob('*.html'))
     for page in pages:
-        text=page.read_text()
+        text=page.read_text(encoding='utf-8')
         text=re.sub(r'<html\b[^>]*>',lambda m: re.sub(r'\s(?:lang|dir)="[^"]*"','',m[0])[:-1]+' lang="fa" dir="rtl">',text,count=1)
         if 'href="/persian.css"' not in text:
             text=text.replace('</head>','<link rel="stylesheet" href="/persian.css"/></head>',1)
-        page.write_text(text)
+        page.write_text(text,encoding='utf-8')
     report={'html_pages':len(pages),'font_files':[p.name for p in (root/'fonts').glob('*.ttf')],
             'preview_only':True,'scientific_notebooks_executed':False}
     (EDITION/'qa/HTML_BUILD.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')

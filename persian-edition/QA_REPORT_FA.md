@@ -48,3 +48,7 @@ PDF از همان سند Word، پس از به‌روزرسانی فهرست م�
 کنترل `tools/check.py --release` باید در این مرحله شکست بخورد. ۴۵ مدخل فهرست هنوز پیش‌نویس فارسی ندارند و پیش‌نویس‌های موجود نیز بازبینی نهایی نشده‌اند. هیچ فایل آزمایشی با نام خروجی نهاییِ کتاب کامل ارائه نمی‌شود.
 
 متن درون ۶۰ فایل تصویر یا منبع گرافیکی در `qa/FIGURE_TRANSLATION_REVIEW.csv` برای بازبینی جداگانه ثبت شده است؛ حفظ بایت‌های تصویر به معنی ترجمهٔ برچسب‌های داخل آن نیست.
+
+## Local workflow update — 2026-11-07
+
+See FINAL_WEBSITE_QA.md, LOCAL_BUILD_REPORT.json and LOCAL_SERVER_TEST.json under qa for current English technical results. Native Windows execution and complete offline reading have not passed. FINAL_TRANSLATION_AUDIT.md and FINAL_DOCX_PDF_QA.md explicitly record incomplete/not-run final stages. Source inventory translation statuses remain unchanged because this change does not complete additional translations.
