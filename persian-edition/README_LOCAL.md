@@ -13,3 +13,7 @@ The site includes only translation records marked `translated_draft` or `transla
 Offline support is not yet certified: `logs/build-report.json` inventories external asset URLs. Math fonts/CSS and some theme integrations still require offline packaging and browser verification. Saved scientific outputs do not provide an executable Python kernel; remote data access and notebook execution require their original environments/services.
 
 Testing limitations: Linux build/server tests are recorded separately. BAT execution and fresh dependency installation on Windows have not been tested. No claim of complete localization, final document export, or a passed final second-pass audit is made.
+
+## Multiple Python installations
+
+Launchers probe the actual interpreter version before selection. A working `python` on PATH at version 3.11+ takes priority; otherwise explicit `py` versions are tried (3.14, 3.13, 3.12, 3.11, then the generic Python 3 selection). An installed `py` launcher alone does not establish that its default Python is suitable. This fixes systems where `py -3` selects Visual Studio Python 3.9 while `python` selects uv-managed Python 3.12. The direct workaround is `python tools/local_book.py setup`, followed by `build` and `start`. Native Windows execution of these BAT changes has not been tested in the Linux cloud environment.
