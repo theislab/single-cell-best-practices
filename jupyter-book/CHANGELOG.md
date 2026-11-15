@@ -4,6 +4,16 @@ numbering: false
 
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Upgrade to `jupyter-book==2.1.7` and the v2 MyST book theme after the v2 theme broke builds with `jupyter-book==2.1.6` ([#524](https://github.com/theislab/single-cell-best-practices/pull/524)) <sub>`@Zethson`</sub>
+
+### Fixed
+
+- Fix small errors in the spatial data structures chapter, including a missing figure citation, a wrong Squidpy link and the element count ([#521](https://github.com/theislab/single-cell-best-practices/pull/521)) <sub>`@timtreis`</sub>
+
 ## [v0.2.0](https://github.com/theislab/single-cell-best-practices/releases/tag/0.2.0) <sub>2026-10-29</sub>
 
 ### Added
