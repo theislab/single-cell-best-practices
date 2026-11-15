@@ -9,6 +9,7 @@ from pathlib import Path
 
 ENTRY_GLOB = "entry.client-*.js"
 DEFAULT_ROOT = Path("jupyter-book/_build/html")
+BUNDLE_DIR = "_assets"
 
 
 def patch_client_entry(marker: str, snippet: str, description: str) -> None:
@@ -16,19 +17,20 @@ def patch_client_entry(marker: str, snippet: str, description: str) -> None:
     if not root.is_dir():
         raise SystemExit(f"{root} does not exist, nothing to patch")
 
-    entries = sorted((root / "build").glob(ENTRY_GLOB))
+    entries = sorted((root / BUNDLE_DIR).glob(ENTRY_GLOB))
     if not entries:
         raise SystemExit(
-            f"no {ENTRY_GLOB} under {root / 'build'}; the theme's bundle layout changed, so {description} was not applied"
+            f"no {ENTRY_GLOB} under {root / BUNDLE_DIR}; the theme's bundle layout changed, so {description} was not applied"
         )
 
     # Every page imports the same client entry, so patch the ones a page actually loads.
-    pages = [p for p in root.rglob("*.html") if "/build/" not in p.as_posix()]
+    pages = [p for p in root.rglob("*.html") if f"/{BUNDLE_DIR}/" not in p.as_posix()]
     referenced = {
         m.group(1)
         for page in pages
         for m in re.finditer(
-            r'/build/(entry\.client-[^"\')]+\.js)', page.read_text(encoding="utf-8")
+            rf'/{BUNDLE_DIR}/(entry\.client-[^"\')]+\.js)',
+            page.read_text(encoding="utf-8"),
         )
     }
     if not referenced:
